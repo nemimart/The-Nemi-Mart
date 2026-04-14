@@ -5,86 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nemi Mart | Premium Product</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --nemi-green: #1B3022;
             --nemi-gold: #D4AF37;
             --nemi-creme: #FDFBF0;
             --white: #ffffff;
-            --light-gray: #f4f4f4;
+            --accent: #15803d;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; outline: none !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--nemi-creme); color: var(--nemi-green); overflow-x: hidden; padding-bottom: 120px; }
 
         /* --- STICKY NAV --- */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 1000;
             display: flex; justify-content: space-between; padding: 15px 20px;
-            background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); align-items: center;
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .nav-title { font-weight: 800; font-size: 16px; transition: 0.3s; opacity: 0; }
+        .nav-title { font-weight: 800; font-size: 16px; opacity: 0; transition: 0.3s; color: var(--nemi-green); }
         .nav-title.show { opacity: 1; }
+        .nav-icons { display: flex; gap: 15px; font-size: 18px; }
 
-        /* --- PRO SLIDER --- */
-        .hero { position: relative; background: var(--white); height: 450px; display: flex; overflow: hidden; }
-        .slider { display: flex; transition: 0.5s ease; width: 100%; cursor: zoom-in; }
-        .slider img { min-width: 100%; height: 450px; object-fit: contain; padding: 30px; }
+        /* --- HERO SLIDER --- */
+        .hero { position: relative; background: var(--white); height: 420px; overflow: hidden; }
+        .slider { display: flex; overflow-x: scroll; scroll-snap-type: x mandatory; scroll-behavior: smooth; height: 100%; }
+        .slider::-webkit-scrollbar { display: none; }
+        .slider img { min-width: 100%; height: 100%; object-fit: contain; padding: 40px; scroll-snap-align: start; cursor: zoom-in; transition: transform 0.5s; }
+        .slider img:hover { transform: scale(1.05); }
+
+        .dots-container { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 8px; }
+        .dot { width: 7px; height: 7px; background: #ddd; border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--nemi-gold); width: 22px; border-radius: 10px; }
+
+        /* --- MAIN CARD --- */
+        .main-card { background: var(--white); border-radius: 40px 40px 0 0; margin-top: -30px; position: relative; z-index: 20; padding: 35px 22px; box-shadow: 0 -15px 30px rgba(0,0,0,0.05); }
+        .price-row { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+        .price-row .new { font-size: 36px; font-weight: 800; color: var(--accent); }
+        .price-row .old { text-decoration: line-through; color: #aaa; font-size: 18px; }
+
+        /* --- ACCORDION --- */
+        .detail-acc { margin-bottom: 10px; background: #fcfcfc; border-radius: 15px; border: 1px solid #f1f1f1; transition: 0.3s; }
+        .detail-acc:hover { border-color: var(--nemi-gold); border-width: 1.5px; }
+        .acc-head { padding: 18px; display: flex; justify-content: space-between; font-weight: 700; cursor: pointer; align-items: center; }
+        .acc-body { padding: 0 18px 18px; font-size: 14px; color: #555; display: none; line-height: 1.6; }
+
+        /* --- REVIEW SYSTEM --- */
+        .review-section { margin-top: 40px; padding: 25px; background: #fff; border-radius: 25px; border: 1px solid #f1f1f1; }
+        .review-section h3 { margin-bottom: 20px; font-weight: 800; }
+        .stars-input { display: flex; gap: 8px; margin-bottom: 15px; }
+        .stars-input i { font-size: 24px; color: #eee; cursor: pointer; transition: 0.2s; }
+        .stars-input i.active { color: var(--nemi-gold); transform: scale(1.1); }
         
-        .dots-container { position: absolute; bottom: 60px; width: 100%; display: flex; justify-content: center; gap: 8px; }
-        .dot { width: 8px; height: 8px; background: #ddd; border-radius: 50%; transition: 0.3s; }
-        .dot.active { background: var(--nemi-gold); width: 20px; border-radius: 10px; }
+        .review-box textarea { width: 100%; border: 1px solid #eee; border-radius: 15px; padding: 15px; font-size: 14px; background: #f9f9f9; resize: none; margin-bottom: 10px; }
+        .btn-send-review { width: 100%; background: var(--nemi-green); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-send-review:active { transform: scale(0.98); }
 
-        .heart-float {
-            position: absolute; right: 20px; top: 100px; width: 50px; height: 50px;
-            background: var(--white); border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 10;
-        }
-        .heart-float i { color: #ccc; font-size: 20px; transition: 0.3s; }
-        .heart-float.active i { color: #ff4757; transform: scale(1.2); }
+        #reviewList { margin-top: 25px; }
+        .review-item { border-bottom: 1px solid #f1f1f1; padding: 15px 0; animation: fadeIn 0.5s; }
+        .review-item strong { font-size: 14px; display: block; margin-bottom: 4px; }
+        .review-item p { font-size: 13px; color: #666; }
 
-        /* --- CONTENT CARD --- */
-        .main-card { background: var(--white); border-radius: 40px 40px 0 0; margin-top: -30px; position: relative; z-index: 20; padding: 30px 20px; }
-        
-        .price-row { display: flex; align-items: baseline; gap: 10px; margin: 15px 0; }
-        .price-row .new { font-size: 32px; font-weight: 800; color: #15803d; }
-        .price-row .old { text-decoration: line-through; color: #999; font-size: 18px; }
-
-        /* --- BUNDLE SECTION (AMAZON STYLE) --- */
-        .bundle-card { background: #f9fbf9; border: 1px solid #edf2ed; border-radius: 20px; padding: 20px; margin: 30px 0; }
-        .bundle-card h3 { font-size: 16px; margin-bottom: 15px; }
-        .bundle-flex { display: flex; align-items: center; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
-        .bundle-item { text-align: center; min-width: 80px; }
-        .bundle-item img { width: 70px; height: 70px; border-radius: 12px; border: 1px solid #eee; background: white; }
-        .bundle-check { margin-top: 10px; }
-        
-        .total-bundle-box { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; display: flex; justify-content: space-between; align-items: center; }
-        .btn-bundle-buy { background: var(--nemi-green); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-weight: 700; font-size: 12px; }
-
-        /* --- DETAILS SECTION --- */
-        .detail-acc { margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; }
-        .acc-head { padding: 15px 0; display: flex; justify-content: space-between; font-weight: 700; cursor: pointer; }
-        .acc-body { padding-bottom: 15px; font-size: 14px; color: #666; display: none; line-height: 1.6; }
-
-        /* --- RATINGS --- */
-        .rating-engine { text-align: center; padding: 30px 0; border-top: 1px solid #f0f0f0; }
-        .stars-input i { font-size: 28px; color: #ddd; margin: 0 5px; cursor: pointer; }
-        .stars-input i.active { color: var(--nemi-gold); }
+        /* --- BUNDLE SECTION --- */
+        .bundle-card { background: #f7faf8; border: 2px dashed #d1dbd4; border-radius: 25px; padding: 25px; margin: 40px 0; }
+        .bundle-flex { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 10px 0; }
+        .bundle-item { text-align: center; min-width: 90px; }
+        .bundle-item img { width: 80px; height: 80px; border-radius: 15px; border: 1px solid #eee; background: white; margin-bottom: 8px; }
+        .total-bundle-box { margin-top: 20px; border-top: 1px solid #dee2df; padding-top: 20px; text-align: center; }
+        .btn-bundle-cart { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 18px; font-weight: 800; font-size: 16px; margin-top: 15px; box-shadow: 0 10px 20px rgba(21, 128, 61, 0.15); }
 
         /* --- FULLSCREEN GALLERY --- */
-        #gallery { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; flex-direction: column; align-items: center; justify-content: center; }
-        #gallery img { max-width: 95%; max-height: 80vh; transition: 0.3s; }
-        .gallery-close { position: absolute; top: 30px; right: 30px; color: white; font-size: 30px; }
+        #gallery { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; flex-direction: column; align-items: center; }
+        .gallery-header { width: 100%; padding: 20px; display: flex; justify-content: flex-end; }
+        .gallery-scroll { width: 100%; height: 70vh; display: flex; overflow-x: scroll; scroll-snap-type: x mandatory; align-items: center; }
+        .gallery-scroll img { min-width: 100%; max-height: 100%; object-fit: contain; scroll-snap-align: start; transition: 0.3s; }
+        .gallery-controls { position: absolute; bottom: 50px; right: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .zoom-btn { width: 55px; height: 55px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; color: white; font-size: 20px; backdrop-filter: blur(10px); }
 
-        /* --- BOTTOM BAR --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: var(--white);
-            padding: 20px 20px 40px; box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
-            display: grid; grid-template-columns: 1fr 2fr; gap: 15px; z-index: 1001;
+        /* --- UPDATED BOTTOM NAV --- */
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; background: var(--white); 
+            padding: 20px 20px 40px; box-shadow: 0 -15px 35px rgba(0,0,0,0.1); 
+            z-index: 1001; border-radius: 30px 30px 0 0; 
         }
-        .btn-cart { background: #f0f0f0; border: none; border-radius: 15px; font-weight: 700; }
-        .btn-buy-now { background: var(--nemi-green); color: white; border: none; border-radius: 15px; font-weight: 800; font-size: 16px; box-shadow: 0 10px 20px rgba(27, 48, 34, 0.2); }
+        .btn-full-cart { 
+            width: 100%; background: var(--nemi-green); color: white; 
+            border: none; border-radius: 20px; height: 65px;
+            font-weight: 800; font-size: 18px; letter-spacing: 0.5px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 12px 25px rgba(27, 48, 34, 0.3); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .btn-full-cart:active { transform: scale(0.96); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -92,12 +107,14 @@
     <nav id="navbar">
         <i class="fas fa-arrow-left" onclick="history.back()"></i>
         <div class="nav-title" id="navTitle">Amritprash Elite Gold</div>
-        <i class="fas fa-shopping-cart"></i>
+        <div class="nav-icons">
+            <i class="fas fa-share-alt" onclick="shareProduct()"></i>
+            <i class="fas fa-shopping-cart"></i>
+        </div>
     </nav>
 
     <div class="hero">
-        <div class="heart-float" onclick="this.classList.toggle('active')"><i class="fas fa-heart"></i></div>
-        <div class="slider" id="slider" onclick="openGallery()">
+        <div class="slider" id="mainSlider" onclick="openGallery()">
             <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
             <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
             <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
@@ -106,68 +123,31 @@
     </div>
 
     <main class="main-card">
-        <span style="color:var(--nemi-gold); font-weight: 800; font-size: 12px; letter-spacing: 1px;">PREMIUM AYURVEDA</span>
-        <h1 style="font-size: 28px; margin-top: 5px;">Amritprash Elite Gold Reserve</h1>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <span style="color:var(--nemi-gold); font-weight: 800; font-size: 12px; letter-spacing: 1.5px;">AYURVEDIC ELITE</span>
+                <h1 style="font-size: 30px; margin-top: 5px; font-weight: 800;">Amritprash Elite Gold</h1>
+            </div>
+            <i class="far fa-heart" id="heartIcon" style="font-size: 24px; color: #ccc;" onclick="toggleHeart(this)"></i>
+        </div>
         
         <div class="price-row">
             <span class="new">₹850</span>
             <span class="old">₹1,499</span>
-            <span style="background:#dcfce7; color:#166534; padding:4px 8px; border-radius:5px; font-size:12px; font-weight:800;">45% OFF</span>
-        </div>
-
-        <div class="bundle-card">
-            <h3>Frequently Bought Together</h3>
-            <div class="bundle-flex">
-                <div class="bundle-item">
-                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
-                    <p style="font-size:10px; font-weight:700; margin:5px 0;">Product 1</p>
-                    <p style="font-size:11px;">₹850</p>
-                    <input type="checkbox" checked class="bundle-check" data-price="850">
-                </div>
-                <div style="font-size:20px; font-weight:800; color:#ddd;">+</div>
-                <div class="bundle-item">
-                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
-                    <p style="font-size:10px; font-weight:700; margin:5px 0;">Herbal Tea</p>
-                    <p style="font-size:11px;">₹350</p>
-                    <input type="checkbox" checked class="bundle-check" data-price="350">
-                </div>
-                <div style="font-size:20px; font-weight:800; color:#ddd;">+</div>
-                <div class="bundle-item">
-                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
-                    <p style="font-size:10px; font-weight:700; margin:5px 0;">Honey Pure</p>
-                    <p style="font-size:11px;">₹200</p>
-                    <input type="checkbox" checked class="bundle-check" data-price="200">
-                </div>
-            </div>
-            <div class="total-bundle-box">
-                <div>
-                    <p style="font-size:12px; color:#666;">Total Price:</p>
-                    <strong id="bundleTotal" style="font-size:18px;">₹1,400</strong>
-                </div>
-                <button class="btn-bundle-buy">Add all 3 to Cart</button>
-            </div>
+            <span style="background:#dcfce7; color:#166534; padding:5px 10px; border-radius:8px; font-size:12px; font-weight:800;">45% OFF</span>
         </div>
 
         <div class="detail-acc">
-            <div class="acc-head" onclick="toggleAcc(this)">Product Description <i class="fas fa-plus"></i></div>
-            <div class="acc-body">Pure Himalayan Shilajit and 48 rare herbs combined with Swarna Bhasma. Formulated for high-performance living.</div>
+            <div class="acc-head" onclick="toggleAcc(this)">Product Description <i class="fas fa-chevron-down"></i></div>
+            <div class="acc-body">Pure Himalayan Shilajit and 48 rare herbs combined with Swarna Bhasma. High energy and vitality booster for your daily lifestyle.</div>
         </div>
         <div class="detail-acc">
-            <div class="acc-head" onclick="toggleAcc(this)">Key Benefits <i class="fas fa-plus"></i></div>
-            <div class="acc-body">
-                • Boosts Immunity & Strength<br>
-                • Enhances Mental Focus<br>
-                • Natural Detoxification<br>
-                • 100% Organic & Chemical Free
-            </div>
-        </div>
-        <div class="detail-acc">
-            <div class="acc-head" onclick="toggleAcc(this)">How to Use <i class="fas fa-plus"></i></div>
-            <div class="acc-body">Take 1 tablespoon with lukewarm milk on an empty stomach every morning for best results.</div>
+            <div class="acc-head" onclick="toggleAcc(this)">Key Ingredients <i class="fas fa-chevron-down"></i></div>
+            <div class="acc-body">Gold Bhasma, Silver Bhasma, Saffron, Ashwagandha, and Safed Musli. All ingredients are sourced from organic farms.</div>
         </div>
 
-        <div class="rating-engine">
-            <h3>Rate this Product</h3>
+        <div class="review-section">
+            <h3>Customer Reviews</h3>
             <div class="stars-input" id="starRating">
                 <i class="fas fa-star" data-val="1"></i>
                 <i class="fas fa-star" data-val="2"></i>
@@ -175,49 +155,87 @@
                 <i class="fas fa-star" data-val="4"></i>
                 <i class="fas fa-star" data-val="5"></i>
             </div>
-            <p id="rateStatus" style="font-size:12px; margin-top:10px; color:#888;">Tap a star to rate</p>
+            <div class="review-box">
+                <textarea id="reviewText" rows="3" placeholder="Tell others about your experience..."></textarea>
+                <button class="btn-send-review" onclick="addReview()">SEND REVIEW</button>
+            </div>
+            <div id="reviewList">
+                <div class="review-item">
+                    <strong>★★★★★ Akash Kohli</strong>
+                    <p>Bhai kya product hai! Energy ekdum top level ho gayi hai. Nemi Mart is best!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bundle-card">
+            <h3 style="font-size: 18px;">Build Your Health Bundle</h3>
+            <div class="bundle-flex">
+                <div class="bundle-item">
+                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+                    <p style="font-size:10px; font-weight:700;">Amritprash</p>
+                    <input type="checkbox" checked class="bundle-check" data-price="850">
+                </div>
+                <div style="font-size:24px; color:#ccc;">+</div>
+                <div class="bundle-item">
+                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+                    <p style="font-size:10px; font-weight:700;">Honey Pure</p>
+                    <input type="checkbox" checked class="bundle-check" data-price="200">
+                </div>
+                <div style="font-size:24px; color:#ccc;">+</div>
+                <div class="bundle-item">
+                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+                    <p style="font-size:10px; font-weight:700;">Herbal Tea</p>
+                    <input type="checkbox" checked class="bundle-check" data-price="350">
+                </div>
+            </div>
+            <div class="total-bundle-box">
+                <p style="font-size:14px; color:#666;">Bundle Price:</p>
+                <strong id="bundleTotal" style="font-size:28px; color: var(--accent);">₹1,400</strong>
+                <button class="btn-bundle-cart">ADD BUNDLE TO CART</button>
+            </div>
         </div>
     </main>
 
-    <div class="bottom-nav">
-        <button class="btn-cart"><i class="fas fa-cart-plus"></i></button>
-        <button class="btn-buy-now">ADD TO CART</button>
-    </div>
-
     <div id="gallery">
-        <span class="gallery-close" onclick="closeGallery()">&times;</span>
-        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" id="galleryImg">
-        <div style="margin-top:20px;">
-            <button onclick="zoomImg(1.2)" style="padding:10px 20px; border-radius:10px;">Zoom In</button>
-            <button onclick="zoomImg(0.8)" style="padding:10px 20px; border-radius:10px;">Zoom Out</button>
+        <div class="gallery-header">
+            <i class="fas fa-times gallery-close" style="color:white; font-size:30px;" onclick="closeGallery()"></i>
+        </div>
+        <div class="gallery-scroll" id="gallerySlider">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+        </div>
+        <div class="gallery-controls">
+            <button class="zoom-btn" onclick="zoomImg(1.2)"><i class="fas fa-plus"></i></button>
+            <button class="zoom-btn" onclick="zoomImg(0.8)"><i class="fas fa-minus"></i></button>
         </div>
     </div>
 
+    <div class="bottom-nav">
+        <button class="btn-full-cart">
+            <i class="fas fa-cart-plus"></i> ADD TO CART
+        </button>
+    </div>
+
     <script>
-        // Slider Logic
-        const slider = document.getElementById('slider');
+        // Image Slider Logic
+        const slider = document.getElementById('mainSlider');
         const dotsBox = document.getElementById('dots');
-        const images = document.querySelectorAll('.slider img');
-        let currentSlide = 0;
-
-        images.forEach((_, i) => {
-            const dot = document.createElement('div');
-            dot.className = i === 0 ? 'dot active' : 'dot';
-            dotsBox.appendChild(dot);
+        const imgs = document.querySelectorAll('.slider img');
+        
+        imgs.forEach((_, i) => {
+            const d = document.createElement('div');
+            d.className = i === 0 ? 'dot active' : 'dot';
+            dotsBox.appendChild(d);
         });
 
-        slider.addEventListener('scroll', () => {
+        slider.onscroll = () => {
             let index = Math.round(slider.scrollLeft / slider.clientWidth);
-            const dots = document.querySelectorAll('.dot');
-            dots.forEach((d, i) => d.classList.toggle('active', i === index));
-        });
-
-        // Dynamic Nav
-        window.onscroll = () => {
-            document.getElementById('navTitle').classList.toggle('show', window.scrollY > 300);
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === index));
+            document.getElementById('navTitle').classList.toggle('show', window.scrollY > 200);
         };
 
-        // Bundle Logic
+        // Bundle Calculation
         const checks = document.querySelectorAll('.bundle-check');
         checks.forEach(c => {
             c.onchange = () => {
@@ -227,32 +245,65 @@
             };
         });
 
-        // Accordion Logic
+        // Review Logic
+        let rating = 0;
+        const stars = document.querySelectorAll('#starRating i');
+        stars.forEach(s => {
+            s.onclick = () => {
+                rating = s.dataset.val;
+                stars.forEach(st => st.classList.toggle('active', st.dataset.val <= rating));
+            };
+        });
+
+        function addReview() {
+            const text = document.getElementById('reviewText').value;
+            if(!rating || !text) { alert("Please provide a rating and a comment!"); return; }
+            const list = document.getElementById('reviewList');
+            const item = document.createElement('div');
+            item.className = 'review-item';
+            item.innerHTML = `<strong>${'★'.repeat(rating)} You</strong><p>${text}</p>`;
+            list.prepend(item);
+            document.getElementById('reviewText').value = '';
+            alert("Review submitted successfully!");
+        }
+
+        // UI Interactions
         function toggleAcc(el) {
             const body = el.nextElementSibling;
             const icon = el.querySelector('i');
             const isOpen = body.style.display === 'block';
             document.querySelectorAll('.acc-body').forEach(b => b.style.display = 'none');
-            document.querySelectorAll('.acc-head i').forEach(i => i.className = 'fas fa-plus');
-            body.style.display = isOpen ? 'none' : 'block';
-            icon.className = isOpen ? 'fas fa-plus' : 'fas fa-minus';
+            document.querySelectorAll('.acc-head i').forEach(i => i.className = 'fas fa-chevron-down');
+            
+            if(!isOpen) {
+                body.style.display = 'block';
+                icon.className = 'fas fa-chevron-up';
+            }
         }
 
-        // Star Rating
-        const stars = document.querySelectorAll('.stars-input i');
-        stars.forEach(s => {
-            s.onclick = () => {
-                let v = s.dataset.val;
-                stars.forEach(st => st.classList.toggle('active', st.dataset.val <= v));
-                document.getElementById('rateStatus').innerText = "Thanks for your " + v + " star rating!";
-            };
-        });
+        function toggleHeart(el) {
+            el.classList.toggle('fas');
+            el.classList.toggle('far');
+            if(el.classList.contains('fas')) el.style.color = '#ff4757';
+            else el.style.color = '#ccc';
+        }
 
-        // Gallery
+        function shareProduct() {
+            if (navigator.share) {
+                navigator.share({ title: 'Nemi Mart', text: 'Check out Amritprash!', url: window.location.href });
+            }
+        }
+
+        // Gallery Zoom
         let zoom = 1;
         function openGallery() { document.getElementById('gallery').style.display = 'flex'; }
         function closeGallery() { document.getElementById('gallery').style.display = 'none'; }
-        function zoomImg(s) { zoom *= s; document.getElementById('galleryImg').style.transform = `scale(${zoom})`; }
+        function zoomImg(s) {
+            zoom *= s;
+            document.querySelectorAll('.gallery-scroll img').forEach(img => {
+                img.style.transform = `scale(${zoom})`;
+            });
+        }
     </script>
 </body>
 </html>

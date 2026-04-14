@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Nemi Mart | Home Premium</title>
+    <title>The Nemi Mart | Premium Ayurveda</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --creme: #FFFDF5;
@@ -13,233 +13,215 @@
             --dark-green: #1B3022;
             --leaf-green: #2D5A27;
             --white: #ffffff;
-            --soft-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --soft-shadow: 0 10px 40px rgba(0,0,0,0.08);
             --inner-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* --- BASIC RESET & SELECTION --- */
+        /* --- RESET & BASE --- */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             font-family: 'Poppins', sans-serif; 
             -webkit-tap-highlight-color: transparent; 
-            scroll-behavior: smooth;
         }
-
-        ::selection { background: var(--gold); color: white; }
 
         body { 
             background-color: var(--creme); 
             color: var(--dark-green); 
             padding-bottom: 120px; 
             overflow-x: hidden; 
+            line-height: 1.6;
         }
 
         /* --- HEADER --- */
         header {
             background: var(--dark-green);
-            padding: 15px;
+            padding: 15px 5%;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
         }
 
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 
         .logo-area { 
-            position: relative; width: 55px; height: 55px; 
+            position: relative; width: 60px; height: 60px; 
             display: flex; justify-content: center; align-items: center; 
             text-decoration: none; transition: var(--transition);
         }
-        .logo-area:active { transform: scale(0.9); }
+        .logo-area:hover { transform: scale(1.05); }
 
-        .main-logo { width: 42px; z-index: 5; position: relative; filter: drop-shadow(0 0 5px rgba(212,175,55,0.4)); }
+        .main-logo { width: 45px; z-index: 5; position: relative; filter: drop-shadow(0 0 8px rgba(212,175,55,0.5)); }
         
         .orbit-icons {
             position: absolute; width: 100%; height: 100%;
-            animation: rotateFull 12s linear infinite;
+            animation: rotateFull 15s linear infinite;
         }
         .orbit-icons i { position: absolute; font-size: 10px; color: var(--gold); opacity: 0.6; }
         .oi1 { top: 0; left: 50%; } .oi2 { bottom: 0; left: 50%; } .oi3 { left: 0; top: 50%; } .oi4 { right: 0; top: 50%; }
         
         @keyframes rotateFull { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .address-box { flex: 1; margin-left: 15px; color: white; text-decoration: none; transition: var(--transition); }
-        .address-box:active { opacity: 0.7; transform: translateX(5px); }
-        .address-box p { font-size: 10px; opacity: 0.7; letter-spacing: 0.3px; }
-        .address-box h4 { font-size: 13px; font-weight: 600; color: var(--gold); display: flex; align-items: center; gap: 4px; }
+        .address-box { flex: 1; margin-left: 20px; color: white; text-decoration: none; transition: var(--transition); }
+        .address-box:hover { opacity: 0.8; transform: translateX(5px); }
+        .address-box p { font-size: 10px; opacity: 0.7; letter-spacing: 0.5px; text-transform: uppercase; }
+        .address-box h4 { font-size: 14px; font-weight: 600; color: var(--gold); display: flex; align-items: center; gap: 6px; }
 
-        .top-actions { display: flex; gap: 15px; font-size: 22px; }
-        .top-actions a { color: white; transition: var(--transition); display: inline-block; }
-        .top-actions a:hover { color: var(--gold); transform: translateY(-2px); }
-        .top-actions a:active { transform: scale(0.8); }
+        .top-actions { display: flex; gap: 20px; font-size: 24px; }
+        .top-actions a { color: white; transition: var(--transition); }
+        .top-actions a:hover { color: var(--gold); transform: translateY(-3px) scale(1.1); }
 
-        .search-container { position: relative; margin-top: 5px; }
+        /* SEARCH BAR */
+        .search-container { position: relative; max-width: 800px; margin: 5px auto 0; }
         .search-fake-input { 
             background: white; border-radius: 15px; height: 50px; 
-            display: flex; align-items: center; padding: 0 18px; color: #666; font-size: 14px;
+            display: flex; align-items: center; padding: 0 20px; color: #666; font-size: 14px;
             box-shadow: var(--inner-shadow); transition: var(--transition);
             border: 1px solid transparent;
         }
-        .search-fake-input:hover { border-color: var(--gold); }
-        .search-fake-input:active { transform: scale(0.98); background: #f9f9f9; }
+        .search-fake-input:hover { border-color: var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
 
-        /* --- CATEGORIES --- */
+        /* --- CATEGORY STRIP --- */
         .cat-strip {
-            display: flex; overflow-x: auto; padding: 25px 15px; gap: 20px;
-            background: white; scrollbar-width: none;
+            display: flex; overflow-x: auto; padding: 30px 5%; gap: 25px;
+            background: white; scrollbar-width: none; justify-content: space-evenly;
         }
         .cat-strip::-webkit-scrollbar { display: none; }
         
-        .cat-card { text-align: center; min-width: 70px; text-decoration: none; color: var(--dark-green); transition: var(--transition); }
-        .cat-card .icon-circle { 
-            width: 60px; height: 60px; background: #fafafa; border-radius: 18px; 
+        .cat-card { text-align: center; min-width: 80px; text-decoration: none; color: var(--dark-green); transition: var(--transition); }
+        .icon-circle { 
+            width: 70px; height: 70px; background: #fafafa; border-radius: 22px; 
             display: flex; justify-content: center; align-items: center; 
-            margin: 0 auto 10px; border: 1.5px solid #f0f0f0; transition: var(--transition);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            margin: 0 auto 12px; border: 1.5px solid #f0f0f0; transition: var(--transition);
         }
-        .cat-card:hover .icon-circle { border-color: var(--gold); transform: translateY(-5px); background: white; box-shadow: 0 8px 20px rgba(212,175,55,0.15); }
-        .cat-card:active .icon-circle { transform: scale(0.9); background: var(--dark-green); }
-        .cat-card:active i { color: var(--gold); }
-        .cat-card i { font-size: 24px; color: var(--leaf-green); transition: 0.3s; }
-        .cat-card span { font-size: 11px; font-weight: 600; display: block; opacity: 0.9; }
+        .cat-card:hover .icon-circle { 
+            transform: translateY(-8px) rotate(5deg); 
+            background: var(--dark-green); border-color: var(--gold);
+            box-shadow: 0 10px 20px rgba(27,48,34,0.15);
+        }
+        .cat-card:hover i { color: var(--gold); }
+        .cat-card:hover span { color: var(--leaf-green); font-weight: 700; }
+        .cat-card i { font-size: 28px; color: var(--leaf-green); transition: 0.3s; }
+        .cat-card span { font-size: 12px; font-weight: 600; display: block; }
 
-        /* --- BANNER --- */
-        .banner-wrapper { position: relative; margin: 10px 0; overflow: hidden; }
+        /* --- BANNER (LAPTOP FRIENDLY) --- */
+        .banner-wrapper { 
+            position: relative; 
+            margin: 20px auto; 
+            width: 95%; 
+            max-width: 1200px;
+            overflow: hidden; 
+            border-radius: 25px;
+        }
         .banner-container { 
             display: flex; 
             overflow-x: auto; 
             scroll-snap-type: x mandatory; 
             scrollbar-width: none;
-            transition: all 0.5s ease;
             cursor: grab;
         }
-        .banner-container:active { cursor: grabbing; }
         .banner-container::-webkit-scrollbar { display: none; }
         
         .banner-slide { 
             min-width: 100%; 
             scroll-snap-align: start; 
-            padding: 0 15px;
         }
         .banner-slide img { 
             width: 100%; 
-            height: 200px; 
+            aspect-ratio: 16/7; /* Responsive height */
             object-fit: cover; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             display: block;
-            transition: var(--transition);
+            transition: transform 0.8s ease;
         }
-        .banner-slide:hover img { transform: scale(1.02); }
-
-        /* --- SECTION HEADERS --- */
-        .section-header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 30px 20px 15px; 
+        @media (max-width: 768px) {
+            .banner-slide img { aspect-ratio: 16/9; height: 200px; }
         }
-        .section-header h2 { font-size: 20px; color: var(--dark-green); position: relative; cursor: default; }
-        .section-header h2::before { 
-            content: ''; position: absolute; bottom: -8px; left: 0; 
-            width: 35px; height: 4px; background: var(--gold); border-radius: 10px;
-            transition: var(--transition);
-        }
-        .section-header:hover h2::before { width: 60px; }
-
-        .view-all { 
-            color: var(--leaf-green); font-size: 12px; font-weight: 600; 
-            text-decoration: none; border: 1.5px solid #eee; padding: 6px 15px; 
-            border-radius: 25px; background: white; transition: var(--transition);
-        }
-        .view-all:hover { background: var(--leaf-green); color: white; border-color: var(--leaf-green); }
-        .view-all:active { transform: scale(0.9); }
 
         /* --- PRODUCT GRID --- */
+        .section-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 40px 5% 20px; 
+        }
+        .section-header h2 { font-size: 24px; color: var(--dark-green); position: relative; }
+        .section-header h2::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 40px; height: 3px; background: var(--gold); border-radius: 5px;
+            transition: 0.3s;
+        }
+        .section-header:hover h2::after { width: 70px; }
+
         .product-grid { 
-            display: grid; grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; padding: 0 15px; 
-        }
-        .p-card { 
-            background: white; border-radius: 25px; padding: 20px; 
-            box-shadow: var(--soft-shadow); transition: var(--transition);
-            border: 1px solid rgba(0,0,0,0.02);
-            position: relative; overflow: hidden;
-            display: flex; flex-direction: column; justify-content: space-between;
-            animation: fadeInUp 0.6s ease forwards;
-            opacity: 0;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 20px; padding: 0 5%; 
         }
         
-        .p-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
-        .p-card:active { transform: scale(0.95); }
+        @media (min-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .p-card { 
+            background: white; border-radius: 25px; padding: 25px; 
+            box-shadow: var(--soft-shadow); transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.02);
+            display: flex; flex-direction: column; justify-content: space-between;
+            position: relative; overflow: hidden;
+            animation: fadeInUp 0.8s ease forwards; opacity: 0;
+        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .p-card:hover { transform: translateY(-12px); border-color: var(--gold); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 
         .p-tag { 
-            font-size: 9px; font-weight: 700; color: var(--gold); 
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+            font-size: 10px; font-weight: 700; color: var(--gold); 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
         }
         .p-title { 
-            font-size: 14px; font-weight: 600; color: var(--dark-green); 
-            line-height: 1.4; margin-bottom: 15px;
-            height: 40px; overflow: hidden;
+            font-size: 15px; font-weight: 600; color: var(--dark-green); 
+            line-height: 1.4; margin-bottom: 20px; height: 45px; overflow: hidden;
         }
         .p-price-row { display: flex; justify-content: space-between; align-items: center; }
-        .p-price { color: var(--leaf-green); font-weight: 700; font-size: 18px; }
+        .p-price { color: var(--leaf-green); font-weight: 700; font-size: 20px; }
         
         .add-btn { 
             background: var(--dark-green); color: white; border: none; 
-            width: 38px; height: 38px; border-radius: 12px; 
+            width: 42px; height: 42px; border-radius: 14px; 
             display: flex; align-items: center; justify-content: center;
-            transition: var(--transition); box-shadow: 0 5px 15px rgba(27,48,34,0.2);
-            cursor: pointer;
+            transition: var(--transition); cursor: pointer;
         }
-        .add-btn:hover { background: var(--leaf-green); transform: rotate(90deg); }
-        .add-btn:active { transform: scale(0.8); background: var(--gold); }
+        .add-btn:hover { background: var(--gold); transform: rotate(90deg) scale(1.1); }
 
-        /* --- BOTTOM NAVIGATION --- */
+        /* --- BOTTOM NAV --- */
         .bottom-nav { 
             position: fixed; bottom: 0; width: 100%; background: white; 
             display: flex; justify-content: space-around; align-items: center; 
-            padding: 15px 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.12); 
-            border-radius: 30px 30px 0 0; z-index: 2000;
+            padding: 15px 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); 
+            border-radius: 35px 35px 0 0; z-index: 2000;
         }
-        .nav-item { text-align: center; text-decoration: none; color: #bbb; font-size: 10px; font-weight: 600; flex: 1; transition: var(--transition); }
-        .nav-item i { font-size: 24px; display: block; margin-bottom: 5px; transition: var(--transition); }
-        .nav-item:hover { color: var(--leaf-green); }
-        .nav-item.active { color: var(--leaf-green); }
-        .nav-item:active i { transform: scale(1.2); }
+        .nav-item { text-align: center; text-decoration: none; color: #ccc; font-size: 11px; font-weight: 600; flex: 1; transition: 0.3s; }
+        .nav-item i { font-size: 26px; display: block; margin-bottom: 4px; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { color: var(--leaf-green); }
+        .nav-item:hover i { transform: translateY(-5px); }
 
-        .cart-float { position: relative; margin-top: -75px; }
+        .cart-float { position: relative; margin-top: -80px; }
         .cart-circle { 
-            width: 75px; height: 75px; background: var(--leaf-green); 
-            border: 6px solid var(--creme); border-radius: 50%; 
+            width: 85px; height: 85px; background: var(--leaf-green); 
+            border: 8px solid var(--creme); border-radius: 50%; 
             display: flex; justify-content: center; align-items: center; 
-            color: white; font-size: 28px; box-shadow: 0 12px 25px rgba(45,90,39,0.3);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white; font-size: 30px; box-shadow: 0 15px 30px rgba(45,90,39,0.3);
+            transition: var(--transition);
         }
-        .cart-circle:hover { background: var(--dark-green); transform: translateY(-5px); }
-        .cart-circle:active { transform: scale(0.9) rotate(-15deg); }
+        .cart-circle:hover { transform: scale(1.1) rotate(-10deg); background: var(--dark-green); }
         
         .badge { 
-            position: absolute; top: 0; right: 0; background: #ff4444; 
-            color: white; font-size: 11px; width: 22px; height: 22px; 
+            position: absolute; top: 2px; right: 2px; background: #ff4444; 
+            color: white; font-size: 11px; width: 24px; height: 24px; 
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            border: 2px solid white; font-weight: bold; animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            border: 2px solid white; font-weight: bold;
         }
 
-        /* Utility Spacers for 400 lines */
-        .spacer-sm { height: 20px; }
-        .spacer-md { height: 40px; }
-        .spacer-lg { height: 60px; }
-
+        .spacer { height: 50px; }
     </style>
 </head>
 <body onload="initApp()">
@@ -262,15 +244,15 @@
             </a>
 
             <div class="top-actions">
-                <a href="heart.html" title="Wishlist"><i class="far fa-heart"></i></a>
-                <a href="profile.html" title="Account"><i class="far fa-user-circle"></i></a>
+                <a href="heart.html"><i class="far fa-heart"></i></a>
+                <a href="profile.html"><i class="far fa-user-circle"></i></a>
             </div>
         </div>
 
         <div class="search-container">
             <a href="search.html" style="text-decoration: none;">
                 <div class="search-fake-input">
-                    <i class="fas fa-search" style="margin-right: 12px; color: var(--gold);"></i>
+                    <i class="fas fa-search" style="margin-right: 15px; color: var(--gold);"></i>
                     Search Premium Ayurvedic products...
                 </div>
             </a>
@@ -307,8 +289,8 @@
     <div class="banner-wrapper">
         <div class="banner-container" id="banner">
             <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" alt="Amritprash"></div>
-            <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" alt="Nyala Oil"></div>
-            <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" alt="Tulsi Oil"></div>
+            <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" alt="Nyala"></div>
+            <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" alt="Tulsi"></div>
             <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" alt="Dantvam"></div>
         </div>
     </div>
@@ -334,6 +316,22 @@
                 <button class="add-btn"><i class="fas fa-plus"></i></button>
             </div>
         </div>
+        <div class="p-card" style="animation-delay: 0.3s;">
+            <span class="p-tag">Immunity</span>
+            <div class="p-title">Panch Tulsi Pure Extract</div>
+            <div class="p-price-row">
+                <span class="p-price">₹195</span>
+                <button class="add-btn"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="p-card" style="animation-delay: 0.4s;">
+            <span class="p-tag">Premium Care</span>
+            <div class="p-title">Dantvam Herbal Toothpaste</div>
+            <div class="p-price-row">
+                <span class="p-price">₹95</span>
+                <button class="add-btn"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
     </div>
 
     <div class="section-header">
@@ -341,63 +339,41 @@
         <a href="all-products.html" class="view-all">View All</a>
     </div>
     <div class="product-grid">
-        <div class="p-card" style="animation-delay: 0.3s;">
+        <div class="p-card" style="animation-delay: 0.5s;">
             <span class="p-tag">Best Value</span>
-            <div class="p-title">Panch Tulsi Immunity Kit</div>
+            <div class="p-title">Immunity & Vitality Duo</div>
+            <div class="p-price-row">
+                <span class="p-price">₹1050</span>
+                <button class="add-btn"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="p-card" style="animation-delay: 0.6s;">
+            <span class="p-tag">Complete Care</span>
+            <div class="p-title">Dantvam Family Combo Kit</div>
+            <div class="p-price-row">
+                <span class="p-price">₹280</span>
+                <button class="add-btn"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="p-card" style="animation-delay: 0.7s;">
+            <span class="p-tag">Hair Expert</span>
+            <div class="p-title">Nyala Hair Oil Pack of 2</div>
+            <div class="p-price-row">
+                <span class="p-price">₹650</span>
+                <button class="add-btn"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="p-card" style="animation-delay: 0.8s;">
+            <span class="p-tag">Daily Wellness</span>
+            <div class="p-title">Tulsi & Ashwagandha Kit</div>
             <div class="p-price-row">
                 <span class="p-price">₹450</span>
                 <button class="add-btn"><i class="fas fa-plus"></i></button>
             </div>
         </div>
-        <div class="p-card" style="animation-delay: 0.4s;">
-            <span class="p-tag">Oral Health</span>
-            <div class="p-title">Dantvam Complete Oral Kit</div>
-            <div class="p-price-row">
-                <span class="p-price">₹180</span>
-                <button class="add-btn"><i class="fas fa-plus"></i></button>
-            </div>
-        </div>
     </div>
 
-    <div class="section-header">
-        <h2>Explore More</h2>
-    </div>
-    <div class="product-grid">
-        <div class="p-card" style="animation-delay: 0.5s;">
-            <span class="p-tag">Pure Herb</span>
-            <div class="p-title">Organic Ashwagandha Powder</div>
-            <div class="p-price-row">
-                <span class="p-price">₹299</span>
-                <button class="add-btn"><i class="fas fa-plus"></i></button>
-            </div>
-        </div>
-        <div class="p-card" style="animation-delay: 0.6s;">
-            <span class="p-tag">Detox</span>
-            <div class="p-title">Herbal Slimming Green Tea</div>
-            <div class="p-price-row">
-                <span class="p-price">₹199</span>
-                <button class="add-btn"><i class="fas fa-plus"></i></button>
-            </div>
-        </div>
-        <div class="p-card" style="animation-delay: 0.7s;">
-            <span class="p-tag">Skin Care</span>
-            <div class="p-title">Neem & Tulsi Face Wash</div>
-            <div class="p-price-row">
-                <span class="p-price">₹145</span>
-                <button class="add-btn"><i class="fas fa-plus"></i></button>
-            </div>
-        </div>
-        <div class="p-card" style="animation-delay: 0.8s;">
-            <span class="p-tag">Digestion</span>
-            <div class="p-title">Lavan Bhaskar Churan Pack</div>
-            <div class="p-price-row">
-                <span class="p-price">₹85</span>
-                <button class="add-btn"><i class="fas fa-plus"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <div class="spacer-md"></div>
+    <div class="spacer"></div>
 
     <nav class="bottom-nav">
         <a href="home.html" class="nav-item active"><i class="fas fa-home-alt"></i>Home</a>
@@ -423,7 +399,6 @@
             let index = 0;
             let isPaused = false;
 
-            // Auto Scroll Logic
             function autoScroll() {
                 if(isPaused) return;
                 index++;
@@ -434,28 +409,26 @@
                 });
             }
 
-            let scrollInterval = setInterval(autoScroll, 3500);
+            let scrollInterval = setInterval(autoScroll, 4000);
 
-            // Manual Interaction Handlers
+            banner.addEventListener('mousedown', () => isPaused = true);
+            banner.addEventListener('mouseup', () => isPaused = false);
             banner.addEventListener('touchstart', () => {
                 isPaused = true;
                 clearInterval(scrollInterval);
             });
-
             banner.addEventListener('touchend', () => {
                 setTimeout(() => {
                     isPaused = false;
                     clearInterval(scrollInterval);
-                    scrollInterval = setInterval(autoScroll, 3500);
+                    scrollInterval = setInterval(autoScroll, 4000);
                 }, 5000);
             });
 
-            // Handle window resize for scroll alignment
             window.addEventListener('resize', () => {
                 banner.scrollTo({ left: index * banner.offsetWidth });
             });
         }
     </script>
-
 </body>
 </html>

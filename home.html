@@ -61,28 +61,35 @@
             display: flex; align-items: center; padding: 0 15px; color: #888; font-size: 14px;
         }
 
-        /* --- CATEGORY STRIP --- */
+        /* --- UPGRADED CATEGORY STRIP --- */
         .cat-strip {
-            display: flex; overflow-x: auto; padding: 15px; gap: 20px;
+            display: flex; overflow-x: auto; padding: 20px 15px; gap: 18px;
             background: white; scrollbar-width: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
         .cat-strip::-webkit-scrollbar { display: none; }
-        .cat-card { text-align: center; min-width: 75px; text-decoration: none; color: var(--dark-green); }
+        .cat-card { text-align: center; min-width: 70px; text-decoration: none; color: var(--dark-green); }
         .cat-card .icon-circle { 
-            width: 58px; height: 58px; background: var(--creme); border-radius: 50%; 
+            width: 62px; height: 62px; background: #fdfdfd; border-radius: 20px; 
             display: flex; justify-content: center; align-items: center; 
-            margin: 0 auto 8px; border: 2px solid var(--gold); transition: 0.3s;
+            margin: 0 auto 10px; border: 1.5px solid #f1f1f1; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.03);
         }
-        .cat-card:hover .icon-circle { background: var(--gold); color: white; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
-        .cat-card i { font-size: 24px; color: var(--leaf-green); }
-        .cat-card:hover i { color: white; }
-        .cat-card span { font-size: 11px; font-weight: 600; }
+        .cat-card:hover .icon-circle { 
+            background: var(--dark-green); 
+            border-color: var(--gold);
+            transform: translateY(-5px) rotate(5deg); 
+            box-shadow: 0 8px 15px rgba(27,48,34,0.2); 
+        }
+        .cat-card i { font-size: 26px; color: var(--leaf-green); transition: 0.3s; }
+        .cat-card:hover i { color: var(--gold); }
+        .cat-card span { font-size: 11px; font-weight: 600; display: block; letter-spacing: 0.3px; }
 
-        /* --- BANNER SLIDER (Updated for 4 Banners) --- */
+        /* --- BANNER SLIDER (untouched) --- */
         .banner-slider { padding: 15px; overflow: hidden; }
         .slider-track { 
             display: flex; 
-            width: 400%; /* 4 banners = 400% */
+            width: 400%; 
             animation: slide 20s infinite; 
             border-radius: 15px; 
         }
@@ -92,11 +99,11 @@
         @keyframes slide {
             0% { transform: translateX(0); }
             20% { transform: translateX(0); }
-            25% { transform: translateX(-25%); } /* Move to 2nd */
+            25% { transform: translateX(-25%); }
             45% { transform: translateX(-25%); }
-            50% { transform: translateX(-50%); } /* Move to 3rd */
+            50% { transform: translateX(-50%); }
             70% { transform: translateX(-50%); }
-            75% { transform: translateX(-75%); } /* Move to 4th */
+            75% { transform: translateX(-75%); }
             95% { transform: translateX(-75%); }
             100% { transform: translateX(0); }
         }
@@ -104,34 +111,29 @@
         /* --- SECTION HEADERS --- */
         .section-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 15px 10px; }
         .section-header h2 { font-size: 19px; color: var(--dark-green); position: relative; }
-        .section-header h2::after { content: ''; width: 40px; height: 3px; background: var(--gold); position: absolute; bottom: -5px; left: 0; border-radius: 2px; }
-        .view-all { color: var(--leaf-green); font-size: 13px; font-weight: 600; text-decoration: none; padding: 5px 12px; border: 1px solid var(--leaf-green); border-radius: 20px; transition: 0.3s; }
-        .view-all:hover { background: var(--leaf-green); color: white; }
+        .section-header h2::after { content: ''; width: 35px; height: 3px; background: var(--gold); position: absolute; bottom: -5px; left: 0; border-radius: 2px; }
+        .view-all { color: var(--leaf-green); font-size: 12px; font-weight: 600; text-decoration: none; padding: 4px 10px; border: 1px solid #ddd; border-radius: 15px; transition: 0.3s; }
+        .view-all:hover { border-color: var(--leaf-green); background: var(--leaf-green); color: white; }
 
-        /* --- PRODUCT CARDS --- */
+        /* --- PRODUCT GRID --- */
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
         .p-card { 
             background: white; border-radius: 18px; padding: 12px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03); position: relative;
-            transition: 0.4s; border: 1px solid #f1f1f1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); position: relative;
+            transition: 0.3s; border: 1px solid #f8f8f8;
         }
-        .p-card:hover { border-color: var(--gold); transform: translateY(-8px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        .p-img-box { width: 100%; height: 130px; border-radius: 12px; overflow: hidden; background: #f9f9f9; margin-bottom: 12px; }
-        .p-img { width: 100%; height: 100%; object-fit: contain; }
-        .p-title { font-size: 13px; font-weight: 600; height: 38px; overflow: hidden; line-height: 1.4; }
+        .p-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .p-img-box { width: 100%; height: 130px; border-radius: 12px; overflow: hidden; background: #fff; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; }
+        .p-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .p-title { font-size: 13px; font-weight: 600; height: 38px; overflow: hidden; line-height: 1.4; color: #333; }
         .p-price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .p-price { color: var(--leaf-green); font-weight: 700; font-size: 15px; }
+        .p-price { color: var(--leaf-green); font-weight: 700; font-size: 16px; }
         .add-btn { 
             background: var(--dark-green); color: white; border: none; 
             width: 32px; height: 32px; border-radius: 10px; cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
         }
-        .add-btn:hover { background: var(--gold); transform: scale(1.1); }
-
-        /* --- USER LOGIN STATUS STRIP --- */
-        .user-status { background: #f0ede0; padding: 10px 15px; margin: 0 15px 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px; font-size: 13px; }
-        .user-status i { color: var(--leaf-green); }
-        .user-status span b { color: var(--leaf-green); text-transform: capitalize; }
+        .add-btn:active { transform: scale(0.9); }
 
         /* --- BOTTOM NAV --- */
         .bottom-nav { 
@@ -143,21 +145,18 @@
         .nav-item { text-align: center; text-decoration: none; color: #bbb; font-size: 11px; font-weight: 600; transition: 0.3s; flex: 1; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
         .nav-item.active { color: var(--leaf-green); }
-        .nav-item:hover { color: var(--gold); }
 
         /* Floating Cart Icon */
         .cart-float { position: relative; margin-top: -60px; z-index: 2001; }
         .cart-circle { 
-            width: 70px; height: 70px; background: var(--leaf-green); 
-            border: 6px solid var(--creme); border-radius: 50%; 
+            width: 68px; height: 68px; background: var(--leaf-green); 
+            border: 5px solid var(--creme); border-radius: 50%; 
             display: flex; justify-content: center; align-items: center; 
-            color: white; font-size: 26px; box-shadow: 0 10px 20px rgba(45,90,39,0.3);
-            transition: 0.4s;
+            color: white; font-size: 24px; box-shadow: 0 8px 15px rgba(45,90,39,0.25);
         }
-        .cart-circle:hover { transform: scale(1.15) rotate(5deg); background: var(--gold); }
         .badge { 
-            position: absolute; top: -5px; right: -5px; background: #ff4444; 
-            color: white; font-size: 11px; width: 22px; height: 22px; 
+            position: absolute; top: -2px; right: -2px; background: #ff4444; 
+            color: white; font-size: 10px; width: 20px; height: 20px; 
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
             border: 2px solid white; font-weight: bold;
         }
@@ -184,8 +183,8 @@
             </a>
 
             <div class="top-actions">
-                <a href="heart.html" title="Wishlist"><i class="far fa-heart"></i></a>
-                <a href="profile.html" title="Account"><i class="far fa-user-circle"></i></a>
+                <a href="heart.html"><i class="far fa-heart"></i></a>
+                <a href="profile.html"><i class="far fa-user-circle"></i></a>
             </div>
         </div>
 
@@ -199,18 +198,13 @@
         </div>
     </header>
 
-    <div class="user-status">
-        <i class="fas fa-user-check"></i>
-        <span>Welcome back, <b>Akash</b>! <a href="profile.html" style="color: var(--gold); text-decoration: none; margin-left: 5px;">(Not you? Logout)</a></span>
-    </div>
-
     <div class="cat-strip">
         <a href="immunity.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-hand-holding-medical"></i></div>
+            <div class="icon-circle"><i class="fas fa-shield-virus"></i></div>
             <span>Immunity</span>
         </a>
         <a href="hair-care.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-spa"></i></div>
+            <div class="icon-circle"><i class="fas fa-wind"></i></div>
             <span>Hair Care</span>
         </a>
         <a href="gum-care.html" class="cat-card">
@@ -218,41 +212,25 @@
             <span>Gum Care</span>
         </a>
         <a href="vitality.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-bolt"></i></div>
+            <div class="icon-circle"><i class="fas fa-fire-alt"></i></div>
             <span>Vitality</span>
         </a>
         <a href="wellness.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-leaf"></i></div>
+            <div class="icon-circle"><i class="fas fa-mortar-pestle"></i></div>
             <span>Wellness</span>
         </a>
         <a href="all-products.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-th"></i></div>
-            <span>More</span>
+            <div class="icon-circle"><i class="fas fa-th-large"></i></div>
+            <span>See All</span>
         </a>
     </div>
 
     <div class="banner-slider">
         <div class="slider-track">
-            <div class="slide">
-                <a href="amritprash-detail.html">
-                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" alt="Amritprash">
-                </a>
-            </div>
-            <div class="slide">
-                <a href="nyala-detail.html">
-                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" alt="Nyala Hair Oil">
-                </a>
-            </div>
-            <div class="slide">
-                <a href="tulsi-detail.html">
-                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" alt="Panch Tulsi Oil">
-                </a>
-            </div>
-            <div class="slide">
-                <a href="dantvam-detail.html">
-                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" alt="Dantvam Toothpaste">
-                </a>
-            </div>
+            <div class="slide"><a href="amritprash-detail.html"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" alt="Amritprash"></a></div>
+            <div class="slide"><a href="nyala-detail.html"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" alt="Nyala"></a></div>
+            <div class="slide"><a href="tulsi-detail.html"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" alt="Tulsi"></a></div>
+            <div class="slide"><a href="dantvam-detail.html"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" alt="Dantvam"></a></div>
         </div>
     </div>
 
@@ -262,8 +240,8 @@
     </div>
     <div class="product-grid">
         <div class="p-card">
-            <a href="product-detail.html" style="text-decoration: none; color: inherit;">
-                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" class="p-img" style="object-fit: contain;"></div>
+            <a href="product-detail.html" style="text-decoration: none;">
+                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" class="p-img"></div>
                 <div class="p-title">Amritprash Power Booster 250gm</div>
                 <div class="p-price-row">
                     <span class="p-price">₹850</span>
@@ -272,8 +250,8 @@
             </a>
         </div>
         <div class="p-card">
-            <a href="product-detail.html" style="text-decoration: none; color: inherit;">
-                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" class="p-img" style="object-fit: contain;"></div>
+            <a href="product-detail.html" style="text-decoration: none;">
+                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" class="p-img"></div>
                 <div class="p-title">Nyala Herbal Hair Fall Oil</div>
                 <div class="p-price-row">
                     <span class="p-price">₹350</span>
@@ -289,8 +267,8 @@
     </div>
     <div class="product-grid">
         <div class="p-card">
-            <a href="product-detail.html" style="text-decoration: none; color: inherit;">
-                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" class="p-img" style="object-fit: contain;"></div>
+            <a href="product-detail.html" style="text-decoration: none;">
+                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" class="p-img"></div>
                 <div class="p-title">Panch Tulsi Immunity Combo</div>
                 <div class="p-price-row">
                     <span class="p-price">₹450</span>
@@ -299,8 +277,8 @@
             </a>
         </div>
         <div class="p-card">
-            <a href="product-detail.html" style="text-decoration: none; color: inherit;">
-                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" class="p-img" style="object-fit: contain;"></div>
+            <a href="product-detail.html" style="text-decoration: none;">
+                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" class="p-img"></div>
                 <div class="p-title">Dantvam Oral Care Kit</div>
                 <div class="p-price-row">
                     <span class="p-price">₹180</span>
@@ -318,7 +296,7 @@
             <a href="cart.html">
                 <div class="cart-circle">
                     <i class="fas fa-shopping-basket"></i>
-                    <div class="badge" id="cart-count">3</div>
+                    <div class="badge" id="cart-count">0</div>
                 </div>
             </a>
         </div>

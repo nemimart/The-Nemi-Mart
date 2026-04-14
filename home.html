@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -78,18 +78,26 @@
         .cat-card:hover i { color: white; }
         .cat-card span { font-size: 11px; font-weight: 600; }
 
-        /* --- BANNER SLIDER --- */
+        /* --- BANNER SLIDER (Updated for 4 Banners) --- */
         .banner-slider { padding: 15px; overflow: hidden; }
-        .slider-track { display: flex; width: 300%; animation: slide 15s infinite; border-radius: 15px; }
+        .slider-track { 
+            display: flex; 
+            width: 400%; /* 4 banners = 400% */
+            animation: slide 20s infinite; 
+            border-radius: 15px; 
+        }
         .slide { width: 100%; position: relative; }
         .slide img { width: 100%; border-radius: 15px; object-fit: cover; height: 200px; display: block; }
+        
         @keyframes slide {
             0% { transform: translateX(0); }
-            30% { transform: translateX(0); }
-            33% { transform: translateX(-33.33%); }
-            63% { transform: translateX(-33.33%); }
-            66% { transform: translateX(-66.66%); }
-            96% { transform: translateX(-66.66%); }
+            20% { transform: translateX(0); }
+            25% { transform: translateX(-25%); } /* Move to 2nd */
+            45% { transform: translateX(-25%); }
+            50% { transform: translateX(-50%); } /* Move to 3rd */
+            70% { transform: translateX(-50%); }
+            75% { transform: translateX(-75%); } /* Move to 4th */
+            95% { transform: translateX(-75%); }
             100% { transform: translateX(0); }
         }
 
@@ -225,9 +233,26 @@
 
     <div class="banner-slider">
         <div class="slider-track">
-            <div class="slide"><a href="sale.html"><img src="https://via.placeholder.com/750x425/1B3022/D4AF37?text=Premium+Ayurveda+Sale+Live" alt="B1"></a></div>
-            <div class="slide"><a href="combos.html"><img src="https://via.placeholder.com/750x425/2D5A27/FFFDF5?text=Flat+20%+OFF+on+Combos" alt="B2"></a></div>
-            <div class="slide"><a href="new-arrivals.html"><img src="https://via.placeholder.com/750x425/D4AF37/1B3022?text=New+Gum+Care+Range" alt="B3"></a></div>
+            <div class="slide">
+                <a href="amritprash-detail.html">
+                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" alt="Amritprash">
+                </a>
+            </div>
+            <div class="slide">
+                <a href="nyala-detail.html">
+                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" alt="Nyala Hair Oil">
+                </a>
+            </div>
+            <div class="slide">
+                <a href="tulsi-detail.html">
+                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" alt="Panch Tulsi Oil">
+                </a>
+            </div>
+            <div class="slide">
+                <a href="dantvam-detail.html">
+                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" alt="Dantvam Toothpaste">
+                </a>
+            </div>
         </div>
     </div>
 
@@ -238,20 +263,20 @@
     <div class="product-grid">
         <div class="p-card">
             <a href="product-detail.html" style="text-decoration: none; color: inherit;">
-                <div class="p-img-box"><img src="https://via.placeholder.com/150" class="p-img"></div>
-                <div class="p-title">Ayurvedic Immunity Booster 500mg</div>
+                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" class="p-img" style="object-fit: contain;"></div>
+                <div class="p-title">Amritprash Power Booster 250gm</div>
                 <div class="p-price-row">
-                    <span class="p-price">₹499</span>
+                    <span class="p-price">₹850</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </a>
         </div>
         <div class="p-card">
             <a href="product-detail.html" style="text-decoration: none; color: inherit;">
-                <div class="p-img-box"><img src="https://via.placeholder.com/150" class="p-img"></div>
-                <div class="p-title">Herbal Hair Revitalizing Oil</div>
+                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" class="p-img" style="object-fit: contain;"></div>
+                <div class="p-title">Nyala Herbal Hair Fall Oil</div>
                 <div class="p-price-row">
-                    <span class="p-price">₹299</span>
+                    <span class="p-price">₹350</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </a>
@@ -265,20 +290,20 @@
     <div class="product-grid">
         <div class="p-card">
             <a href="product-detail.html" style="text-decoration: none; color: inherit;">
-                <div class="p-img-box"><img src="https://via.placeholder.com/150" class="p-img"></div>
-                <div class="p-title">Complete Family Wellness Pack</div>
+                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" class="p-img" style="object-fit: contain;"></div>
+                <div class="p-title">Panch Tulsi Immunity Combo</div>
                 <div class="p-price-row">
-                    <span class="p-price">₹1,299</span>
+                    <span class="p-price">₹450</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </a>
         </div>
         <div class="p-card">
             <a href="product-detail.html" style="text-decoration: none; color: inherit;">
-                <div class="p-img-box"><img src="https://via.placeholder.com/150" class="p-img"></div>
-                <div class="p-title">Daily Oral Hygiene Kit</div>
+                <div class="p-img-box"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" class="p-img" style="object-fit: contain;"></div>
+                <div class="p-title">Dantvam Oral Care Kit</div>
                 <div class="p-price-row">
-                    <span class="p-price">₹899</span>
+                    <span class="p-price">₹180</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </a>

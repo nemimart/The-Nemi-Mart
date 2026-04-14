@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nemi Mart | Premium Experience</title>
+    <title>Nemi Elite | Premium Product</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -11,207 +11,202 @@
             --nemi-green: #1B3022;
             --nemi-gold: #D4AF37;
             --nemi-creme: #FDFBF0;
-            --text-dark: #2D2D2D;
             --white: #ffffff;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-family: 'Outfit', sans-serif; 
-            outline: none !important; /* Blue outline khatam */
-            -webkit-tap-highlight-color: transparent; /* Click blue effect khatam */
-        }
-        
-        body { background: var(--nemi-creme); color: var(--text-dark); padding-bottom: 120px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--nemi-creme); color: #333; overflow-x: hidden; padding-bottom: 120px; }
 
-        /* --- Header --- */
+        /* --- STICKY DYNAMIC NAVBAR --- */
         nav {
-            position: sticky; top: 0; width: 100%; z-index: 1000;
+            position: fixed; top: 0; width: 100%; z-index: 1000;
             display: flex; justify-content: space-between; padding: 15px 20px;
-            background: var(--white); box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(15px);
+            transition: var(--transition); align-items: center;
         }
-        .icon-btn { font-size: 20px; color: var(--nemi-green); cursor: pointer; }
+        .nav-title { font-weight: 800; color: var(--nemi-green); font-size: 18px; opacity: 0; transform: translateY(10px); transition: 0.3s; }
+        .nav-title.show { opacity: 1; transform: translateY(0); }
+        .nav-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--white); cursor: pointer; border: 1px solid #eee; }
 
-        /* --- Zepto Image Slider --- */
-        .slider-container {
-            background: var(--white); width: 100%; height: 350px;
-            overflow-x: auto; display: flex; scroll-snap-type: x mandatory;
-            scrollbar-width: none; position: relative;
-        }
-        .slider-container img {
-            min-width: 100%; height: 100%; object-fit: contain;
-            scroll-snap-align: start; padding: 20px;
-        }
-        .dots { display: flex; justify-content: center; gap: 8px; margin-top: -25px; position: relative; z-index: 5; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; }
-        .dot.active { background: var(--nemi-gold); width: 20px; border-radius: 10px; }
+        /* --- LUXURY IMAGE SLIDER --- */
+        .hero-slider { position: relative; width: 100%; height: 80vh; background: var(--white); overflow: hidden; }
+        .slider-track { display: flex; height: 100%; transition: transform 0.5s ease-out; cursor: zoom-in; }
+        .slider-track img { min-width: 100%; height: 100%; object-fit: contain; padding: 40px; }
+        
+        /* Laptop Controls */
+        .slide-ctrl { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; background: rgba(255,255,255,0.8); border-radius: 50%; border: none; cursor: pointer; display: none; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        @media (min-width: 768px) { .slide-ctrl { display: block; } }
+        .ctrl-prev { left: 20px; } .ctrl-next { right: 20px; }
 
-        /* --- Main Details --- */
-        .content-card {
-            background: var(--white); padding: 25px; border-radius: 30px 30px 0 0;
-            margin-top: 10px; box-shadow: 0 -10px 30px rgba(0,0,0,0.02);
-        }
-        .stars { color: var(--nemi-gold); font-size: 14px; margin-bottom: 10px; }
-        .product-title { font-size: 24px; font-weight: 800; color: var(--nemi-green); margin-bottom: 8px; }
-        .price-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-        .curr-price { font-size: 28px; font-weight: 800; color: #15803d; }
-        .old-price { text-decoration: line-through; color: #888; }
+        /* Favorite Heart */
+        .fav-btn { position: absolute; top: 100px; right: 25px; z-index: 20; background: var(--white); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); cursor: pointer; border: none; }
+        .fav-btn i { font-size: 22px; color: #ccc; transition: 0.3s; }
+        .fav-btn.active i { color: #ff4757; transform: scale(1.2); }
 
-        /* --- Tabs (Details/Benefits/How to use) --- */
-        .tabs { display: flex; gap: 10px; margin: 25px 0; overflow-x: auto; scrollbar-width: none; }
-        .tab-btn {
-            padding: 10px 20px; background: #f5f5f5; border-radius: 12px;
-            font-weight: 700; font-size: 13px; border: none; white-space: nowrap; color: #666;
-        }
-        .tab-btn.active { background: var(--nemi-green); color: var(--white); }
-        .tab-content { line-height: 1.6; font-size: 14px; color: #555; background: #f9faf9; padding: 15px; border-radius: 15px; }
+        /* --- CONTENT SECTION --- */
+        .main-card { background: var(--white); border-radius: 40px 40px 0 0; margin-top: -40px; position: relative; z-index: 30; padding: 40px 25px; box-shadow: 0 -20px 40px rgba(0,0,0,0.03); }
+        
+        .badge-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .exclusive-badge { background: #E8F5E9; color: #2E7D32; padding: 5px 15px; border-radius: 100px; font-size: 12px; font-weight: 800; text-transform: uppercase; }
 
-        /* --- Amazon "Frequently Bought Together" --- */
-        .combo-section { padding: 20px; background: var(--white); margin: 15px 0; border-radius: 20px; }
-        .combo-section h3 { font-size: 16px; margin-bottom: 15px; color: var(--nemi-green); }
-        .combo-flex { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
-        .combo-item img { width: 60px; height: 60px; border: 1px solid #eee; border-radius: 10px; }
-        .plus { font-size: 18px; font-weight: 800; color: var(--nemi-gold); }
-        .combo-price { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ddd; text-align: right; }
+        .product-name { font-size: 32px; font-weight: 800; color: var(--nemi-green); line-height: 1.1; margin-bottom: 10px; }
+        
+        .price-tag { font-size: 36px; font-weight: 800; color: #1B3022; display: flex; align-items: center; gap: 15px; }
+        .price-tag span { font-size: 18px; text-decoration: line-through; color: #bbb; font-weight: 400; }
 
-        /* --- Review Section --- */
-        .review-box { padding: 20px; background: var(--white); border-radius: 20px; }
-        .rev-input {
-            width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 12px;
-            background: var(--nemi-creme); margin-top: 10px; resize: none;
-        }
-        .user-review { margin-top: 20px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px; }
-        .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .user-info b { font-size: 14px; }
+        /* --- INTERACTIVE RATING --- */
+        .rating-engine { margin: 30px 0; padding: 20px; background: #f9f9f9; border-radius: 20px; text-align: center; }
+        .star-input { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+        .star-input i { font-size: 30px; color: #ddd; cursor: pointer; transition: 0.2s; }
+        .star-input i.active { color: var(--nemi-gold); transform: scale(1.1); }
 
-        /* --- Luxury Bottom Bar --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: var(--white);
-            padding: 20px 25px 35px; box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
-            z-index: 1001; border-radius: 30px 30px 0 0;
-        }
-        .add-to-cart {
-            width: 100%; background: var(--nemi-green); color: var(--white);
-            padding: 18px; border-radius: 18px; border: none; font-weight: 800;
-            font-size: 16px; display: flex; justify-content: center; align-items: center;
-            gap: 12px; box-shadow: 0 10px 20px rgba(27, 48, 34, 0.2);
-            transition: 0.3s;
-        }
-        .add-to-cart:active { transform: scale(0.96); background: #000; }
-        .price-indicator { display: flex; flex-direction: column; text-align: left; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px; }
+        /* --- PHOTO GALLERY MODAL --- */
+        .gallery-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .gallery-modal img { max-width: 95%; max-height: 70vh; object-fit: contain; transition: 0.3s; }
+        .modal-controls { position: absolute; bottom: 50px; display: flex; gap: 20px; }
+        .m-btn { background: rgba(255,255,255,0.2); color: white; border: none; padding: 15px 25px; border-radius: 15px; cursor: pointer; }
+        .close-modal { position: absolute; top: 30px; right: 30px; color: white; font-size: 30px; cursor: pointer; }
+
+        /* --- ANIMATIONS --- */
+        .reveal { animation: revealUp 0.8s forwards; opacity: 0; }
+        @keyframes revealUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* --- CART BUTTON --- */
+        .cart-bar { position: fixed; bottom: 0; width: 100%; background: var(--white); padding: 20px 25px 40px; z-index: 1001; border-radius: 35px 35px 0 0; box-shadow: 0 -15px 40px rgba(0,0,0,0.08); }
+        .btn-add { width: 100%; height: 70px; background: var(--nemi-green); color: white; border-radius: 22px; border: none; font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 15px; cursor: pointer; transition: 0.3s; }
+        .btn-add:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
-    <nav>
-        <i class="fas fa-chevron-left icon-btn" onclick="history.back()"></i>
-        <div style="font-weight: 800; color: var(--nemi-green);">THE NEMI MART</div>
-        <i class="fas fa-share-alt icon-btn"></i>
+    <nav id="navbar">
+        <div class="nav-icon" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+        <div class="nav-title" id="navTitle">Amritprash Elite</div>
+        <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
     </nav>
 
-    <div class="slider-container" id="slider">
-        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
-        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
-        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+    <div class="hero-slider">
+        <button class="slide-ctrl ctrl-prev" onclick="moveSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="slide-ctrl ctrl-next" onclick="moveSlide(1)"><i class="fas fa-chevron-right"></i></button>
+        
+        <div class="fav-btn" onclick="this.classList.toggle('active')"><i class="fas fa-heart"></i></div>
+
+        <div class="slider-track" id="slider" onclick="openGallery()">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Product 1">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Product 2">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Product 3">
+        </div>
     </div>
-    <div class="dots">
-        <div class="dot active"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-    </div>
 
-    <main class="content-card">
-        <div class="stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-            <span style="color: #888; font-size: 12px; font-weight: 600;">(4.7 - 2,145 Reviews)</span>
-        </div>
-        <h1 class="product-title">Premium Amritprash Gold Reserve</h1>
-        <div class="price-row">
-            <span class="curr-price">₹850</span>
-            <span class="old-price">₹1,200</span>
-            <span style="color: var(--nemi-gold); font-weight: 800; font-size: 12px; background: #fff8e1; padding: 4px 10px; border-radius: 5px;">30% OFF</span>
-        </div>
-
-        <div class="tabs">
-            <button class="tab-btn active">Highlights</button>
-            <button class="tab-btn">Benefits</button>
-            <button class="tab-btn">How to use</button>
-        </div>
-        <div class="tab-content">
-            Experience the power of 48 rare herbs. Slow-cooked for 72 hours with pure Swarna Bhasma for maximum vitality and immunity.
-        </div>
-
-        <div class="combo-section">
-            <h3>Frequently Bought Together</h3>
-            <div class="combo-flex">
-                <div class="combo-item"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png"></div>
-                <div class="plus">+</div>
-                <div class="combo-item"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png"></div>
-                <div class="plus">+</div>
-                <div class="combo-item"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png"></div>
-            </div>
-            <div class="combo-price">
-                <span style="font-size: 13px; color: #888;">Total for all 3: </span>
-                <strong style="font-size: 18px; color: var(--nemi-green);">₹1,250</strong>
-            </div>
-        </div>
-
-        <div class="review-box">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3>Customer Reviews</h3>
-                <span style="color: var(--nemi-gold); font-weight: 700; font-size: 13px;">Write a Review</span>
+    <main class="main-card">
+        <div class="reveal">
+            <div class="badge-row">
+                <div class="exclusive-badge">Limited Edition</div>
+                <div id="reviewCounter" style="font-size: 12px; color: #888; font-weight: 600;">Check back for reviews soon...</div>
             </div>
             
-            <div class="user-review">
-                <div class="user-info">
-                    <img src="https://ui-avatars.com/api/?name=Akash+Kohli&background=1B3022&color=fff" style="width: 24px; border-radius: 50%;">
-                    <b>Akash Kohli</b>
-                    <span style="color: var(--nemi-gold); font-size: 10px;">★★★★★</span>
+            <h1 class="product-name" id="productHeader">Amritprash Elite Gold Reserve</h1>
+            
+            <div class="price-tag">
+                ₹850.00 <span>₹1,499</span>
+            </div>
+
+            <p style="margin: 25px 0; color: #666; line-height: 1.8;">
+                The world's first Gold-Infused Amritprash. Hand-crafted in small batches using Himalayan herbs and pure Swarna Bhasma. 
+            </p>
+
+            <div class="rating-engine">
+                <h3 style="font-size: 16px;">Rate this Product</h3>
+                <p style="font-size: 12px; color: #999;">Tell others what you think</p>
+                <div class="star-input" id="starInput">
+                    <i class="fas fa-star" data-val="1"></i>
+                    <i class="fas fa-star" data-val="2"></i>
+                    <i class="fas fa-star" data-val="3"></i>
+                    <i class="fas fa-star" data-val="4"></i>
+                    <i class="fas fa-star" data-val="5"></i>
                 </div>
-                <p style="font-size: 13px; color: #666;">Amazing product! Energy level next level pe chali gayi hai. Must buy!</p>
             </div>
-            
-            <textarea class="rev-input" placeholder="Share your experience..."></textarea>
         </div>
     </main>
 
-    <div class="bottom-nav">
-        <button class="add-to-cart">
-            <div class="price-indicator">
-                <span style="font-size: 10px; opacity: 0.8;">Total Price</span>
-                <span>₹850.00</span>
-            </div>
-            <span>ADD TO CART</span>
-            <i class="fas fa-shopping-bag"></i>
+    <div class="gallery-modal" id="gallery">
+        <div class="close-modal" onclick="closeGallery()">&times;</div>
+        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" id="galleryImg">
+        <div class="modal-controls">
+            <button class="m-btn" onclick="zoomImg(0.8)"><i class="fas fa-search-minus"></i></button>
+            <button class="m-btn" onclick="zoomImg(1.2)"><i class="fas fa-search-plus"></i></button>
+        </div>
+    </div>
+
+    <div class="cart-bar">
+        <button class="btn-add">
+            ADD TO CART <i class="fas fa-plus"></i>
         </button>
     </div>
 
     <script>
-        // Slider Dot Logic
+        let currentSlide = 0;
         const slider = document.getElementById('slider');
-        const dots = document.querySelectorAll('.dot');
-        slider.onscroll = () => {
-            let index = Math.round(slider.scrollLeft / slider.offsetWidth);
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
+        const slides = document.querySelectorAll('.slider-track img');
+        let zoomLevel = 1;
+
+        // Dynamic Header on Scroll
+        window.onscroll = () => {
+            const navTitle = document.getElementById('navTitle');
+            if (window.scrollY > 400) {
+                navTitle.classList.add('show');
+            } else {
+                navTitle.classList.remove('show');
+            }
+        };
+
+        // Laptop Slide Controls
+        function moveSlide(dir) {
+            currentSlide = (currentSlide + dir + slides.length) % slides.length;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
         }
 
-        // Tab Switching Simulation
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContent = document.querySelector('.tab-content');
-        const contents = [
-            "Experience the power of 48 rare herbs. Slow-cooked for 72 hours with pure Swarna Bhasma.",
-            "Increases Immunity, Improves Memory, Detoxifies Body, and Boosts Physical Strength.",
-            "Take 1 tablespoon daily with lukewarm milk or water, preferably before breakfast."
-        ];
+        // Gallery Logic
+        function openGallery() {
+            document.getElementById('gallery').style.display = 'flex';
+        }
+        function closeGallery() {
+            document.getElementById('gallery').style.display = 'none';
+        }
+        function zoomImg(scale) {
+            zoomLevel *= scale;
+            document.getElementById('galleryImg').style.transform = `scale(${zoomLevel})`;
+        }
 
-        tabBtns.forEach((btn, i) => {
-            btn.onclick = () => {
-                tabBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                tabContent.innerText = contents[i];
+        // Play Store Rating Simulation
+        const stars = document.querySelectorAll('.star-input i');
+        let reviewsCount = 48; // Backend se aayega ye count
+
+        stars.forEach(star => {
+            star.onclick = () => {
+                let val = star.dataset.val;
+                stars.forEach(s => {
+                    s.classList.toggle('active', s.dataset.val <= val);
+                });
+                
+                // Smart Review Logic
+                reviewsCount++;
+                if(reviewsCount >= 50) {
+                    document.getElementById('reviewCounter').innerHTML = `<i class="fas fa-star" style="color:#D4AF37"></i> 4.9 (${reviewsCount} Reviews)`;
+                }
             }
+        });
+
+        // Swipe Support for Mobile
+        let touchstartX = 0;
+        let touchendX = 0;
+        
+        slider.addEventListener('touchstart', e => touchstartX = e.changedTouches[0].screenX);
+        slider.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            if (touchstartX - touchendX > 50) moveSlide(1);
+            if (touchendX - touchstartX > 50) moveSlide(-1);
         });
     </script>
 </body>

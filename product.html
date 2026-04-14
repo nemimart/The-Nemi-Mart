@@ -3,230 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Premium Ayurveda | The Nemi Mart</title>
+    <title>Nemi Mart Royale | Elite Ayurveda</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --nemi-deep: #0A1A10;
+            --royal-bg: #070B08;
             --nemi-gold: #D4AF37;
-            --nemi-light-gold: #F4EBD0;
+            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #F4EBD0 100%);
             --white: #ffffff;
-            --shadow-strong: 0 30px 60px rgba(0,0,0,0.12);
-            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass: rgba(255, 255, 255, 0.03);
+            --card-glass: rgba(255, 255, 255, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        body { background: #f8f9f8; color: var(--nemi-deep); overflow-x: hidden; }
+        body { background: var(--royal-bg); color: var(--white); overflow-x: hidden; }
 
-        /* --- STUNNING NAVIGATION --- */
+        /* --- STUNNING FLOATING NAVIGATION --- */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 1000;
-            display: flex; justify-content: space-between; padding: 25px;
-            pointer-events: none;
+            display: flex; justify-content: space-between; padding: 25px; align-items: center;
         }
         .nav-btn {
-            pointer-events: auto; width: 50px; height: 50px; background: var(--white);
-            border-radius: 18px; display: flex; align-items: center; justify-content: center;
-            box-shadow: var(--shadow-strong); border: none; cursor: pointer;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .nav-btn:active { transform: scale(0.8); }
-        .nav-btn i { font-size: 20px; color: var(--nemi-deep); }
-
-        /* --- IMMERSIVE HERO SECTION --- */
-        .product-hero {
-            height: 90vh; background: radial-gradient(circle at center, #ffffff 0%, #f0f2f0 100%);
-            display: flex; align-items: center; justify-content: center; position: relative;
-        }
-        .main-product-img {
-            max-width: 85%; max-height: 70%; object-fit: contain;
-            filter: drop-shadow(0 40px 70px rgba(0,0,0,0.15));
-            transition: transform 0.2s ease-out;
-            z-index: 2;
-        }
-
-        /* --- INTERACTIVE ACTION BUTTONS (Floating) --- */
-        .side-actions { position: absolute; right: 25px; top: 120px; display: flex; flex-direction: column; gap: 15px; z-index: 10; }
-        .action-circle {
-            width: 55px; height: 55px; background: var(--white); border-radius: 50%;
+            width: 48px; height: 48px; background: var(--card-glass);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; 
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: none; cursor: pointer;
-            transition: 0.3s;
+            color: white; backdrop-filter: blur(10px); cursor: pointer; transition: 0.3s;
         }
-        .action-circle i { font-size: 22px; color: #888; transition: 0.3s; }
-        .action-circle.heart-active i { color: #ff3e3e; transform: scale(1.2); }
-        .action-circle:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .nav-btn:active { transform: scale(0.9); background: var(--nemi-gold); }
 
-        /* --- ELEGANT CONTENT SHEET --- */
-        .content-sheet {
-            background: var(--white); border-radius: 50px 50px 0 0;
-            padding: 45px 35px; margin-top: -120px; position: relative;
-            box-shadow: 0 -30px 60px rgba(0,0,0,0.05); z-index: 5;
-        }
-        .status-badge {
-            display: inline-block; padding: 6px 16px; background: var(--nemi-light-gold);
-            color: #8b6e15; border-radius: 50px; font-size: 12px; font-weight: 800;
-            margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;
+        /* --- IMMERSIVE HERO WITH LIGHT EFFECT --- */
+        .hero {
+            height: 100vh; position: relative; display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start; padding-top: 100px;
+            background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
         }
 
-        .title-group h1 { font-size: 32px; font-weight: 800; color: var(--nemi-deep); line-height: 1.1; margin-bottom: 10px; }
-        .rating-chip { display: flex; align-items: center; gap: 5px; margin-bottom: 25px; }
-        .rating-chip i { color: var(--nemi-gold); font-size: 14px; }
-        
-        .price-container { display: flex; align-items: center; gap: 15px; margin-bottom: 35px; }
-        .new-price { font-size: 36px; font-weight: 800; color: #1a4d2e; }
-        .old-price { font-size: 20px; color: #999; text-decoration: line-through; }
-        
-        /* --- HIGH-END FEATURES CARDS --- */
-        .benefits-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 5px; scrollbar-width: none; margin-bottom: 40px; }
-        .benefit-card {
-            min-width: 130px; padding: 20px; background: #f9fbf9;
-            border-radius: 25px; border: 1px solid #edf2ed; transition: 0.3s;
-        }
-        .benefit-card i { font-size: 24px; color: var(--nemi-gold); margin-bottom: 12px; display: block; }
-        .benefit-card span { font-size: 13px; font-weight: 700; color: var(--nemi-deep); }
+        .product-brand { font-family: 'Syncopate', sans-serif; font-size: 10px; letter-spacing: 5px; color: var(--nemi-gold); margin-bottom: 20px; opacity: 0.8; }
 
-        /* --- RE-DESIGNED CHECKOUT BAR (The Game Changer) --- */
-        .checkout-bar {
-            position: fixed; bottom: 0; width: 100%; background: var(--white);
-            padding: 25px 30px 45px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px;
-            box-shadow: 0 -20px 50px rgba(0,0,0,0.08); z-index: 1001;
-            border-radius: 35px 35px 0 0;
+        .img-box {
+            width: 85%; max-height: 50vh; display: flex; align-items: center; justify-content: center;
+            perspective: 1000px; cursor: zoom-in; position: relative;
+        }
+        .main-img {
+            width: 100%; max-height: 45vh; object-fit: contain;
+            filter: drop-shadow(0 20px 50px rgba(0,0,0,0.5));
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .img-box:active .main-img { transform: scale(1.1) rotateY(10deg); }
+
+        /* --- FULLSCREEN IMAGE OVERLAY --- */
+        #fullscreenOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 2000; display: none;
+            align-items: center; justify-content: center; backdrop-filter: blur(20px);
+        }
+        #fullscreenOverlay img { max-width: 95%; max-height: 80vh; object-fit: contain; animation: zoomIn 0.4s ease; }
+        .close-zoom { position: absolute; top: 30px; right: 30px; font-size: 30px; color: white; cursor: pointer; }
+
+        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* --- CONTENT CARD (SOFT GLASS) --- */
+        .details-card {
+            width: 100%; background: var(--card-glass); backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255,255,255,0.1); border-radius: 40px 40px 0 0;
+            padding: 40px 30px 150px; position: relative; z-index: 10;
         }
 
-        .btn-secondary {
-            background: #f1f3f1; color: var(--nemi-deep); border: none;
-            border-radius: 22px; font-weight: 700; font-size: 16px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            cursor: pointer; transition: 0.3s;
-        }
+        .title-row { margin-bottom: 25px; }
+        .title-row h1 { font-size: 34px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+        .title-row span { color: var(--nemi-gold); font-size: 18px; font-weight: 400; }
 
-        .btn-primary {
-            background: var(--nemi-deep); color: var(--white); border: none;
-            border-radius: 22px; font-weight: 700; font-size: 16px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 15px 30px rgba(10, 26, 16, 0.25);
+        .price-chip {
+            display: inline-flex; align-items: center; gap: 15px;
+            background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 100px; margin: 20px 0;
         }
-        .btn-primary:active { transform: scale(0.95); }
-        .btn-primary:hover { background: #000; transform: translateY(-3px); }
+        .price-now { font-size: 28px; font-weight: 800; color: var(--nemi-gold); }
+        .price-old { font-size: 16px; color: rgba(255,255,255,0.4); text-decoration: line-through; }
 
-        /* --- ANIMATIONS --- */
-        @keyframes reveal { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-        .reveal-up { animation: reveal 1s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        /* --- PREMIUM FEATURE GRID --- */
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
+        .f-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+            padding: 20px; border-radius: 24px; transition: 0.3s;
+        }
+        .f-card:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--nemi-gold); }
+        .f-card i { color: var(--nemi-gold); font-size: 22px; margin-bottom: 12px; display: block; }
+        .f-card p { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
+
+        /* --- THE ULTIMATE ACTION BAR --- */
+        .action-bar {
+            position: fixed; bottom: 30px; left: 5%; width: 90%;
+            height: 85px; background: rgba(255,255,255,0.08); backdrop-filter: blur(20px);
+            border-radius: 28px; border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; padding: 10px; gap: 10px; z-index: 1500;
+        }
+        .heart-toggle {
+            width: 65px; height: 100%; border-radius: 20px; background: var(--glass);
+            border: none; color: white; font-size: 20px; cursor: pointer; transition: 0.3s;
+        }
+        .heart-toggle.active { color: #ff3e3e; background: rgba(255, 62, 62, 0.1); }
+
+        .btn-buy {
+            flex: 1; height: 100%; border-radius: 22px; border: none;
+            background: var(--gold-gradient); color: var(--royal-bg);
+            font-size: 18px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3); transition: 0.3s;
+        }
+        .btn-buy:active { transform: scale(0.96); box-shadow: none; }
+
+        /* Scroll Progress Bar */
+        #progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--nemi-gold); z-index: 1100; transition: 0.1s; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <button class="nav-btn" onclick="history.back()"><i class="fas fa-chevron-left"></i></button>
-        <button class="nav-btn"><i class="fas fa-shopping-bag"></i></button>
-    </nav>
-
-    <div class="side-actions">
-        <button class="action-circle" onclick="toggleHeart(this)"><i class="fas fa-heart"></i></button>
-        <button class="action-circle" onclick="shareMe()"><i class="fas fa-paper-plane"></i></button>
+    <div id="progress"></div>
+    <div id="fullscreenOverlay" onclick="closeZoom()">
+        <span class="close-zoom">&times;</span>
+        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" id="zoomImg">
     </div>
 
-    <section class="product-hero" id="parallaxBox">
-        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-product-img" id="heroImg">
+    <nav>
+        <button class="nav-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+        <div style="font-weight: 800; letter-spacing: 2px; font-size: 14px;">NEMI MART</div>
+        <button class="nav-btn" onclick="shareMe()"><i class="fas fa-share-nodes"></i></button>
+    </nav>
+
+    <section class="hero">
+        <div class="product-brand">ORGANIC ELIXIR</div>
+        <div class="img-box" onclick="openZoom()">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-img" id="mainImg">
+        </div>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.5;">Tap image to expand view</p>
     </section>
 
-    <main class="content-sheet reveal-up">
-        <div class="status-badge">✨ Best Seller 2026</div>
-        
-        <div class="title-group">
-            <h1>Amritprash Elite <br><span style="color:var(--nemi-gold)">Royal Formulation</span></h1>
-            <div class="rating-chip">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                <span style="font-size: 12px; font-weight: 600; color: #888; margin-left: 5px;">(4.9/5 from 2k+ orders)</span>
-            </div>
+    <main class="details-card">
+        <div class="title-row">
+            <span>Supreme Series</span>
+            <h1>Amritprash Elite <br>Gold Reserve</h1>
         </div>
 
-        <div class="price-container">
-            <span class="new-price">₹850</span>
-            <span class="old-price">₹1,499</span>
-            <span style="color: #d32f2f; font-weight: 800; font-size: 14px;">45% OFF</span>
+        <div class="price-chip">
+            <span class="price-now">₹850.00</span>
+            <span class="price-old">₹1,499</span>
+            <span style="color: #4ade80; font-weight: 800; font-size: 12px;">-45%</span>
         </div>
 
-        <p style="color: #666; line-height: 1.8; margin-bottom: 35px; font-size: 15px;">
-            Experience the pinnacle of Ayurvedic science. Our Elite Amritprash is slow-cooked for 72 hours with 48 rare herbs, designed to supercharge your vitality and mental clarity.
+        <p style="line-height: 1.8; color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 30px;">
+            The world's first Gold-Infused Amritprash. Hand-crafted in small batches using Himalayan herbs and pure Swarna Bhasma. Designed for the leaders of tomorrow.
         </p>
 
-        <div class="benefits-scroll">
-            <div class="benefit-card">
-                <i class="fas fa-bolt"></i>
-                <span>Instant Energy Boost</span>
+        <div class="feature-grid">
+            <div class="f-card">
+                <i class="fas fa-crown"></i>
+                <p>Royal Quality Certified</p>
             </div>
-            <div class="benefit-card">
-                <i class="fas fa-brain"></i>
-                <span>Mental Focus+</span>
+            <div class="f-card">
+                <i class="fas fa-vial"></i>
+                <p>Zero Artificial Salts</p>
             </div>
-            <div class="benefit-card">
-                <i class="fas fa-shield-virus"></i>
-                <span>Immune Shield</span>
+            <div class="f-card">
+                <i class="fas fa-fire-alt"></i>
+                <p>72-Hour Slow Cook</p>
+            </div>
+            <div class="f-card">
+                <i class="fas fa-box-open"></i>
+                <p>Eco-Luxury Packaging</p>
             </div>
         </div>
 
-        <h3 style="font-size: 20px; margin-bottom: 20px;">Health Expert's Choice</h3>
-        <div style="background: var(--nemi-deep); color: white; padding: 25px; border-radius: 30px; display: flex; align-items: center; gap: 20px;">
-            <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--nemi-gold); display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-user-md" style="font-size: 24px;"></i>
-            </div>
-            <p style="font-size: 13px; font-style: italic; opacity: 0.9;">"The purity of herbs used in Nemi Mart is unmatched in the modern market." - Dr. Gupta</p>
-        </div>
+        <h3 style="margin: 40px 0 20px; color: var(--nemi-gold);">The Ritual</h3>
+        <p style="color: rgba(255,255,255,0.7); font-size: 14px;">
+            Consume 1 tablespoon every morning on an empty stomach with lukewarm milk for peak hormonal balance and cognitive power.
+        </p>
     </main>
 
-    <div class="checkout-bar">
-        <button class="btn-secondary" onclick="addToCart(this)">
-            <i class="fas fa-cart-plus"></i> Cart
+    <div class="action-bar">
+        <button class="heart-toggle" onclick="this.classList.toggle('active')">
+            <i class="fas fa-heart"></i>
         </button>
-        <button class="btn-primary" onclick="buyNow()">
-            Buy Now <i class="fas fa-arrow-right"></i>
+        <button class="btn-buy" onclick="checkout()">
+            <i class="fas fa-bolt"></i> Buy Now
         </button>
     </div>
 
     <script>
-        // --- PARALLAX EFFECT ---
-        const box = document.getElementById('parallaxBox');
-        const img = document.getElementById('heroImg');
-
-        box.addEventListener('mousemove', (e) => {
-            let x = (window.innerWidth / 2 - e.pageX) / 25;
-            let y = (window.innerHeight / 2 - e.pageY) / 25;
-            img.style.transform = `translateX(${x}px) translateY(${y}px) scale(1.05)`;
-        });
-
-        box.addEventListener('mouseleave', () => {
-            img.style.transform = `scale(1)`;
-        });
-
-        // --- FAVORITE TOGGLE ---
-        function toggleHeart(btn) {
-            btn.classList.toggle('heart-active');
-            // Haptic Feedback simulated via animation
+        // Fullscreen Zoom Logic
+        function openZoom() {
+            document.getElementById('fullscreenOverlay').style.display = 'flex';
+        }
+        function closeZoom() {
+            document.getElementById('fullscreenOverlay').style.display = 'none';
         }
 
-        // --- BUTTON LOGIC ---
-        function addToCart(btn) {
-            btn.innerHTML = "<i class='fas fa-check'></i> Added";
-            btn.style.background = "#dcfce7";
-            setTimeout(() => {
-                btn.innerHTML = "<i class='fas fa-cart-plus'></i> Cart";
-                btn.style.background = "#f1f3f1";
-            }, 2000);
-        }
+        // Scroll Progress
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress").style.width = scrolled + "%";
+        };
 
         function shareMe() {
             if (navigator.share) {
-                navigator.share({ title: 'Nemi Mart Elite', url: window.location.href });
+                navigator.share({ title: 'Nemi Mart Gold Reserve', url: window.location.href });
             }
         }
 
-        function buyNow() {
-            alert("Redirecting to Premium Checkout...");
+        function checkout() {
+            // Haptic Feedback Simulation
+            alert("Entering the Secure Luxury Checkout...");
         }
     </script>
 </body>

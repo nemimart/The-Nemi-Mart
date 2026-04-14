@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Nemi Mart | Home Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --creme: #FFFDF5;
@@ -13,161 +13,236 @@
             --dark-green: #1B3022;
             --leaf-green: #2D5A27;
             --white: #ffffff;
-            --soft-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            --soft-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Essential Resets & No Blue Highlight */
+        /* --- GLOBAL RESETS --- */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             font-family: 'Poppins', sans-serif; 
             -webkit-tap-highlight-color: transparent; 
-            outline: none;
+            scroll-behavior: smooth;
         }
 
-        body { background-color: var(--creme); color: var(--dark-green); padding-bottom: 140px; overflow-x: hidden; }
+        body { 
+            background-color: var(--creme); 
+            color: var(--dark-green); 
+            padding-bottom: 120px; 
+            overflow-x: hidden; 
+        }
 
-        /* --- HEADER --- */
+        /* --- HEADER STYLES --- */
         header {
             background: var(--dark-green);
             padding: 15px;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.2);
         }
 
-        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 
-        .logo-area { position: relative; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; }
-        .main-logo { width: 42px; z-index: 5; position: relative; filter: drop-shadow(0 0 8px rgba(212,175,55,0.4)); }
+        /* Logo Area as Link */
+        .logo-area { 
+            position: relative; width: 55px; height: 55px; 
+            display: flex; justify-content: center; align-items: center; 
+            text-decoration: none;
+        }
+        .main-logo { width: 42px; z-index: 5; position: relative; filter: drop-shadow(0 0 5px rgba(212,175,55,0.4)); }
         
         .orbit-icons {
             position: absolute; width: 100%; height: 100%;
-            animation: rotateFull 10s linear infinite;
+            animation: rotateFull 12s linear infinite;
         }
         .orbit-icons i { position: absolute; font-size: 10px; color: var(--gold); opacity: 0.6; }
         .oi1 { top: 0; left: 50%; } .oi2 { bottom: 0; left: 50%; } .oi3 { left: 0; top: 50%; } .oi4 { right: 0; top: 50%; }
+        
         @keyframes rotateFull { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .address-box { flex: 1; margin-left: 15px; color: white; text-decoration: none; }
-        .address-box p { font-size: 10px; opacity: 0.7; letter-spacing: 0.5px; }
+        .address-box p { font-size: 10px; opacity: 0.7; letter-spacing: 0.3px; }
         .address-box h4 { font-size: 13px; font-weight: 600; color: var(--gold); display: flex; align-items: center; gap: 4px; }
 
-        .top-actions { display: flex; gap: 18px; font-size: 22px; }
-        .top-actions a { color: white; text-decoration: none; transition: 0.3s; }
-        .top-actions a:active { transform: scale(0.85); color: var(--gold); }
+        .top-actions { display: flex; gap: 15px; font-size: 22px; }
+        .top-actions a { color: white; transition: var(--transition); }
+        .top-actions a:active { transform: scale(0.8); color: var(--gold); }
 
+        .search-container { position: relative; margin-top: 5px; }
         .search-fake-input { 
-            background: white; border-radius: 12px; height: 48px; 
-            display: flex; align-items: center; padding: 0 15px; color: #777; font-size: 14px;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+            background: white; border-radius: 15px; height: 50px; 
+            display: flex; align-items: center; padding: 0 18px; color: #666; font-size: 14px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        /* --- CATEGORIES --- */
+        /* --- CATEGORY SECTION --- */
         .cat-strip {
-            display: flex; overflow-x: auto; padding: 20px 15px; gap: 18px;
+            display: flex; overflow-x: auto; padding: 25px 15px; gap: 20px;
             background: white; scrollbar-width: none;
         }
         .cat-strip::-webkit-scrollbar { display: none; }
-        .cat-card { text-align: center; min-width: 72px; text-decoration: none; color: var(--dark-green); }
+        
+        .cat-card { text-align: center; min-width: 70px; text-decoration: none; color: var(--dark-green); }
         .cat-card .icon-circle { 
-            width: 62px; height: 62px; background: #f9f9f9; border-radius: 20px; 
+            width: 60px; height: 60px; background: #fafafa; border-radius: 18px; 
             display: flex; justify-content: center; align-items: center; 
-            margin: 0 auto 8px; border: 1px solid #eee; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: var(--soft-shadow);
+            margin: 0 auto 10px; border: 1.5px solid #f0f0f0; transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
-        .cat-card:active .icon-circle { transform: translateY(-5px) scale(1.05); background: var(--dark-green); border-color: var(--gold); }
+        .cat-card:active .icon-circle { 
+            transform: scale(1.1) rotate(5deg); 
+            background: var(--dark-green); 
+            border-color: var(--gold); 
+        }
         .cat-card:active i { color: var(--gold); }
-        .cat-card i { font-size: 26px; color: var(--leaf-green); }
-        .cat-card span { font-size: 11px; font-weight: 600; }
+        .cat-card i { font-size: 24px; color: var(--leaf-green); transition: 0.3s; }
+        .cat-card span { font-size: 11px; font-weight: 600; display: block; opacity: 0.9; }
 
-        /* --- SWIPEABLE BANNER --- */
+        /* --- AUTO-SCROLL BANNER (FIXED WHITE SPACE) --- */
+        .banner-wrapper { position: relative; margin: 10px 0; overflow: hidden; }
         .banner-container { 
-            padding: 10px 0; 
-            overflow-x: auto; 
             display: flex; 
+            overflow-x: auto; 
             scroll-snap-type: x mandatory; 
             scrollbar-width: none;
-            gap: 15px;
-            padding-left: 15px;
-            padding-right: 15px;
+            transition: all 0.5s ease;
         }
         .banner-container::-webkit-scrollbar { display: none; }
+        
         .banner-slide { 
-            min-width: 90%; 
-            height: 180px; 
-            scroll-snap-align: center; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            background: white;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            min-width: 100%; 
+            scroll-snap-align: start; 
+            padding: 0 15px;
         }
         .banner-slide img { 
-            width: 100%; height: 100%; 
-            object-fit: contain; /* Ensure image doesn't cut */
-            background: #fff;
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; /* No white space at top/bottom */
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: block;
         }
 
         /* --- SECTION HEADERS --- */
-        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 15px 15px; }
-        .section-header h2 { font-size: 19px; color: var(--dark-green); font-weight: 600; position: relative; }
-        .section-header h2::after { content: ''; width: 25px; height: 3px; background: var(--gold); position: absolute; bottom: -6px; left: 0; border-radius: 10px; }
-        .view-all { color: var(--leaf-green); font-size: 12px; font-weight: 600; text-decoration: none; padding: 5px 12px; background: #fff; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-
-        /* --- PRODUCT CARDS (NEW LAYOUT) --- */
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 15px; }
-        .p-card { 
-            background: white; border-radius: 22px; padding: 15px; 
-            box-shadow: var(--soft-shadow); position: relative;
-            transition: 0.3s; border: 1px solid rgba(0,0,0,0.02);
-            display: flex; flex-direction: column; justify-content: space-between;
-            min-height: 140px;
+        .section-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 30px 20px 15px; 
         }
-        .p-card:active { transform: scale(0.96); background: #fdfdfd; }
+        .section-header h2 { font-size: 20px; color: var(--dark-green); position: relative; }
+        .section-header h2::before { 
+            content: ''; position: absolute; bottom: -8px; left: 0; 
+            width: 35px; height: 4px; background: var(--gold); border-radius: 10px;
+        }
+        .view-all { 
+            color: var(--leaf-green); font-size: 12px; font-weight: 600; 
+            text-decoration: none; border: 1.5px solid #eee; padding: 6px 15px; 
+            border-radius: 25px; background: white;
+        }
+
+        /* --- ENHANCED PRODUCT GRID --- */
+        .product-grid { 
+            display: grid; grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; padding: 0 15px; 
+        }
+        .p-card { 
+            background: white; border-radius: 25px; padding: 20px; 
+            box-shadow: var(--soft-shadow); transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
-        .p-tag { font-size: 9px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
-        .p-title { font-size: 13px; font-weight: 600; color: var(--dark-green); margin-bottom: 10px; line-height: 1.4; }
-        .p-price-row { display: flex; justify-content: space-between; align-items: center; }
-        .p-price { color: var(--leaf-green); font-weight: 700; font-size: 16px; }
+        .p-card::after {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%; background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .p-tag { 
+            font-size: 9px; font-weight: 700; color: var(--gold); 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+            position: relative; z-index: 1;
+        }
+        .p-title { 
+            font-size: 14px; font-weight: 600; color: var(--dark-green); 
+            line-height: 1.4; margin-bottom: 15px; position: relative; z-index: 1;
+            height: 40px; overflow: hidden;
+        }
+        .p-price-row { 
+            display: flex; justify-content: space-between; align-items: center; 
+            position: relative; z-index: 1;
+        }
+        .p-price { color: var(--leaf-green); font-weight: 700; font-size: 18px; }
+        
         .add-btn { 
             background: var(--dark-green); color: white; border: none; 
-            width: 34px; height: 34px; border-radius: 10px; cursor: pointer;
+            width: 38px; height: 38px; border-radius: 12px; 
             display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); box-shadow: 0 5px 15px rgba(27,48,34,0.2);
         }
-        .add-btn:active { background: var(--gold); }
+        .add-btn:active { transform: scale(0.8); background: var(--gold); }
+
+        /* --- TESTIMONIALS SECTION --- */
+        .reviews-section { margin: 40px 15px; background: var(--dark-green); border-radius: 25px; padding: 25px; color: white; }
+        .review-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-top: 15px; }
+        .review-card p { font-size: 12px; font-style: italic; opacity: 0.9; }
+        .review-user { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .review-user img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--gold); }
+        .review-user span { font-size: 11px; font-weight: 600; color: var(--gold); }
+
+        /* --- NEWSLETTER --- */
+        .newsletter { padding: 40px 20px; text-align: center; }
+        .newsletter h3 { font-size: 18px; margin-bottom: 10px; }
+        .newsletter p { font-size: 12px; opacity: 0.7; margin-bottom: 20px; }
+        .n-input-group { display: flex; gap: 10px; }
+        .n-input-group input { 
+            flex: 1; padding: 12px 15px; border-radius: 12px; 
+            border: 1px solid #ddd; font-size: 13px; 
+        }
+        .n-btn { background: var(--leaf-green); color: white; border: none; padding: 0 20px; border-radius: 12px; font-weight: 600; }
 
         /* --- BOTTOM NAVIGATION --- */
         .bottom-nav { 
             position: fixed; bottom: 0; width: 100%; background: white; 
             display: flex; justify-content: space-around; align-items: center; 
-            padding: 15px 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); border-radius: 25px 25px 0 0;
-            z-index: 2000;
+            padding: 15px 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.12); 
+            border-radius: 30px 30px 0 0; z-index: 2000;
         }
-        .nav-item { text-align: center; text-decoration: none; color: #ccc; font-size: 10px; font-weight: 600; flex: 1; transition: 0.3s; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item { text-align: center; text-decoration: none; color: #bbb; font-size: 10px; font-weight: 600; flex: 1; transition: 0.3s; }
+        .nav-item i { font-size: 24px; display: block; margin-bottom: 5px; }
         .nav-item.active { color: var(--leaf-green); }
+        .nav-item:active { transform: translateY(-5px); }
 
-        .cart-float { position: relative; margin-top: -65px; }
+        .cart-float { position: relative; margin-top: -75px; }
         .cart-circle { 
-            width: 70px; height: 70px; background: var(--leaf-green); 
-            border: 5px solid var(--creme); border-radius: 50%; 
+            width: 75px; height: 75px; background: var(--leaf-green); 
+            border: 6px solid var(--creme); border-radius: 50%; 
             display: flex; justify-content: center; align-items: center; 
-            color: white; font-size: 24px; box-shadow: 0 10px 20px rgba(45,90,39,0.2);
+            color: white; font-size: 28px; box-shadow: 0 12px 25px rgba(45,90,39,0.3);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .cart-circle:active { transform: scale(0.9) rotate(-15deg); }
         .badge { 
-            position: absolute; top: -2px; right: -2px; background: #ff4444; 
-            color: white; font-size: 10px; width: 20px; height: 20px; 
+            position: absolute; top: 0; right: 0; background: #ff4444; 
+            color: white; font-size: 11px; width: 22px; height: 22px; 
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
             border: 2px solid white; font-weight: bold;
         }
 
     </style>
 </head>
-<body>
+<body onload="initApp()">
 
     <header>
         <div class="header-top">
-            <div class="logo-area">
+            <a href="index.html" class="logo-area">
                 <div class="orbit-icons">
                     <i class="fas fa-plus oi1"></i>
                     <i class="fas fa-heart oi2"></i>
@@ -175,7 +250,7 @@
                     <i class="fas fa-leaf oi4"></i>
                 </div>
                 <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-logo" alt="Logo">
-            </div>
+            </a>
 
             <a href="address.html" class="address-box">
                 <p>Deliver to</p>
@@ -188,11 +263,11 @@
             </div>
         </div>
 
-        <div class="search-row">
-            <a href="search.html" style="text-decoration: none; flex: 1;">
+        <div class="search-container">
+            <a href="search.html" style="text-decoration: none;">
                 <div class="search-fake-input">
                     <i class="fas fa-search" style="margin-right: 12px; color: var(--gold);"></i>
-                    Search Pure Ayurvedic Products...
+                    Search Premium Ayurvedic products...
                 </div>
             </a>
         </div>
@@ -200,36 +275,38 @@
 
     <div class="cat-strip">
         <a href="immunity.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-shield-virus"></i></div>
+            <div class="icon-circle"><i class="fas fa-shield-heart"></i></div>
             <span>Immunity</span>
         </a>
         <a href="hair-care.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-spa"></i></div>
+            <div class="icon-circle"><i class="fas fa-pump-soap"></i></div>
             <span>Hair Care</span>
         </a>
         <a href="gum-care.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-tooth"></i></div>
+            <div class="icon-circle"><i class="fas fa-teeth"></i></div>
             <span>Gum Care</span>
         </a>
         <a href="vitality.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-fire-flame-curved"></i></div>
+            <div class="icon-circle"><i class="fas fa-hand-holding-heart"></i></div>
             <span>Vitality</span>
         </a>
         <a href="wellness.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-leaf"></i></div>
+            <div class="icon-circle"><i class="fas fa-mortar-pestle"></i></div>
             <span>Wellness</span>
         </a>
         <a href="all-products.html" class="cat-card">
-            <div class="icon-circle"><i class="fas fa-layer-group"></i></div>
+            <div class="icon-circle"><i class="fas fa-border-all"></i></div>
             <span>See All</span>
         </a>
     </div>
 
-    <div class="banner-container">
-        <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" alt="Slide 1"></div>
-        <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" alt="Slide 2"></div>
-        <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" alt="Slide 3"></div>
-        <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" alt="Slide 4"></div>
+    <div class="banner-wrapper">
+        <div class="banner-container" id="banner">
+            <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png" alt="B1"></div>
+            <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png" alt="B2"></div>
+            <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png" alt="B3"></div>
+            <div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png" alt="B4"></div>
+        </div>
     </div>
 
     <div class="section-header">
@@ -237,20 +314,20 @@
         <a href="all-products.html" class="view-all">View All</a>
     </div>
     <div class="product-grid">
-        <div class="p-card">
+        <div class="p-card" style="animation-delay: 0.1s;">
             <div class="p-info">
-                <span class="p-tag">Best Seller</span>
-                <div class="p-title">Amritprash Power Booster</div>
+                <span class="p-tag">Natural Power</span>
+                <div class="p-title">Amritprash Power Booster 250gm</div>
                 <div class="p-price-row">
                     <span class="p-price">₹850</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </div>
-        <div class="p-card">
+        <div class="p-card" style="animation-delay: 0.2s;">
             <div class="p-info">
-                <span class="p-tag">New Arrival</span>
-                <div class="p-title">Nyala Herbal Hair Oil</div>
+                <span class="p-tag">Anti-Hairfall</span>
+                <div class="p-title">Nyala Herbal Hair Fall Oil</div>
                 <div class="p-price-row">
                     <span class="p-price">₹350</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
@@ -264,20 +341,20 @@
         <a href="all-products.html" class="view-all">View All</a>
     </div>
     <div class="product-grid">
-        <div class="p-card">
+        <div class="p-card" style="animation-delay: 0.3s;">
             <div class="p-info">
-                <span class="p-tag">Value Pack</span>
-                <div class="p-title">Panch Tulsi Immunity Combo</div>
+                <span class="p-tag">Best Value</span>
+                <div class="p-title">Panch Tulsi Immunity Kit</div>
                 <div class="p-price-row">
                     <span class="p-price">₹450</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </div>
-        <div class="p-card">
+        <div class="p-card" style="animation-delay: 0.4s;">
             <div class="p-info">
-                <span class="p-tag">Oral Kit</span>
-                <div class="p-title">Dantvam Herbal Care Kit</div>
+                <span class="p-tag">Oral Health</span>
+                <div class="p-title">Dantvam Complete Oral Kit</div>
                 <div class="p-price-row">
                     <span class="p-price">₹180</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
@@ -286,92 +363,122 @@
         </div>
     </div>
 
+    <div class="reviews-section">
+        <h3>What Our Clients Say</h3>
+        <div class="review-card">
+            <p>"Product ki quality ekdum asli hai. Amritprash use karne se energy level badh gaya hai. Highly recommend!"</p>
+            <div class="review-user">
+                <img src="https://i.pravatar.cc/100?img=12" alt="U1">
+                <span>Ravi Kumar, Punjab</span>
+            </div>
+        </div>
+    </div>
+
     <div class="section-header">
         <h2>Explore More</h2>
     </div>
     <div class="product-grid">
-        <div class="p-card">
+        <div class="p-card" style="animation-delay: 0.5s;">
             <div class="p-info">
-                <span class="p-tag">Wellness</span>
-                <div class="p-title">Ashwagandha Gold Capsules</div>
+                <span class="p-tag">Pure Herb</span>
+                <div class="p-title">Organic Ashwagandha Powder</div>
                 <div class="p-price-row">
-                    <span class="p-price">₹599</span>
+                    <span class="p-price">₹299</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </div>
-        <div class="p-card">
+        <div class="p-card" style="animation-delay: 0.6s;">
             <div class="p-info">
-                <span class="p-tag">Pure Extracts</span>
-                <div class="p-title">Shilajit Resin Pure 20g</div>
+                <span class="p-tag">Detox</span>
+                <div class="p-title">Herbal Slimming Green Tea</div>
                 <div class="p-price-row">
-                    <span class="p-price">₹1250</span>
+                    <span class="p-price">₹199</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </div>
-        <div class="p-card">
-            <div class="p-info">
-                <span class="p-tag">Digestion</span>
-                <div class="p-title">Triphala Herbal Juice 1L</div>
-                <div class="p-price-row">
-                    <span class="p-price">₹240</span>
-                    <button class="add-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-        </div>
-        <div class="p-card">
+        <div class="p-card" style="animation-delay: 0.7s;">
             <div class="p-info">
                 <span class="p-tag">Skin Care</span>
-                <div class="p-title">Aloe Vera Saffron Gel</div>
+                <div class="p-title">Neem & Tulsi Face Wash</div>
                 <div class="p-price-row">
-                    <span class="p-price">₹150</span>
+                    <span class="p-price">₹145</span>
+                    <button class="add-btn"><i class="fas fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="p-card" style="animation-delay: 0.8s;">
+            <div class="p-info">
+                <span class="p-tag">Digestion</span>
+                <div class="p-title">Lavan Bhaskar Churan Pack</div>
+                <div class="p-price-row">
+                    <span class="p-price">₹85</span>
                     <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="newsletter">
+        <h3>Join The Community</h3>
+        <p>Get daily Ayurvedic tips and exclusive offers!</p>
+        <div class="n-input-group">
+            <input type="email" placeholder="Your Email Address">
+            <button class="n-btn">Join</button>
+        </div>
+    </div>
+
     <nav class="bottom-nav">
-        <a href="home.html" class="nav-item active"><i class="fas fa-home-lg-alt"></i>Home</a>
+        <a href="home.html" class="nav-item active"><i class="fas fa-home-alt"></i>Home</a>
         <a href="all-products.html" class="nav-item"><i class="fas fa-store"></i>Shop</a>
         
         <div class="cart-float">
-            <a href="cart.html">
+            <a href="cart.html" style="text-decoration: none;">
                 <div class="cart-circle">
                     <i class="fas fa-shopping-basket"></i>
-                    <div class="badge">0</div>
+                    <div class="badge">2</div>
                 </div>
             </a>
         </div>
 
-        <a href="notifications.html" class="nav-item"><i class="fas fa-bell-concierge"></i>Alerts</a>
-        <a href="orders.html" class="nav-item"><i class="fas fa-shipping-fast"></i>Orders</a>
+        <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i>Alerts</a>
+        <a href="orders.html" class="nav-item"><i class="fas fa-box-open"></i>Orders</a>
     </nav>
 
     <script>
-        // Optional: Add auto-scroll behavior for the banner if no user interaction
-        const banner = document.querySelector('.banner-container');
-        let isDown = false;
-        let startX;
-        let scrollLeft;
+        function initApp() {
+            // --- AUTO SCROLL BANNER LOGIC ---
+            const banner = document.getElementById('banner');
+            const slides = document.querySelectorAll('.banner-slide');
+            let index = 0;
 
-        banner.addEventListener('mousedown', (e) => {
-            isDown = true;
-            startX = e.pageX - banner.offsetLeft;
-            scrollLeft = banner.scrollLeft;
-        });
-        banner.addEventListener('mouseleave', () => isDown = false);
-        banner.addEventListener('mouseup', () => isDown = false);
-        banner.addEventListener('mousemove', (e) => {
-            if(!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - banner.offsetLeft;
-            const walk = (x - startX) * 2;
-            banner.scrollLeft = scrollLeft - walk;
-        });
+            function autoScroll() {
+                index++;
+                if (index >= slides.length) index = 0;
+                banner.scrollTo({
+                    left: index * banner.offsetWidth,
+                    behavior: 'smooth'
+                });
+            }
+
+            // Scroll every 3.5 seconds
+            let scrollInterval = setInterval(autoScroll, 3500);
+
+            // Stop auto-scroll on manual touch
+            banner.addEventListener('touchstart', () => {
+                clearInterval(scrollInterval);
+            });
+
+            // Restart auto-scroll after 5s of no touch
+            banner.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    clearInterval(scrollInterval);
+                    scrollInterval = setInterval(autoScroll, 3500);
+                }, 5000);
+            });
+        }
     </script>
 
 </body>
-                                                                           </html>
-                                                                           
+</html>

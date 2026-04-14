@@ -1,222 +1,218 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nemi Mart Royale | Elite Ayurveda</title>
+    <title>Nemi Mart | Premium Experience</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --royal-bg: #070B08;
+            --nemi-green: #1B3022;
             --nemi-gold: #D4AF37;
-            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #F4EBD0 100%);
+            --nemi-creme: #FDFBF0;
+            --text-dark: #2D2D2D;
             --white: #ffffff;
-            --glass: rgba(255, 255, 255, 0.03);
-            --card-glass: rgba(255, 255, 255, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Outfit', sans-serif; 
+            outline: none !important; /* Blue outline khatam */
+            -webkit-tap-highlight-color: transparent; /* Click blue effect khatam */
+        }
         
-        body { background: var(--royal-bg); color: var(--white); overflow-x: hidden; }
+        body { background: var(--nemi-creme); color: var(--text-dark); padding-bottom: 120px; }
 
-        /* --- STUNNING FLOATING NAVIGATION --- */
+        /* --- Header --- */
         nav {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            display: flex; justify-content: space-between; padding: 25px; align-items: center;
+            position: sticky; top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; padding: 15px 20px;
+            background: var(--white); box-shadow: 0 2px 15px rgba(0,0,0,0.05);
         }
-        .nav-btn {
-            width: 48px; height: 48px; background: var(--card-glass);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; 
-            display: flex; align-items: center; justify-content: center;
-            color: white; backdrop-filter: blur(10px); cursor: pointer; transition: 0.3s;
+        .icon-btn { font-size: 20px; color: var(--nemi-green); cursor: pointer; }
+
+        /* --- Zepto Image Slider --- */
+        .slider-container {
+            background: var(--white); width: 100%; height: 350px;
+            overflow-x: auto; display: flex; scroll-snap-type: x mandatory;
+            scrollbar-width: none; position: relative;
         }
-        .nav-btn:active { transform: scale(0.9); background: var(--nemi-gold); }
-
-        /* --- IMMERSIVE HERO WITH LIGHT EFFECT --- */
-        .hero {
-            height: 100vh; position: relative; display: flex; flex-direction: column;
-            align-items: center; justify-content: flex-start; padding-top: 100px;
-            background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+        .slider-container img {
+            min-width: 100%; height: 100%; object-fit: contain;
+            scroll-snap-align: start; padding: 20px;
         }
+        .dots { display: flex; justify-content: center; gap: 8px; margin-top: -25px; position: relative; z-index: 5; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; }
+        .dot.active { background: var(--nemi-gold); width: 20px; border-radius: 10px; }
 
-        .product-brand { font-family: 'Syncopate', sans-serif; font-size: 10px; letter-spacing: 5px; color: var(--nemi-gold); margin-bottom: 20px; opacity: 0.8; }
-
-        .img-box {
-            width: 85%; max-height: 50vh; display: flex; align-items: center; justify-content: center;
-            perspective: 1000px; cursor: zoom-in; position: relative;
+        /* --- Main Details --- */
+        .content-card {
+            background: var(--white); padding: 25px; border-radius: 30px 30px 0 0;
+            margin-top: 10px; box-shadow: 0 -10px 30px rgba(0,0,0,0.02);
         }
-        .main-img {
-            width: 100%; max-height: 45vh; object-fit: contain;
-            filter: drop-shadow(0 20px 50px rgba(0,0,0,0.5));
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        .stars { color: var(--nemi-gold); font-size: 14px; margin-bottom: 10px; }
+        .product-title { font-size: 24px; font-weight: 800; color: var(--nemi-green); margin-bottom: 8px; }
+        .price-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .curr-price { font-size: 28px; font-weight: 800; color: #15803d; }
+        .old-price { text-decoration: line-through; color: #888; }
+
+        /* --- Tabs (Details/Benefits/How to use) --- */
+        .tabs { display: flex; gap: 10px; margin: 25px 0; overflow-x: auto; scrollbar-width: none; }
+        .tab-btn {
+            padding: 10px 20px; background: #f5f5f5; border-radius: 12px;
+            font-weight: 700; font-size: 13px; border: none; white-space: nowrap; color: #666;
         }
-        .img-box:active .main-img { transform: scale(1.1) rotateY(10deg); }
+        .tab-btn.active { background: var(--nemi-green); color: var(--white); }
+        .tab-content { line-height: 1.6; font-size: 14px; color: #555; background: #f9faf9; padding: 15px; border-radius: 15px; }
 
-        /* --- FULLSCREEN IMAGE OVERLAY --- */
-        #fullscreenOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 2000; display: none;
-            align-items: center; justify-content: center; backdrop-filter: blur(20px);
+        /* --- Amazon "Frequently Bought Together" --- */
+        .combo-section { padding: 20px; background: var(--white); margin: 15px 0; border-radius: 20px; }
+        .combo-section h3 { font-size: 16px; margin-bottom: 15px; color: var(--nemi-green); }
+        .combo-flex { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+        .combo-item img { width: 60px; height: 60px; border: 1px solid #eee; border-radius: 10px; }
+        .plus { font-size: 18px; font-weight: 800; color: var(--nemi-gold); }
+        .combo-price { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ddd; text-align: right; }
+
+        /* --- Review Section --- */
+        .review-box { padding: 20px; background: var(--white); border-radius: 20px; }
+        .rev-input {
+            width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 12px;
+            background: var(--nemi-creme); margin-top: 10px; resize: none;
         }
-        #fullscreenOverlay img { max-width: 95%; max-height: 80vh; object-fit: contain; animation: zoomIn 0.4s ease; }
-        .close-zoom { position: absolute; top: 30px; right: 30px; font-size: 30px; color: white; cursor: pointer; }
+        .user-review { margin-top: 20px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px; }
+        .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .user-info b { font-size: 14px; }
 
-        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* --- CONTENT CARD (SOFT GLASS) --- */
-        .details-card {
-            width: 100%; background: var(--card-glass); backdrop-filter: blur(30px);
-            border-top: 1px solid rgba(255,255,255,0.1); border-radius: 40px 40px 0 0;
-            padding: 40px 30px 150px; position: relative; z-index: 10;
+        /* --- Luxury Bottom Bar --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: var(--white);
+            padding: 20px 25px 35px; box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+            z-index: 1001; border-radius: 30px 30px 0 0;
         }
-
-        .title-row { margin-bottom: 25px; }
-        .title-row h1 { font-size: 34px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
-        .title-row span { color: var(--nemi-gold); font-size: 18px; font-weight: 400; }
-
-        .price-chip {
-            display: inline-flex; align-items: center; gap: 15px;
-            background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 100px; margin: 20px 0;
+        .add-to-cart {
+            width: 100%; background: var(--nemi-green); color: var(--white);
+            padding: 18px; border-radius: 18px; border: none; font-weight: 800;
+            font-size: 16px; display: flex; justify-content: center; align-items: center;
+            gap: 12px; box-shadow: 0 10px 20px rgba(27, 48, 34, 0.2);
+            transition: 0.3s;
         }
-        .price-now { font-size: 28px; font-weight: 800; color: var(--nemi-gold); }
-        .price-old { font-size: 16px; color: rgba(255,255,255,0.4); text-decoration: line-through; }
-
-        /* --- PREMIUM FEATURE GRID --- */
-        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
-        .f-card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-            padding: 20px; border-radius: 24px; transition: 0.3s;
-        }
-        .f-card:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--nemi-gold); }
-        .f-card i { color: var(--nemi-gold); font-size: 22px; margin-bottom: 12px; display: block; }
-        .f-card p { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
-
-        /* --- THE ULTIMATE ACTION BAR --- */
-        .action-bar {
-            position: fixed; bottom: 30px; left: 5%; width: 90%;
-            height: 85px; background: rgba(255,255,255,0.08); backdrop-filter: blur(20px);
-            border-radius: 28px; border: 1px solid rgba(255,255,255,0.1);
-            display: flex; align-items: center; padding: 10px; gap: 10px; z-index: 1500;
-        }
-        .heart-toggle {
-            width: 65px; height: 100%; border-radius: 20px; background: var(--glass);
-            border: none; color: white; font-size: 20px; cursor: pointer; transition: 0.3s;
-        }
-        .heart-toggle.active { color: #ff3e3e; background: rgba(255, 62, 62, 0.1); }
-
-        .btn-buy {
-            flex: 1; height: 100%; border-radius: 22px; border: none;
-            background: var(--gold-gradient); color: var(--royal-bg);
-            font-size: 18px; font-weight: 800; text-transform: uppercase;
-            letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3); transition: 0.3s;
-        }
-        .btn-buy:active { transform: scale(0.96); box-shadow: none; }
-
-        /* Scroll Progress Bar */
-        #progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--nemi-gold); z-index: 1100; transition: 0.1s; }
+        .add-to-cart:active { transform: scale(0.96); background: #000; }
+        .price-indicator { display: flex; flex-direction: column; text-align: left; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px; }
     </style>
 </head>
 <body>
 
-    <div id="progress"></div>
-    <div id="fullscreenOverlay" onclick="closeZoom()">
-        <span class="close-zoom">&times;</span>
-        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" id="zoomImg">
-    </div>
-
     <nav>
-        <button class="nav-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
-        <div style="font-weight: 800; letter-spacing: 2px; font-size: 14px;">NEMI MART</div>
-        <button class="nav-btn" onclick="shareMe()"><i class="fas fa-share-nodes"></i></button>
+        <i class="fas fa-chevron-left icon-btn" onclick="history.back()"></i>
+        <div style="font-weight: 800; color: var(--nemi-green);">THE NEMI MART</div>
+        <i class="fas fa-share-alt icon-btn"></i>
     </nav>
 
-    <section class="hero">
-        <div class="product-brand">ORGANIC ELIXIR</div>
-        <div class="img-box" onclick="openZoom()">
-            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-img" id="mainImg">
+    <div class="slider-container" id="slider">
+        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+    </div>
+    <div class="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <main class="content-card">
+        <div class="stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            <span style="color: #888; font-size: 12px; font-weight: 600;">(4.7 - 2,145 Reviews)</span>
         </div>
-        <p style="margin-top: 20px; font-size: 12px; opacity: 0.5;">Tap image to expand view</p>
-    </section>
-
-    <main class="details-card">
-        <div class="title-row">
-            <span>Supreme Series</span>
-            <h1>Amritprash Elite <br>Gold Reserve</h1>
-        </div>
-
-        <div class="price-chip">
-            <span class="price-now">₹850.00</span>
-            <span class="price-old">₹1,499</span>
-            <span style="color: #4ade80; font-weight: 800; font-size: 12px;">-45%</span>
-        </div>
-
-        <p style="line-height: 1.8; color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 30px;">
-            The world's first Gold-Infused Amritprash. Hand-crafted in small batches using Himalayan herbs and pure Swarna Bhasma. Designed for the leaders of tomorrow.
-        </p>
-
-        <div class="feature-grid">
-            <div class="f-card">
-                <i class="fas fa-crown"></i>
-                <p>Royal Quality Certified</p>
-            </div>
-            <div class="f-card">
-                <i class="fas fa-vial"></i>
-                <p>Zero Artificial Salts</p>
-            </div>
-            <div class="f-card">
-                <i class="fas fa-fire-alt"></i>
-                <p>72-Hour Slow Cook</p>
-            </div>
-            <div class="f-card">
-                <i class="fas fa-box-open"></i>
-                <p>Eco-Luxury Packaging</p>
-            </div>
+        <h1 class="product-title">Premium Amritprash Gold Reserve</h1>
+        <div class="price-row">
+            <span class="curr-price">₹850</span>
+            <span class="old-price">₹1,200</span>
+            <span style="color: var(--nemi-gold); font-weight: 800; font-size: 12px; background: #fff8e1; padding: 4px 10px; border-radius: 5px;">30% OFF</span>
         </div>
 
-        <h3 style="margin: 40px 0 20px; color: var(--nemi-gold);">The Ritual</h3>
-        <p style="color: rgba(255,255,255,0.7); font-size: 14px;">
-            Consume 1 tablespoon every morning on an empty stomach with lukewarm milk for peak hormonal balance and cognitive power.
-        </p>
+        <div class="tabs">
+            <button class="tab-btn active">Highlights</button>
+            <button class="tab-btn">Benefits</button>
+            <button class="tab-btn">How to use</button>
+        </div>
+        <div class="tab-content">
+            Experience the power of 48 rare herbs. Slow-cooked for 72 hours with pure Swarna Bhasma for maximum vitality and immunity.
+        </div>
+
+        <div class="combo-section">
+            <h3>Frequently Bought Together</h3>
+            <div class="combo-flex">
+                <div class="combo-item"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png"></div>
+                <div class="plus">+</div>
+                <div class="combo-item"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png"></div>
+                <div class="plus">+</div>
+                <div class="combo-item"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png"></div>
+            </div>
+            <div class="combo-price">
+                <span style="font-size: 13px; color: #888;">Total for all 3: </span>
+                <strong style="font-size: 18px; color: var(--nemi-green);">₹1,250</strong>
+            </div>
+        </div>
+
+        <div class="review-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Customer Reviews</h3>
+                <span style="color: var(--nemi-gold); font-weight: 700; font-size: 13px;">Write a Review</span>
+            </div>
+            
+            <div class="user-review">
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name=Akash+Kohli&background=1B3022&color=fff" style="width: 24px; border-radius: 50%;">
+                    <b>Akash Kohli</b>
+                    <span style="color: var(--nemi-gold); font-size: 10px;">★★★★★</span>
+                </div>
+                <p style="font-size: 13px; color: #666;">Amazing product! Energy level next level pe chali gayi hai. Must buy!</p>
+            </div>
+            
+            <textarea class="rev-input" placeholder="Share your experience..."></textarea>
+        </div>
     </main>
 
-    <div class="action-bar">
-        <button class="heart-toggle" onclick="this.classList.toggle('active')">
-            <i class="fas fa-heart"></i>
-        </button>
-        <button class="btn-buy" onclick="checkout()">
-            <i class="fas fa-bolt"></i> Buy Now
+    <div class="bottom-nav">
+        <button class="add-to-cart">
+            <div class="price-indicator">
+                <span style="font-size: 10px; opacity: 0.8;">Total Price</span>
+                <span>₹850.00</span>
+            </div>
+            <span>ADD TO CART</span>
+            <i class="fas fa-shopping-bag"></i>
         </button>
     </div>
 
     <script>
-        // Fullscreen Zoom Logic
-        function openZoom() {
-            document.getElementById('fullscreenOverlay').style.display = 'flex';
-        }
-        function closeZoom() {
-            document.getElementById('fullscreenOverlay').style.display = 'none';
+        // Slider Dot Logic
+        const slider = document.getElementById('slider');
+        const dots = document.querySelectorAll('.dot');
+        slider.onscroll = () => {
+            let index = Math.round(slider.scrollLeft / slider.offsetWidth);
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
         }
 
-        // Scroll Progress
-        window.onscroll = function() {
-            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            document.getElementById("progress").style.width = scrolled + "%";
-        };
+        // Tab Switching Simulation
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContent = document.querySelector('.tab-content');
+        const contents = [
+            "Experience the power of 48 rare herbs. Slow-cooked for 72 hours with pure Swarna Bhasma.",
+            "Increases Immunity, Improves Memory, Detoxifies Body, and Boosts Physical Strength.",
+            "Take 1 tablespoon daily with lukewarm milk or water, preferably before breakfast."
+        ];
 
-        function shareMe() {
-            if (navigator.share) {
-                navigator.share({ title: 'Nemi Mart Gold Reserve', url: window.location.href });
+        tabBtns.forEach((btn, i) => {
+            btn.onclick = () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                tabContent.innerText = contents[i];
             }
-        }
-
-        function checkout() {
-            // Haptic Feedback Simulation
-            alert("Entering the Secure Luxury Checkout...");
-        }
+        });
     </script>
 </body>
 </html>

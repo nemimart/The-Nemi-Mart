@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Elite Checkout | Nemi Mart Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Elite Checkout Engine | Nemi Mart Premium</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
@@ -18,12 +18,16 @@
             --cream-card: #FFFFFF;
             --text-dark: #0A1F13;
             --text-grey: #5C6F63;
+            --error: #FF4D4D;
+            --success: #00B259;
             --white: #FFFFFF;
-            --shadow: 0 15px 35px rgba(10, 31, 19, 0.1);
+            --shadow-sm: 0 4px 12px rgba(10, 31, 19, 0.05);
+            --shadow-lg: 0 20px 40px rgba(10, 31, 19, 0.12);
             --radius-main: 24px;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* --- GLOBAL SMOOTHING --- */
+        /* --- ADVANCED RESET --- */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -33,409 +37,530 @@
         body { 
             background: var(--cream-bg); 
             color: var(--text-dark); 
-            padding-bottom: 140px; 
             overflow-x: hidden;
+            padding-bottom: 140px;
         }
 
         /* --- ANIMATIONS --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        @keyframes goldGlow {
-            0% { box-shadow: 0 0 5px var(--gold); }
-            50% { box-shadow: 0 0 20px var(--gold); }
-            100% { box-shadow: 0 0 5px var(--gold); }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        .animate-in { animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes pulse-gold {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
 
-        /* --- PREMIUM NAVIGATION --- */
-        .top-nav {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            padding: 18px 25px;
-            position: sticky;
-            top: 0; z-index: 1000;
-            display: flex; align-items: center; gap: 20px;
+        .animate-in { animation: fadeIn 0.6s ease-out forwards; }
+
+        /* --- LUXURY NAVIGATION --- */
+        .header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            padding: 15px 20px;
+            position: sticky; top: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
             border-bottom: 1px solid var(--gold-light);
         }
 
-        .back-btn { 
-            width: 40px; height: 40px; 
-            background: var(--cream-bg);
-            border-radius: 12px;
+        .nav-left { display: flex; align-items: center; gap: 15px; flex: 1; overflow: hidden; }
+        
+        .circle-btn {
+            width: 42px; height: 42px;
+            border-radius: 50%; border: 1px solid var(--gold-light);
             display: flex; align-items: center; justify-content: center;
-            color: var(--lush-green); cursor: pointer;
-            border: 1px solid var(--gold-light);
-            transition: 0.3s;
+            background: white; color: var(--lush-green);
+            transition: var(--transition); cursor: pointer;
         }
-        .back-btn:hover { background: var(--gold); color: white; }
+        .circle-btn:hover { background: var(--gold); color: white; transform: rotate(-15deg); }
 
-        .address-box { flex: 1; }
-        .address-box h4 { 
-            font-family: 'Outfit'; font-size: 15px; font-weight: 700; 
-            color: var(--lush-green); text-transform: uppercase; letter-spacing: 0.5px;
+        .active-address-display { cursor: pointer; overflow: hidden; }
+        .active-address-display h4 { 
+            font-family: 'Outfit'; font-size: 13px; color: var(--gold); 
+            display: flex; align-items: center; gap: 5px; 
         }
-        .address-box p { font-size: 13px; color: var(--text-grey); font-weight: 500; }
-
-        .change-btn {
-            background: var(--gold-light); color: var(--lush-green);
-            padding: 8px 16px; border-radius: 10px; font-size: 12px;
-            font-weight: 800; cursor: pointer; border: none; transition: 0.3s;
+        .active-address-display p { 
+            font-size: 14px; font-weight: 700; color: var(--lush-green);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .change-btn:hover { background: var(--gold); color: white; }
 
-        .container { max-width: 550px; margin: 0 auto; padding: 20px; }
+        /* --- MAIN CONTAINER --- */
+        .engine-container {
+            max-width: 550px; margin: 0 auto; padding: 20px;
+        }
 
-        /* --- THEMED CARDS --- */
-        .card {
+        /* --- LUXE CARDS --- */
+        .luxe-card {
             background: var(--cream-card);
             border-radius: var(--radius-main);
             padding: 25px; margin-bottom: 20px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-sm);
             border: 1px solid rgba(212, 175, 55, 0.1);
-            position: relative; overflow: hidden;
+            transition: var(--transition);
+            position: relative;
         }
+        .luxe-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
 
-        .card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--gold);
-        }
-
-        .section-header {
-            display: flex; align-items: center; gap: 12px;
+        .card-header {
+            display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 20px;
         }
-        .section-header i { 
-            background: var(--lush-green); color: var(--gold);
-            width: 32px; height: 32px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px;
+        .card-title { display: flex; align-items: center; gap: 12px; }
+        .card-title i { color: var(--gold); font-size: 18px; }
+        .card-title h2 { font-family: 'Outfit'; font-size: 18px; font-weight: 800; }
+
+        /* --- DYNAMIC CART ITEMS --- */
+        .cart-list { display: flex; flex-direction: column; gap: 15px; }
+        .item-row {
+            display: flex; gap: 15px; align-items: center;
+            padding-bottom: 15px; border-bottom: 1px solid #f8f8f8;
+            animation: fadeIn 0.5s ease forwards;
         }
-        .section-header h2 { font-family: 'Outfit'; font-size: 18px; font-weight: 700; }
+        .item-row:last-child { border: none; padding-bottom: 0; }
 
-        /* --- PRODUCT ITEMS (LUXE STYLE) --- */
-        .cart-item {
-            display: flex; gap: 18px; align-items: center;
-            margin-bottom: 20px; padding-bottom: 20px;
-            border-bottom: 1px solid #f0f0f0;
+        .item-img {
+            width: 80px; height: 80px; border-radius: 16px;
+            background: #FAFAFA; border: 1px solid var(--gold-light);
+            padding: 8px; flex-shrink: 0;
         }
-        .cart-item:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+        .item-img img { width: 100%; height: 100%; object-fit: contain; }
 
-        .item-img-wrapper {
-            position: relative; width: 85px; height: 85px;
-            background: #fdfdfd; border-radius: 18px;
-            border: 1px solid var(--gold-light); padding: 8px;
+        .item-details { flex: 1; }
+        .item-details h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--lush-green); }
+        .item-details p { font-size: 12px; color: var(--text-grey); }
+
+        .item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        
+        .delete-item { color: var(--error); font-size: 14px; cursor: pointer; padding: 5px; opacity: 0.6; transition: 0.3s; }
+        .delete-item:hover { opacity: 1; transform: scale(1.2); }
+
+        .qty-box {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--cream-bg); padding: 5px 12px;
+            border-radius: 10px; border: 1px solid var(--gold-light);
         }
-        .item-img-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+        .qty-box button { border: none; background: none; color: var(--gold); font-weight: 900; cursor: pointer; }
 
-        .item-info { flex: 1; }
-        .item-info h3 { font-size: 15px; font-weight: 700; color: var(--lush-green); margin-bottom: 4px; }
-        .item-info p { font-size: 12px; color: var(--text-grey); font-weight: 500; }
-
-        .qty-controller {
-            display: flex; align-items: center; gap: 15px;
-            background: var(--cream-bg); padding: 6px 14px;
-            border-radius: 12px; border: 1px solid var(--gold-light);
-            width: fit-content; margin-top: 10px;
-        }
-        .qty-controller button { 
-            border: none; background: none; color: var(--gold); 
-            font-size: 18px; font-weight: 800; cursor: pointer;
-        }
-        .qty-controller span { font-weight: 800; color: var(--lush-green); min-width: 15px; text-align: center; }
-
-        .item-price { font-family: 'Outfit'; font-weight: 800; color: var(--lush-green); font-size: 16px; }
-
-        /* --- BILLING SECTION --- */
-        .bill-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 14px; font-weight: 600; color: var(--text-grey); }
-        .bill-row.savings { color: #00B259; }
-        .bill-row.grand-total {
-            border-top: 2px dashed var(--gold-light);
-            margin-top: 15px; padding-top: 20px;
-            color: var(--lush-green); font-size: 22px; font-weight: 900; font-family: 'Outfit';
+        /* --- BILLING UI --- */
+        .bill-line { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 600; font-size: 14px; }
+        .bill-total {
+            margin-top: 15px; padding-top: 15px; border-top: 2px dashed var(--gold-light);
+            display: flex; justify-content: space-between;
+            font-family: 'Outfit'; font-size: 22px; font-weight: 900; color: var(--lush-green);
         }
 
-        /* --- FLOATING BOTTOM ACTION --- */
-        .bottom-action {
-            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 600px;
-            background: var(--white); padding: 25px;
-            border-radius: 30px 30px 0 0;
-            box-shadow: 0 -15px 40px rgba(0,0,0,0.1);
+        /* --- BOTTOM ACTION BAR --- */
+        .bottom-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white; padding: 20px 25px;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.08);
             display: flex; align-items: center; justify-content: space-between;
-            z-index: 2000;
+            z-index: 2000; border-radius: 28px 28px 0 0;
         }
-
-        .price-display h2 { font-size: 24px; font-weight: 900; color: var(--lush-green); font-family: 'Outfit'; }
-        .price-display p { font-size: 11px; font-weight: 800; color: var(--gold); letter-spacing: 1px; }
-
-        .pay-btn {
+        .checkout-btn {
             background: var(--lush-green); color: var(--gold);
-            border: none; padding: 18px 40px; border-radius: 18px;
+            border: none; padding: 16px 35px; border-radius: 18px;
             font-family: 'Outfit'; font-size: 16px; font-weight: 800;
-            cursor: pointer; display: flex; align-items: center; gap: 12px;
-            transition: 0.4s; animation: goldGlow 3s infinite;
-        }
-        .pay-btn:hover { transform: scale(1.05); background: var(--deep-green); }
-
-        /* --- PREMIUM PAYMENT SHEET --- */
-        .payment-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 31, 19, 0.7); backdrop-filter: blur(8px);
-            z-index: 3000; display: none; align-items: flex-end;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; animation: pulse-gold 3s infinite;
         }
 
+        /* --- ADVANCED MODALS (SHEETS) --- */
+        .overlay {
+            position: fixed; inset: 0; background: rgba(10, 31, 19, 0.7);
+            backdrop-filter: blur(8px); z-index: 3000;
+            display: none; align-items: flex-end;
+        }
         .sheet {
             background: var(--cream-bg); width: 100%; max-width: 600px;
-            margin: 0 auto; border-radius: 35px 35px 0 0;
-            padding: 35px; transform: translateY(100%);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-top: 4px solid var(--gold);
+            margin: 0 auto; border-radius: 32px 32px 0 0;
+            padding: 30px 25px; transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 85vh; overflow-y: auto;
         }
         .sheet.active { transform: translateY(0); }
 
-        .sheet-header { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: center; }
-        .sheet-header h2 { font-family: 'Outfit'; color: var(--lush-green); font-size: 22px; }
-
-        .upi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
-        .upi-option {
-            background: var(--white); border: 1px solid var(--gold-light);
-            padding: 20px 10px; border-radius: 20px; text-align: center;
-            cursor: pointer; transition: 0.3s;
+        .sheet-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 25px;
         }
-        .upi-option:hover { border-color: var(--gold); transform: translateY(-5px); box-shadow: var(--shadow); }
-        .upi-option i { font-size: 28px; color: var(--lush-green); margin-bottom: 8px; }
-        .upi-option span { display: block; font-size: 12px; font-weight: 800; }
 
-        .qr-section {
-            background: var(--white); border-radius: 25px; padding: 25px;
-            text-align: center; border: 2px dashed var(--gold); margin-bottom: 25px;
+        /* --- ADDRESS LIST UI --- */
+        .address-card {
+            background: white; border-radius: 20px; padding: 18px;
+            margin-bottom: 12px; border: 2px solid transparent;
+            display: flex; align-items: flex-start; gap: 15px;
+            transition: 0.3s; cursor: pointer; position: relative;
         }
-        .qr-section img { width: 180px; height: 180px; border-radius: 15px; margin-bottom: 15px; }
+        .address-card.selected { border-color: var(--gold); background: var(--gold-light); }
+        .address-card i.type-icon { 
+            background: var(--lush-green); color: var(--gold);
+            width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .address-info { flex: 1; }
+        .address-info h5 { font-family: 'Outfit'; font-size: 16px; margin-bottom: 4px; }
+        .address-info p { font-size: 13px; color: var(--text-grey); }
 
-        .utr-box { position: relative; }
-        .utr-box input {
-            width: 100%; padding: 20px; border-radius: 15px;
-            border: 2px solid var(--gold-light); outline: none;
-            font-size: 15px; font-weight: 600; transition: 0.3s;
+        .delete-addr { color: var(--error); padding: 10px; font-size: 14px; }
+
+        .add-new-btn {
+            width: 100%; padding: 18px; border-radius: 18px;
+            border: 2px dashed var(--gold); background: transparent;
+            color: var(--gold); font-weight: 800; cursor: pointer;
+            margin-top: 10px; transition: 0.3s;
         }
-        .utr-box input:focus { border-color: var(--gold); background: #fff; }
+        .add-new-btn:hover { background: var(--gold-light); }
+
+        /* --- FORM STYLING --- */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 800; color: var(--lush-green); margin-bottom: 8px; }
+        .input-group input, .input-group select {
+            width: 100%; padding: 16px; border-radius: 15px;
+            border: 1px solid var(--gold-light); background: white;
+            outline: none; font-size: 15px; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1); }
 
         /* --- SUCCESS OVERLAY --- */
-        #successScreen {
+        .order-success {
             position: fixed; inset: 0; background: var(--lush-green);
             z-index: 9999; display: none; flex-direction: column;
             align-items: center; justify-content: center; color: var(--gold);
         }
-        .success-icon { font-size: 80px; margin-bottom: 20px; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { from { scale: 0; } to { scale: 1; } }
-
-        /* --- HOVER EFFECTS --- */
-        .card:hover { transform: translateY(-5px); transition: 0.4s; }
         
+        /* Empty State */
+        .empty-cart { text-align: center; padding: 40px 0; display: none; }
+        .empty-cart i { font-size: 50px; opacity: 0.2; margin-bottom: 15px; }
+
     </style>
 </head>
 <body>
 
-    <div id="successScreen">
-        <i class="fas fa-check-circle success-icon"></i>
-        <h1 style="font-family: 'Outfit';">ORDER PLACED!</h1>
-        <p style="margin-top: 10px; color: white;">Redirecting to your vault...</p>
-    </div>
-
-    <div class="top-nav">
-        <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
-        <div class="address-box">
-            <h4>Delivering to Home <i class="fas fa-chevron-down" style="font-size: 10px; color: var(--gold);"></i></h4>
-            <p id="userAddr">1327/3, Ragho Majra, Patiala, Punjab</p>
+    <header class="header">
+        <div class="nav-left">
+            <div class="circle-btn"><i class="fas fa-chevron-left"></i></div>
+            <div class="active-address-display" onclick="toggleModal('addressSheet')">
+                <h4>DELIVERING TO <i class="fas fa-chevron-down"></i></h4>
+                <p id="currentAddrLabel">Home: 1327/3 Ragho Majra, Patiala</p>
+            </div>
         </div>
-        <button class="change-btn" onclick="editAddress()">CHANGE</button>
-    </div>
+        <div class="circle-btn" onclick="toggleModal('addressSheet')"><i class="fas fa-map-marker-alt"></i></div>
+    </header>
 
-    <div class="container">
+    <div class="engine-container">
         
-        <div class="card animate-in" style="border-left: 6px solid #00B259;">
+        <div class="luxe-card animate-in" style="background: linear-gradient(135deg, #1A3E26 0%, #0A1F13 100%); border: none;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <span style="background: #E6F7ED; color: #00B259; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800;">PRIORITY</span>
-                    <h3 style="font-size: 18px; margin-top: 8px; font-family: 'Outfit';">Arrival in 8 Minutes</h3>
-                    <p style="font-size: 13px; color: var(--text-grey);">Nemi Mart Express is on the way</p>
+                    <h3 style="color: var(--gold); font-family: 'Outfit'; font-size: 20px;">Elite Delivery</h3>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 13px;">Arriving in 8-12 minutes</p>
                 </div>
-                <div style="font-size: 35px; color: var(--gold);"><i class="fas fa-bolt-lightning"></i></div>
+                <div style="width: 50px; height: 50px; background: rgba(212,175,55,0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-bolt-lightning" style="color: var(--gold); font-size: 24px;"></i>
+                </div>
             </div>
         </div>
 
-        <div class="card animate-in" style="animation-delay: 0.1s;">
-            <div class="section-header">
-                <i class="fas fa-shopping-bag"></i>
-                <h2>Your Selections</h2>
-            </div>
-            
-            <div class="cart-item">
-                <div class="item-img-wrapper">
-                    <img src="49779.jpg" alt="Amritprash">
+        <div class="luxe-card animate-in" id="cartCard">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h2>Items In Cart</h2>
                 </div>
-                <div class="item-info">
-                    <h3>Amritprash Gold Luxury</h3>
-                    <p>500g • Artisanal Glass Jar</p>
-                    <div class="qty-controller">
-                        <button onclick="changeQty('q1', -1)">-</button>
-                        <span id="q1">1</span>
-                        <button onclick="changeQty('q1', 1)">+</button>
+                <span id="itemCountTag" style="background: var(--gold-light); color: var(--lush-green); padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800;">2 ITEMS</span>
+            </div>
+
+            <div class="cart-list" id="cartList">
+                <div class="item-row" id="item_1">
+                    <div class="item-img"><img src="49779.jpg" alt="Item"></div>
+                    <div class="item-details">
+                        <h3>Amritprash Luxury</h3>
+                        <p>500g • Artisanal</p>
+                    </div>
+                    <div class="item-actions">
+                        <i class="far fa-trash-can delete-item" onclick="removeItem('item_1', 850)"></i>
+                        <div class="qty-box">
+                            <button onclick="updateQty('q1', -1, 850)">-</button>
+                            <span id="q1">1</span>
+                            <button onclick="updateQty('q1', 1, 850)">+</button>
+                        </div>
                     </div>
                 </div>
-                <div class="item-price">₹850</div>
-            </div>
 
-            <div class="cart-item">
-                <div class="item-img-wrapper">
-                    <img src="49780.jpg" alt="Shilajit">
-                </div>
-                <div class="item-info">
-                    <h3>Pure Himalayan Shilajit</h3>
-                    <p>30g Resin • Lab Tested</p>
-                    <div class="qty-controller">
-                        <button onclick="changeQty('q2', -1)">-</button>
-                        <span id="q2">1</span>
-                        <button onclick="changeQty('q2', 1)">+</button>
+                <div class="item-row" id="item_2">
+                    <div class="item-img"><img src="49780.jpg" alt="Item"></div>
+                    <div class="item-details">
+                        <h3>Himalayan Shilajit</h3>
+                        <p>30g • Pure Resin</p>
+                    </div>
+                    <div class="item-actions">
+                        <i class="far fa-trash-can delete-item" onclick="removeItem('item_2', 1255)"></i>
+                        <div class="qty-box">
+                            <button onclick="updateQty('q2', -1, 1255)">-</button>
+                            <span id="q2">1</span>
+                            <button onclick="updateQty('q2', 1, 1255)">+</button>
+                        </div>
                     </div>
                 </div>
-                <div class="item-price">₹1255</div>
+            </div>
+
+            <div class="empty-cart" id="emptyCart">
+                <i class="fas fa-cart-plus"></i>
+                <p>Abhi cart khaali hai, kuch mangwa lo!</p>
             </div>
         </div>
 
-        <div class="card animate-in" style="animation-delay: 0.2s;">
-            <div class="section-header">
-                <i class="fas fa-receipt"></i>
-                <h2>Payment Summary</h2>
+        <div class="luxe-card animate-in" style="margin-bottom: 50px;">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-receipt"></i>
+                    <h2>Bill Summary</h2>
+                </div>
             </div>
-            <div class="bill-row"><span>Cart Subtotal</span><span>₹2105.00</span></div>
-            <div class="bill-row"><span>Premium Delivery</span><span style="text-decoration: line-through;">₹50</span></div>
-            <div class="bill-row savings"><span>Elite Member Discount</span><span>-₹50</span></div>
-            <div class="bill-row"><span>Packaging & Handling</span><span>₹5.00</span></div>
-            <div class="bill-row grand-total">
-                <span>Total Payable</span>
-                <span style="color: var(--gold);">₹2,110.00</span>
+            <div class="bill-line"><span>Item Total</span><span id="subtotalDisplay">₹2105</span></div>
+            <div class="bill-line" style="color: var(--success);"><span>Delivery Fee</span><span>FREE</span></div>
+            <div class="bill-line"><span>Taxes & Handling</span><span>₹5</span></div>
+            <div class="bill-total">
+                <span>To Pay</span>
+                <span id="totalDisplay" style="color: var(--gold);">₹2110</span>
             </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 10px; opacity: 0.6;">
-            <p style="font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--lush-green);">
-                <i class="fas fa-shield-halved"></i> 256-BIT SSL SECURED CHECKOUT
-            </p>
         </div>
 
     </div>
 
-    <div class="bottom-action">
-        <div class="price-display">
-            <p>TOTAL PAYABLE</p>
-            <h2>₹2,110.00</h2>
+    <div class="bottom-bar">
+        <div>
+            <p style="font-size: 11px; font-weight: 800; color: var(--gold);">PAYABLE</p>
+            <h2 id="bottomPrice" style="font-family: 'Outfit'; font-size: 24px;">₹2,110</h2>
         </div>
-        <button class="pay-btn" onclick="openPayment()">
-            PLACE ORDER <i class="fas fa-chevron-right"></i>
+        <button class="checkout-btn" onclick="toggleModal('paymentSheet')">
+            PAY & ORDER <i class="fas fa-chevron-right"></i>
         </button>
     </div>
 
-    <div class="payment-modal" id="payModal">
-        <div class="sheet" id="paySheet">
+    <div class="overlay" id="addressOverlay" onclick="closeAllModals(event)">
+        <div class="sheet" id="addressSheet">
             <div class="sheet-header">
-                <h2>Choose Payment</h2>
-                <div class="back-btn" onclick="openPayment()"><i class="fas fa-times"></i></div>
+                <h2 style="font-family: 'Outfit';">Saved Addresses</h2>
+                <div class="circle-btn" onclick="toggleModal('addressSheet')"><i class="fas fa-times"></i></div>
+            </div>
+            
+            <div id="addressList">
+                <div class="address-card selected" onclick="selectAddress(this, 'Home: 1327/3 Ragho Majra, Patiala')">
+                    <i class="fas fa-home type-icon"></i>
+                    <div class="address-info">
+                        <h5>Home</h5>
+                        <p>1327/3, Ragho Majra, Patiala, Punjab - 147001</p>
+                    </div>
+                    <i class="fas fa-check-circle" style="color: var(--gold);"></i>
+                </div>
+
+                <div class="address-card" onclick="selectAddress(this, 'Work: Thapar University, Patiala')">
+                    <i class="fas fa-briefcase type-icon"></i>
+                    <div class="address-info">
+                        <h5>Work</h5>
+                        <p>Computer Dept, Thapar University, Patiala</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="upi-grid">
-                <div class="upi-option" onclick="processSuccess()">
-                    <i class="fab fa-google-pay"></i>
-                    <span>G-Pay</span>
-                </div>
-                <div class="upi-option" onclick="processSuccess()">
-                    <i class="fas fa-mobile-button"></i>
-                    <span>PhonePe</span>
-                </div>
-                <div class="upi-option" onclick="processSuccess()">
-                    <i class="fas fa-wallet"></i>
-                    <span>Paytm</span>
-                </div>
-            </div>
+            <button class="add-new-btn" onclick="showAddForm()">
+                <i class="fas fa-plus"></i> ADD NEW ADDRESS
+            </button>
 
-            <div class="qr-section">
-                <p style="font-size: 12px; font-weight: 800; color: var(--lush-green); margin-bottom: 15px;">SCAN TO PAY ARHAM</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=arham@upi&pn=Nemi%20Mart&am=2110" alt="QR">
-                <p style="font-size: 11px; font-weight: 600;">Merchant: <b>NEMI MART ELITE</b></p>
-            </div>
-
-            <div class="utr-box">
-                <input type="text" placeholder="Paste 12-digit UTR / Ref Number">
-                <button class="pay-btn" style="width: 100%; margin-top: 15px; justify-content: center;" onclick="processSuccess()">
-                    VERIFY & CONFIRM
-                </button>
+            <div id="addressForm" style="display: none; margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px;">
+                <div class="input-group">
+                    <label>ADDRESS TYPE</label>
+                    <select id="newType">
+                        <option value="Home">Home</option>
+                        <option value="Work">Work</option>
+                        <option value="Shop">Shop</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>COMPLETE ADDRESS</label>
+                    <input type="text" id="newAddrText" placeholder="House no, Street, Area...">
+                </div>
+                <button class="checkout-btn" style="width: 100%; justify-content: center;" onclick="saveAddress()">SAVE ADDRESS</button>
             </div>
         </div>
     </div>
 
+    <div class="overlay" id="paymentOverlay" onclick="closeAllModals(event)">
+        <div class="sheet" id="paymentSheet">
+            <div class="sheet-header">
+                <h2 style="font-family: 'Outfit';">Complete Payment</h2>
+                <div class="circle-btn" onclick="toggleModal('paymentSheet')"><i class="fas fa-times"></i></div>
+            </div>
+
+            <div style="text-align: center; background: white; border-radius: 20px; padding: 25px; border: 2px dashed var(--gold); margin-bottom: 25px;">
+                <p style="font-size: 12px; font-weight: 800; color: var(--lush-green); margin-bottom: 15px;">SCAN TO PAY ARHAM</p>
+                <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=arham@upi&pn=NemiMart&am=2110" alt="QR" style="width: 150px;">
+                <p style="margin-top: 15px; font-size: 14px; font-weight: 700;">NEMI MART PREMIUM</p>
+            </div>
+
+            <div class="input-group">
+                <label>ENTER UTR / TRANSACTION ID</label>
+                <input type="text" id="utrInput" placeholder="Enter 12-digit number">
+            </div>
+
+            <button class="checkout-btn" style="width: 100%; justify-content: center;" onclick="confirmOrder()">
+                CONFIRM PAYMENT
+            </button>
+        </div>
+    </div>
+
+    <div class="order-success" id="successScreen">
+        <i class="fas fa-check-circle" style="font-size: 80px; margin-bottom: 25px;"></i>
+        <h1 style="font-family: 'Outfit'; font-size: 32px;">BOOM! ORDERED</h1>
+        <p style="color: white; margin-top: 10px;">Arham is preparing your luxury package...</p>
+    </div>
+
     <script>
-        // Quantity Logic
-        function changeQty(id, delta) {
+        let subtotal = 2105;
+        let tax = 5;
+        let itemsCount = 2;
+
+        // UI Toggle Logic
+        function toggleModal(id) {
+            const overlay = document.getElementById(id + 'Overlay');
+            const sheet = document.getElementById(id);
+            
+            if(overlay.style.display === 'flex') {
+                sheet.classList.remove('active');
+                setTimeout(() => overlay.style.display = 'none', 300);
+            } else {
+                overlay.style.display = 'flex';
+                setTimeout(() => sheet.classList.add('active'), 10);
+            }
+        }
+
+        function closeAllModals(e) {
+            if(e.target.className === 'overlay') {
+                const sheets = document.querySelectorAll('.sheet');
+                const overlays = document.querySelectorAll('.overlay');
+                sheets.forEach(s => s.classList.remove('active'));
+                setTimeout(() => overlays.forEach(o => o.style.display = 'none'), 300);
+            }
+        }
+
+        // Cart Logic
+        function updateQty(id, delta, price) {
             const el = document.getElementById(id);
             let val = parseInt(el.innerText);
             val += delta;
             if(val < 1) return;
             el.innerText = val;
             
-            // Pop Animation
-            el.parentElement.style.transform = "scale(1.1)";
-            setTimeout(() => el.parentElement.style.transform = "scale(1)", 200);
+            subtotal += (delta * price);
+            updateBill();
         }
 
-        // Sheet Toggle
-        function openPayment() {
-            const modal = document.getElementById('payModal');
-            const sheet = document.getElementById('paySheet');
+        function removeItem(itemId, price) {
+            const item = document.getElementById(itemId);
+            const qty = parseInt(item.querySelector('span').innerText);
             
-            if(modal.style.display === 'flex') {
-                sheet.classList.remove('active');
-                setTimeout(() => modal.style.display = 'none', 400);
-            } else {
-                modal.style.display = 'flex';
-                setTimeout(() => sheet.classList.add('active'), 10);
-            }
-        }
-
-        // Success Logic
-        function processSuccess() {
-            const btn = event.currentTarget;
-            if(btn.tagName === "BUTTON") btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SECURING...';
+            item.style.transform = "translateX(100px)";
+            item.style.opacity = "0";
             
             setTimeout(() => {
-                document.getElementById('successScreen').style.display = 'flex';
-                // Trigger confetti or redirect here
-                setTimeout(() => {
-                    window.location.href = "index.html"; // Home par wapas
-                }, 3000);
-            }, 1500);
+                item.remove();
+                subtotal -= (qty * price);
+                itemsCount--;
+                updateBill();
+                
+                if(itemsCount === 0) {
+                    document.getElementById('cartList').style.display = 'none';
+                    document.getElementById('emptyCart').style.display = 'block';
+                    document.getElementById('itemCountTag').innerText = "0 ITEMS";
+                } else {
+                    document.getElementById('itemCountTag').innerText = `${itemsCount} ITEMS`;
+                }
+            }, 300);
         }
 
-        // Address Edit (Surprise Feature)
-        function editAddress() {
-            const p = document.getElementById('userAddr');
-            const newAddr = prompt("Enter New Delivery Address:", p.innerText);
-            if(newAddr) {
-                p.style.opacity = '0';
-                setTimeout(() => {
-                    p.innerText = newAddr;
-                    p.style.opacity = '1';
-                }, 300);
+        function updateBill() {
+            const total = subtotal + tax;
+            document.getElementById('subtotalDisplay').innerText = `₹${subtotal}`;
+            document.getElementById('totalDisplay').innerText = `₹${total}`;
+            document.getElementById('bottomPrice').innerText = `₹${total}`;
+            
+            // Update QR Code Amount
+            const qr = document.getElementById('qrCode');
+            qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=arham@upi&pn=NemiMart&am=${total}`;
+        }
+
+        // Address Management
+        function selectAddress(element, text) {
+            document.querySelectorAll('.address-card').forEach(c => {
+                c.classList.remove('selected');
+                const check = c.querySelector('.fa-check-circle');
+                if(check) check.remove();
+            });
+            
+            element.classList.add('selected');
+            element.innerHTML += '<i class="fas fa-check-circle" style="color: var(--gold);"></i>';
+            document.getElementById('currentAddrLabel').innerText = text;
+            
+            setTimeout(() => toggleModal('addressSheet'), 300);
+        }
+
+        function showAddForm() {
+            const form = document.getElementById('addressForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function saveAddress() {
+            const type = document.getElementById('newType').value;
+            const text = document.getElementById('newAddrText').value;
+            
+            if(!text) return;
+
+            const icon = type === 'Home' ? 'fa-home' : (type === 'Work' ? 'fa-briefcase' : 'fa-store');
+            
+            const newCard = document.createElement('div');
+            newCard.className = 'address-card';
+            newCard.onclick = function() { selectAddress(this, type + ': ' + text); };
+            newCard.innerHTML = `
+                <i class="fas ${icon} type-icon"></i>
+                <div class="address-info">
+                    <h5>${type}</h5>
+                    <p>${text}</p>
+                </div>
+                <i class="far fa-trash-can delete-addr" onclick="this.parentElement.remove(); event.stopPropagation();"></i>
+            `;
+            
+            document.getElementById('addressList').appendChild(newCard);
+            document.getElementById('newAddrText').value = "";
+            showAddForm();
+        }
+
+        // Final Order
+        function confirmOrder() {
+            const utr = document.getElementById('utrInput').value;
+            if(utr.length < 10) {
+                alert("Bhai sahi UTR dalo!");
+                return;
             }
+
+            toggleModal('paymentSheet');
+            document.getElementById('successScreen').style.display = 'flex';
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 4000);
         }
 
-        // Close on overlay click
-        document.getElementById('payModal').addEventListener('click', (e) => {
-            if(e.target.id === 'payModal') openPayment();
-        });
     </script>
 </body>
 </html>

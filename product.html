@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,6 +22,7 @@
             --radius-xl: 32px;
             --radius-lg: 20px;
             --shadow-soft: 0 15px 35px rgba(15, 37, 23, 0.05);
+            --heart-red: #EF4444;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
@@ -62,19 +63,35 @@
         .slider-wrap { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
         .slider-wrap::-webkit-scrollbar { display: none; }
         .slider-wrap img { 
-            min-width: 100%; height: 550px; object-fit: contain; 
-            scroll-snap-align: start; padding: 40px; cursor: zoom-in;
+            min-width: 100%; height: 500px; object-fit: contain; 
+            scroll-snap-align: start; padding: 30px; cursor: zoom-in;
         }
         .img-badge {
             position: absolute; top: 20px; left: 20px;
             background: var(--gold-primary); color: white;
             padding: 6px 15px; border-radius: 50px; font-size: 11px; font-weight: 800; letter-spacing: 1px;
-            text-transform: uppercase; box-shadow: 0 5px 15px rgba(212,175,55,0.3);
+            text-transform: uppercase; box-shadow: 0 5px 15px rgba(212,175,55,0.3); z-index: 10;
         }
+
+        /* --- ACTION ICONS (HEART & SHARE) --- */
+        .action-icons {
+            position: absolute; top: 20px; right: 20px;
+            display: flex; flex-direction: column; gap: 10px; z-index: 10;
+        }
+        .icon-btn {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: white; border: 1px solid var(--border-color);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 18px; color: var(--text-muted);
+            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .icon-btn:hover { transform: translateY(-3px); color: var(--gold-primary); border-color: var(--gold-primary); }
+        .icon-btn.active-heart { color: var(--heart-red); border-color: var(--heart-red); }
+        .icon-btn.active-heart i { font-weight: 900; } /* Solid heart */
 
         /* --- PRODUCT INFO --- */
         .brand-text { color: var(--gold-primary); font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        .main-title { font-family: 'Outfit'; font-size: clamp(32px, 4vw, 46px); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
+        .main-title { font-family: 'Outfit'; font-size: clamp(28px, 4vw, 42px); font-weight: 800; line-height: 1.2; margin-bottom: 15px; }
         .sub-desc { color: var(--text-muted); font-size: 16px; margin-bottom: 25px; }
 
         /* --- PRICING CARD --- */
@@ -83,25 +100,32 @@
             border: 1px solid var(--border-color); margin-bottom: 30px;
             box-shadow: var(--shadow-soft);
         }
-        .price-row { display: flex; align-items: baseline; gap: 15px; }
-        .p-now { font-size: 46px; font-weight: 800; color: var(--green-dark); }
-        .p-old { text-decoration: line-through; color: #9CA3AF; font-size: 22px; }
-        .save-badge { background: var(--green-light); color: white; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 14px; }
-        .tax-info { font-size: 13px; color: var(--text-muted); margin-top: 5px; display: block; }
+        .price-row { display: flex; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .p-now { font-size: clamp(36px, 5vw, 46px); font-weight: 800; color: var(--green-dark); line-height: 1; }
+        .p-old { text-decoration: line-through; color: #9CA3AF; font-size: 20px; }
+        .save-badge { background: var(--green-light); color: white; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 14px; }
+        .tax-info { font-size: 13px; color: var(--text-muted); margin-top: 10px; display: block; }
 
         /* --- INGREDIENTS GRID --- */
-        .section-title { font-family: 'Outfit'; font-size: 24px; font-weight: 800; margin: 40px 0 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title { font-family: 'Outfit'; font-size: 22px; font-weight: 800; margin: 40px 0 20px; display: flex; align-items: center; gap: 10px; }
         .section-title i { color: var(--gold-primary); }
         
-        .ing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .ing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .ing-card {
-            background: white; padding: 20px; border-radius: 16px; border: 1px solid var(--border-color);
+            background: white; padding: 18px; border-radius: 16px; border: 1px solid var(--border-color);
             display: flex; align-items: center; gap: 15px; transition: 0.3s;
         }
         .ing-card:hover { border-color: var(--gold-primary); background: var(--gold-light); transform: translateY(-3px); }
-        .ing-icon { width: 50px; height: 50px; background: var(--cream-dark); border-radius: 12px; display: grid; place-items: center; color: var(--gold-primary); font-size: 24px; }
+        .ing-icon { width: 45px; height: 45px; flex-shrink: 0; background: var(--cream-dark); border-radius: 12px; display: grid; place-items: center; color: var(--gold-primary); font-size: 20px; }
         .ing-info h4 { font-size: 15px; font-weight: 800; }
         .ing-info p { font-size: 12px; color: var(--text-muted); }
+
+        /* --- DETAILED DESCRIPTION --- */
+        .desc-box { background: white; padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 20px; }
+        .desc-box p { color: var(--text-muted); font-size: 15px; margin-bottom: 15px; line-height: 1.8; }
+        .desc-list { list-style: none; padding-left: 0; }
+        .desc-list li { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 15px; color: var(--green-dark); }
+        .desc-list li i { color: var(--gold-primary); margin-top: 5px; font-size: 14px; }
 
         /* --- FAQ ACCORDIONS --- */
         .faq-item { background: white; border-radius: 16px; margin-bottom: 15px; border: 1px solid var(--border-color); overflow: hidden; }
@@ -125,8 +149,8 @@
         .btn-submit-rev:hover { background: var(--gold-primary); }
 
         /* User Reviews List */
-        .user-comment { margin-bottom: 25px; }
-        .user-comment:last-child { margin-bottom: 0; }
+        .user-comment { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .user-comment:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
         .u-stars { color: var(--gold-primary); font-size: 12px; margin-bottom: 5px; }
         .u-name { font-weight: 800; font-size: 14px; }
         .u-date { font-size: 12px; color: #9CA3AF; margin-left: 10px; }
@@ -136,27 +160,48 @@
         .cart-bar {
             position: fixed; bottom: 0; left: 0; width: 100%;
             background: rgba(253, 251, 247, 0.95); backdrop-filter: blur(20px);
-            padding: 20px 6% 30px; z-index: 1500;
+            padding: 15px 5% 25px; z-index: 1500;
             box-shadow: 0 -10px 40px rgba(15,37,23,0.08); border-top: 1px solid var(--border-color);
         }
         .btn-grand-cart {
-            width: 100%; max-width: 800px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 15px;
-            height: 70px; background: var(--green-dark); color: var(--gold-primary);
-            border: 2px solid var(--gold-primary); border-radius: 20px;
-            font-size: 20px; font-weight: 800; font-family: 'Outfit'; cursor: pointer;
+            width: 100%; max-width: 800px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 12px;
+            height: 65px; background: var(--green-dark); color: var(--gold-primary);
+            border: 2px solid var(--gold-primary); border-radius: 18px;
+            font-size: 18px; font-weight: 800; font-family: 'Outfit'; cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
         }
-        .btn-grand-cart:hover { background: var(--gold-primary); color: white; transform: translateY(-3px); box-shadow: 0 15px 30px rgba(212,175,55,0.3); }
+        .btn-grand-cart:hover { background: var(--gold-primary); color: white; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(212,175,55,0.3); }
         .btn-grand-cart:active { transform: scale(0.98); }
         
         .pulse-icon { animation: heartBeat 2s infinite; }
-        @keyframes heartBeat { 0% { transform: scale(1); } 14% { transform: scale(1.3); } 28% { transform: scale(1); } 42% { transform: scale(1.3); } 70% { transform: scale(1); } }
+        @keyframes heartBeat { 0% { transform: scale(1); } 14% { transform: scale(1.2); } 28% { transform: scale(1); } 42% { transform: scale(1.2); } 70% { transform: scale(1); } }
 
         /* Fullscreen Zoom Overlay */
         #zoomOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,37,23,0.98); z-index: 3000; display: none; justify-content: center; align-items: center; }
         #zoomOverlay img { max-width: 90%; max-height: 85%; object-fit: contain; border-radius: 20px; }
-        .close-btn { position: absolute; top: 30px; right: 30px; color: var(--gold-primary); font-size: 40px; cursor: pointer; transition: 0.3s; }
+        .close-btn { position: absolute; top: 20px; right: 25px; color: var(--gold-primary); font-size: 40px; cursor: pointer; transition: 0.3s; z-index: 3001; }
         .close-btn:hover { transform: rotate(90deg); }
+
+        /* --- MOBILE RESPONSIVE TWEAKS --- */
+        @media (max-width: 768px) {
+            .nav-logo h1 { font-size: 20px; }
+            .nav-review-btn { padding: 6px 12px; font-size: 12px; }
+            .nav-review-btn span { display: none; } /* Hide text on very small screens, keep star */
+            
+            .master-wrapper { padding: 25px 5% 120px; }
+            .product-grid { gap: 30px; }
+            .slider-wrap img { height: 350px; padding: 15px; }
+            
+            .price-card { padding: 20px; }
+            .p-now { font-size: 32px; }
+            
+            .ing-grid { grid-template-columns: 1fr; } /* 1 column on mobile */
+            
+            .review-wrapper { padding: 20px; }
+            .rating-summary h2 { font-size: 32px; }
+            
+            .btn-grand-cart { height: 55px; font-size: 16px; }
+        }
     </style>
 </head>
 <body>
@@ -167,7 +212,7 @@
             <h1>NEMI MART</h1>
         </div>
         <button class="nav-review-btn" onclick="scrollToReviews()">
-            <i class="fas fa-star"></i> Write a Review
+            <i class="fas fa-star"></i> <span>Write a Review</span>
         </button>
     </nav>
 
@@ -182,12 +227,22 @@
             <div class="left-column">
                 <div class="gallery-box">
                     <span class="img-badge">100% Pure Organic</span>
+                    
+                    <div class="action-icons">
+                        <button class="icon-btn" id="heartBtn" onclick="toggleHeart(this)" title="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="icon-btn" onclick="shareProduct()" title="Share Product">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+
                     <div class="slider-wrap" id="imageSlider">
                         <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" onclick="openZoom(this.src)" alt="Product View 1">
                         <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" onclick="openZoom(this.src)" alt="Product View 2">
                         <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" onclick="openZoom(this.src)" alt="Product View 3">
                     </div>
-                    <p style="text-align: center; padding: 15px; font-size: 12px; color: var(--text-muted); font-weight: 600;">
+                    <p style="text-align: center; padding: 15px; font-size: 12px; color: var(--text-muted); font-weight: 600; border-top: 1px solid var(--border-color);">
                         <i class="fas fa-arrows-left-right"></i> SWIPE TO EXPLORE • CLICK TO ZOOM
                     </p>
                 </div>
@@ -205,6 +260,17 @@
                         <span class="save-badge">Save 45% Today</span>
                     </div>
                     <span class="tax-info">Inclusive of all taxes. Free Premium Delivery.</span>
+                </div>
+
+                <h3 class="section-title"><i class="fas fa-info-circle"></i> Complete Description</h3>
+                <div class="desc-box">
+                    <p>Amritprash Elite Gold is not just an immunity booster; it is a meticulously crafted Ayurvedic masterpiece. Made using the traditional <strong>'Paka Vidhi'</strong>, it blends over 40+ potent Himalayan herbs to provide complete holistic wellness for you and your family.</p>
+                    <ul class="desc-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Anti-Aging Properties:</strong> Rich in antioxidants that promote skin glow and delay cellular aging.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Enhanced Immunity:</strong> Forms a protective shield against seasonal flus and common infections.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Brain & Memory Power:</strong> Infusion of pure Brahmi and Shankhpushpi sharpens focus.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Energy & Stamina:</strong> Shilajit and Safed Musli act as natural vitality boosters keeping you active all day.</li>
+                    </ul>
                 </div>
 
                 <h3 class="section-title"><i class="fas fa-leaf"></i> Elite Ingredients</h3>
@@ -247,6 +313,10 @@
                 <div class="faq-item" onclick="this.classList.toggle('active')">
                     <div class="faq-head">Are there any side effects? <i class="fas fa-chevron-down"></i></div>
                     <div class="faq-body">No, this is a 100% natural, lab-tested Ayurvedic formulation. It contains zero chemicals, preservatives, or artificial colors. However, pregnant women should consult a physician.</div>
+                </div>
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-head">Is it safe for diabetic patients? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-body">We use pure Wild Forest Honey instead of refined sugar, but diabetic patients should consult their doctor before starting any new sweet supplement.</div>
                 </div>
 
                 <div id="reviewsArea" class="review-wrapper">
@@ -313,6 +383,35 @@
             document.getElementById('reviewsArea').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
+        // Heart (Wishlist) Toggle Logic
+        function toggleHeart(element) {
+            element.classList.toggle('active-heart');
+            const icon = element.querySelector('i');
+            if(element.classList.contains('active-heart')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas'); // Solid heart
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far'); // Outline heart
+            }
+        }
+
+        // Native Share Logic
+        function shareProduct() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Amritprash Elite Gold - Nemi Mart',
+                    text: 'Check out this Premium Elite Gold Formula at Nemi Mart!',
+                    url: window.location.href,
+                })
+                .catch((error) => console.log('Error sharing', error));
+            } else {
+                alert("Link copied to clipboard! Share it with your friends.");
+                // Fallback: Copy link to clipboard
+                navigator.clipboard.writeText(window.location.href);
+            }
+        }
+
         // Add to Cart Logic
         function addToCartFunc() {
             const btn = document.querySelector('.btn-grand-cart');
@@ -321,7 +420,7 @@
             // Success State Animation
             btn.style.background = "var(--gold-primary)";
             btn.style.color = "#fff";
-            btn.innerHTML = `<i class="fas fa-check-circle"></i> ADDED TO CART SUCCESSFULLY`;
+            btn.innerHTML = `<i class="fas fa-check-circle"></i> ADDED TO CART`;
             
             setTimeout(() => {
                 alert("🛒 Premium Elite Gold has been added to your cart!");

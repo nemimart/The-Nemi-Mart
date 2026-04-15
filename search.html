@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nemi Mart | Smart Search</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1A3E26;
+            --accent: #D4AF37;
+            --bg-light: #F8F9FA;
+            --white: #FFFFFF;
+            --text-main: #0A1F13;
+            --text-muted: #64748B;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body { background: var(--bg-light); color: var(--text-main); }
+
+        /* --- Search Header --- */
+        .search-header {
+            background: var(--white);
+            padding: 20px;
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .search-bar-container {
+            display: flex;
+            align-items: center;
+            background: #F1F3F2;
+            padding: 12px 18px;
+            border-radius: 18px;
+            gap: 12px;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+
+        .search-bar-container:focus-within {
+            border-color: var(--accent);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            color: var(--text-main);
+        }
+
+        /* --- Filters / Chips --- */
+        .filter-scroll {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .filter-scroll::-webkit-scrollbar { display: none; }
+
+        .chip {
+            padding: 8px 18px;
+            background: var(--white);
+            border: 1px solid #E2E8F0;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .chip.active {
+            background: var(--primary);
+            color: var(--accent);
+            border-color: var(--primary);
+        }
+
+        /* --- Results Grid --- */
+        .results-container {
+            padding: 10px 20px 100px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 12px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .p-img {
+            width: 100%;
+            height: 140px;
+            background: #f4f4f4;
+            border-radius: 15px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .p-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .p-price { font-size: 15px; color: var(--primary); font-weight: 800; }
+
+        /* --- Suggestion List --- */
+        #suggestions {
+            background: var(--white);
+            margin: 0 20px;
+            border-radius: 0 0 20px 20px;
+            display: none;
+            flex-direction: column;
+            border-top: 1px solid #eee;
+        }
+
+        .suggest-item {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-header">
+        <div class="search-bar-container">
+            <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search products, honey, oils..." oninput="handleSearch()">
+            <i class="fa-solid fa-xmark" id="clearBtn" style="display:none; cursor:pointer;" onclick="clearSearch()"></i>
+        </div>
+    </div>
+
+    <div id="suggestions"></div>
+
+    <div class="filter-scroll">
+        <div class="chip active">All</div>
+        <div class="chip">Honey</div>
+        <div class="chip">Organic</div>
+        <div class="chip">Oils</div>
+        <div class="chip">Dry Fruits</div>
+    </div>
+
+    <div class="results-container" id="resultsGrid">
+        </div>
+
+    <div class="no-results" id="noResults">
+        <i class="fa-regular fa-face-frown" style="font-size: 50px; color: #cbd5e1; margin-bottom: 15px;"></i>
+        <h3>Bhai, ye item nahi mila!</h3>
+        <p style="color: var(--text-muted);">Kuch aur try kar, shayad mil jaye.</p>
+    </div>
+
+    <script>
+        // Database (Ye tere Admin panel se update hota rahega)
+        const products = [
+            { id: 1, name: "Premium Saffron", price: "₹499", category: "Organic", img: "https://via.placeholder.com/150", url: "product-details.html?id=1" },
+            { id: 2, name: "Wild Forest Honey", price: "₹250", category: "Honey", img: "https://via.placeholder.com/150", url: "product-details.html?id=2" },
+            { id: 3, name: "Cold Pressed Oil", price: "₹890", category: "Oils", img: "https://via.placeholder.com/150", url: "product-details.html?id=3" },
+            { id: 4, name: "Roasted Almonds", price: "₹650", category: "Dry Fruits", img: "https://via.placeholder.com/150", url: "product-details.html?id=4" },
+            { id: 5, name: "Organic Ghee", price: "₹1200", category: "Organic", img: "https://via.placeholder.com/150", url: "product-details.html?id=5" }
+        ];
+
+        function handleSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const grid = document.getElementById('resultsGrid');
+            const suggestBox = document.getElementById('suggestions');
+            const noRes = document.getElementById('noResults');
+            const clear = document.getElementById('clearBtn');
+
+            grid.innerHTML = "";
+            suggestBox.innerHTML = "";
+            
+            if(input.length > 0) {
+                clear.style.display = "block";
+                const filtered = products.filter(p => p.name.toLowerCase().includes(input));
+
+                if(filtered.length > 0) {
+                    noRes.style.display = "none";
+                    suggestBox.style.display = "flex";
+
+                    filtered.forEach(p => {
+                        // Add to Suggestions
+                        const sItem = document.createElement('div');
+                        sItem.className = 'suggest-item';
+                        sItem.innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> ${p.name}`;
+                        sItem.onclick = () => { document.getElementById('searchInput').value = p.name; handleSearch(); };
+                        suggestBox.appendChild(sItem);
+
+                        // Add to Grid
+                        const card = `
+                            <a href="${p.url}" class="product-card">
+                                <img src="${p.img}" class="p-img">
+                                <div class="p-name">${p.name}</div>
+                                <div class="p-price">${p.price}</div>
+                            </a>
+                        `;
+                        grid.innerHTML += card;
+                    });
+                } else {
+                    suggestBox.style.display = "none";
+                    noRes.style.display = "block";
+                }
+            } else {
+                clear.style.display = "none";
+                suggestBox.style.display = "none";
+                renderAll();
+            }
+        }
+
+        function renderAll() {
+            const grid = document.getElementById('resultsGrid');
+            grid.innerHTML = products.map(p => `
+                <a href="${p.url}" class="product-card">
+                    <img src="${p.img}" class="p-img">
+                    <div class="p-name">${p.name}</div>
+                    <div class="p-price">${p.price}</div>
+                </a>
+            `).join('');
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = "";
+            handleSearch();
+        }
+
+        // Initial Load
+        renderAll();
+    </script>
+</body>
+</html>

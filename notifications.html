@@ -1,243 +1,387 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Notifications</title>
+    <title>Nemi Mart | Notifications Pro</title>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --deep-green: #0A1F13;
-            --lush-green: #1A3E26;
-            --gold: #D4AF37;
-            --gold-light: #F4E8C1;
-            --cream-bg: #FDFBF7;
+            --primary: #1A3E26; /* Deep Lush Green */
+            --accent: #D4AF37;  /* Premium Gold */
+            --bg-light: #F8F9FA;
             --white: #FFFFFF;
-            --text-grey: #5C6F63;
-            --shadow: 0 10px 30px rgba(10, 31, 19, 0.05);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --text-main: #0A1F13;
+            --text-muted: #64748B;
+            --glass-border: rgba(212, 175, 55, 0.15);
+            --card-shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
+            --curve: 24px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        body { background: var(--cream-bg); color: var(--deep-green); overflow-x: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* --- HEADER --- */
-        .header {
-            background: var(--white);
-            padding: 20px;
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 0px; }
+
+        /* --- Header Styling --- */
+        .app-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px 24px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            position: sticky; top: 0; z-index: 100;
-            border-bottom: 1px solid var(--gold-light);
-        }
-        .back-btn {
-            width: 40px; height: 40px; border-radius: 50%;
-            border: 1px solid var(--gold-light);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--lush-green); cursor: pointer;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        /* --- TABS SYSTEM --- */
-        .tabs-container {
-            padding: 20px;
-            display: flex;
-            background: var(--white);
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .tab {
-            flex: 1; padding: 12px;
+        .header-left { display: flex; align-items: center; gap: 16px; }
+
+        .btn-back {
+            width: 44px;
+            height: 44px;
             border-radius: 14px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 14px;
+            background: var(--white);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
             cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid transparent;
-            background: #f4f6f5;
-            color: var(--text-grey);
-        }
-        .tab.active {
-            background: var(--lush-green);
-            color: var(--gold);
-            box-shadow: 0 4px 15px rgba(26, 62, 38, 0.2);
+            transition: 0.3s;
         }
 
-        /* --- NOTIFICATION LIST --- */
-        .notif-list { padding: 0 15px 100px; }
+        .btn-back:active { transform: scale(0.9); }
 
+        .header-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .clear-all {
+            font-size: 13px;
+            font-weight: 700;
+            color: #EF4444;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+        }
+
+        /* --- Section Info --- */
+        .section-label {
+            padding: 24px 24px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* --- Notification Container --- */
+        .notifications-wrapper {
+            padding: 0 20px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* --- Pro Notification Card --- */
         .notif-card {
             background: var(--white);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 15px;
+            border-radius: var(--curve);
+            padding: 18px;
             display: flex;
-            gap: 15px;
+            gap: 16px;
             position: relative;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(212, 175, 55, 0.05);
-            transition: var(--transition);
-            animation: slideIn 0.4s ease forwards;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            box-shadow: var(--card-shadow);
+            border: 1px solid transparent;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: cardReveal 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+            cursor: pointer;
+            overflow: hidden;
         }
 
-        .notif-icon {
-            width: 50px; height: 50px;
-            border-radius: 15px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; flex-shrink: 0;
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        
-        /* Icon Colors */
-        .bg-gold { background: var(--gold-light); color: var(--gold); }
-        .bg-green { background: #e8f5e9; color: var(--lush-green); }
-        .bg-blue { background: #e3f2fd; color: #2196f3; }
 
-        .notif-content { flex: 1; }
-        .notif-content h4 { font-family: 'Outfit'; font-size: 16px; margin-bottom: 4px; }
-        .notif-content p { font-size: 13px; color: var(--text-grey); line-height: 1.4; }
-        .notif-time { font-size: 11px; color: #aaa; margin-top: 8px; font-weight: 600; }
+        .notif-card:active { transform: scale(0.98); background: #fafafa; }
 
-        .delete-btn {
-            position: absolute; top: 16px; right: 16px;
-            color: #ff4d4d; opacity: 0.3; cursor: pointer;
-            padding: 5px; transition: 0.3s;
+        /* Icon Styles */
+        .icon-box {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            position: relative;
         }
-        .delete-btn:hover { opacity: 1; transform: scale(1.2); }
 
-        /* --- EMPTY STATE --- */
-        .empty-state {
-            text-align: center; padding: 100px 20px; display: none;
+        .icon-box::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            opacity: 0.15;
         }
-        .empty-state i { font-size: 60px; color: var(--gold-light); margin-bottom: 15px; }
 
-        /* Hide logic */
-        .hidden { display: none !important; }
+        .type-order { color: #10B981; }
+        .type-order::after { background: #10B981; }
+
+        .type-promo { color: var(--accent); }
+        .type-promo::after { background: var(--accent); }
+
+        .type-system { color: #3B82F6; }
+        .type-system::after { background: #3B82F6; }
+
+        /* Content Styles */
+        .notif-body { flex: 1; }
+
+        .notif-body h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .unread-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .notif-body p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .notif-meta {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #CBD5E1;
+            text-transform: uppercase;
+        }
+
+        /* Delete Action */
+        .swipe-action {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FF4D4D;
+            background: #FFF5F5;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .notif-card:hover .swipe-action { opacity: 1; }
+
+        /* --- Empty State --- */
+        .empty-box {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 40px;
+            text-align: center;
+        }
+
+        .empty-box img {
+            width: 140px;
+            margin-bottom: 24px;
+            filter: grayscale(1);
+            opacity: 0.3;
+        }
+
+        .empty-box h2 { font-family: 'Outfit'; font-size: 20px; color: var(--text-main); }
+        .empty-box p { color: var(--text-muted); font-size: 14px; margin-top: 8px; }
+
+        /* Staggered Delay for Cards */
+        .notif-card:nth-child(1) { animation-delay: 0.1s; }
+        .notif-card:nth-child(2) { animation-delay: 0.2s; }
+        .notif-card:nth-child(3) { animation-delay: 0.3s; }
+        .notif-card:nth-child(4) { animation-delay: 0.4s; }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="back-btn" onclick="window.history.back()"><i class="fas fa-chevron-left"></i></div>
-        <h2 style="font-family: 'Outfit'; font-weight: 800;">Notifications</h2>
+    <header class="app-header">
+        <div class="header-left">
+            <div class="btn-back" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </div>
+            <div class="header-title">
+                <h1>Updates</h1>
+            </div>
+        </div>
+        <div class="clear-all" onclick="clearAll()">Clear All</div>
     </header>
 
-    <div class="tabs-container">
-        <div class="tab active" onclick="switchTab('personal', this)">
-            <i class="fas fa-user-circle"></i> Personal
-        </div>
-        <div class="tab" onclick="switchTab('global', this)">
-            <i class="fas fa-globe"></i> Global
-        </div>
-    </div>
+    <div class="section-label">Recent Notifications</div>
 
-    <div class="notif-list" id="notifContainer">
+    <main class="notifications-wrapper" id="masterContainer">
         
-        <div class="notif-card personal" id="n1">
-            <div class="notif-icon bg-green"><i class="fas fa-check-double"></i></div>
-            <div class="notif-content">
-                <h4>Order Confirmed!</h4>
-                <p>Arham ne aapka order pack karna shuru kar diya hai. Ready ho jao!</p>
-                <div class="notif-time">2 MINS AGO</div>
+        <div class="notif-card" id="card-1">
+            <div class="icon-box type-order">
+                <i class="fa-solid fa-box-open"></i>
             </div>
-            <i class="far fa-trash-can delete-btn" onclick="removeNotif('n1')"></i>
+            <div class="notif-body">
+                <h3>Order Delivered <span class="unread-dot"></span></h3>
+                <p>Khushi ki baat! Aapka "Premium Kesar" safely deliver ho chuka hai. Feedback dena na bhulein.</p>
+                <div class="notif-meta">
+                    <span><i class="fa-regular fa-clock"></i> Just Now</span>
+                    <span>•</span>
+                    <span>Order #NM-9921</span>
+                </div>
+            </div>
+            <div class="swipe-action" onclick="deleteNotif('card-1')">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
         </div>
 
-        <div class="notif-card personal" id="n2">
-            <div class="notif-icon bg-blue"><i class="fas fa-truck-fast"></i></div>
-            <div class="notif-content">
-                <h4>Out for Delivery</h4>
-                <p>Aapka Amritprash bas 5 minute mein pahunchne wala hai.</p>
-                <div class="notif-time">1 HOUR AGO</div>
+        <div class="notif-card" id="card-2">
+            <div class="icon-box type-promo">
+                <i class="fa-solid fa-bolt-lightning"></i>
             </div>
-            <i class="far fa-trash-can delete-btn" onclick="removeNotif('n2')"></i>
+            <div class="notif-body">
+                <h3>Flash Sale Alert!</h3>
+                <p>Agli 2 ghante ke liye Nemi Mart par sabhi products par 15% ki extra choot. Use code: ARHAM15</p>
+                <div class="notif-meta">
+                    <span><i class="fa-regular fa-clock"></i> 45 Mins Ago</span>
+                    <span>•</span>
+                    <span>Exclusive</span>
+                </div>
+            </div>
+            <div class="swipe-action" onclick="deleteNotif('card-2')">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
         </div>
 
-        <div class="notif-card global hidden" id="n3">
-            <div class="notif-icon bg-gold"><i class="fas fa-fire"></i></div>
-            <div class="notif-content">
-                <h4>Mega Sale Live!</h4>
-                <p>Himalayan Shilajit par flat 20% OFF. Stock khatam hone se pehle mangwa lo.</p>
-                <div class="notif-time">4 HOURS AGO</div>
+        <div class="notif-card" id="card-3">
+            <div class="icon-box type-system">
+                <i class="fa-solid fa-wallet"></i>
             </div>
-            <i class="far fa-trash-can delete-btn" onclick="removeNotif('n3')"></i>
+            <div class="notif-body">
+                <h3>Wallet Updated</h3>
+                <p>Refund process complete. ₹450 aapke Nemi Wallet mein add kar diye gaye hain.</p>
+                <div class="notif-meta">
+                    <span><i class="fa-regular fa-clock"></i> 3 Hours Ago</span>
+                </div>
+            </div>
+            <div class="swipe-action" onclick="deleteNotif('card-3')">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
         </div>
 
-        <div class="notif-card global hidden" id="n4">
-            <div class="notif-icon bg-gold"><i class="fas fa-star"></i></div>
-            <div class="notif-content">
-                <h4>New Arrival: Gold Saffron</h4>
-                <p>Premium Kashmiri Kesar ab Nemi Mart par available hai.</p>
-                <div class="notif-time">YESTERDAY</div>
+        <div class="notif-card" id="card-4">
+            <div class="icon-box type-order">
+                <i class="fa-solid fa-check-to-slot"></i>
             </div>
-            <i class="far fa-trash-can delete-btn" onclick="removeNotif('n4')"></i>
+            <div class="notif-body">
+                <h3>Payment Successful</h3>
+                <p>Aapka order receive ho gaya hai. Hamari team packing shuru kar rahi hai.</p>
+                <div class="notif-meta">
+                    <span><i class="fa-regular fa-clock"></i> Yesterday</span>
+                </div>
+            </div>
+            <div class="swipe-action" onclick="deleteNotif('card-4')">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
         </div>
 
-    </div>
+    </main>
 
-    <div class="empty-state" id="emptyState">
-        <i class="fas fa-bell-slash"></i>
-        <h3>Sab saaf hai!</h3>
-        <p style="color: var(--text-grey); font-size: 14px; margin-top: 5px;">Abhi koi naya notification nahi hai.</p>
+    <div class="empty-box" id="emptyState">
+        <i class="fa-solid fa-bell-slash" style="font-size: 50px; color: #cbd5e1; margin-bottom: 20px;"></i>
+        <h2>All Caught Up!</h2>
+        <p>Aapke paas filhal koi naya notification nahi hai. Check back later!</p>
     </div>
 
     <script>
-        function switchTab(type, el) {
-            // Update tabs UI
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-
-            // Filter Notifications
-            const allCards = document.querySelectorAll('.notif-card');
-            let count = 0;
-
-            allCards.forEach(card => {
-                if(card.classList.contains(type)) {
-                    card.classList.remove('hidden');
-                    count++;
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
-
-            checkEmpty(count);
-        }
-
-        function removeNotif(id) {
-            const el = document.getElementById(id);
-            el.style.transform = "translateX(100%)";
-            el.style.opacity = "0";
+        function deleteNotif(id) {
+            const card = document.getElementById(id);
             
+            // Professional "Out" Animation
+            card.style.transform = "translateX(100px) scale(0.9)";
+            card.style.opacity = "0";
+            card.style.maxHeight = "0";
+            card.style.margin = "0";
+            card.style.padding = "0";
+            card.style.border = "none";
+
             setTimeout(() => {
-                el.remove();
-                // Check if currently visible tab is now empty
-                const activeTabType = document.querySelector('.tab.active').innerText.toLowerCase().includes('personal') ? 'personal' : 'global';
-                const remaining = document.querySelectorAll('.notif-card.' + activeTabType).length;
-                checkEmpty(remaining);
-            }, 300);
+                card.remove();
+                checkCount();
+            }, 400);
         }
 
-        function checkEmpty(count) {
+        function clearAll() {
+            const container = document.getElementById('masterContainer');
+            container.style.transition = "0.5s";
+            container.style.opacity = "0";
+            container.style.transform = "translateY(20px)";
+
+            setTimeout(() => {
+                container.innerHTML = "";
+                checkCount();
+            }, 500);
+        }
+
+        function checkCount() {
+            const container = document.getElementById('masterContainer');
             const empty = document.getElementById('emptyState');
-            const container = document.getElementById('notifContainer');
+            const label = document.querySelector('.section-label');
             
-            if(count === 0) {
-                empty.style.display = 'block';
+            if (container.children.length === 0) {
                 container.style.display = 'none';
-            } else {
-                empty.style.display = 'none';
-                container.style.display = 'block';
+                label.style.display = 'none';
+                empty.style.display = 'flex';
+                document.querySelector('.clear-all').style.display = 'none';
             }
         }
     </script>
+
 </body>
 </html>

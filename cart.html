@@ -3,630 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Checkout | Nemi Mart Official</title>
+    <title>Elite Checkout | Nemi Mart</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* ============================================================
-           1. ROOT SETTINGS & THEME
-           ============================================================ */
         :root {
-            --cream-bg: #FDFBF7;
-            --cream-dark: #F5F1E6;
-            --green-dark: #0F2517;
-            --green-light: #1A3E26;
-            --gold-primary: #D4AF37;
-            --gold-hover: #B8860B;
-            --gold-soft: #FAF4E5;
+            --bg-deep: #0A1A10; /* Deepest Green */
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --cream: #FDFBF7;
+            --accent: #1A3E26;
             --white: #FFFFFF;
-            --text-main: #1F2937;
-            --text-muted: #5C6F63;
-            --border-color: #EAE5D9;
-            --shadow-lux: 0 20px 50px rgba(15, 37, 23, 0.1);
-            --radius-xl: 30px;
-            --radius-lg: 20px;
+            --radius-main: 24px;
+        }
+
+        /* --- GLOBAL ANIMATIONS --- */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px var(--gold-glow); }
+            50% { box-shadow: 0 0 20px var(--gold-glow); }
+            100% { box-shadow: 0 0 5px var(--gold-glow); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         
         body { 
-            background: var(--cream-bg); 
-            color: var(--green-dark); 
-            line-height: 1.6; 
+            background: radial-gradient(circle at top right, #1A3E26, #0A1A10);
+            color: var(--white);
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* ============================================================
-           2. HEADER / NAVIGATION
-           ============================================================ */
-        .header-nav {
-            background: var(--white);
-            padding: 18px 6%;
+        /* --- LUXURY NAV --- */
+        nav {
+            padding: 25px 8%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(15px);
+            background: rgba(10, 26, 16, 0.8);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
         }
+        .nav-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .nav-logo img { width: 45px; border-radius: 12px; border: 1px solid var(--gold); }
+        .nav-logo h1 { font-family: 'Outfit'; color: var(--gold); font-size: 24px; letter-spacing: 2px; }
 
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .brand-logo img {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
-        }
-
-        .brand-logo h1 {
-            font-family: 'Outfit';
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--green-dark);
-            letter-spacing: 1px;
-        }
-
-        .step-indicator {
-            display: flex;
-            gap: 10px;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .step-indicator span.active { color: var(--gold-primary); }
-
-        /* ============================================================
-           3. MAIN LAYOUT GRID
-           ============================================================ */
-        .cart-wrapper {
+        .cart-container {
             max-width: 1300px;
-            margin: 40px auto;
-            padding: 0 6% 100px;
+            margin: 50px auto;
+            padding: 0 5% 150px;
             display: grid;
             grid-template-columns: 1fr;
             gap: 40px;
+            animation: slideIn 0.8s ease-out;
         }
 
-        @media (min-width: 1024px) {
-            .cart-wrapper { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
+        @media (min-width: 1100px) {
+            .cart-container { grid-template-columns: 1.2fr 0.8fr; }
         }
 
-        /* ============================================================
-           4. LEFT COLUMN: LUXURY ITEM CARDS
-           ============================================================ */
-        .section-heading {
-            font-family: 'Outfit';
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .luxury-item {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 25px;
-            border: 1px solid var(--border-color);
+        /* --- DYNAMIC PRODUCT CARDS --- */
+        .cart-header { font-family: 'Outfit'; font-size: 32px; margin-bottom: 30px; color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
+        
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-main);
+            padding: 30px;
             margin-bottom: 20px;
             display: flex;
             gap: 25px;
             position: relative;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            transform: scale(1.02);
+            border-color: var(--gold);
         }
 
-        .luxury-item:hover {
-            border-color: var(--gold-primary);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lux);
-        }
-
-        .product-thumb {
-            width: 110px;
-            height: 110px;
-            background: var(--cream-dark);
+        .prod-image {
+            width: 120px; height: 120px;
+            background: var(--white);
             border-radius: 18px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid var(--border-color);
+            padding: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            animation: float 4s infinite ease-in-out;
         }
+        .prod-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
 
-        .product-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .prod-details { flex: 1; }
+        .prod-details h3 { font-family: 'Outfit'; font-size: 20px; color: var(--gold); margin-bottom: 8px; }
+        .prod-details p { color: #A0AEC0; font-size: 13px; margin-bottom: 15px; }
+
+        .price-badge { font-size: 22px; font-weight: 800; color: var(--white); display: block; margin-bottom: 15px; }
+
+        .qty-control {
+            display: flex; align-items: center; gap: 20px;
+            background: rgba(0,0,0,0.3);
+            width: fit-content; padding: 8px 18px; border-radius: 50px;
+            border: 1px solid var(--glass-border);
         }
-
-        .item-details { flex: 1; }
-
-        .item-details h3 {
-            font-family: 'Outfit';
-            font-size: 18px;
-            font-weight: 800;
-            margin-bottom: 6px;
+        .qty-control button {
+            background: none; border: none; color: var(--gold); font-size: 20px; cursor: pointer; font-weight: 800;
         }
+        .qty-control span { font-weight: 800; min-width: 20px; text-align: center; }
 
-        .item-details .badge {
-            font-size: 10px;
-            background: var(--gold-soft);
-            color: var(--gold-primary);
-            padding: 3px 10px;
-            border-radius: 50px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .item-details .price-tag {
-            font-size: 20px;
-            font-weight: 800;
-            margin: 12px 0;
-            display: block;
-        }
-
-        .qty-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: var(--cream-bg);
-            width: fit-content;
-            padding: 6px 16px;
-            border-radius: 50px;
-            border: 1px solid var(--border-color);
-        }
-
-        .qty-btn {
-            background: none;
-            border: none;
-            font-size: 18px;
-            font-weight: 800;
-            cursor: pointer;
-            color: var(--green-dark);
-            transition: 0.2s;
-        }
-
-        .qty-btn:hover { color: var(--gold-primary); }
-
-        .qty-num { font-weight: 800; min-width: 25px; text-align: center; }
-
-        .trash-btn {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            color: #EF4444;
-            background: #FEF2F2;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
+        .remove-icon {
+            position: absolute; top: 30px; right: 30px;
+            color: rgba(255, 0, 0, 0.5); cursor: pointer; font-size: 20px;
             transition: 0.3s;
         }
+        .remove-icon:hover { color: #ff4d4d; transform: rotate(90deg); }
 
-        .trash-btn:hover { background: #EF4444; color: white; }
-
-        /* ============================================================
-           5. RIGHT COLUMN: AUTHENTIC RECEIPT BILL
-           ============================================================ */
-        .receipt-container {
-            background: var(--white);
-            border-radius: 4px;
+        /* --- THE SCI-FI BILL / RECEIPT --- */
+        .bill-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-main);
+            border: 1px solid var(--gold);
             padding: 40px;
-            position: relative;
-            box-shadow: var(--shadow-lux);
-            border-top: 8px solid var(--gold-primary);
+            position: sticky; top: 120px;
+            box-shadow: 0 0 30px var(--gold-glow);
+            overflow: hidden;
+        }
+        .bill-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, var(--gold), transparent);
+            animation: rotate 6s linear infinite;
+            opacity: 0.1;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .bill-header { text-align: center; margin-bottom: 30px; }
+        .bill-header h2 { font-family: 'Outfit'; font-size: 28px; color: var(--gold); letter-spacing: 5px; }
+
+        .line-item {
+            display: flex; justify-content: space-between; margin-bottom: 15px;
+            font-size: 15px; color: #CBD5E0;
+        }
+        .line-item.total {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 20px; margin-top: 20px;
+            font-size: 28px; font-weight: 800; color: var(--white);
         }
 
-        /* Zig Zag Bottom for Receipt */
-        .receipt-container::after {
-            content: "";
-            position: absolute;
-            bottom: -15px;
-            left: 0;
-            width: 100%;
-            height: 15px;
-            background: linear-gradient(-45deg, var(--white) 8px, transparent 0), 
-                        linear-gradient(45deg, var(--white) 8px, transparent 0);
-            background-size: 16px 16px;
+        /* --- PAYMENT GATEWAY --- */
+        .payment-methods { margin-top: 35px; }
+        .pay-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); display: block; margin-bottom: 15px; }
+        
+        .upi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .upi-tile {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px; padding: 15px;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            cursor: pointer; transition: 0.3s;
         }
+        .upi-tile:hover { background: var(--gold); color: var(--bg-deep); border-color: var(--white); }
+        .upi-tile i { font-size: 24px; }
 
-        .receipt-header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px dashed var(--border-color);
-            padding-bottom: 20px;
+        .btn-confirm {
+            width: 100%; height: 65px; background: var(--gold);
+            color: var(--bg-deep); border: none; border-radius: 15px;
+            font-family: 'Outfit'; font-size: 20px; font-weight: 800;
+            margin-top: 25px; cursor: pointer; transition: 0.4s;
+            text-transform: uppercase; letter-spacing: 1px;
+            animation: glow 3s infinite;
         }
+        .btn-confirm:hover { transform: translateY(-5px); box-shadow: 0 15px 30px var(--gold-glow); }
 
-        .receipt-header h2 {
-            font-family: 'Outfit';
-            font-size: 28px;
-            letter-spacing: 3px;
+        /* --- FLOATING QR MODAL --- */
+        #qrOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 5000;
+            display: none; justify-content: center; align-items: center;
+            backdrop-filter: blur(10px);
         }
-
-        .receipt-header p {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-top: 5px;
+        .qr-card {
+            background: var(--white); padding: 40px; border-radius: 30px;
+            text-align: center; color: var(--bg-deep);
+            animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        @keyframes popUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .qr-card img { width: 200px; height: 200px; margin-bottom: 20px; border: 10px solid var(--cream); border-radius: 20px; }
+        .close-qr { margin-top: 20px; color: #ff4d4d; font-weight: 800; cursor: pointer; }
 
-        .bill-table { width: 100%; margin-bottom: 25px; }
-
-        .bill-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            font-size: 14px;
-            font-weight: 600;
+        /* --- RECOMMENDED SLIDER --- */
+        .rec-section { max-width: 1300px; margin: 100px auto; padding: 0 5%; }
+        .rec-scroll { 
+            display: flex; gap: 20px; overflow-x: auto; padding: 20px 0;
+            scrollbar-width: none;
         }
-
-        .bill-row.main {
-            border-top: 2px solid var(--green-dark);
-            margin-top: 20px;
-            padding-top: 20px;
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--green-dark);
+        .rec-item {
+            min-width: 240px; background: var(--glass); padding: 20px; border-radius: 20px;
+            text-align: center; border: 1px solid var(--glass-border);
         }
+        .rec-item img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
+        .rec-item h4 { color: var(--gold); margin-bottom: 10px; }
+        .btn-mini { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 50px; cursor: pointer; font-size: 12px; font-weight: 800; transition: 0.3s; }
+        .btn-mini:hover { background: var(--gold); color: var(--bg-deep); }
 
-        /* ============================================================
-           6. PAYMENT & UPI INTEGRATION
-           ============================================================ */
-        .payment-box {
-            margin-top: 30px;
-            padding: 20px;
-            background: var(--gold-soft);
-            border-radius: 15px;
-            border: 1px solid var(--gold-primary);
-        }
-
-        .payment-label {
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--gold-primary);
-            margin-bottom: 15px;
-            display: block;
-            text-align: center;
-        }
-
-        .upi-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .upi-card {
-            background: var(--white);
-            border: 1.5px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .upi-card:hover {
-            border-color: var(--gold-primary);
-            transform: scale(1.05);
-        }
-
-        .upi-card i { font-size: 18px; color: var(--gold-primary); }
-
-        .qr-section {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .qr-section img {
-            width: 160px;
-            height: 160px;
-            padding: 10px;
-            background: white;
-            border: 2px solid var(--gold-primary);
-            border-radius: 15px;
-        }
-
-        .btn-checkout {
-            width: 100%;
-            height: 65px;
-            background: var(--green-dark);
-            color: var(--gold-primary);
-            border: 2px solid var(--gold-primary);
-            border-radius: 18px;
-            font-family: 'Outfit';
-            font-size: 18px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.4s;
-            margin-top: 10px;
-        }
-
-        .btn-checkout:hover {
-            background: var(--gold-primary);
-            color: var(--white);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
-        }
-
-        /* ============================================================
-           7. RECOMMENDATION SECTION
-           ============================================================ */
-        .recommend-container {
-            max-width: 1300px;
-            margin: 50px auto;
-            padding: 0 6%;
-        }
-
-        .rec-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .rec-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            transition: 0.3s;
-            text-align: center;
-        }
-
-        .rec-card:hover {
-            border-color: var(--gold-primary);
-            box-shadow: var(--shadow-lux);
-        }
-
-        .rec-img {
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
-
-        .rec-card h4 { font-family: 'Outfit'; font-size: 16px; margin-bottom: 8px; }
-        .rec-card .price { font-weight: 800; color: var(--gold-primary); font-size: 18px; margin-bottom: 15px; display: block; }
-
-        .btn-add-mini {
-            width: 100%;
-            padding: 10px;
-            background: none;
-            border: 1.5px solid var(--green-dark);
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-add-mini:hover { background: var(--green-dark); color: var(--white); }
-
-        /* ============================================================
-           8. MOBILE RESPONSIVE TWEAKS
-           ============================================================ */
+        /* --- MOBILE TWEAKS --- */
         @media (max-width: 768px) {
-            .luxury-item { flex-direction: column; align-items: center; text-align: center; padding: 20px; }
-            .qty-box { margin: 15px auto 0; }
-            .receipt-container { padding: 25px; }
-            .bill-row.main { font-size: 20px; }
-            .header-nav { padding: 15px 5%; }
-            .brand-logo h1 { font-size: 18px; }
+            .nav-logo h1 { font-size: 18px; }
+            .glass-card { flex-direction: column; align-items: center; text-align: center; }
+            .prod-image { width: 140px; height: 140px; }
+            .bill-card { padding: 25px; }
+            .btn-confirm { height: 55px; font-size: 16px; }
         }
     </style>
 </head>
 <body>
 
-    <header class="header-nav">
-        <a href="product.html" class="brand-logo">
+    <nav>
+        <a href="product.html" class="nav-logo">
             <img src="49779.jpg" alt="Logo">
             <h1>NEMI MART</h1>
         </a>
-        <div class="step-indicator">
-            <span class="active">Cart</span> • <span>Payment</span> • <span>Success</span>
-        </div>
-    </header>
+        <div style="color: var(--gold); font-weight: 800;">ELITE SECURE CHECKOUT</div>
+    </nav>
 
-    <main class="cart-wrapper">
+    <div id="qrOverlay">
+        <div class="qr-card">
+            <h3 style="margin-bottom: 15px; font-family: 'Outfit';">Scan to Pay Arham</h3>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=arham@upi&pn=Nemi%20Mart&am=2105" alt="QR Code">
+            <p style="font-weight: 700;">₹2,105.00</p>
+            <p style="font-size: 12px; color: #666; margin-top: 5px;">UPI ID: arham@upi</p>
+            <div class="close-qr" onclick="closeQR()">CANCEL PAYMENT</div>
+        </div>
+    </div>
+
+    <main class="cart-container">
         
-        <div class="cart-items-section">
-            <h2 class="section-heading"><i class="fas fa-shopping-bag"></i> Your Luxury Cart</h2>
+        <div class="cart-left">
+            <h2 class="cart-header">Your Premium Vault</h2>
             
-            <div id="cartList">
-                <div class="luxury-item" id="item1">
-                    <div class="product-thumb">
-                        <img src="49779.jpg" alt="Amritprash">
+            <div id="itemsContainer">
+                <div class="glass-card" id="cartItem1">
+                    <div class="prod-image">
+                        <img src="49779.jpg" alt="Product">
                     </div>
-                    <div class="item-details">
-                        <span class="badge">Elite Gold Series</span>
-                        <h3>Amritprash Elite Gold Formula (500g)</h3>
-                        <span class="price-tag">₹850</span>
-                        <div class="qty-box">
-                            <button class="qty-btn" onclick="changeQty('q1', -1)">-</button>
-                            <span class="qty-num" id="q1">1</span>
-                            <button class="qty-btn" onclick="changeQty('q1', 1)">+</button>
+                    <div class="prod-details">
+                        <p style="color: var(--gold); font-weight: 800; letter-spacing: 1px;">ELITE SERIES</p>
+                        <h3>Amritprash Gold Luxury (500g)</h3>
+                        <p>Infused with 24K Gold & Kashmiri Kesar</p>
+                        <span class="price-badge">₹850.00</span>
+                        <div class="qty-control">
+                            <button onclick="updateQty('q1', -1)">-</button>
+                            <span id="q1">1</span>
+                            <button onclick="updateQty('q1', 1)">+</button>
                         </div>
                     </div>
-                    <div class="trash-btn" onclick="removeItem('item1')">
-                        <i class="fas fa-trash-alt"></i>
+                    <div class="remove-icon" onclick="deleteItem('cartItem1')">
+                        <i class="fas fa-times-circle"></i>
                     </div>
                 </div>
 
-                <div class="luxury-item" id="item2">
-                    <div class="product-thumb">
-                        <img src="49780.jpg" alt="Shilajit">
+                <div class="glass-card" id="cartItem2">
+                    <div class="prod-image">
+                        <img src="49780.jpg" alt="Product">
                     </div>
-                    <div class="item-details">
-                        <span class="badge">Himalayan Pure</span>
-                        <h3>Natural Shilajit Resin Potency+</h3>
-                        <span class="price-tag">₹1,250</span>
-                        <div class="qty-box">
-                            <button class="qty-btn" onclick="changeQty('q2', -1)">-</button>
-                            <span class="qty-num" id="q2">1</span>
-                            <button class="qty-btn" onclick="changeQty('q2', 1)">+</button>
+                    <div class="prod-details">
+                        <p style="color: var(--gold); font-weight: 800; letter-spacing: 1px;">HERITAGE CARE</p>
+                        <h3>Pure Himalayan Shilajit Resin</h3>
+                        <p>Maximum Potency Natural Booster</p>
+                        <span class="price-badge">₹1,255.00</span>
+                        <div class="qty-control">
+                            <button onclick="updateQty('q2', -1)">-</button>
+                            <span id="q2">1</span>
+                            <button onclick="updateQty('q2', 1)">+</button>
                         </div>
                     </div>
-                    <div class="trash-btn" onclick="removeItem('item2')">
-                        <i class="fas fa-trash-alt"></i>
+                    <div class="remove-icon" onclick="deleteItem('cartItem2')">
+                        <i class="fas fa-times-circle"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="billing-section">
-            <div class="receipt-container">
-                <div class="receipt-header">
-                    <h2>NEMI MART</h2>
-                    <p>OFFICIAL DIGITAL RECEIPT</p>
-                    <p style="font-size: 10px; margin-top: 10px;">ID: NM-786-2026</p>
+        <div class="cart-right">
+            <div class="bill-card">
+                <div class="bill-header">
+                    <h2>INVOICE</h2>
+                    <p>Nemi Mart Digital Goods</p>
                 </div>
 
-                <div class="bill-table">
-                    <div class="bill-row"><span>Cart Subtotal</span><span>₹2,100</span></div>
-                    <div class="bill-row"><span>Luxury Packaging</span><span style="color:#059669">FREE</span></div>
-                    <div class="bill-row"><span>GST (Integrated)</span><span>₹105</span></div>
-                    <div class="bill-row"><span>Shipping</span><span style="color:#059669">FREE</span></div>
-                    
-                    <div class="bill-row main">
-                        <span>PAYABLE AMOUNT</span>
-                        <span>₹2,205</span>
-                    </div>
+                <div class="line-item"><span>Items Subtotal</span><span>₹2,105.00</span></div>
+                <div class="line-item"><span>Elite Shipping</span><span style="color:var(--gold)">FREE</span></div>
+                <div class="line-item"><span>Digital GST</span><span>₹0.00</span></div>
+                
+                <div class="line-item total">
+                    <span>GRAND TOTAL</span>
+                    <span style="color: var(--gold);">₹2,105.00</span>
                 </div>
 
-                <div class="payment-box">
-                    <span class="payment-label">Secure Payment Gateway</span>
+                <div class="payment-methods">
+                    <span class="pay-label">Express Secure Checkout</span>
                     <div class="upi-grid">
-                        <div class="upi-card" onclick="showQR()">
-                            <i class="fas fa-mobile-alt"></i> GPay / PhonePe
+                        <div class="upi-tile" onclick="openQR()">
+                            <i class="fas fa-qrcode"></i>
+                            <span>UPI Scan</span>
                         </div>
-                        <div class="upi-card" onclick="showQR()">
-                            <i class="fas fa-qrcode"></i> Scan to Pay
+                        <div class="upi-tile" onclick="openQR()">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>PhonePe</span>
                         </div>
                     </div>
-
-                    <div class="qr-section" id="qrContainer">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=arham@upi&pn=Nemi%20Mart&am=2205" alt="QR">
-                        <p style="font-size: 11px; font-weight: 700; margin-top: 10px; color: var(--green-dark);">UPI ID: arham@upi</p>
-                        <p style="font-size: 9px; color: var(--text-muted);">Please scan and complete the payment</p>
-                    </div>
-
-                    <button class="btn-checkout" onclick="initiatePayment()">
-                        <i class="fas fa-lock"></i> COMPLETE ORDER
-                    </button>
                 </div>
 
-                <div style="text-align: center; margin-top: 20px;">
-                    <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" style="width: 30px; opacity: 0.3;">
-                </div>
+                <button class="btn-confirm" onclick="processOrder()">
+                    PLACE ORDER NOW
+                </button>
+                
+                <p style="text-align: center; margin-top: 25px; font-size: 10px; color: #666; letter-spacing: 1px;">
+                    SECURED BY QUANTUM ENCRYPTION
+                </p>
             </div>
         </div>
     </main>
 
-    <div class="recommend-container">
-        <h2 class="section-heading"><i class="fas fa-magic"></i> You Might Also Like</h2>
-        <div class="rec-grid">
-            <div class="rec-card">
-                <img src="49781.jpg" class="rec-img">
-                <h4>Kashmiri Saffron (1g)</h4>
-                <span class="price">₹399</span>
-                <button class="btn-add-mini">Add to Cart</button>
+    <div class="rec-section">
+        <h3 class="cart-header" style="font-size: 24px;">Upgrade Your Experience</h3>
+        <div class="rec-scroll">
+            <div class="rec-item">
+                <img src="49781.jpg">
+                <h4>Golden Saffron</h4>
+                <p style="color: var(--gold); font-weight: 800; margin-bottom: 10px;">₹499</p>
+                <button class="btn-mini">ADD TO CART</button>
             </div>
-            <div class="rec-card">
-                <img src="49779.jpg" class="rec-img">
-                <h4>Wild Forest Honey</h4>
-                <span class="price">₹550</span>
-                <button class="btn-add-mini">Add to Cart</button>
+            <div class="rec-item">
+                <img src="49779.jpg">
+                <h4>Forest Honey</h4>
+                <p style="color: var(--gold); font-weight: 800; margin-bottom: 10px;">₹550</p>
+                <button class="btn-mini">ADD TO CART</button>
             </div>
-            <div class="rec-card">
-                <img src="49780.jpg" class="rec-img">
-                <h4>Vitality Combo Pack</h4>
-                <span class="price">₹1,899</span>
-                <button class="btn-add-mini">Add to Cart</button>
-            </div>
-            <div class="rec-card">
-                <img src="49781.jpg" class="rec-img">
-                <h4>Golden Milk Masala</h4>
-                <span class="price">₹250</span>
-                <button class="btn-add-mini">Add to Cart</button>
+            <div class="rec-item">
+                <img src="49780.jpg">
+                <h4>Vitality Mix</h4>
+                <p style="color: var(--gold); font-weight: 800; margin-bottom: 10px;">₹1,200</p>
+                <button class="btn-mini">ADD TO CART</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Quantity Management
-        function changeQty(id, delta) {
+        function updateQty(id, delta) {
             const el = document.getElementById(id);
-            let current = parseInt(el.innerText);
-            current += delta;
-            if(current < 1) current = 1;
-            el.innerText = current;
+            let val = parseInt(el.innerText);
+            val += delta;
+            if(val < 1) val = 1;
+            el.innerText = val;
+            
+            // Add a little pop animation
+            el.style.transform = "scale(1.5)";
+            el.style.color = "var(--gold)";
+            setTimeout(() => {
+                el.style.transform = "scale(1)";
+                el.style.color = "var(--white)";
+            }, 200);
         }
 
-        // Remove Item with Animation
-        function removeItem(id) {
+        function deleteItem(id) {
             const item = document.getElementById(id);
-            item.style.transform = "translateX(100px)";
+            item.style.transform = "translateX(100%) rotate(10deg)";
             item.style.opacity = "0";
             setTimeout(() => {
                 item.remove();
-                if(document.querySelectorAll('.luxury-item').length === 0) {
-                    document.getElementById('cartList').innerHTML = "<p style='text-align:center; padding:40px; font-weight:800; color:var(--text-muted);'>Your cart is empty.</p>";
-                }
-            }, 300);
+            }, 400);
         }
 
-        // Show QR Logic
-        function showQR() {
-            const qr = document.getElementById('qrContainer');
-            qr.style.display = 'block';
-            qr.scrollIntoView({behavior: 'smooth', block: 'center'});
+        function openQR() {
+            document.getElementById('qrOverlay').style.display = 'flex';
         }
 
-        // Payment Simulation
-        function initiatePayment() {
-            const btn = document.querySelector('.btn-checkout');
-            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> VERIFYING PAYMENT...`;
-            
+        function closeQR() {
+            document.getElementById('qrOverlay').style.display = 'none';
+        }
+
+        function processOrder() {
+            const btn = document.querySelector('.btn-confirm');
+            btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> GENERATING TRANSACTION...`;
             setTimeout(() => {
-                alert("Redirecting to Secure UPI Gateway...\nPay to: arham@upi\nAmount: ₹2,205");
-                btn.innerHTML = `<i class="fas fa-check-double"></i> WAITING FOR CONFIRMATION`;
-                btn.style.background = "#059669";
-                btn.style.borderColor = "#059669";
-                btn.style.color = "#fff";
-            }, 2000);
+                openQR();
+                btn.innerHTML = `PLACE ORDER NOW`;
+            }, 1500);
         }
     </script>
 </body>

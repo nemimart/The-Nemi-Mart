@@ -1,260 +1,440 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Checkout | Nemi Mart Pro</title>
+    <title>Elite Checkout | Nemi Mart Premium</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-green: #1A3E26;
+            --deep-green: #0A1F13;
+            --lush-green: #1A3E26;
             --gold: #D4AF37;
-            --bg-light: #F8F9FB;
+            --gold-light: #F4E8C1;
+            --cream-bg: #FDFBF7;
+            --cream-card: #FFFFFF;
+            --text-dark: #0A1F13;
+            --text-grey: #5C6F63;
             --white: #FFFFFF;
-            --text-dark: #1C1C1C;
-            --text-grey: #666666;
-            --card-shadow: 0 8px 24px rgba(0,0,0,0.05);
-            --radius: 20px;
+            --shadow: 0 15px 35px rgba(10, 31, 19, 0.1);
+            --radius-main: 24px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        /* --- GLOBAL SMOOTHING --- */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        body { background: var(--bg-light); color: var(--text-dark); padding-bottom: 120px; }
+        body { 
+            background: var(--cream-bg); 
+            color: var(--text-dark); 
+            padding-bottom: 140px; 
+            overflow-x: hidden;
+        }
 
-        /* --- TOP NAVIGATION & ADDRESS --- */
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes goldGlow {
+            0% { box-shadow: 0 0 5px var(--gold); }
+            50% { box-shadow: 0 0 20px var(--gold); }
+            100% { box-shadow: 0 0 5px var(--gold); }
+        }
+
+        .animate-in { animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+        /* --- PREMIUM NAVIGATION --- */
         .top-nav {
-            background: var(--white); padding: 15px 20px; position: sticky; top: 0; z-index: 100;
-            display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 18px 25px;
+            position: sticky;
+            top: 0; z-index: 1000;
+            display: flex; align-items: center; gap: 20px;
+            border-bottom: 1px solid var(--gold-light);
         }
-        .back-btn { font-size: 20px; color: var(--text-dark); cursor: pointer; }
+
+        .back-btn { 
+            width: 40px; height: 40px; 
+            background: var(--cream-bg);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--lush-green); cursor: pointer;
+            border: 1px solid var(--gold-light);
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: var(--gold); color: white; }
+
         .address-box { flex: 1; }
-        .address-box h4 { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
-        .address-box p { font-size: 12px; color: var(--text-grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-        .change-link { color: var(--gold); font-size: 12px; font-weight: 700; cursor: pointer; }
+        .address-box h4 { 
+            font-family: 'Outfit'; font-size: 15px; font-weight: 700; 
+            color: var(--lush-green); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .address-box p { font-size: 13px; color: var(--text-grey); font-weight: 500; }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 15px; }
+        .change-btn {
+            background: var(--gold-light); color: var(--lush-green);
+            padding: 8px 16px; border-radius: 10px; font-size: 12px;
+            font-weight: 800; cursor: pointer; border: none; transition: 0.3s;
+        }
+        .change-btn:hover { background: var(--gold); color: white; }
 
-        /* --- SECTION CARDS --- */
+        .container { max-width: 550px; margin: 0 auto; padding: 20px; }
+
+        /* --- THEMED CARDS --- */
         .card {
-            background: var(--white); border-radius: var(--radius); padding: 20px;
-            margin-bottom: 15px; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02);
+            background: var(--cream-card);
+            border-radius: var(--radius-main);
+            padding: 25px; margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            position: relative; overflow: hidden;
         }
-        .section-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
 
-        /* --- ITEM BOX --- */
-        .cart-item { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
-        .item-img { width: 70px; height: 70px; border-radius: 12px; background: #f0f0f0; object-fit: cover; }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--gold);
+        }
+
+        .section-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 20px;
+        }
+        .section-header i { 
+            background: var(--lush-green); color: var(--gold);
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+        .section-header h2 { font-family: 'Outfit'; font-size: 18px; font-weight: 700; }
+
+        /* --- PRODUCT ITEMS (LUXE STYLE) --- */
+        .cart-item {
+            display: flex; gap: 18px; align-items: center;
+            margin-bottom: 20px; padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .cart-item:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .item-img-wrapper {
+            position: relative; width: 85px; height: 85px;
+            background: #fdfdfd; border-radius: 18px;
+            border: 1px solid var(--gold-light); padding: 8px;
+        }
+        .item-img-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+
         .item-info { flex: 1; }
-        .item-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-        .item-info p { font-size: 12px; color: var(--text-grey); }
+        .item-info h3 { font-size: 15px; font-weight: 700; color: var(--lush-green); margin-bottom: 4px; }
+        .item-info p { font-size: 12px; color: var(--text-grey); font-weight: 500; }
 
-        .qty-btns {
-            display: flex; align-items: center; gap: 12px; background: #F0F4F1;
-            padding: 5px 12px; border-radius: 10px; border: 1px solid #E0E7E1;
+        .qty-controller {
+            display: flex; align-items: center; gap: 15px;
+            background: var(--cream-bg); padding: 6px 14px;
+            border-radius: 12px; border: 1px solid var(--gold-light);
+            width: fit-content; margin-top: 10px;
         }
-        .qty-btns button { border: none; background: none; color: var(--primary-green); font-weight: 800; cursor: pointer; font-size: 16px; }
-        .qty-btns span { font-size: 14px; font-weight: 800; }
+        .qty-controller button { 
+            border: none; background: none; color: var(--gold); 
+            font-size: 18px; font-weight: 800; cursor: pointer;
+        }
+        .qty-controller span { font-weight: 800; color: var(--lush-green); min-width: 15px; text-align: center; }
 
-        /* --- BILL SUMMARY (CLEAN & PRO) --- */
-        .bill-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; font-weight: 500; }
-        .bill-row.free { color: #00B259; font-weight: 700; }
-        .bill-row.total { 
-            border-top: 1px dashed #ddd; margin-top: 15px; padding-top: 15px;
-            font-size: 18px; font-weight: 800; 
+        .item-price { font-family: 'Outfit'; font-weight: 800; color: var(--lush-green); font-size: 16px; }
+
+        /* --- BILLING SECTION --- */
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 14px; font-weight: 600; color: var(--text-grey); }
+        .bill-row.savings { color: #00B259; }
+        .bill-row.grand-total {
+            border-top: 2px dashed var(--gold-light);
+            margin-top: 15px; padding-top: 20px;
+            color: var(--lush-green); font-size: 22px; font-weight: 900; font-family: 'Outfit';
         }
 
-        /* --- BOTTOM BAR --- */
-        .bottom-bar {
-            position: fixed; bottom: 0; width: 100%; max-width: 600px;
-            background: var(--white); padding: 20px; border-top: 1px solid #eee;
+        /* --- FLOATING BOTTOM ACTION --- */
+        .bottom-action {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 600px;
+            background: var(--white); padding: 25px;
+            border-radius: 30px 30px 0 0;
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.1);
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.05); z-index: 200;
+            z-index: 2000;
         }
-        .total-pay h2 { font-size: 20px; font-weight: 800; }
-        .total-pay p { font-size: 11px; color: var(--text-grey); text-transform: uppercase; }
 
-        .btn-pay {
-            background: var(--primary-green); color: var(--white);
-            border: none; padding: 15px 35px; border-radius: 15px;
-            font-weight: 800; font-size: 16px; cursor: pointer;
-            transition: 0.3s; display: flex; align-items: center; gap: 10px;
+        .price-display h2 { font-size: 24px; font-weight: 900; color: var(--lush-green); font-family: 'Outfit'; }
+        .price-display p { font-size: 11px; font-weight: 800; color: var(--gold); letter-spacing: 1px; }
+
+        .pay-btn {
+            background: var(--lush-green); color: var(--gold);
+            border: none; padding: 18px 40px; border-radius: 18px;
+            font-family: 'Outfit'; font-size: 16px; font-weight: 800;
+            cursor: pointer; display: flex; align-items: center; gap: 12px;
+            transition: 0.4s; animation: goldGlow 3s infinite;
         }
-        .btn-pay:active { transform: scale(0.95); }
+        .pay-btn:hover { transform: scale(1.05); background: var(--deep-green); }
 
-        /* --- PAYMENT SHEET (MODAL) --- */
-        .payment-overlay {
+        /* --- PREMIUM PAYMENT SHEET --- */
+        .payment-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 1000;
-            display: none; align-items: flex-end; backdrop-filter: blur(5px);
+            background: rgba(10, 31, 19, 0.7); backdrop-filter: blur(8px);
+            z-index: 3000; display: none; align-items: flex-end;
         }
-        .payment-sheet {
-            background: var(--white); width: 100%; max-width: 600px;
-            border-top-left-radius: 30px; border-top-right-radius: 30px;
-            padding: 30px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
-        }
-        .payment-sheet.active { transform: translateY(0); }
 
-        .sheet-header { display: flex; justify-content: space-between; margin-bottom: 25px; }
-        .sheet-header h2 { font-size: 20px; font-weight: 800; }
+        .sheet {
+            background: var(--cream-bg); width: 100%; max-width: 600px;
+            margin: 0 auto; border-radius: 35px 35px 0 0;
+            padding: 35px; transform: translateY(100%);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 4px solid var(--gold);
+        }
+        .sheet.active { transform: translateY(0); }
+
+        .sheet-header { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: center; }
+        .sheet-header h2 { font-family: 'Outfit'; color: var(--lush-green); font-size: 22px; }
+
+        .upi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .upi-option {
+            background: var(--white); border: 1px solid var(--gold-light);
+            padding: 20px 10px; border-radius: 20px; text-align: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .upi-option:hover { border-color: var(--gold); transform: translateY(-5px); box-shadow: var(--shadow); }
+        .upi-option i { font-size: 28px; color: var(--lush-green); margin-bottom: 8px; }
+        .upi-option span { display: block; font-size: 12px; font-weight: 800; }
+
+        .qr-section {
+            background: var(--white); border-radius: 25px; padding: 25px;
+            text-align: center; border: 2px dashed var(--gold); margin-bottom: 25px;
+        }
+        .qr-section img { width: 180px; height: 180px; border-radius: 15px; margin-bottom: 15px; }
+
+        .utr-box { position: relative; }
+        .utr-box input {
+            width: 100%; padding: 20px; border-radius: 15px;
+            border: 2px solid var(--gold-light); outline: none;
+            font-size: 15px; font-weight: 600; transition: 0.3s;
+        }
+        .utr-box input:focus { border-color: var(--gold); background: #fff; }
+
+        /* --- SUCCESS OVERLAY --- */
+        #successScreen {
+            position: fixed; inset: 0; background: var(--lush-green);
+            z-index: 9999; display: none; flex-direction: column;
+            align-items: center; justify-content: center; color: var(--gold);
+        }
+        .success-icon { font-size: 80px; margin-bottom: 20px; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { from { scale: 0; } to { scale: 1; } }
+
+        /* --- HOVER EFFECTS --- */
+        .card:hover { transform: translateY(-5px); transition: 0.4s; }
         
-        .upi-apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .app-card {
-            border: 1px solid #eee; border-radius: 15px; padding: 15px;
-            display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
-        }
-        .app-card:hover { border-color: var(--gold); background: #FFFDF7; }
-        .app-card i { font-size: 24px; color: #555; }
-        .app-card span { font-size: 12px; font-weight: 600; }
-
-        .scanner-box { 
-            background: #f9f9f9; padding: 20px; border-radius: 20px; text-align: center;
-            border: 2px dashed #ddd; margin-bottom: 20px;
-        }
-        .scanner-box img { width: 150px; height: 150px; margin-bottom: 10px; }
-
-        .utr-input {
-            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd;
-            font-size: 14px; margin-top: 10px; outline: none;
-        }
-        .utr-input:focus { border-color: var(--gold); }
-
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+    <div id="successScreen">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h1 style="font-family: 'Outfit';">ORDER PLACED!</h1>
+        <p style="margin-top: 10px; color: white;">Redirecting to your vault...</p>
+    </div>
+
     <div class="top-nav">
-        <i class="fas fa-chevron-left back-btn"></i>
+        <div class="back-btn"><i class="fas fa-arrow-left"></i></div>
         <div class="address-box">
-            <h4>Home <i class="fas fa-caret-down"></i></h4>
-            <p>1327/3, Ragho Majra, Patiala, Punjab</p>
+            <h4>Delivering to Home <i class="fas fa-chevron-down" style="font-size: 10px; color: var(--gold);"></i></h4>
+            <p id="userAddr">1327/3, Ragho Majra, Patiala, Punjab</p>
         </div>
-        <div class="change-link">CHANGE</div>
+        <button class="change-btn" onclick="editAddress()">CHANGE</button>
     </div>
 
     <div class="container">
         
-        <div class="card" style="border-left: 5px solid #00B259;">
+        <div class="card animate-in" style="border-left: 6px solid #00B259;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h3 style="font-size: 16px; font-weight: 800;">Delivering in 8 mins</h3>
-                    <p style="font-size: 12px; color: var(--text-grey);">Shipment 1 of 1 • 2 items</p>
+                    <span style="background: #E6F7ED; color: #00B259; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800;">PRIORITY</span>
+                    <h3 style="font-size: 18px; margin-top: 8px; font-family: 'Outfit';">Arrival in 8 Minutes</h3>
+                    <p style="font-size: 13px; color: var(--text-grey);">Nemi Mart Express is on the way</p>
                 </div>
-                <i class="fas fa-truck-fast" style="font-size: 24px; color: #00B259;"></i>
+                <div style="font-size: 35px; color: var(--gold);"><i class="fas fa-bolt-lightning"></i></div>
             </div>
         </div>
 
-        <div class="card">
-            <h2 class="section-title"><i class="fas fa-box-open"></i> Order Summary</h2>
+        <div class="card animate-in" style="animation-delay: 0.1s;">
+            <div class="section-header">
+                <i class="fas fa-shopping-bag"></i>
+                <h2>Your Selections</h2>
+            </div>
             
             <div class="cart-item">
-                <img src="49779.jpg" class="item-img" alt="Pepsi">
+                <div class="item-img-wrapper">
+                    <img src="49779.jpg" alt="Amritprash">
+                </div>
                 <div class="item-info">
-                    <h3>Premium Amritprash Gold</h3>
-                    <p>500g • Glass Bottle</p>
+                    <h3>Amritprash Gold Luxury</h3>
+                    <p>500g • Artisanal Glass Jar</p>
+                    <div class="qty-controller">
+                        <button onclick="changeQty('q1', -1)">-</button>
+                        <span id="q1">1</span>
+                        <button onclick="changeQty('q1', 1)">+</button>
+                    </div>
                 </div>
-                <div class="qty-btns">
-                    <button>-</button>
-                    <span>1</span>
-                    <button>+</button>
-                </div>
-                <div style="font-weight: 800;">₹850</div>
+                <div class="item-price">₹850</div>
             </div>
 
             <div class="cart-item">
-                <img src="49780.jpg" class="item-img" alt="Honey">
+                <div class="item-img-wrapper">
+                    <img src="49780.jpg" alt="Shilajit">
+                </div>
                 <div class="item-info">
                     <h3>Pure Himalayan Shilajit</h3>
-                    <p>30g Resin</p>
+                    <p>30g Resin • Lab Tested</p>
+                    <div class="qty-controller">
+                        <button onclick="changeQty('q2', -1)">-</button>
+                        <span id="q2">1</span>
+                        <button onclick="changeQty('q2', 1)">+</button>
+                    </div>
                 </div>
-                <div class="qty-btns">
-                    <button>-</button>
-                    <span>1</span>
-                    <button>+</button>
-                </div>
-                <div style="font-weight: 800;">₹1250</div>
+                <div class="item-price">₹1255</div>
             </div>
         </div>
 
-        <div class="card">
-            <h2 class="section-title"><i class="fas fa-file-invoice-dollar"></i> Bill Summary</h2>
-            <div class="bill-row"><span>Item Total</span><span>₹2100</span></div>
-            <div class="bill-row"><span>Delivery Fee</span><span>₹30</span></div>
-            <div class="bill-row free"><span>Delivery Discount</span><span>-₹30</span></div>
-            <div class="bill-row"><span>Handling Fee</span><span>₹5</span></div>
-            <div class="bill-row total"><span>To Pay</span><span>₹2105</span></div>
+        <div class="card animate-in" style="animation-delay: 0.2s;">
+            <div class="section-header">
+                <i class="fas fa-receipt"></i>
+                <h2>Payment Summary</h2>
+            </div>
+            <div class="bill-row"><span>Cart Subtotal</span><span>₹2105.00</span></div>
+            <div class="bill-row"><span>Premium Delivery</span><span style="text-decoration: line-through;">₹50</span></div>
+            <div class="bill-row savings"><span>Elite Member Discount</span><span>-₹50</span></div>
+            <div class="bill-row"><span>Packaging & Handling</span><span>₹5.00</span></div>
+            <div class="bill-row grand-total">
+                <span>Total Payable</span>
+                <span style="color: var(--gold);">₹2,110.00</span>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 10px; opacity: 0.6;">
+            <p style="font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--lush-green);">
+                <i class="fas fa-shield-halved"></i> 256-BIT SSL SECURED CHECKOUT
+            </p>
         </div>
 
     </div>
 
-    <div class="bottom-bar">
-        <div class="total-pay">
-            <h2>₹2,105</h2>
-            <p>VIEW DETAILED BILL <i class="fas fa-chevron-up"></i></p>
+    <div class="bottom-action">
+        <div class="price-display">
+            <p>TOTAL PAYABLE</p>
+            <h2>₹2,110.00</h2>
         </div>
-        <button class="btn-pay" onclick="togglePayment()">
-            PROCEED TO PAY <i class="fas fa-arrow-right"></i>
+        <button class="pay-btn" onclick="openPayment()">
+            PLACE ORDER <i class="fas fa-chevron-right"></i>
         </button>
     </div>
 
-    <div class="payment-overlay" id="payOverlay">
-        <div class="payment-sheet" id="paySheet">
+    <div class="payment-modal" id="payModal">
+        <div class="sheet" id="paySheet">
             <div class="sheet-header">
-                <h2>Secure Payment</h2>
-                <i class="fas fa-times" onclick="togglePayment()" style="cursor:pointer; font-size: 20px;"></i>
+                <h2>Choose Payment</h2>
+                <div class="back-btn" onclick="openPayment()"><i class="fas fa-times"></i></div>
             </div>
 
-            <p class="pay-label" style="font-size: 13px; font-weight: 700; margin-bottom: 15px;">PAY VIA UPI APPS</p>
-            <div class="upi-apps">
-                <div class="app-card">
-                    <i class="fab fa-google-pay" style="color: #4285F4;"></i>
+            <div class="upi-grid">
+                <div class="upi-option" onclick="processSuccess()">
+                    <i class="fab fa-google-pay"></i>
                     <span>G-Pay</span>
                 </div>
-                <div class="app-card">
-                    <i class="fas fa-mobile-screen-button" style="color: #673AB7;"></i>
+                <div class="upi-option" onclick="processSuccess()">
+                    <i class="fas fa-mobile-button"></i>
                     <span>PhonePe</span>
                 </div>
-                <div class="app-card">
-                    <i class="fas fa-wallet" style="color: #00BAF2;"></i>
+                <div class="upi-option" onclick="processSuccess()">
+                    <i class="fas fa-wallet"></i>
                     <span>Paytm</span>
                 </div>
             </div>
 
-            <div class="scanner-box">
-                <p style="font-size: 12px; margin-bottom: 10px; font-weight: 800;">SCAN QR TO PAY DIRECTLY</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=arham@upi&pn=NemiMart&am=2105" alt="QR">
-                <p style="font-size: 11px; color: var(--text-grey);">UPI ID: <b>arham@upi</b></p>
+            <div class="qr-section">
+                <p style="font-size: 12px; font-weight: 800; color: var(--lush-green); margin-bottom: 15px;">SCAN TO PAY ARHAM</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=arham@upi&pn=Nemi%20Mart&am=2110" alt="QR">
+                <p style="font-size: 11px; font-weight: 600;">Merchant: <b>NEMI MART ELITE</b></p>
             </div>
 
-            <p class="pay-label" style="font-size: 13px; font-weight: 700;">HAVE UTR / TRANSACTION ID?</p>
-            <input type="text" class="utr-input" placeholder="Enter 12-digit UTR Number">
-
-            <button class="btn-pay" style="width: 100%; margin-top: 20px; justify-content: center;">
-                CONFIRM PAYMENT
-            </button>
+            <div class="utr-box">
+                <input type="text" placeholder="Paste 12-digit UTR / Ref Number">
+                <button class="pay-btn" style="width: 100%; margin-top: 15px; justify-content: center;" onclick="processSuccess()">
+                    VERIFY & CONFIRM
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        function togglePayment() {
-            const overlay = document.getElementById('payOverlay');
-            const sheet = document.getElementById('paySheet');
+        // Quantity Logic
+        function changeQty(id, delta) {
+            const el = document.getElementById(id);
+            let val = parseInt(el.innerText);
+            val += delta;
+            if(val < 1) return;
+            el.innerText = val;
+            
+            // Pop Animation
+            el.parentElement.style.transform = "scale(1.1)";
+            setTimeout(() => el.parentElement.style.transform = "scale(1)", 200);
+        }
 
-            if (overlay.style.display === 'flex') {
+        // Sheet Toggle
+        function openPayment() {
+            const modal = document.getElementById('payModal');
+            const sheet = document.getElementById('paySheet');
+            
+            if(modal.style.display === 'flex') {
                 sheet.classList.remove('active');
-                setTimeout(() => { overlay.style.display = 'none'; }, 300);
+                setTimeout(() => modal.style.display = 'none', 400);
             } else {
-                overlay.style.display = 'flex';
-                setTimeout(() => { sheet.classList.add('active'); }, 10);
+                modal.style.display = 'flex';
+                setTimeout(() => sheet.classList.add('active'), 10);
             }
         }
 
-        // Close when clicking outside sheet
-        document.getElementById('payOverlay').addEventListener('click', function(e) {
-            if (e.target === this) togglePayment();
+        // Success Logic
+        function processSuccess() {
+            const btn = event.currentTarget;
+            if(btn.tagName === "BUTTON") btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SECURING...';
+            
+            setTimeout(() => {
+                document.getElementById('successScreen').style.display = 'flex';
+                // Trigger confetti or redirect here
+                setTimeout(() => {
+                    window.location.href = "index.html"; // Home par wapas
+                }, 3000);
+            }, 1500);
+        }
+
+        // Address Edit (Surprise Feature)
+        function editAddress() {
+            const p = document.getElementById('userAddr');
+            const newAddr = prompt("Enter New Delivery Address:", p.innerText);
+            if(newAddr) {
+                p.style.opacity = '0';
+                setTimeout(() => {
+                    p.innerText = newAddr;
+                    p.style.opacity = '1';
+                }, 300);
+            }
+        }
+
+        // Close on overlay click
+        document.getElementById('payModal').addEventListener('click', (e) => {
+            if(e.target.id === 'payModal') openPayment();
         });
     </script>
 </body>

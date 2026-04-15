@@ -27,7 +27,6 @@
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* --- ADVANCED RESET --- */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -39,12 +38,6 @@
             color: var(--text-dark); 
             overflow-x: hidden;
             padding-bottom: 140px;
-        }
-
-        /* --- ANIMATIONS --- */
-        @keyframes slideUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         @keyframes fadeIn {
@@ -60,7 +53,6 @@
 
         .animate-in { animation: fadeIn 0.6s ease-out forwards; }
 
-        /* --- LUXURY NAVIGATION --- */
         .header {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
@@ -91,12 +83,8 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        /* --- MAIN CONTAINER --- */
-        .engine-container {
-            max-width: 550px; margin: 0 auto; padding: 20px;
-        }
+        .engine-container { max-width: 550px; margin: 0 auto; padding: 20px; }
 
-        /* --- LUXE CARDS --- */
         .luxe-card {
             background: var(--cream-card);
             border-radius: var(--radius-main);
@@ -108,20 +96,16 @@
         }
         .luxe-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
 
-        .card-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 20px;
-        }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .card-title { display: flex; align-items: center; gap: 12px; }
         .card-title i { color: var(--gold); font-size: 18px; }
         .card-title h2 { font-family: 'Outfit'; font-size: 18px; font-weight: 800; }
 
-        /* --- DYNAMIC CART ITEMS --- */
         .cart-list { display: flex; flex-direction: column; gap: 15px; }
         .item-row {
             display: flex; gap: 15px; align-items: center;
             padding-bottom: 15px; border-bottom: 1px solid #f8f8f8;
-            animation: fadeIn 0.5s ease forwards;
+            transition: 0.3s;
         }
         .item-row:last-child { border: none; padding-bottom: 0; }
 
@@ -137,9 +121,7 @@
         .item-details p { font-size: 12px; color: var(--text-grey); }
 
         .item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-        
-        .delete-item { color: var(--error); font-size: 14px; cursor: pointer; padding: 5px; opacity: 0.6; transition: 0.3s; }
-        .delete-item:hover { opacity: 1; transform: scale(1.2); }
+        .delete-item { color: var(--error); font-size: 14px; cursor: pointer; padding: 5px; opacity: 0.6; }
 
         .qty-box {
             display: flex; align-items: center; gap: 12px;
@@ -148,7 +130,6 @@
         }
         .qty-box button { border: none; background: none; color: var(--gold); font-weight: 900; cursor: pointer; }
 
-        /* --- BILLING UI --- */
         .bill-line { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 600; font-size: 14px; }
         .bill-total {
             margin-top: 15px; padding-top: 15px; border-top: 2px dashed var(--gold-light);
@@ -156,7 +137,6 @@
             font-family: 'Outfit'; font-size: 22px; font-weight: 900; color: var(--lush-green);
         }
 
-        /* --- BOTTOM ACTION BAR --- */
         .bottom-bar {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: white; padding: 20px 25px;
@@ -173,7 +153,6 @@
             cursor: pointer; animation: pulse-gold 3s infinite;
         }
 
-        /* --- ADVANCED MODALS (SHEETS) --- */
         .overlay {
             position: fixed; inset: 0; background: rgba(10, 31, 19, 0.7);
             backdrop-filter: blur(8px); z-index: 3000;
@@ -183,17 +162,11 @@
             background: var(--cream-bg); width: 100%; max-width: 600px;
             margin: 0 auto; border-radius: 32px 32px 0 0;
             padding: 30px 25px; transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.4s ease;
             max-height: 85vh; overflow-y: auto;
         }
         .sheet.active { transform: translateY(0); }
 
-        .sheet-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 25px;
-        }
-
-        /* --- ADDRESS LIST UI --- */
         .address-card {
             background: white; border-radius: 20px; padding: 18px;
             margin-bottom: 12px; border: 2px solid transparent;
@@ -206,41 +179,28 @@
             width: 40px; height: 40px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
         }
-        .address-info { flex: 1; }
-        .address-info h5 { font-family: 'Outfit'; font-size: 16px; margin-bottom: 4px; }
-        .address-info p { font-size: 13px; color: var(--text-grey); }
-
-        .delete-addr { color: var(--error); padding: 10px; font-size: 14px; }
 
         .add-new-btn {
             width: 100%; padding: 18px; border-radius: 18px;
             border: 2px dashed var(--gold); background: transparent;
             color: var(--gold); font-weight: 800; cursor: pointer;
-            margin-top: 10px; transition: 0.3s;
+            margin-top: 10px;
         }
-        .add-new-btn:hover { background: var(--gold-light); }
 
-        /* --- FORM STYLING --- */
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 12px; font-weight: 800; color: var(--lush-green); margin-bottom: 8px; }
         .input-group input, .input-group select {
             width: 100%; padding: 16px; border-radius: 15px;
-            border: 1px solid var(--gold-light); background: white;
-            outline: none; font-size: 15px; transition: 0.3s;
+            border: 1px solid var(--gold-light); background: white; outline: none;
         }
-        .input-group input:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1); }
 
-        /* --- SUCCESS OVERLAY --- */
         .order-success {
             position: fixed; inset: 0; background: var(--lush-green);
             z-index: 9999; display: none; flex-direction: column;
             align-items: center; justify-content: center; color: var(--gold);
         }
         
-        /* Empty State */
         .empty-cart { text-align: center; padding: 40px 0; display: none; }
-        .empty-cart i { font-size: 50px; opacity: 0.2; margin-bottom: 15px; }
-
     </style>
 </head>
 <body>
@@ -295,7 +255,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="item-row" id="item_2">
                     <div class="item-img"><img src="49780.jpg" alt="Item"></div>
                     <div class="item-details">
@@ -334,7 +293,6 @@
                 <span id="totalDisplay" style="color: var(--gold);">₹2110</span>
             </div>
         </div>
-
     </div>
 
     <div class="bottom-bar">
@@ -347,9 +305,9 @@
         </button>
     </div>
 
-    <div class="overlay" id="addressOverlay" onclick="closeAllModals(event)">
+    <div class="overlay" id="addressSheetOverlay" onclick="closeOnOverlay(event, 'addressSheet')">
         <div class="sheet" id="addressSheet">
-            <div class="sheet-header">
+            <div class="sheet-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h2 style="font-family: 'Outfit';">Saved Addresses</h2>
                 <div class="circle-btn" onclick="toggleModal('addressSheet')"><i class="fas fa-times"></i></div>
             </div>
@@ -384,7 +342,6 @@
                         <option value="Home">Home</option>
                         <option value="Work">Work</option>
                         <option value="Shop">Shop</option>
-                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -396,9 +353,9 @@
         </div>
     </div>
 
-    <div class="overlay" id="paymentOverlay" onclick="closeAllModals(event)">
+    <div class="overlay" id="paymentSheetOverlay" onclick="closeOnOverlay(event, 'paymentSheet')">
         <div class="sheet" id="paymentSheet">
-            <div class="sheet-header">
+            <div class="sheet-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h2 style="font-family: 'Outfit';">Complete Payment</h2>
                 <div class="circle-btn" onclick="toggleModal('paymentSheet')"><i class="fas fa-times"></i></div>
             </div>
@@ -431,61 +388,48 @@
         let tax = 5;
         let itemsCount = 2;
 
-        // UI Toggle Logic
         function toggleModal(id) {
             const overlay = document.getElementById(id + 'Overlay');
             const sheet = document.getElementById(id);
             
             if(overlay.style.display === 'flex') {
                 sheet.classList.remove('active');
-                setTimeout(() => overlay.style.display = 'none', 300);
+                setTimeout(() => { overlay.style.display = 'none'; }, 300);
             } else {
                 overlay.style.display = 'flex';
-                setTimeout(() => sheet.classList.add('active'), 10);
+                setTimeout(() => { sheet.classList.add('active'); }, 10);
             }
         }
 
-        function closeAllModals(e) {
-            if(e.target.className === 'overlay') {
-                const sheets = document.querySelectorAll('.sheet');
-                const overlays = document.querySelectorAll('.overlay');
-                sheets.forEach(s => s.classList.remove('active'));
-                setTimeout(() => overlays.forEach(o => o.style.display = 'none'), 300);
-            }
+        function closeOnOverlay(e, id) {
+            if(e.target.classList.contains('overlay')) toggleModal(id);
         }
 
-        // Cart Logic
         function updateQty(id, delta, price) {
             const el = document.getElementById(id);
             let val = parseInt(el.innerText);
             val += delta;
             if(val < 1) return;
             el.innerText = val;
-            
             subtotal += (delta * price);
             updateBill();
         }
 
         function removeItem(itemId, price) {
             const item = document.getElementById(itemId);
-            const qty = parseInt(item.querySelector('span').innerText);
-            
+            const qty = parseInt(item.querySelector('span[id^="q"]').innerText);
             item.style.transform = "translateX(100px)";
             item.style.opacity = "0";
-            
             setTimeout(() => {
                 item.remove();
                 subtotal -= (qty * price);
                 itemsCount--;
                 updateBill();
-                
                 if(itemsCount === 0) {
                     document.getElementById('cartList').style.display = 'none';
                     document.getElementById('emptyCart').style.display = 'block';
-                    document.getElementById('itemCountTag').innerText = "0 ITEMS";
-                } else {
-                    document.getElementById('itemCountTag').innerText = `${itemsCount} ITEMS`;
                 }
+                document.getElementById('itemCountTag').innerText = `${itemsCount} ITEMS`;
             }, 300);
         }
 
@@ -494,25 +438,23 @@
             document.getElementById('subtotalDisplay').innerText = `₹${subtotal}`;
             document.getElementById('totalDisplay').innerText = `₹${total}`;
             document.getElementById('bottomPrice').innerText = `₹${total}`;
-            
-            // Update QR Code Amount
             const qr = document.getElementById('qrCode');
             qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=arham@upi&pn=NemiMart&am=${total}`;
         }
 
-        // Address Management
         function selectAddress(element, text) {
             document.querySelectorAll('.address-card').forEach(c => {
                 c.classList.remove('selected');
                 const check = c.querySelector('.fa-check-circle');
                 if(check) check.remove();
             });
-            
             element.classList.add('selected');
-            element.innerHTML += '<i class="fas fa-check-circle" style="color: var(--gold);"></i>';
+            const checkIcon = document.createElement('i');
+            checkIcon.className = 'fas fa-check-circle';
+            checkIcon.style.color = 'var(--gold)';
+            element.appendChild(checkIcon);
             document.getElementById('currentAddrLabel').innerText = text;
-            
-            setTimeout(() => toggleModal('addressSheet'), 300);
+            setTimeout(() => toggleModal('addressSheet'), 400);
         }
 
         function showAddForm() {
@@ -523,11 +465,8 @@
         function saveAddress() {
             const type = document.getElementById('newType').value;
             const text = document.getElementById('newAddrText').value;
-            
             if(!text) return;
-
             const icon = type === 'Home' ? 'fa-home' : (type === 'Work' ? 'fa-briefcase' : 'fa-store');
-            
             const newCard = document.createElement('div');
             newCard.className = 'address-card';
             newCard.onclick = function() { selectAddress(this, type + ': ' + text); };
@@ -537,30 +476,19 @@
                     <h5>${type}</h5>
                     <p>${text}</p>
                 </div>
-                <i class="far fa-trash-can delete-addr" onclick="this.parentElement.remove(); event.stopPropagation();"></i>
             `;
-            
             document.getElementById('addressList').appendChild(newCard);
             document.getElementById('newAddrText').value = "";
             showAddForm();
         }
 
-        // Final Order
         function confirmOrder() {
             const utr = document.getElementById('utrInput').value;
-            if(utr.length < 10) {
-                alert("Bhai sahi UTR dalo!");
-                return;
-            }
-
+            if(utr.length < 10) { alert("Bhai sahi UTR dalo!"); return; }
             toggleModal('paymentSheet');
             document.getElementById('successScreen').style.display = 'flex';
-            
-            setTimeout(() => {
-                window.location.reload();
-            }, 4000);
+            setTimeout(() => { window.location.reload(); }, 4000);
         }
-
     </script>
 </body>
 </html>

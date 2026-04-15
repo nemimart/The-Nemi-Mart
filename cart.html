@@ -3,408 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Elite Checkout | Nemi Mart</title>
+    <title>Checkout | Nemi Mart Pro</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-deep: #0A1A10; /* Deepest Green */
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary-green: #1A3E26;
             --gold: #D4AF37;
-            --gold-glow: rgba(212, 175, 55, 0.4);
-            --cream: #FDFBF7;
-            --accent: #1A3E26;
+            --bg-light: #F8F9FB;
             --white: #FFFFFF;
-            --radius-main: 24px;
+            --text-dark: #1C1C1C;
+            --text-grey: #666666;
+            --card-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            --radius: 20px;
         }
 
-        /* --- GLOBAL ANIMATIONS --- */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body { background: var(--bg-light); color: var(--text-dark); padding-bottom: 120px; }
+
+        /* --- TOP NAVIGATION & ADDRESS --- */
+        .top-nav {
+            background: var(--white); padding: 15px 20px; position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee;
         }
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px var(--gold-glow); }
-            50% { box-shadow: 0 0 20px var(--gold-glow); }
-            100% { box-shadow: 0 0 5px var(--gold-glow); }
+        .back-btn { font-size: 20px; color: var(--text-dark); cursor: pointer; }
+        .address-box { flex: 1; }
+        .address-box h4 { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+        .address-box p { font-size: 12px; color: var(--text-grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        .change-link { color: var(--gold); font-size: 12px; font-weight: 700; cursor: pointer; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 15px; }
+
+        /* --- SECTION CARDS --- */
+        .card {
+            background: var(--white); border-radius: var(--radius); padding: 20px;
+            margin-bottom: 15px; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02);
         }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
+        .section-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+        /* --- ITEM BOX --- */
+        .cart-item { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+        .item-img { width: 70px; height: 70px; border-radius: 12px; background: #f0f0f0; object-fit: cover; }
+        .item-info { flex: 1; }
+        .item-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .item-info p { font-size: 12px; color: var(--text-grey); }
+
+        .qty-btns {
+            display: flex; align-items: center; gap: 12px; background: #F0F4F1;
+            padding: 5px 12px; border-radius: 10px; border: 1px solid #E0E7E1;
+        }
+        .qty-btns button { border: none; background: none; color: var(--primary-green); font-weight: 800; cursor: pointer; font-size: 16px; }
+        .qty-btns span { font-size: 14px; font-weight: 800; }
+
+        /* --- BILL SUMMARY (CLEAN & PRO) --- */
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; font-weight: 500; }
+        .bill-row.free { color: #00B259; font-weight: 700; }
+        .bill-row.total { 
+            border-top: 1px dashed #ddd; margin-top: 15px; padding-top: 15px;
+            font-size: 18px; font-weight: 800; 
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        body { 
-            background: radial-gradient(circle at top right, #1A3E26, #0A1A10);
-            color: var(--white);
-            min-height: 100vh;
-            overflow-x: hidden;
+        /* --- BOTTOM BAR --- */
+        .bottom-bar {
+            position: fixed; bottom: 0; width: 100%; max-width: 600px;
+            background: var(--white); padding: 20px; border-top: 1px solid #eee;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.05); z-index: 200;
         }
+        .total-pay h2 { font-size: 20px; font-weight: 800; }
+        .total-pay p { font-size: 11px; color: var(--text-grey); text-transform: uppercase; }
 
-        /* --- LUXURY NAV --- */
-        nav {
-            padding: 25px 8%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(15px);
-            background: rgba(10, 26, 16, 0.8);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--glass-border);
+        .btn-pay {
+            background: var(--primary-green); color: var(--white);
+            border: none; padding: 15px 35px; border-radius: 15px;
+            font-weight: 800; font-size: 16px; cursor: pointer;
+            transition: 0.3s; display: flex; align-items: center; gap: 10px;
         }
-        .nav-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-        .nav-logo img { width: 45px; border-radius: 12px; border: 1px solid var(--gold); }
-        .nav-logo h1 { font-family: 'Outfit'; color: var(--gold); font-size: 24px; letter-spacing: 2px; }
+        .btn-pay:active { transform: scale(0.95); }
 
-        .cart-container {
-            max-width: 1300px;
-            margin: 50px auto;
-            padding: 0 5% 150px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
-            animation: slideIn 0.8s ease-out;
-        }
-
-        @media (min-width: 1100px) {
-            .cart-container { grid-template-columns: 1.2fr 0.8fr; }
-        }
-
-        /* --- DYNAMIC PRODUCT CARDS --- */
-        .cart-header { font-family: 'Outfit'; font-size: 32px; margin-bottom: 30px; color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
-        
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-main);
-            padding: 30px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 25px;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.07);
-            transform: scale(1.02);
-            border-color: var(--gold);
-        }
-
-        .prod-image {
-            width: 120px; height: 120px;
-            background: var(--white);
-            border-radius: 18px;
-            padding: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            animation: float 4s infinite ease-in-out;
-        }
-        .prod-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
-
-        .prod-details { flex: 1; }
-        .prod-details h3 { font-family: 'Outfit'; font-size: 20px; color: var(--gold); margin-bottom: 8px; }
-        .prod-details p { color: #A0AEC0; font-size: 13px; margin-bottom: 15px; }
-
-        .price-badge { font-size: 22px; font-weight: 800; color: var(--white); display: block; margin-bottom: 15px; }
-
-        .qty-control {
-            display: flex; align-items: center; gap: 20px;
-            background: rgba(0,0,0,0.3);
-            width: fit-content; padding: 8px 18px; border-radius: 50px;
-            border: 1px solid var(--glass-border);
-        }
-        .qty-control button {
-            background: none; border: none; color: var(--gold); font-size: 20px; cursor: pointer; font-weight: 800;
-        }
-        .qty-control span { font-weight: 800; min-width: 20px; text-align: center; }
-
-        .remove-icon {
-            position: absolute; top: 30px; right: 30px;
-            color: rgba(255, 0, 0, 0.5); cursor: pointer; font-size: 20px;
-            transition: 0.3s;
-        }
-        .remove-icon:hover { color: #ff4d4d; transform: rotate(90deg); }
-
-        /* --- THE SCI-FI BILL / RECEIPT --- */
-        .bill-card {
-            background: rgba(255,255,255,0.02);
-            border-radius: var(--radius-main);
-            border: 1px solid var(--gold);
-            padding: 40px;
-            position: sticky; top: 120px;
-            box-shadow: 0 0 30px var(--gold-glow);
-            overflow: hidden;
-        }
-        .bill-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(transparent, transparent, var(--gold), transparent);
-            animation: rotate 6s linear infinite;
-            opacity: 0.1;
-        }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .bill-header { text-align: center; margin-bottom: 30px; }
-        .bill-header h2 { font-family: 'Outfit'; font-size: 28px; color: var(--gold); letter-spacing: 5px; }
-
-        .line-item {
-            display: flex; justify-content: space-between; margin-bottom: 15px;
-            font-size: 15px; color: #CBD5E0;
-        }
-        .line-item.total {
-            border-top: 1px solid var(--glass-border);
-            padding-top: 20px; margin-top: 20px;
-            font-size: 28px; font-weight: 800; color: var(--white);
-        }
-
-        /* --- PAYMENT GATEWAY --- */
-        .payment-methods { margin-top: 35px; }
-        .pay-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); display: block; margin-bottom: 15px; }
-        
-        .upi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .upi-tile {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px; padding: 15px;
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            cursor: pointer; transition: 0.3s;
-        }
-        .upi-tile:hover { background: var(--gold); color: var(--bg-deep); border-color: var(--white); }
-        .upi-tile i { font-size: 24px; }
-
-        .btn-confirm {
-            width: 100%; height: 65px; background: var(--gold);
-            color: var(--bg-deep); border: none; border-radius: 15px;
-            font-family: 'Outfit'; font-size: 20px; font-weight: 800;
-            margin-top: 25px; cursor: pointer; transition: 0.4s;
-            text-transform: uppercase; letter-spacing: 1px;
-            animation: glow 3s infinite;
-        }
-        .btn-confirm:hover { transform: translateY(-5px); box-shadow: 0 15px 30px var(--gold-glow); }
-
-        /* --- FLOATING QR MODAL --- */
-        #qrOverlay {
+        /* --- PAYMENT SHEET (MODAL) --- */
+        .payment-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 5000;
-            display: none; justify-content: center; align-items: center;
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.6); z-index: 1000;
+            display: none; align-items: flex-end; backdrop-filter: blur(5px);
         }
-        .qr-card {
-            background: var(--white); padding: 40px; border-radius: 30px;
-            text-align: center; color: var(--bg-deep);
-            animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .payment-sheet {
+            background: var(--white); width: 100%; max-width: 600px;
+            border-top-left-radius: 30px; border-top-right-radius: 30px;
+            padding: 30px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
         }
-        @keyframes popUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .qr-card img { width: 200px; height: 200px; margin-bottom: 20px; border: 10px solid var(--cream); border-radius: 20px; }
-        .close-qr { margin-top: 20px; color: #ff4d4d; font-weight: 800; cursor: pointer; }
+        .payment-sheet.active { transform: translateY(0); }
 
-        /* --- RECOMMENDED SLIDER --- */
-        .rec-section { max-width: 1300px; margin: 100px auto; padding: 0 5%; }
-        .rec-scroll { 
-            display: flex; gap: 20px; overflow-x: auto; padding: 20px 0;
-            scrollbar-width: none;
+        .sheet-header { display: flex; justify-content: space-between; margin-bottom: 25px; }
+        .sheet-header h2 { font-size: 20px; font-weight: 800; }
+        
+        .upi-apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .app-card {
+            border: 1px solid #eee; border-radius: 15px; padding: 15px;
+            display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
         }
-        .rec-item {
-            min-width: 240px; background: var(--glass); padding: 20px; border-radius: 20px;
-            text-align: center; border: 1px solid var(--glass-border);
-        }
-        .rec-item img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
-        .rec-item h4 { color: var(--gold); margin-bottom: 10px; }
-        .btn-mini { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 50px; cursor: pointer; font-size: 12px; font-weight: 800; transition: 0.3s; }
-        .btn-mini:hover { background: var(--gold); color: var(--bg-deep); }
+        .app-card:hover { border-color: var(--gold); background: #FFFDF7; }
+        .app-card i { font-size: 24px; color: #555; }
+        .app-card span { font-size: 12px; font-weight: 600; }
 
-        /* --- MOBILE TWEAKS --- */
-        @media (max-width: 768px) {
-            .nav-logo h1 { font-size: 18px; }
-            .glass-card { flex-direction: column; align-items: center; text-align: center; }
-            .prod-image { width: 140px; height: 140px; }
-            .bill-card { padding: 25px; }
-            .btn-confirm { height: 55px; font-size: 16px; }
+        .scanner-box { 
+            background: #f9f9f9; padding: 20px; border-radius: 20px; text-align: center;
+            border: 2px dashed #ddd; margin-bottom: 20px;
         }
+        .scanner-box img { width: 150px; height: 150px; margin-bottom: 10px; }
+
+        .utr-input {
+            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd;
+            font-size: 14px; margin-top: 10px; outline: none;
+        }
+        .utr-input:focus { border-color: var(--gold); }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="product.html" class="nav-logo">
-            <img src="49779.jpg" alt="Logo">
-            <h1>NEMI MART</h1>
-        </a>
-        <div style="color: var(--gold); font-weight: 800;">ELITE SECURE CHECKOUT</div>
-    </nav>
-
-    <div id="qrOverlay">
-        <div class="qr-card">
-            <h3 style="margin-bottom: 15px; font-family: 'Outfit';">Scan to Pay Arham</h3>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=arham@upi&pn=Nemi%20Mart&am=2105" alt="QR Code">
-            <p style="font-weight: 700;">₹2,105.00</p>
-            <p style="font-size: 12px; color: #666; margin-top: 5px;">UPI ID: arham@upi</p>
-            <div class="close-qr" onclick="closeQR()">CANCEL PAYMENT</div>
+    <div class="top-nav">
+        <i class="fas fa-chevron-left back-btn"></i>
+        <div class="address-box">
+            <h4>Home <i class="fas fa-caret-down"></i></h4>
+            <p>1327/3, Ragho Majra, Patiala, Punjab</p>
         </div>
+        <div class="change-link">CHANGE</div>
     </div>
 
-    <main class="cart-container">
+    <div class="container">
         
-        <div class="cart-left">
-            <h2 class="cart-header">Your Premium Vault</h2>
+        <div class="card" style="border-left: 5px solid #00B259;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="font-size: 16px; font-weight: 800;">Delivering in 8 mins</h3>
+                    <p style="font-size: 12px; color: var(--text-grey);">Shipment 1 of 1 • 2 items</p>
+                </div>
+                <i class="fas fa-truck-fast" style="font-size: 24px; color: #00B259;"></i>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title"><i class="fas fa-box-open"></i> Order Summary</h2>
             
-            <div id="itemsContainer">
-                <div class="glass-card" id="cartItem1">
-                    <div class="prod-image">
-                        <img src="49779.jpg" alt="Product">
-                    </div>
-                    <div class="prod-details">
-                        <p style="color: var(--gold); font-weight: 800; letter-spacing: 1px;">ELITE SERIES</p>
-                        <h3>Amritprash Gold Luxury (500g)</h3>
-                        <p>Infused with 24K Gold & Kashmiri Kesar</p>
-                        <span class="price-badge">₹850.00</span>
-                        <div class="qty-control">
-                            <button onclick="updateQty('q1', -1)">-</button>
-                            <span id="q1">1</span>
-                            <button onclick="updateQty('q1', 1)">+</button>
-                        </div>
-                    </div>
-                    <div class="remove-icon" onclick="deleteItem('cartItem1')">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
+            <div class="cart-item">
+                <img src="49779.jpg" class="item-img" alt="Pepsi">
+                <div class="item-info">
+                    <h3>Premium Amritprash Gold</h3>
+                    <p>500g • Glass Bottle</p>
                 </div>
+                <div class="qty-btns">
+                    <button>-</button>
+                    <span>1</span>
+                    <button>+</button>
+                </div>
+                <div style="font-weight: 800;">₹850</div>
+            </div>
 
-                <div class="glass-card" id="cartItem2">
-                    <div class="prod-image">
-                        <img src="49780.jpg" alt="Product">
-                    </div>
-                    <div class="prod-details">
-                        <p style="color: var(--gold); font-weight: 800; letter-spacing: 1px;">HERITAGE CARE</p>
-                        <h3>Pure Himalayan Shilajit Resin</h3>
-                        <p>Maximum Potency Natural Booster</p>
-                        <span class="price-badge">₹1,255.00</span>
-                        <div class="qty-control">
-                            <button onclick="updateQty('q2', -1)">-</button>
-                            <span id="q2">1</span>
-                            <button onclick="updateQty('q2', 1)">+</button>
-                        </div>
-                    </div>
-                    <div class="remove-icon" onclick="deleteItem('cartItem2')">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
+            <div class="cart-item">
+                <img src="49780.jpg" class="item-img" alt="Honey">
+                <div class="item-info">
+                    <h3>Pure Himalayan Shilajit</h3>
+                    <p>30g Resin</p>
                 </div>
+                <div class="qty-btns">
+                    <button>-</button>
+                    <span>1</span>
+                    <button>+</button>
+                </div>
+                <div style="font-weight: 800;">₹1250</div>
             </div>
         </div>
 
-        <div class="cart-right">
-            <div class="bill-card">
-                <div class="bill-header">
-                    <h2>INVOICE</h2>
-                    <p>Nemi Mart Digital Goods</p>
-                </div>
-
-                <div class="line-item"><span>Items Subtotal</span><span>₹2,105.00</span></div>
-                <div class="line-item"><span>Elite Shipping</span><span style="color:var(--gold)">FREE</span></div>
-                <div class="line-item"><span>Digital GST</span><span>₹0.00</span></div>
-                
-                <div class="line-item total">
-                    <span>GRAND TOTAL</span>
-                    <span style="color: var(--gold);">₹2,105.00</span>
-                </div>
-
-                <div class="payment-methods">
-                    <span class="pay-label">Express Secure Checkout</span>
-                    <div class="upi-grid">
-                        <div class="upi-tile" onclick="openQR()">
-                            <i class="fas fa-qrcode"></i>
-                            <span>UPI Scan</span>
-                        </div>
-                        <div class="upi-tile" onclick="openQR()">
-                            <i class="fas fa-mobile-alt"></i>
-                            <span>PhonePe</span>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn-confirm" onclick="processOrder()">
-                    PLACE ORDER NOW
-                </button>
-                
-                <p style="text-align: center; margin-top: 25px; font-size: 10px; color: #666; letter-spacing: 1px;">
-                    SECURED BY QUANTUM ENCRYPTION
-                </p>
-            </div>
+        <div class="card">
+            <h2 class="section-title"><i class="fas fa-file-invoice-dollar"></i> Bill Summary</h2>
+            <div class="bill-row"><span>Item Total</span><span>₹2100</span></div>
+            <div class="bill-row"><span>Delivery Fee</span><span>₹30</span></div>
+            <div class="bill-row free"><span>Delivery Discount</span><span>-₹30</span></div>
+            <div class="bill-row"><span>Handling Fee</span><span>₹5</span></div>
+            <div class="bill-row total"><span>To Pay</span><span>₹2105</span></div>
         </div>
-    </main>
 
-    <div class="rec-section">
-        <h3 class="cart-header" style="font-size: 24px;">Upgrade Your Experience</h3>
-        <div class="rec-scroll">
-            <div class="rec-item">
-                <img src="49781.jpg">
-                <h4>Golden Saffron</h4>
-                <p style="color: var(--gold); font-weight: 800; margin-bottom: 10px;">₹499</p>
-                <button class="btn-mini">ADD TO CART</button>
+    </div>
+
+    <div class="bottom-bar">
+        <div class="total-pay">
+            <h2>₹2,105</h2>
+            <p>VIEW DETAILED BILL <i class="fas fa-chevron-up"></i></p>
+        </div>
+        <button class="btn-pay" onclick="togglePayment()">
+            PROCEED TO PAY <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+
+    <div class="payment-overlay" id="payOverlay">
+        <div class="payment-sheet" id="paySheet">
+            <div class="sheet-header">
+                <h2>Secure Payment</h2>
+                <i class="fas fa-times" onclick="togglePayment()" style="cursor:pointer; font-size: 20px;"></i>
             </div>
-            <div class="rec-item">
-                <img src="49779.jpg">
-                <h4>Forest Honey</h4>
-                <p style="color: var(--gold); font-weight: 800; margin-bottom: 10px;">₹550</p>
-                <button class="btn-mini">ADD TO CART</button>
+
+            <p class="pay-label" style="font-size: 13px; font-weight: 700; margin-bottom: 15px;">PAY VIA UPI APPS</p>
+            <div class="upi-apps">
+                <div class="app-card">
+                    <i class="fab fa-google-pay" style="color: #4285F4;"></i>
+                    <span>G-Pay</span>
+                </div>
+                <div class="app-card">
+                    <i class="fas fa-mobile-screen-button" style="color: #673AB7;"></i>
+                    <span>PhonePe</span>
+                </div>
+                <div class="app-card">
+                    <i class="fas fa-wallet" style="color: #00BAF2;"></i>
+                    <span>Paytm</span>
+                </div>
             </div>
-            <div class="rec-item">
-                <img src="49780.jpg">
-                <h4>Vitality Mix</h4>
-                <p style="color: var(--gold); font-weight: 800; margin-bottom: 10px;">₹1,200</p>
-                <button class="btn-mini">ADD TO CART</button>
+
+            <div class="scanner-box">
+                <p style="font-size: 12px; margin-bottom: 10px; font-weight: 800;">SCAN QR TO PAY DIRECTLY</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=arham@upi&pn=NemiMart&am=2105" alt="QR">
+                <p style="font-size: 11px; color: var(--text-grey);">UPI ID: <b>arham@upi</b></p>
             </div>
+
+            <p class="pay-label" style="font-size: 13px; font-weight: 700;">HAVE UTR / TRANSACTION ID?</p>
+            <input type="text" class="utr-input" placeholder="Enter 12-digit UTR Number">
+
+            <button class="btn-pay" style="width: 100%; margin-top: 20px; justify-content: center;">
+                CONFIRM PAYMENT
+            </button>
         </div>
     </div>
 
     <script>
-        function updateQty(id, delta) {
-            const el = document.getElementById(id);
-            let val = parseInt(el.innerText);
-            val += delta;
-            if(val < 1) val = 1;
-            el.innerText = val;
-            
-            // Add a little pop animation
-            el.style.transform = "scale(1.5)";
-            el.style.color = "var(--gold)";
-            setTimeout(() => {
-                el.style.transform = "scale(1)";
-                el.style.color = "var(--white)";
-            }, 200);
+        function togglePayment() {
+            const overlay = document.getElementById('payOverlay');
+            const sheet = document.getElementById('paySheet');
+
+            if (overlay.style.display === 'flex') {
+                sheet.classList.remove('active');
+                setTimeout(() => { overlay.style.display = 'none'; }, 300);
+            } else {
+                overlay.style.display = 'flex';
+                setTimeout(() => { sheet.classList.add('active'); }, 10);
+            }
         }
 
-        function deleteItem(id) {
-            const item = document.getElementById(id);
-            item.style.transform = "translateX(100%) rotate(10deg)";
-            item.style.opacity = "0";
-            setTimeout(() => {
-                item.remove();
-            }, 400);
-        }
-
-        function openQR() {
-            document.getElementById('qrOverlay').style.display = 'flex';
-        }
-
-        function closeQR() {
-            document.getElementById('qrOverlay').style.display = 'none';
-        }
-
-        function processOrder() {
-            const btn = document.querySelector('.btn-confirm');
-            btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> GENERATING TRANSACTION...`;
-            setTimeout(() => {
-                openQR();
-                btn.innerHTML = `PLACE ORDER NOW`;
-            }, 1500);
-        }
+        // Close when clicking outside sheet
+        document.getElementById('payOverlay').addEventListener('click', function(e) {
+            if (e.target === this) togglePayment();
+        });
     </script>
 </body>
 </html>

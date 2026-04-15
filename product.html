@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nemi Mart | Premium Product Elite</title>
+    <title>Nemi Mart | Premium Elite Gold</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -12,291 +12,296 @@
         :root {
             --primary: #1B3022;
             --gold: #D4AF37;
-            --gold-soft: #fdf6e3;
+            --gold-light: #fdf6e3;
             --accent: #15803d;
+            --danger: #ef4444;
             --white: #ffffff;
-            --bg: #f8f9fa;
-            --border: #eaecf0;
-            --radius-lg: 32px;
-            --radius-md: 20px;
-            --shadow: 0 20px 40px rgba(0,0,0,0.06);
+            --bg: #f4f7f5;
+            --border: #e2e8f0;
+            --radius-xl: 40px;
+            --radius-lg: 24px;
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: var(--primary); line-height: 1.6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--primary); overflow-x: hidden; }
 
-        /* --- HEADER & NAVIGATION --- */
+        /* --- STICKY NAVIGATION --- */
         nav {
-            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px);
-            padding: 15px 6%; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px);
+            padding: 18px 6%; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 2000; border-bottom: 1px solid var(--border);
         }
         .nav-logo { display: flex; align-items: center; gap: 12px; }
-        .nav-logo img { width: 42px; border-radius: 12px; }
-        .nav-logo h1 { font-family: 'Outfit'; font-size: 20px; font-weight: 800; color: var(--primary); }
+        .nav-logo img { width: 45px; border-radius: 12px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .nav-logo h1 { font-family: 'Outfit'; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
 
-        .nav-actions { display: flex; gap: 20px; font-size: 20px; }
-        .nav-actions i { cursor: pointer; transition: 0.3s; }
-        .nav-actions i:hover { color: var(--gold); }
+        .nav-icons { display: flex; gap: 22px; font-size: 20px; align-items: center; }
+        .nav-icons i { cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+        .nav-icons i:hover { color: var(--gold); transform: translateY(-2px); }
+        .wishlist-count { position: absolute; top: -8px; right: -10px; background: var(--danger); color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; font-weight: 800; }
 
-        /* --- LAYOUT ENGINE --- */
-        .page-container { max-width: 1300px; margin: 0 auto; padding: 20px 5% 120px; }
+        /* --- MAIN LAYOUT --- */
+        .master-wrapper { max-width: 1400px; margin: 0 auto; padding: 30px 5% 150px; }
 
-        /* --- GALLERY --- */
-        .product-visuals { position: relative; margin-bottom: 30px; }
-        .main-slider {
-            display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
-            scrollbar-width: none; border-radius: var(--radius-lg); background: var(--white);
-            box-shadow: var(--shadow);
-        }
-        .main-slider::-webkit-scrollbar { display: none; }
-        .main-slider img { 
-            min-width: 100%; height: 450px; object-fit: contain; 
-            scroll-snap-align: start; padding: 30px; cursor: zoom-in;
+        /* --- PRODUCT GRID (LAPTOP OPTIMIZED) --- */
+        .product-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+
+        @media (min-width: 1024px) {
+            .product-grid { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
+            .left-column { position: sticky; top: 120px; }
         }
 
-        .share-float {
-            position: absolute; top: 20px; right: 20px; width: 50px; height: 50px;
-            background: var(--white); border-radius: 50%; display: grid; place-items: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); cursor: pointer; z-index: 10;
-        }
-
-        /* --- PRODUCT INFO --- */
-        .badge-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        .badge { padding: 6px 14px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .badge-gold { background: var(--gold-soft); color: var(--gold); }
-        .badge-green { background: #e6f4ea; color: var(--accent); }
-
-        .main-title { font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 15px; font-family: 'Outfit'; }
+        /* --- IMAGE ENGINE --- */
+        .gallery-box { background: var(--white); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow); position: relative; border: 1px solid var(--border); }
+        .slider-wrap { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+        .slider-wrap::-webkit-scrollbar { display: none; }
+        .slider-wrap img { min-width: 100%; height: 500px; object-fit: contain; scroll-snap-align: start; padding: 40px; transition: 0.5s; }
         
-        .pricing-box { 
-            display: flex; align-items: baseline; gap: 15px; 
-            background: var(--white); padding: 20px; border-radius: var(--radius-md);
-            margin: 25px 0; border: 1px solid var(--border);
-        }
-        .price-now { font-size: 40px; font-weight: 800; color: var(--accent); }
-        .price-was { text-decoration: line-through; color: #98a2b3; font-size: 20px; }
-        .discount { color: #f04438; font-weight: 700; background: #fee4e2; padding: 4px 10px; border-radius: 8px; font-size: 14px; }
+        .action-floats { position: absolute; top: 25px; right: 25px; display: flex; flex-direction: column; gap: 15px; }
+        .float-btn { width: 50px; height: 50px; background: var(--white); border-radius: 50%; display: grid; place-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; color: #64748b; }
+        .float-btn:hover { background: var(--gold); color: white; }
+        .float-btn.active { color: var(--danger); }
 
-        /* --- DETAILED SECTIONS --- */
-        .detail-card { background: var(--white); padding: 30px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border); }
-        .section-h { font-size: 20px; font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        /* --- PRODUCT HEADLINE --- */
+        .status-pill { display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; color: #065f46; padding: 6px 16px; border-radius: 50px; font-size: 12px; font-weight: 700; margin-bottom: 15px; }
+        .main-h { font-size: clamp(28px, 4vw, 42px); font-weight: 800; line-height: 1.1; margin-bottom: 20px; color: var(--primary); }
+
+        /* --- PRICE & STOCK --- */
+        .price-section { background: var(--white); padding: 25px; border-radius: var(--radius-lg); margin-bottom: 25px; border: 1px solid var(--border); }
+        .price-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .p-now { font-size: 42px; font-weight: 800; color: var(--accent); }
+        .p-old { text-decoration: line-through; color: #94a3b8; font-size: 20px; }
+        .save-badge { background: #fee2e2; color: #ef4444; padding: 4px 12px; border-radius: 8px; font-weight: 800; font-size: 14px; }
         
-        .ingredients-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .ing-item { background: var(--bg); padding: 15px; border-radius: 15px; text-align: center; }
-        .ing-item i { color: var(--gold); font-size: 24px; margin-bottom: 10px; display: block; }
-        .ing-item span { font-size: 12px; font-weight: 700; }
+        .stock-meter { margin-top: 20px; }
+        .meter-text { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+        .bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+        .bar-fill { width: 75%; height: 100%; background: linear-gradient(90deg, var(--gold), #facc15); animation: loading 2s ease-out; }
+        @keyframes loading { from { width: 0; } to { width: 75%; } }
 
-        /* --- SPECS TABLE --- */
-        .specs-table { width: 100%; border-collapse: collapse; }
-        .specs-table td { padding: 15px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
-        .specs-table td:first-child { font-weight: 700; color: #667085; width: 40%; }
+        /* --- COMBO SYSTEM --- */
+        .combo-box { background: #fdf2f8; border: 2px dashed #f472b6; padding: 20px; border-radius: var(--radius-lg); margin: 30px 0; }
+        .combo-h { font-weight: 800; color: #be185d; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .combo-item { display: flex; align-items: center; gap: 15px; background: white; padding: 12px; border-radius: 15px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
+        .combo-item:hover { transform: translateX(10px); }
+        .combo-item img { width: 50px; border-radius: 8px; }
+        .combo-info b { font-size: 14px; display: block; }
+        .combo-info span { font-size: 12px; color: #db2777; font-weight: 700; }
 
-        /* --- ADD TO CART BAR --- */
-        .bottom-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: var(--white); padding: 20px 6% 35px;
-            box-shadow: 0 -15px 40px rgba(0,0,0,0.08); z-index: 1001;
-            display: flex; gap: 15px;
-        }
-        .btn-cart {
-            flex: 1; height: 65px; background: var(--primary); color: white;
-            border: none; border-radius: 18px; font-size: 18px; font-weight: 800;
-            display: flex; justify-content: center; align-items: center; gap: 12px;
-            cursor: pointer; position: relative; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(27,48,34,0.2);
-        }
-        
-        /* Floating Icons for Button */
-        .btn-cart i.anim { position: absolute; opacity: 0.15; font-size: 14px; animation: orbit 4s linear infinite; }
-        @keyframes orbit {
-            0% { transform: rotate(0deg) translateX(70px) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.6; }
-            100% { transform: rotate(360deg) translateX(70px) rotate(-360deg); opacity: 0; }
-        }
+        /* --- FEATURES TAB --- */
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin: 30px 0; }
+        .f-card { background: white; padding: 20px; border-radius: 20px; text-align: center; border: 1px solid var(--border); transition: 0.3s; }
+        .f-card:hover { border-color: var(--gold); background: var(--gold-light); }
+        .f-card i { font-size: 28px; color: var(--gold); margin-bottom: 12px; display: block; }
+        .f-card p { font-size: 12px; font-weight: 800; text-transform: uppercase; }
+
+        /* --- INFO ACCORDION --- */
+        .info-tab { background: white; border-radius: 20px; margin-bottom: 15px; overflow: hidden; border: 1px solid var(--border); }
+        .tab-head { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; }
+        .tab-body { padding: 0 20px 20px; font-size: 14px; color: #64748b; display: none; }
+        .info-tab.active .tab-body { display: block; }
+        .info-tab.active .tab-head i { transform: rotate(180deg); }
 
         /* --- REVIEWS --- */
-        .rev-form { margin-top: 20px; }
-        .star-box { display: flex; gap: 10px; margin: 15px 0; font-size: 26px; color: #d0d5dd; }
-        .star-box i.active { color: var(--gold); }
-        textarea { width: 100%; height: 100px; padding: 15px; border: 1px solid var(--border); border-radius: 15px; background: #f9fafb; margin-bottom: 15px; resize: none; }
-        .btn-post { background: var(--gold); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+        .review-card { background: white; padding: 25px; border-radius: var(--radius-lg); margin-top: 40px; border: 1px solid var(--border); }
+        .user-rev { border-bottom: 1px solid #f1f5f9; padding: 20px 0; }
+        .user-rev:last-child { border: none; }
+        .stars-active { color: var(--gold); margin-bottom: 8px; }
 
-        /* --- LAPTOP OPTIMIZATION --- */
-        @media (min-width: 1024px) {
-            .page-container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; padding-top: 50px; }
-            .product-visuals { position: sticky; top: 120px; height: fit-content; }
-            .main-slider img { height: 650px; }
-            .bottom-bar { position: static; padding: 0; box-shadow: none; background: transparent; margin-top: 30px; }
-            .btn-cart { height: 75px; }
+        /* --- FLOATING CART BAR --- */
+        .buy-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(20px);
+            padding: 20px 6% 40px; display: flex; gap: 15px; z-index: 1500;
+            box-shadow: 0 -20px 40px rgba(0,0,0,0.05);
+        }
+        .btn-main {
+            flex: 1; height: 70px; border: none; border-radius: 22px;
+            font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.4s;
+            display: flex; justify-content: center; align-items: center; gap: 12px;
+            position: relative; overflow: hidden;
+        }
+        .btn-add { background: var(--primary); color: white; }
+        .btn-buy { background: var(--gold); color: white; }
+        .btn-main:active { transform: scale(0.95); }
+
+        /* Orbiting Icons */
+        .orbit { position: absolute; opacity: 0.2; font-size: 14px; animation: rotating 5s linear infinite; }
+        @keyframes rotating {
+            from { transform: rotate(0deg) translateX(80px); }
+            to { transform: rotate(360deg) translateX(80px); }
         }
 
-        /* Fullscreen Image Overlay */
-        #imgOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 2000; display: none;
-            justify-content: center; align-items: center;
-        }
-        #imgOverlay img { max-width: 90%; max-height: 80%; }
-        .close-over { position: absolute; top: 30px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
+        /* Fullscreen Overlay */
+        #zoomBox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 3000; display: none; justify-content: center; align-items: center; }
+        #zoomBox img { max-width: 95%; max-height: 80%; object-fit: contain; }
+        .close-zoom { position: absolute; top: 30px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <nav>
         <div class="nav-logo">
-            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Logo">
             <h1>NEMI MART</h1>
         </div>
-        <div class="nav-actions">
+        <div class="nav-icons">
             <i class="fas fa-search"></i>
-            <i class="fas fa-shopping-bag"></i>
+            <i class="fas fa-heart" id="wishlistIcon">
+                <span class="wishlist-count" id="wishCount">0</span>
+            </i>
+            <i class="fas fa-shopping-cart"></i>
         </div>
     </nav>
 
-    <div id="imgOverlay">
-        <span class="close-over">&times;</span>
+    <div id="zoomBox">
+        <span class="close-zoom" onclick="closeZoom()">&times;</span>
         <img id="zoomImg" src="">
     </div>
 
-    <div class="page-container">
-        <div class="product-visuals">
-            <div class="share-float" onclick="shareProduct()">
-                <i class="fas fa-share-alt"></i>
-            </div>
-            <div class="main-slider" id="slider">
-                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" onclick="zoom(this.src)">
-                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" onclick="zoom(this.src)">
-                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" onclick="zoom(this.src)">
-            </div>
-            <p style="text-align: center; font-size: 11px; color: #999; margin-top: 15px;"><i class="fas fa-arrows-alt-h"></i> SWIPE TO SEE MORE SIDES</p>
-        </div>
-
-        <div class="product-content">
-            <div class="badge-row">
-                <span class="badge badge-gold">✨ Premium Quality</span>
-                <span class="badge badge-green">🌿 100% Organic</span>
-            </div>
+    <div class="master-wrapper">
+        <div class="product-grid">
             
-            <h1 class="main-title">Amritprash Elite Gold Formula - Luxury Wellness</h1>
-            
-            <div class="pricing-box">
-                <span class="price-now">₹850</span>
-                <span class="price-was">₹1,499</span>
-                <span class="discount">45% OFF</span>
-            </div>
-
-            <div class="detail-card">
-                <div class="section-h"><i class="fas fa-book-open" style="color:var(--gold)"></i> The Product Story</div>
-                <p style="font-size: 14px; color: #475467;">
-                    Experience the pinnacle of ancient wisdom. Nemi Mart's Elite Gold Amritprash is not just a supplement; it's a legacy. Handcrafted with Kashmiri Saffron and 24K Gold Bhasma, it revitalizes your energy levels and sharpens mental clarity like never before.
-                </p>
-            </div>
-
-            <div class="detail-card">
-                <div class="section-h"><i class="fas fa-leaf" style="color:var(--accent)"></i> Power Ingredients</div>
-                <div class="ingredients-grid">
-                    <div class="ing-item"><i class="fas fa-gem"></i><span>Gold Bhasma</span></div>
-                    <div class="ing-item"><i class="fas fa-spa"></i><span>Pure Shilajit</span></div>
-                    <div class="ing-item"><i class="fas fa-sun"></i><span>Saffron</span></div>
-                    <div class="ing-item"><i class="fas fa-tint"></i><span>Raw Honey</span></div>
-                </div>
-            </div>
-
-            <div class="detail-card">
-                <div class="section-h"><i class="fas fa-list-ul"></i> Product Specifications</div>
-                <table class="specs-table">
-                    <tr><td>Net Weight</td><td>500 Grams</td></tr>
-                    <tr><td>Form</td><td>Semi-Liquid Paste</td></tr>
-                    <tr><td>Target Audience</td><td>All Adults</td></tr>
-                    <tr><td>Packaging</td><td>Glass Jar (Premium)</td></tr>
-                    <tr><td>Expiry</td><td>24 Months from PKD</td></tr>
-                </table>
-            </div>
-
-            <div class="detail-card">
-                <div class="section-h"><i class="fas fa-star" style="color:var(--gold)"></i> Customer Reviews (120+)</div>
-                <div class="rev-form">
-                    <div class="star-box" id="stars">
-                        <i class="fas fa-star" data-v="1"></i>
-                        <i class="fas fa-star" data-v="2"></i>
-                        <i class="fas fa-star" data-v="3"></i>
-                        <i class="fas fa-star" data-v="4"></i>
-                        <i class="fas fa-star" data-v="5"></i>
+            <div class="left-column">
+                <div class="gallery-box">
+                    <div class="action-floats">
+                        <div class="float-btn" onclick="toggleWish(this)"><i class="fas fa-heart"></i></div>
+                        <div class="float-btn" onclick="shareMe()"><i class="fas fa-share-nodes"></i></div>
                     </div>
-                    <textarea id="revText" placeholder="Share your honest experience with us..."></textarea>
-                    <button class="btn-post" onclick="postRev()">Submit Review</button>
-                </div>
-                <div id="reviewList" style="margin-top: 25px;">
-                    <div style="border-bottom: 1px solid #eee; padding-bottom: 15px;">
-                        <span style="color:var(--gold); font-size: 12px;">★★★★★</span>
-                        <p style="font-size: 14px; font-weight: 700;">"Mind-blowing results!"</p>
-                        <p style="font-size: 13px; color: #666;">Pehle din se hi mood aur focus mein fark dikha. Best product in market.</p>
+                    <div class="slider-wrap" id="slider">
+                        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" onclick="openZoom(this.src)">
+                        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" onclick="openZoom(this.src)">
                     </div>
                 </div>
+                
+                <div class="feature-grid">
+                    <div class="f-card"><i class="fas fa-truck-fast"></i><p>Free Delivery</p></div>
+                    <div class="f-card"><i class="fas fa-shield-halved"></i><p>Secure Pay</p></div>
+                    <div class="f-card"><i class="fas fa-rotate-left"></i><p>Easy Return</p></div>
+                </div>
             </div>
 
-            <div class="bottom-bar">
-                <button class="btn-cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    ADD TO CART
-                    <i class="fas fa-star anim" style="animation-delay: 0s"></i>
-                    <i class="fas fa-bolt anim" style="animation-delay: 1s"></i>
-                    <i class="fas fa-heart anim" style="animation-delay: 2s"></i>
-                    <i class="fas fa-crown anim" style="animation-delay: 3s"></i>
-                </button>
+            <div class="right-column">
+                <div class="status-pill"><i class="fas fa-circle-check"></i> Verified Nemi Mart Choice</div>
+                <h1 class="main-h">Amritprash Elite Gold Formula - 500g Luxury Edition</h1>
+                
+                <div class="price-section">
+                    <div class="price-row">
+                        <span class="p-now">₹850</span>
+                        <span class="p-old">₹1,499</span>
+                        <span class="save-badge">SAVE 45%</span>
+                    </div>
+                    <p style="font-size: 13px; color: #64748b;">Inclusive of all taxes</p>
+                    
+                    <div class="stock-meter">
+                        <div class="meter-text">
+                            <span>🔥 Selling Fast!</span>
+                            <span>Only 12 Left in Stock</span>
+                        </div>
+                        <div class="bar-bg"><div class="bar-fill"></div></div>
+                    </div>
+                </div>
+
+                <div class="combo-box">
+                    <div class="combo-h"><i class="fas fa-layer-group"></i> FREQUENTLY BOUGHT TOGETHER</div>
+                    <div class="combo-item" onclick="addCombo()">
+                        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Shilajit">
+                        <div class="combo-info">
+                            <b>+ Pure Resin Shilajit (20g)</b>
+                            <span>Save Extra ₹200 on this Combo</span>
+                        </div>
+                        <i class="fas fa-plus-circle" style="margin-left:auto; color: #f472b6;"></i>
+                    </div>
+                </div>
+
+                <div class="info-tab active" onclick="this.classList.toggle('active')">
+                    <div class="tab-head">Product Highlights <i class="fas fa-chevron-down"></i></div>
+                    <div class="tab-body">
+                        • Contains 24K Gold Bhasma for cellular repair.<br>
+                        • Enriched with Kashmiri Saffron and Wild Honey.<br>
+                        • Boosts immunity and natural energy levels.<br>
+                        • No added refined sugar or preservatives.
+                    </div>
+                </div>
+
+                <div class="info-tab" onclick="this.classList.toggle('active')">
+                    <div class="tab-head">How To Use <i class="fas fa-chevron-down"></i></div>
+                    <div class="tab-body">
+                        Take 1 tablespoon twice daily, preferably with lukewarm milk or water before breakfast and after dinner for best results.
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <h3 style="margin-bottom: 20px;">Real Customer Stories</h3>
+                    <div class="user-rev">
+                        <div class="stars-active">★★★★★</div>
+                        <b>"Paisa Vasool Quality!"</b>
+                        <p style="font-size: 13px; color: #64748b; margin-top: 5px;">Bhai packaging ekdum premium hai aur product ka taste bhi real lag raha hai. Must try!</p>
+                    </div>
+                    <div class="user-rev">
+                        <div class="stars-active">★★★★★</div>
+                        <b>"Great Energy Boost"</b>
+                        <p style="font-size: 13px; color: #64748b; margin-top: 5px;">Energy levels badh gaye hain office work mein bhi focus rehta hai. Thanks Nemi Mart.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <div class="buy-bar">
+        <button class="btn-main btn-add" onclick="cartAnim()">
+            <i class="fas fa-cart-shopping"></i> ADD TO CART
+            <i class="fas fa-star orbit"></i>
+        </button>
+        <button class="btn-main btn-buy" onclick="buyNow()">
+            BUY NOW 
+            <i class="fas fa-bolt"></i>
+        </button>
+    </div>
+
     <script>
-        // Zoom Logic
-        const overlay = document.getElementById('imgOverlay');
-        const zoomImg = document.getElementById('zoomImg');
-        function zoom(src) {
-            zoomImg.src = src;
-            overlay.style.display = 'flex';
+        // Gallery Functions
+        function openZoom(src) {
+            document.getElementById('zoomImg').src = src;
+            document.getElementById('zoomBox').style.display = 'flex';
         }
-        document.querySelector('.close-over').onclick = () => overlay.style.display = 'none';
-
-        // Star Rating
-        const stars = document.querySelectorAll('#stars i');
-        let rating = 0;
-        stars.forEach(s => {
-            s.onclick = () => {
-                rating = s.dataset.v;
-                stars.forEach(star => star.classList.toggle('active', star.dataset.v <= rating));
-            }
-        });
-
-        // Review Submission
-        function postRev() {
-            const text = document.getElementById('revText').value;
-            if(!text || rating == 0) return alert("Bhai, star aur comment dono zaroori hain!");
-            
-            const div = document.createElement('div');
-            div.style.padding = "15px 0";
-            div.style.borderBottom = "1px solid #eee";
-            div.innerHTML = `
-                <span style="color:var(--gold); font-size: 12px;">${'★'.repeat(rating)}${'☆'.repeat(5-rating)}</span>
-                <p style="font-size: 14px; font-weight: 700;">User Feedback</p>
-                <p style="font-size: 13px; color: #666;">${text}</p>
-            `;
-            document.getElementById('reviewList').prepend(div);
-            document.getElementById('revText').value = "";
-            alert("Review submitted successfully! 🔥");
+        function closeZoom() {
+            document.getElementById('zoomBox').style.display = 'none';
         }
 
-        // Share API
-        function shareProduct() {
-            if(navigator.share) {
-                navigator.share({
-                    title: 'Nemi Mart Elite Gold',
-                    text: 'Check out this amazing product on Nemi Mart!',
-                    url: window.location.href
-                });
+        // Wishlist System
+        let wishCount = 0;
+        function toggleWish(btn) {
+            btn.classList.toggle('active');
+            if(btn.classList.contains('active')) {
+                wishCount++;
+                btn.style.color = '#ef4444';
             } else {
-                alert("Link Copied to Clipboard!");
+                wishCount--;
+                btn.style.color = '#64748b';
+            }
+            document.getElementById('wishCount').innerText = wishCount;
+        }
+
+        // Action Handlers
+        function cartAnim() {
+            alert("Added to Cart! 🛒 Check out our combos for more savings.");
+        }
+
+        function buyNow() {
+            alert("Redirecting to Secure Checkout... 🔐");
+        }
+
+        function addCombo() {
+            alert("Combo Added! Total Discount Applied: ₹200 💸");
+        }
+
+        function shareMe() {
+            if(navigator.share) {
+                navigator.share({ title: 'Nemi Mart Elite', url: window.location.href });
+            } else {
+                alert("Link Copied!");
             }
         }
     </script>

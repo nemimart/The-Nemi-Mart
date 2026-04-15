@@ -3,253 +3,941 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nemi Mart | Premium Elite Gold - Luxury Edition</title>
+    <title>Nemi Mart | Amritprash Elite Gold Luxury Edition</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- LUXURY COLOR PALETTE --- */
+        /* ============================================================
+           1. CSS VARIABLES & CORE RESET
+           ============================================================ */
         :root {
             --cream-bg: #FDFBF7;
             --cream-dark: #F5F1E6;
             --green-dark: #0F2517;
             --green-light: #1A3E26;
             --gold-primary: #D4AF37;
+            --gold-hover: #B8860B;
             --gold-light: #FAF4E5;
+            --text-main: #1F2937;
             --text-muted: #5C6F63;
+            --white: #FFFFFF;
             --border-color: #EAE5D9;
             --radius-xl: 32px;
             --radius-lg: 20px;
-            --shadow-soft: 0 15px 35px rgba(15, 37, 23, 0.05);
+            --radius-md: 12px;
+            --shadow-premium: 0 20px 40px rgba(15, 37, 23, 0.08);
             --heart-red: #EF4444;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        body { background: var(--cream-bg); color: var(--green-dark); overflow-x: hidden; line-height: 1.6; width: 100%; }
-
-        /* --- STICKY NAVIGATION --- */
-        nav {
-            background: rgba(253, 251, 247, 0.95); backdrop-filter: blur(20px);
-            padding: 12px 5%; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 2000; border-bottom: 1px solid var(--border-color);
-        }
-        .nav-logo { display: flex; align-items: center; gap: 10px; }
-        .nav-logo img { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; }
-        .nav-logo h1 { font-family: 'Outfit'; font-size: 20px; font-weight: 800; color: var(--green-dark); letter-spacing: 0.5px; }
-
-        .nav-review-btn {
-            background: var(--gold-light); color: var(--gold-primary);
-            border: 1px solid var(--gold-primary); padding: 7px 14px;
-            border-radius: 50px; font-weight: 700; font-size: 12px;
-            cursor: pointer; display: flex; align-items: center; gap: 6px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- MASTER LAYOUT --- */
-        .master-wrapper { max-width: 1350px; margin: 0 auto; padding: 20px 4% 120px; }
-        .product-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-
-        @media (min-width: 1024px) {
-            .product-grid { grid-template-columns: 1fr 1fr; align-items: start; gap: 60px; }
-            .left-column { position: sticky; top: 100px; }
-        }
-
-        /* --- GALLERY ENGINE --- */
-        .gallery-box { 
-            background: #ffffff; border-radius: var(--radius-xl); overflow: hidden; 
-            box-shadow: var(--shadow-soft); position: relative; border: 1px solid var(--border-color);
+        body {
+            background-color: var(--cream-bg);
+            color: var(--green-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
             width: 100%;
         }
-        .slider-wrap { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; }
-        .slider-wrap::-webkit-scrollbar { display: none; }
-        .slider-wrap img { 
-            min-width: 100%; height: auto; aspect-ratio: 1/1; object-fit: cover; 
-            scroll-snap-align: start; cursor: zoom-in; display: block;
-        }
-        
-        .img-badge {
-            position: absolute; top: 15px; left: 15px;
-            background: var(--gold-primary); color: white;
-            padding: 5px 12px; border-radius: 50px; font-size: 10px; font-weight: 800;
-            text-transform: uppercase; z-index: 10;
-        }
 
-        /* --- ACTION ICONS --- */
-        .action-icons {
-            position: absolute; top: 15px; right: 15px;
-            display: flex; flex-direction: column; gap: 8px; z-index: 10;
-        }
-        .icon-btn {
-            width: 38px; height: 38px; border-radius: 50%;
-            background: white; border: 1px solid var(--border-color);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 16px; color: var(--text-muted); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        .icon-btn.active-heart { color: var(--heart-red); border-color: var(--heart-red); }
-
-        /* --- PRODUCT INFO --- */
-        .brand-text { color: var(--gold-primary); font-weight: 800; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .main-title { font-family: 'Outfit'; font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; color: var(--green-dark); }
-        .sub-desc { color: var(--text-muted); font-size: 15px; margin-bottom: 20px; }
-
-        /* --- PRICING CARD --- */
-        .price-card {
-            background: white; padding: 20px; border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color); margin-bottom: 25px;
-            box-shadow: var(--shadow-soft);
-        }
-        .price-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-        .p-now { font-size: 36px; font-weight: 800; color: var(--green-dark); }
-        .p-old { text-decoration: line-through; color: #9CA3AF; font-size: 18px; }
-        .save-badge { background: var(--green-light); color: white; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px; }
-
-        /* --- INGREDIENTS GRID --- */
-        .section-title { font-family: 'Outfit'; font-size: 20px; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px; }
-        
-        .ing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (max-width: 480px) { .ing-grid { grid-template-columns: 1fr; } }
-        
-        .ing-card {
-            background: white; padding: 15px; border-radius: 16px; border: 1px solid var(--border-color);
-            display: flex; align-items: center; gap: 12px;
-        }
-        .ing-icon { width: 40px; height: 40px; flex-shrink: 0; background: var(--gold-light); border-radius: 10px; display: grid; place-items: center; color: var(--gold-primary); }
-
-        /* --- DESCRIPTION --- */
-        .desc-box { background: white; padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); }
-        .desc-box p { font-size: 14px; margin-bottom: 15px; color: var(--text-muted); }
-        .desc-list { list-style: none; }
-        .desc-list li { display: flex; gap: 10px; margin-bottom: 10px; font-size: 14px; align-items: flex-start; }
-        .desc-list li i { color: var(--gold-primary); margin-top: 4px; }
-
-        /* --- FAQ --- */
-        .faq-item { background: white; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border-color); }
-        .faq-head { padding: 15px; font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer; }
-        .faq-body { padding: 0 15px 15px; font-size: 13px; color: var(--text-muted); display: none; }
-        .faq-item.active .faq-body { display: block; }
-
-        /* --- REVIEWS --- */
-        .review-wrapper { background: white; padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-top: 30px; }
-        .rating-summary { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .rating-summary h2 { font-size: 32px; }
-        .stars-big { color: var(--gold-primary); }
-
-        /* --- FIXED CART BAR --- */
-        .cart-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: white; padding: 12px 5% 20px; z-index: 1500;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05); border-top: 1px solid var(--border-color);
-        }
-        .btn-grand-cart {
-            width: 100%; height: 55px; background: var(--green-dark); color: var(--gold-primary);
-            border: 2px solid var(--gold-primary); border-radius: 15px;
-            font-size: 16px; font-weight: 800; cursor: pointer;
+        /* ============================================================
+           2. NAVIGATION BAR (PREMIUM STICKY)
+           ============================================================ */
+        nav {
+            background: rgba(253, 251, 247, 0.96);
+            backdrop-filter: blur(15px);
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
         }
 
-        /* ZOOM */
-        #zoomOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; display:none; align-items:center; justify-content:center; }
-        #zoomOverlay img { max-width: 95%; max-height: 80%; object-fit: contain; }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+        }
+
+        .nav-logo h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--green-dark);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-review-btn {
+            background: var(--gold-light);
+            color: var(--gold-primary);
+            border: 1.5px solid var(--gold-primary);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .nav-review-btn:hover {
+            background: var(--gold-primary);
+            color: var(--white);
+        }
+
+        /* ============================================================
+           3. PRODUCT LAYOUT ENGINE
+           ============================================================ */
+        .master-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 6% 140px;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        @media (min-width: 1024px) {
+            .product-container {
+                grid-template-columns: 1.1fr 0.9fr;
+                gap: 80px;
+                align-items: start;
+            }
+            .gallery-sticky {
+                position: sticky;
+                top: 110px;
+            }
+        }
+
+        /* ============================================================
+           4. IMAGE GALLERY SYSTEM
+           ============================================================ */
+        .gallery-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            position: relative;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-premium);
+            overflow: hidden;
+        }
+
+        .main-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .main-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .main-slider img {
+            min-width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            scroll-snap-align: start;
+            cursor: zoom-in;
+            padding: 10px;
+            border-radius: var(--radius-xl);
+        }
+
+        .promo-badge {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            background: var(--gold-primary);
+            color: var(--white);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .float-icons {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .btn-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .btn-circle:hover {
+            color: var(--gold-primary);
+            border-color: var(--gold-primary);
+            transform: translateY(-3px);
+        }
+
+        .btn-circle.liked {
+            color: var(--heart-red);
+            border-color: var(--heart-red);
+        }
+
+        .gallery-indicator {
+            padding: 15px;
+            text-align: center;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .gallery-indicator span {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ============================================================
+           5. PRODUCT DETAILS & PRICING
+           ============================================================ */
+        .info-header {
+            margin-bottom: 30px;
+        }
+
+        .tagline {
+            display: inline-block;
+            color: var(--gold-primary);
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .product-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(26px, 4vw, 38px);
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--green-dark);
+            margin-bottom: 15px;
+        }
+
+        .rating-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stars-gold {
+            color: var(--gold-primary);
+            font-size: 14px;
+        }
+
+        .rating-count {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .price-box {
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 35px;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .current-price {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--green-dark);
+        }
+
+        .old-price {
+            font-size: 20px;
+            text-decoration: line-through;
+            color: #9CA3AF;
+        }
+
+        .discount-pill {
+            background: var(--green-light);
+            color: var(--white);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .stock-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #059669;
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           6. INGREDIENTS & FEATURES GRID
+           ============================================================ */
+        .section-heading {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            margin: 40px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-heading i {
+            color: var(--gold-primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-item {
+            background: var(--white);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .feature-item:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-3px);
+            background: var(--gold-light);
+        }
+
+        .feature-icon {
+            width: 46px;
+            height: 46px;
+            background: var(--cream-dark);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: var(--gold-primary);
+            font-size: 20px;
+        }
+
+        .feature-info h4 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--green-dark);
+        }
+
+        .feature-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           7. ACCORDION & DESCRIPTION BOX
+           ============================================================ */
+        .description-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .description-card p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .benefit-list {
+            list-style: none;
+        }
+
+        .benefit-list li {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            align-items: flex-start;
+        }
+
+        .benefit-list li i {
+            color: var(--gold-primary);
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        .accordion {
+            margin-bottom: 40px;
+        }
+
+        .acc-item {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .acc-btn {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--green-dark);
+            text-align: left;
+        }
+
+        .acc-content {
+            padding: 0 20px 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            display: none;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .acc-item.active .acc-content {
+            display: block;
+        }
+
+        .acc-item.active .acc-btn i {
+            transform: rotate(180deg);
+            color: var(--gold-primary);
+        }
+
+        /* ============================================================
+           8. REVIEW SYSTEM (FULL DETAIL)
+           ============================================================ */
+        .reviews-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-premium);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .big-rating h2 {
+            font-size: 48px;
+            line-height: 1;
+        }
+
+        .big-rating .stars-gold {
+            font-size: 22px;
+            margin-top: 5px;
+        }
+
+        .review-form {
+            background: var(--cream-bg);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 35px;
+        }
+
+        .rating-input {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 8px;
+            font-size: 24px;
+            color: #D1D5DB;
+        }
+
+        .rating-input i {
+            cursor: pointer;
+        }
+
+        .rating-input i.selected {
+            color: var(--gold-primary);
+        }
+
+        .review-textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            resize: none;
+            height: 110px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            background: var(--green-dark);
+            color: var(--white);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            background: var(--gold-primary);
+        }
+
+        .comment-item {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .user-info {
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           9. BOTTOM ACTION BAR (STICKY)
+           ============================================================ */
+        .sticky-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 15px 6% 25px;
+            z-index: 1500;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.06);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-add-to-cart {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 62px;
+            background: var(--green-dark);
+            color: var(--gold-primary);
+            border: 2px solid var(--gold-primary);
+            border-radius: 18px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .btn-add-to-cart:hover {
+            background: var(--gold-primary);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .btn-add-to-cart i {
+            font-size: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        /* ============================================================
+           10. ZOOM MODAL
+           ============================================================ */
+        #zoomOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 37, 23, 0.98);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #zoomOverlay img {
+            max-width: 95%;
+            max-height: 85%;
+            object-fit: contain;
+            border-radius: 15px;
+        }
+
+        .close-zoom {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            color: var(--gold-primary);
+            font-size: 45px;
+            cursor: pointer;
+        }
+
+        /* ============================================================
+           11. MOBILE OVERRIDES (STRICT)
+           ============================================================ */
+        @media (max-width: 768px) {
+            .nav-logo h1 { font-size: 18px; }
+            .master-wrapper { padding: 20px 5% 120px; }
+            .product-title { font-size: 26px; }
+            .price-box { padding: 20px; }
+            .current-price { font-size: 34px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .btn-add-to-cart { height: 56px; font-size: 15px; }
+        }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="nav-logo">
-            <img src="49779.jpg" alt="Logo">
+        <a href="#" class="nav-logo">
+            <img src="49779.jpg" alt="Nemi Mart">
             <h1>NEMI MART</h1>
+        </a>
+        <div class="nav-actions">
+            <button class="nav-review-btn" onclick="document.getElementById('reviews-anchor').scrollIntoView({behavior:'smooth'})">
+                <i class="fas fa-star"></i> <span>REVIEWS</span>
+            </button>
         </div>
-        <button class="nav-review-btn" onclick="document.getElementById('reviewsArea').scrollIntoView()">
-            <i class="fas fa-star"></i> Review
-        </button>
     </nav>
 
     <div id="zoomOverlay" onclick="this.style.display='none'">
+        <span class="close-zoom">&times;</span>
         <img id="zoomedImage" src="">
     </div>
 
-    <div class="master-wrapper">
-        <div class="product-grid">
+    <main class="master-wrapper">
+        <div class="product-container">
             
-            <div class="left-column">
-                <div class="gallery-box">
-                    <span class="img-badge">Organic Gold</span>
-                    <div class="action-icons">
-                        <button class="icon-btn" onclick="this.classList.toggle('active-heart')"><i class="fas fa-heart"></i></button>
-                        <button class="icon-btn" onclick="alert('Link Copied!')"><i class="fas fa-share-alt"></i></button>
+            <div class="gallery-sticky">
+                <div class="gallery-card">
+                    <div class="promo-badge">Pure Gold Bhasma</div>
+                    
+                    <div class="float-icons">
+                        <button class="btn-circle" onclick="this.classList.toggle('liked')">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="btn-circle" onclick="shareMe()">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
                     </div>
-                    <div class="slider-wrap">
-                        <img src="49779.jpg" onclick="openZoom(this.src)" alt="Img 1">
-                        <img src="49780.jpg" onclick="openZoom(this.src)" alt="Img 2">
-                        <img src="49781.jpg" onclick="openZoom(this.src)" alt="Img 3">
+
+                    <div class="main-slider" id="productSlider">
+                        <img src="49779.jpg" onclick="openZoom(this.src)" alt="Elite Gold Front">
+                        <img src="49780.jpg" onclick="openZoom(this.src)" alt="Elite Gold Back">
+                        <img src="49781.jpg" onclick="openZoom(this.src)" alt="Elite Gold Ingredients">
                     </div>
-                    <p style="text-align: center; font-size: 11px; padding: 10px; color: var(--text-muted);">Swipe to see more images</p>
+
+                    <div class="gallery-indicator">
+                        <span><i class="fas fa-arrows-left-right"></i> SWIPE FOR MORE ANGLES</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="right-column">
-                <span class="brand-text">Premium Ayurvedic Series</span>
-                <h1 class="main-title">Amritprash Elite Gold Formula (500g)</h1>
-                <p class="sub-desc">Traditional Ayurvedic chyawanprash with 24K Gold Bhasma and Saffron for ultimate immunity.</p>
-                
-                <div class="price-card">
+            <div class="details-column">
+                <div class="info-header">
+                    <span class="tagline">Premium Ayurvedic Wellness</span>
+                    <h1 class="product-title">Amritprash Elite Gold Luxury Formula (500g)</h1>
+                    <div class="rating-inline">
+                        <div class="stars-gold">★★★★★</div>
+                        <span class="rating-count">4.9 | 1,280+ Reviews</span>
+                    </div>
+                    <p class="sub-desc">Infused with 24K Gold Bhasma, Kashmiri Saffron, and 40+ Rare Himalayan Herbs. A royal recipe for immunity, vitality, and brain power.</p>
+                </div>
+
+                <div class="price-box">
                     <div class="price-row">
-                        <span class="p-now">₹850</span>
-                        <span class="p-old">₹1,499</span>
-                        <span class="save-badge">45% OFF</span>
+                        <span class="current-price">₹850</span>
+                        <span class="old-price">₹1,499</span>
+                        <span class="discount-pill">45% OFF</span>
+                    </div>
+                    <div class="stock-status">
+                        <i class="fas fa-check-circle"></i> IN STOCK - READY TO SHIP
                     </div>
                 </div>
 
-                <h3 class="section-title"><i class="fas fa-leaf"></i> Key Ingredients</h3>
-                <div class="ing-grid">
-                    <div class="ing-card">
-                        <div class="ing-icon"><i class="fas fa-gem"></i></div>
-                        <div><h4 style="font-size:14px;">Gold Bhasma</h4><p style="font-size:11px;">Vitality</p></div>
+                <h3 class="section-heading"><i class="fas fa-gem"></i> Premium Ingredients</h3>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-crown"></i></div>
+                        <div class="feature-info">
+                            <h4>24K Gold Bhasma</h4>
+                            <p>Cellular Rejuvenation</p>
+                        </div>
                     </div>
-                    <div class="ing-card">
-                        <div class="ing-icon"><i class="fas fa-sun"></i></div>
-                        <div><h4 style="font-size:14px;">Kashmiri Kesar</h4><p style="font-size:11px;">Natural Glow</p></div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-sun"></i></div>
+                        <div class="feature-info">
+                            <h4>Kashmiri Kesar</h4>
+                            <p>Premium Saffron Glow</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-mountain"></i></div>
+                        <div class="feature-info">
+                            <h4>Pure Shilajit</h4>
+                            <p>Maximum Stamina</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                        <div class="feature-info">
+                            <h4>Wild Honey</h4>
+                            <p>No Artificial Sugar</p>
+                        </div>
                     </div>
                 </div>
 
-                <h3 class="section-title"><i class="fas fa-file-alt"></i> Description</h3>
-                <div class="desc-box">
-                    <ul class="desc-list">
-                        <li><i class="fas fa-check"></i> Boosts Immunity naturally</li>
-                        <li><i class="fas fa-check"></i> Improves Memory & Focus</li>
-                        <li><i class="fas fa-check"></i> Pure Forest Honey based</li>
+                <h3 class="section-heading"><i class="fas fa-file-alt"></i> Product Overview</h3>
+                <div class="description-card">
+                    <p>Amritprash Elite Gold represents the pinnacle of ancient wisdom combined with modern purity standards. Every jar is a source of holistic wellness.</p>
+                    <ul class="benefit-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Natural Shield:</strong> Builds a powerful immunity against seasonal issues.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Brain Power:</strong> Enriched with Brahmi to improve focus and memory.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Anti-Aging:</strong> Antioxidants that help maintain youthful energy.</li>
                     </ul>
                 </div>
 
-                <h3 class="section-title"><i class="fas fa-question-circle"></i> FAQ</h3>
-                <div class="faq-item" onclick="this.classList.toggle('active')">
-                    <div class="faq-head">How to use? <i class="fas fa-chevron-down"></i></div>
-                    <div class="faq-body">1 teaspoon twice a day with warm milk.</div>
+                <h3 class="section-heading"><i class="fas fa-question-circle"></i> Help & FAQs</h3>
+                <div class="accordion">
+                    <div class="acc-item active">
+                        <button class="acc-btn" onclick="toggleAcc(this)">
+                            What is the best way to consume? <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="acc-content">
+                            Take 1 tablespoon (approx 10-12g) twice daily. Ideally with lukewarm milk or water, once in the morning on an empty stomach and once before bed.
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <button class="acc-btn" onclick="toggleAcc(this)">
+                            Is it safe for long-term use? <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="acc-content">
+                            Yes, this is a 100% natural Ayurvedic formulation. It contains no synthetic chemicals or preservatives, making it safe for daily long-term consumption.
+                        </div>
+                    </div>
                 </div>
 
-                <div id="reviewsArea" class="review-wrapper">
-                    <div class="rating-summary">
-                        <h2>4.9</h2>
-                        <div class="stars-big">★★★★★</div>
+                <div id="reviews-anchor" class="reviews-section">
+                    <div class="review-header">
+                        <div class="big-rating">
+                            <h2>4.9</h2>
+                            <div class="stars-gold">★★★★★</div>
+                        </div>
+                        <div style="text-align: right; color: var(--text-muted); font-size: 13px;">Verified Buyers Only</div>
                     </div>
-                    <div class="user-comment">
-                        <p style="font-weight:800; font-size:14px;">Aryan</p>
-                        <p style="font-size:13px; color:var(--text-muted);">Best product for energy levels. Highly recommend!</p>
+
+                    <div class="review-form">
+                        <h4 style="margin-bottom: 15px;">Write a Review</h4>
+                        <div class="rating-input" id="starInput">
+                            <i class="fas fa-star" onclick="setRate(1)"></i>
+                            <i class="fas fa-star" onclick="setRate(2)"></i>
+                            <i class="fas fa-star" onclick="setRate(3)"></i>
+                            <i class="fas fa-star" onclick="setRate(4)"></i>
+                            <i class="fas fa-star" onclick="setRate(5)"></i>
+                        </div>
+                        <textarea id="revText" class="review-textarea" placeholder="Tell others about your experience..."></textarea>
+                        <button class="submit-btn" onclick="postReview()">Submit Review</button>
+                    </div>
+
+                    <div id="commentsList">
+                        <div class="comment-item">
+                            <div class="comment-meta">
+                                <span class="user-info">Arham Sharma <i class="fas fa-check-circle" style="color:#059669; font-size:10px;"></i></span>
+                                <span class="comment-date">3 days ago</span>
+                            </div>
+                            <div class="stars-gold" style="font-size:10px; margin-bottom:5px;">★★★★★</div>
+                            <p class="comment-text">Bhai sach bataun toh quality top hai. Packaging bahut premium hai aur taste bhi asli honey jaisa hai. Highly recommended!</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <div class="cart-bar">
-        <button class="btn-grand-cart" onclick="alert('Added to Cart!')">
+    <div class="sticky-footer">
+        <button class="btn-add-to-cart" onclick="addToCart()">
+            <i class="fas fa-shopping-bag"></i>
             ADD TO CART • ₹850
         </button>
     </div>
 
     <script>
+        // Zoom functionality
         function openZoom(src) {
             document.getElementById('zoomedImage').src = src;
             document.getElementById('zoomOverlay').style.display = 'flex';
+        }
+
+        // Accordion Toggle
+        function toggleAcc(btn) {
+            const item = btn.parentElement;
+            item.classList.toggle('active');
+        }
+
+        // Share Function
+        function shareMe() {
+            if(navigator.share) {
+                navigator.share({title: 'Nemi Mart Elite Gold', url: window.location.href});
+            } else {
+                alert('Product link copied to clipboard!');
+            }
+        }
+
+        // Review Rating
+        let currentRate = 0;
+        function setRate(n) {
+            currentRate = n;
+            const stars = document.querySelectorAll('#starInput i');
+            stars.forEach((s, index) => {
+                if(index < n) s.classList.add('selected');
+                else s.classList.remove('selected');
+            });
+        }
+
+        // Post Review
+        function postReview() {
+            const txt = document.getElementById('revText').value;
+            if(currentRate === 0 || txt.trim() === "") {
+                alert("Please add stars and a comment!");
+                return;
+            }
+            const list = document.getElementById('commentsList');
+            const item = document.createElement('div');
+            item.className = 'comment-item';
+            item.innerHTML = `
+                <div class="comment-meta">
+                    <span class="user-info">You (Verified)</span>
+                    <span class="comment-date">Just now</span>
+                </div>
+                <div class="stars-gold" style="font-size:10px; margin-bottom:5px;">${'★'.repeat(currentRate)}${'☆'.repeat(5-currentRate)}</div>
+                <p class="comment-text">${txt}</p>
+            `;
+            list.prepend(item);
+            document.getElementById('revText').value = "";
+            alert("Thanks for your review!");
+        }
+
+        // Cart Action
+        function addToCart() {
+            const btn = document.querySelector('.btn-add-to-cart');
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ADDING...`;
+            setTimeout(() => {
+                btn.innerHTML = `<i class="fas fa-check"></i> ADDED SUCCESSFULLY`;
+                btn.style.background = "#059669";
+                btn.style.borderColor = "#059669";
+                btn.style.color = "#fff";
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fas fa-shopping-bag"></i> ADD TO CART • ₹850`;
+                    btn.style.background = "var(--green-dark)";
+                    btn.style.borderColor = "var(--gold-primary)";
+                    btn.style.color = "var(--gold-primary)";
+                }, 2000);
+            }, 1000);
         }
     </script>
 </body>

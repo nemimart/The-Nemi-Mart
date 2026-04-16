@@ -1,372 +1,467 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Member Dashboard</title>
+    <title>Nemi Mart OS | Ultra Pro Profile System</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Outfit:wght@100;300;500;700;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     
     <style>
+        /* --- 1. ADVANCED DESIGN SYSTEM --- */
         :root {
-            --primary: #1A3E26; 
-            --accent: #D4AF37;  
-            --creme: #FDFBF7;   
-            --white: #ffffff;
-            --text-main: #0A1F13;
-            --text-muted: #64748B;
-            --danger: #FF4D4D;
-            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            --primary: #0A1F13;
+            --accent: #D4AF37;
+            --accent-light: #F4DF95;
+            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #B8860B 50%, #8A6D3B 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --bg-soft: #FDFBF7;
+            --text-dark: #050F09;
+            --text-light: #64748B;
+            --danger: #FF3B30;
+            --success: #34C759;
+            --shadow-premium: 0 25px 50px -12px rgba(10, 31, 19, 0.15);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        /* --- 2. GLOBAL RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body { background: var(--bg-soft); color: var(--text-dark); overflow-x: hidden; min-height: 100vh; }
 
-        body { background: var(--creme); color: var(--text-main); overflow-x: hidden; padding-bottom: 30px; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-soft); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-        /* --- PREVENT SCROLL ON MODAL --- */
-        .no-scroll { overflow: hidden; }
+        /* --- 3. AUTHENTICATION SCREENS --- */
+        .auth-overlay {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 20px; position: relative; z-index: 100; background: var(--bg-soft);
+        }
 
-        /* --- DYNAMIC BACKGROUND & AVATAR --- */
-        .profile-hero {
-            position: relative; height: 380px;
-            background: var(--primary);
+        .auth-card {
+            width: 100%; max-width: 480px; background: var(--white); border-radius: 45px;
+            padding: 40px; box-shadow: var(--shadow-premium); border: 1px solid rgba(212, 175, 55, 0.2);
+            position: relative; overflow: hidden; transform: scale(1); transition: var(--transition);
+        }
+
+        .auth-logo { text-align: center; margin-bottom: 30px; }
+        .auth-logo i { font-size: 50px; color: var(--primary); filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+
+        .auth-header { text-align: center; margin-bottom: 35px; }
+        .auth-header h2 { font-family: 'Outfit'; font-size: 32px; font-weight: 900; color: var(--primary); letter-spacing: -1px; }
+        .auth-header p { color: var(--text-light); font-size: 15px; margin-top: 8px; font-weight: 500; }
+
+        .input-box { margin-bottom: 22px; position: relative; }
+        .input-box label { display: block; font-size: 13px; font-weight: 800; color: var(--primary); margin-bottom: 8px; margin-left: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .input-field {
+            width: 100%; padding: 18px 20px 18px 55px; border-radius: 22px;
+            border: 2px solid #F1F5F9; background: #F8FAF9; font-size: 16px; font-weight: 600;
+            outline: none; transition: var(--transition); color: var(--text-dark);
+        }
+        .input-field:focus { border-color: var(--accent); background: #fff; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.1); }
+        
+        .input-box i { position: absolute; left: 22px; top: 43px; color: var(--text-light); font-size: 18px; transition: var(--transition); }
+        .input-field:focus + i { color: var(--accent); }
+
+        .action-btn {
+            width: 100%; padding: 20px; background: var(--primary); color: var(--accent);
+            border: none; border-radius: 24px; font-size: 18px; font-weight: 800;
+            cursor: pointer; box-shadow: 0 15px 30px rgba(10, 31, 19, 0.2); transition: var(--transition);
+            margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(10, 31, 19, 0.3); }
+        .action-btn:active { transform: translateY(0) scale(0.98); }
+
+        .toggle-text { text-align: center; margin-top: 30px; font-weight: 600; color: var(--text-light); font-size: 15px; }
+        .toggle-text b { color: var(--primary); cursor: pointer; text-decoration: underline; margin-left: 5px; }
+
+        /* --- 4. PROFESSIONAL PROFILE SYSTEM --- */
+        #mainProfileUI { display: none; padding-bottom: 50px; }
+
+        .header-bg {
+            height: 420px; background: var(--primary); position: relative;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden; border-bottom-right-radius: 60px; border-bottom-left-radius: 60px;
+            border-bottom-left-radius: 80px; border-bottom-right-radius: 80px; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
-        .floating-icons i {
-            position: absolute; color: rgba(212, 175, 55, 0.15);
-            font-size: 26px; animation: rotateOrbit var(--d) linear infinite;
-            z-index: 1;
+        /* Animated Background Icons */
+        .bg-icon {
+            position: absolute; color: rgba(212, 175, 55, 0.08); font-size: 28px;
+            animation: floatMove var(--d) linear infinite; pointer-events: none;
+        }
+        @keyframes floatMove {
+            0% { transform: rotate(0deg) translateX(var(--r)) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); opacity: 0; }
         }
 
-        @keyframes rotateOrbit {
-            from { transform: rotate(0deg) translateX(var(--r)) rotate(0deg); }
-            to { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); }
+        .profile-container {
+            width: 150px; height: 150px; border-radius: 55px; background: var(--gold-gradient);
+            padding: 5px; position: relative; z-index: 5; margin-bottom: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4); transition: var(--transition);
+        }
+        .profile-container:hover { transform: scale(1.05) rotate(2deg); }
+        
+        #userImg { width: 100%; height: 100%; border-radius: 50px; object-fit: cover; border: 5px solid var(--primary); }
+        
+        .upload-label {
+            position: absolute; bottom: -5px; right: -5px; width: 45px; height: 45px;
+            background: #fff; border-radius: 15px; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: 2px solid var(--accent);
+            transition: var(--transition);
+        }
+        .upload-label:hover { background: var(--accent); color: #fff; }
+
+        .user-details-hero { text-align: center; color: #fff; }
+        .user-details-hero h1 { font-family: 'Outfit'; font-size: 34px; font-weight: 900; letter-spacing: -1px; }
+        .user-details-hero p { color: var(--accent); font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 3px; margin-top: 5px; }
+
+        /* Dashboard Grid */
+        .content-wrapper { max-width: 600px; margin: -60px auto 0; padding: 0 20px; position: relative; z-index: 10; }
+
+        .card-system {
+            background: #fff; border-radius: 40px; padding: 15px;
+            box-shadow: 0 30px 60px rgba(10, 31, 19, 0.1); margin-bottom: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
         }
 
-        .avatar-wrapper {
-            position: relative; z-index: 10;
-            width: 140px; height: 140px;
-            border-radius: 50px; background: var(--gold-gradient);
-            padding: 5px; box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-            margin-bottom: 20px; transition: 0.5s;
+        .nav-item {
+            display: flex; align-items: center; padding: 22px; text-decoration: none;
+            color: var(--text-dark); border-radius: 28px; transition: var(--transition);
+            border: none; background: transparent; width: 100%; cursor: pointer;
         }
+        .nav-item:hover { background: #F8FAF9; transform: translateX(10px); }
 
-        .avatar-wrapper img {
-            width: 100%; height: 100%; border-radius: 45px;
-            object-fit: cover; border: 5px solid var(--primary);
+        .nav-icon {
+            width: 55px; height: 55px; border-radius: 20px; background: #E9F0EB;
+            color: var(--primary); display: flex; align-items: center; justify-content: center;
+            margin-right: 20px; font-size: 22px; transition: var(--transition);
         }
+        .nav-item:hover .nav-icon { background: var(--primary); color: var(--accent); }
 
-        .edit-avatar-btn {
-            position: absolute; bottom: -5px; right: -5px;
-            width: 45px; height: 45px; background: var(--white);
-            border-radius: 15px; display: flex; align-items: center;
-            justify-content: center; color: var(--primary);
-            font-size: 18px; cursor: pointer; border: 2px solid var(--accent);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .nav-text { flex: 1; text-align: left; }
+        .nav-text b { display: block; font-size: 17px; font-weight: 800; color: var(--primary); }
+        .nav-text span { display: block; font-size: 13px; color: var(--text-light); font-weight: 500; margin-top: 2px; }
+
+        .chevron { color: #CBD5E1; font-size: 16px; }
+
+        .danger-zone { color: var(--danger) !important; }
+        .danger-zone .nav-icon { background: #FFF0F0; color: var(--danger); }
+
+        /* --- 5. MODAL SYSTEM --- */
+        .modal {
+            position: fixed; inset: 0; background: rgba(5, 15, 9, 0.85);
+            backdrop-filter: blur(15px); z-index: 1000; display: none;
+            align-items: center; justify-content: center; padding: 20px;
         }
-
-        .profile-info h1 {
-            color: var(--white); font-family: 'Outfit';
-            font-size: 32px; font-weight: 900; text-align: center;
+        .modal-body {
+            background: #fff; width: 100%; max-width: 500px; border-radius: 45px;
+            padding: 40px; position: relative; animation: popUp 0.4s cubic-bezier(.47,1.64,.41,.8);
         }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .member-badge {
-            display: block; text-align: center; color: var(--accent);
-            font-weight: 800; letter-spacing: 2px; font-size: 12px;
-            text-transform: uppercase; margin-top: 5px;
+        .close-btn { position: absolute; top: 30px; right: 30px; font-size: 24px; color: var(--text-light); cursor: pointer; }
+
+        /* --- 6. TOAST NOTIFICATION --- */
+        .toast-box {
+            position: fixed; top: 40px; left: 50%; transform: translateX(-50%);
+            background: var(--primary); color: var(--accent); padding: 18px 40px;
+            border-radius: 30px; font-weight: 800; font-size: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            display: none; z-index: 9999; border: 2px solid var(--accent);
         }
-
-        /* --- DASHBOARD TILES --- */
-        .content-area { max-width: 550px; margin: -50px auto 0; padding: 0 20px; position: relative; z-index: 20; }
-
-        .menu-card {
-            background: var(--white); border-radius: 35px;
-            padding: 12px; box-shadow: 0 20px 40px rgba(26, 62, 38, 0.08);
-            margin-bottom: 25px; border: 1px solid rgba(212, 175, 55, 0.1);
-        }
-
-        .menu-item {
-            display: flex; align-items: center; padding: 20px;
-            text-decoration: none; color: var(--text-main);
-            border-radius: 25px; transition: 0.3s; margin-bottom: 5px;
-            cursor: pointer; border: none; background: transparent; width: 100%;
-        }
-
-        .menu-item:last-child { margin-bottom: 0; }
-        .menu-item:hover { background: #F8FAF9; transform: scale(1.02); }
-
-        .icon-box {
-            width: 50px; height: 50px; border-radius: 18px;
-            background: #F0F4F1; color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            margin-right: 18px; font-size: 20px; transition: 0.3s;
-        }
-
-        .menu-item:hover .icon-box { background: var(--primary); color: var(--accent); }
-
-        .menu-text { flex: 1; text-align: left; }
-        .menu-text span { display: block; font-weight: 800; font-size: 16px; margin-bottom: 2px; }
-        .menu-text small { color: var(--text-muted); font-size: 12px; font-weight: 500; }
-
-        .arrow { color: #CBD5E1; font-size: 14px; }
-
-        /* --- MODAL SYSTEM --- */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px); z-index: 1000;
-            display: none; align-items: center; justify-content: center; padding: 20px;
-        }
-
-        .modal-content {
-            background: var(--white); width: 100%; max-width: 450px;
-            border-radius: 40px; padding: 30px; position: relative;
-            animation: modalSlide 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes modalSlide { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .modal-header { margin-bottom: 25px; }
-        .modal-header h2 { font-family: 'Outfit'; font-size: 24px; color: var(--primary); }
-
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 5px; }
-        .form-group input {
-            width: 100%; padding: 15px 20px; border-radius: 18px;
-            border: 2px solid #F1F5F9; background: #F8FAF9;
-            font-size: 15px; font-weight: 600; outline: none; transition: 0.3s;
-        }
-
-        .form-group input:focus { border-color: var(--accent); background: var(--white); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
-
-        .save-btn {
-            width: 100%; padding: 18px; background: var(--primary);
-            color: var(--accent); border: none; border-radius: 20px;
-            font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 10px;
-        }
-
-        .close-modal { position: absolute; top: 25px; right: 25px; font-size: 20px; color: #94A3B8; cursor: pointer; }
-
-        /* --- LEGAL SECTION --- */
-        .legal-box { background: #E9F0EB; border-radius: 35px; padding: 30px; margin-top: 10px; }
-        .legal-box h3 { font-family: 'Outfit'; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .tc-text { font-size: 13px; color: var(--text-main); line-height: 1.7; opacity: 0.8; max-height: 150px; overflow-y: auto; }
-
-        .contact-btn {
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            width: 100%; padding: 18px; background: var(--white);
-            border: 2px solid var(--primary); border-radius: 20px;
-            margin-top: 25px; text-decoration: none; color: var(--primary);
-            font-weight: 800; transition: 0.3s;
-        }
-        .contact-btn:hover { background: var(--primary); color: var(--accent); }
 
     </style>
 </head>
-<body id="mainBody">
+<body id="appBody">
 
-    <div class="profile-hero">
-        <div class="floating-icons" id="iconBox"></div>
+    <div id="toastMessage" class="toast-box">Notification text here!</div>
 
-        <div class="avatar-wrapper">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Akash" id="userPhoto" alt="User">
-            <label for="uploadPhoto" class="edit-avatar-btn">
-                <i class="fa-solid fa-camera"></i>
-                <input type="file" id="uploadPhoto" hidden accept="image/*">
-            </label>
-        </div>
-
-        <div class="profile-info">
-            <h1 id="displayName">Akash Deep</h1>
-            <span class="member-badge">Nemi Mart Gold Member</span>
+    <div class="auth-overlay" id="loginUI">
+        <div class="auth-card">
+            <div class="auth-logo"><i class="fa-solid fa-shield-heart"></i></div>
+            <div class="auth-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your Nemi Mart account</p>
+            </div>
+            <div class="input-box">
+                <label>Username</label>
+                <i class="fa-solid fa-user-ninja"></i>
+                <input type="text" id="l_user" class="input-field" placeholder="Ex: akash_dev">
+            </div>
+            <div class="input-box">
+                <label>Access Password</label>
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="l_pass" class="input-field" placeholder="••••••••">
+            </div>
+            <button class="action-btn" onclick="executeLogin()">
+                Access Dashboard <i class="fa-solid fa-arrow-right-long"></i>
+            </button>
+            <p class="toggle-text">Don't have an account? <b onclick="toggleAuth('registerUI')">Register Now</b></p>
         </div>
     </div>
 
-    <div class="content-area">
-        
-        <div class="menu-card">
-            <button class="menu-item" onclick="openModal('editProfileModal')">
-                <div class="icon-box"><i class="fa-solid fa-user-gear"></i></div>
-                <div class="menu-text">
-                    <span>Personal Details</span>
-                    <small id="displayEmail">akash@example.com</small>
-                </div>
-                <i class="fa-solid fa-chevron-right arrow"></i>
-            </button>
-            
-            <button class="menu-item" onclick="openModal('addressModal')">
-                <div class="icon-box"><i class="fa-solid fa-map-pin"></i></div>
-                <div class="menu-text">
-                    <span>Delivery Address</span>
-                    <small id="displayAddress">Ragho Majra, Patiala, Punjab</small>
-                </div>
-                <i class="fa-solid fa-chevron-right arrow"></i>
-            </button>
-        </div>
-
-        <div class="menu-card">
-            <a href="orders.html" class="menu-item">
-                <div class="icon-box"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                <div class="menu-text">
-                    <span>Order History</span>
-                    <small>Manage your past purchases</small>
-                </div>
-                <i class="fa-solid fa-chevron-right arrow"></i>
-            </a>
-            
-            <a href="heart.html" class="menu-item">
-                <div class="icon-box"><i class="fa-solid fa-heart"></i></div>
-                <div class="menu-text">
-                    <span>My Wishlist</span>
-                    <small>Items you've loved</small>
-                </div>
-                <i class="fa-solid fa-chevron-right arrow"></i>
-            </a>
-        </div>
-
-        <div class="legal-box">
-            <h3><i class="fa-solid fa-fingerprint"></i> Terms of Service</h3>
-            <div class="tc-text">
-                <strong>1. User Account:</strong> You are responsible for maintaining the confidentiality of your Nemi Mart account. <br><br>
-                <strong>2. Service Quality:</strong> We promise 100% organic and fresh products sourced from Punjab's finest farmers.<br><br>
-                <strong>3. Privacy:</strong> Your personal data is encrypted and used only for fulfilling your orders in Patiala and surrounding areas.<br><br>
-                <strong>4. Returns:</strong> Fresh items are only returnable at the time of delivery if found damaged.
+    <div class="auth-overlay" id="registerUI" style="display: none;">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p>Join the elite organic community</p>
             </div>
-        </div>
-
-        <a href="mailto:nemimart@gmail.com" class="contact-btn">
-            <i class="fa-solid fa-headset"></i> Need Help? Contact Support
-        </a>
-
-        <p style="text-align:center; font-size: 11px; color: #94A3B8; margin-top: 30px; font-weight: 700;">
-            VERSION 3.0.1 • POWERED BY ARHAM INSIGHTS
-        </p>
-    </div>
-
-    <div class="modal-overlay" id="editProfileModal">
-        <div class="modal-content">
-            <i class="fa-solid fa-xmark close-modal" onclick="closeModal('editProfileModal')"></i>
-            <div class="modal-header">
-                <h2>Update Profile</h2>
-            </div>
-            <div class="form-group">
+            <div class="input-box">
                 <label>Full Name</label>
-                <input type="text" id="inputName" placeholder="Enter your name">
+                <i class="fa-solid fa-id-card"></i>
+                <input type="text" id="r_name" class="input-field" placeholder="Enter your full name">
             </div>
-            <div class="form-group">
+            <div class="input-box">
+                <label>Unique Username</label>
+                <i class="fa-solid fa-at"></i>
+                <input type="text" id="r_user" class="input-field" placeholder="Choose username">
+            </div>
+            <div class="input-box">
+                <label>Mobile Number</label>
+                <i class="fa-solid fa-mobile-screen"></i>
+                <input type="tel" id="r_phone" class="input-field" placeholder="+91 XXXXX XXXXX">
+            </div>
+            <div class="input-box">
                 <label>Email Address</label>
-                <input type="email" id="inputEmail" placeholder="Enter your email">
+                <i class="fa-solid fa-envelope-open"></i>
+                <input type="email" id="r_email" class="input-field" placeholder="yourname@gmail.com">
             </div>
-            <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="inputPhone" placeholder="Mobile number">
+            <div class="input-box">
+                <label>Security Password</label>
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="r_pass" class="input-field" placeholder="Min. 8 characters">
             </div>
-            <button class="save-btn" onclick="saveProfile()">Update Details</button>
+            <button class="action-btn" onclick="executeRegister()">
+                Confirm Registration <i class="fa-solid fa-check-double"></i>
+            </button>
+            <p class="toggle-text">Already a member? <b onclick="toggleAuth('loginUI')">Login here</b></p>
         </div>
     </div>
 
-    <div class="modal-overlay" id="addressModal">
-        <div class="modal-content">
-            <i class="fa-solid fa-xmark close-modal" onclick="closeModal('addressModal')"></i>
-            <div class="modal-header">
-                <h2>Delivery Address</h2>
+    <div id="mainProfileUI">
+        <div class="header-bg" id="dynamicBg">
+            <div class="profile-container">
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" id="userImg">
+                <label for="fileUpload" class="upload-label">
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <input type="file" id="fileUpload" hidden accept="image/*">
+                </label>
             </div>
-            <div class="form-group">
-                <label>House / Flat No.</label>
-                <input type="text" id="inputHouse" placeholder="Ex: H.No 123, Ground Floor">
+            <div class="user-details-hero">
+                <h1 id="disp_Name">Akash Deep</h1>
+                <p id="disp_Handle">@akash_official</p>
             </div>
-            <div class="form-group">
-                <label>Landmark / Area</label>
-                <input type="text" id="inputArea" placeholder="Ex: Ragho Majra, Near Main Gate">
+        </div>
+
+        <div class="content-wrapper">
+            <div class="card-system">
+                <button class="nav-item" onclick="openProfileEdit()">
+                    <div class="nav-icon"><i class="fa-solid fa-user-pen"></i></div>
+                    <div class="nav-text">
+                        <b>Personal Identity</b>
+                        <span id="disp_Email">akash@nemi.com</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right chevron"></i>
+                </button>
+                <button class="nav-item">
+                    <div class="nav-icon"><i class="fa-solid fa-phone-volume"></i></div>
+                    <div class="nav-text">
+                        <b>Contact Verified</b>
+                        <span id="disp_Phone">+91 98765 43210</span>
+                    </div>
+                </button>
             </div>
-            <div class="form-group">
-                <label>City</label>
-                <input type="text" value="Patiala, Punjab" readonly style="background: #eee;">
+
+            <div class="card-system">
+                <a href="orders.html" class="nav-item">
+                    <div class="nav-icon"><i class="fa-solid fa-box-archive"></i></div>
+                    <div class="nav-text">
+                        <b>Order Repository</b>
+                        <span>Track, Reorder & Invoices</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right chevron"></i>
+                </a>
+                <a href="wishlist.html" class="nav-item">
+                    <div class="nav-icon"><i class="fa-solid fa-heart-circle-check"></i></div>
+                    <div class="nav-text">
+                        <b>Saved Favorites</b>
+                        <span>Your curated wishlist</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right chevron"></i>
+                </a>
             </div>
-            <button class="save-btn" onclick="saveAddress()">Save Address</button>
+
+            <div class="card-system">
+                <button class="nav-item danger-zone" onclick="triggerLogout()">
+                    <div class="nav-icon"><i class="fa-solid fa-power-off"></i></div>
+                    <div class="nav-text">
+                        <b>Terminate Session</b>
+                        <span>Logout of this device</span>
+                    </div>
+                </button>
+            </div>
+            
+            <p style="text-align: center; color: var(--text-light); font-size: 11px; font-weight: 800; letter-spacing: 2px;">
+                ENGINEERED IN PATIALA • VERSION 4.0.0
+            </p>
+        </div>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-body">
+            <i class="fa-solid fa-circle-xmark close-btn" onclick="closeEditModal()"></i>
+            <h2 style="font-family: 'Outfit'; margin-bottom: 25px; color: var(--primary);">Edit Profile</h2>
+            <div class="input-box">
+                <label>Full Name</label>
+                <input type="text" id="edit_name" class="input-field">
+            </div>
+            <div class="input-box">
+                <label>Email Address</label>
+                <input type="email" id="edit_email" class="input-field">
+            </div>
+            <button class="action-btn" onclick="saveEdits()">Update Profile</button>
         </div>
     </div>
 
     <script>
-        // --- DATA MANAGEMENT ---
-        function loadUserData() {
-            const name = localStorage.getItem('nm_name') || 'Akash Deep';
-            const email = localStorage.getItem('nm_email') || 'akash@example.com';
-            const address = localStorage.getItem('nm_address') || 'Ragho Majra, Patiala, Punjab';
-            const photo = localStorage.getItem('nm_photo');
+        /* --- JS LOGIC CORE --- */
 
-            document.getElementById('displayName').innerText = name;
-            document.getElementById('displayEmail').innerText = email;
-            document.getElementById('displayAddress').innerText = address;
-            if(photo) document.getElementById('userPhoto').src = photo;
-
-            // Fill inputs
-            document.getElementById('inputName').value = name;
-            document.getElementById('inputEmail').value = email;
-            document.getElementById('inputArea').value = address;
+        // 1. Navigation Controller
+        function toggleAuth(id) {
+            document.getElementById('loginUI').style.display = 'none';
+            document.getElementById('registerUI').style.display = 'none';
+            document.getElementById('mainProfileUI').style.display = 'none';
+            document.getElementById(id).style.display = (id === 'mainProfileUI') ? 'block' : 'flex';
         }
 
-        function saveProfile() {
-            const newName = document.getElementById('inputName').value;
-            const newEmail = document.getElementById('inputEmail').value;
-            localStorage.setItem('nm_name', newName);
-            localStorage.setItem('nm_email', newEmail);
-            loadUserData();
-            closeModal('editProfileModal');
-            alert('Profile Updated Successfully!');
+        // 2. Registration Logic
+        function executeRegister() {
+            const data = {
+                name: document.getElementById('r_name').value,
+                user: document.getElementById('r_user').value,
+                phone: document.getElementById('r_phone').value,
+                email: document.getElementById('r_email').value,
+                pass: document.getElementById('r_pass').value
+            };
+
+            if(!data.name || !data.user || !data.pass) {
+                showToast("Fill all mandatory fields!");
+                return;
+            }
+
+            localStorage.setItem('nemi_master_user', JSON.stringify(data));
+            showToast("Account Created Successfully!");
+            setTimeout(() => toggleAuth('loginUI'), 1000);
         }
 
-        function saveAddress() {
-            const house = document.getElementById('inputHouse').value;
-            const area = document.getElementById('inputArea').value;
-            const fullAddress = `${house}, ${area}`;
-            localStorage.setItem('nm_address', fullAddress);
-            loadUserData();
-            closeModal('addressModal');
+        // 3. Login Logic
+        function executeLogin() {
+            const u = document.getElementById('l_user').value;
+            const p = document.getElementById('l_pass').value;
+            const saved = JSON.parse(localStorage.getItem('nemi_master_user'));
+
+            if(saved && saved.user === u && saved.pass === p) {
+                localStorage.setItem('nemi_active_session', 'true');
+                syncProfile();
+                showToast("Access Granted. Welcome!");
+                setTimeout(() => toggleAuth('mainProfileUI'), 800);
+            } else {
+                showToast("Invalid Credentials!");
+            }
         }
 
-        // --- AVATAR UPLOAD ---
-        document.getElementById('uploadPhoto').addEventListener('change', function(e) {
+        // 4. Sync Profile Data
+        function syncProfile() {
+            const saved = JSON.parse(localStorage.getItem('nemi_master_user'));
+            if(!saved) return;
+
+            document.getElementById('disp_Name').innerText = saved.name;
+            document.getElementById('disp_Handle').innerText = "@" + saved.user;
+            document.getElementById('disp_Email').innerText = saved.email;
+            document.getElementById('disp_Phone').innerText = saved.phone;
+
+            const pic = localStorage.getItem('nemi_master_pic');
+            if(pic) document.getElementById('userImg').src = pic;
+        }
+
+        // 5. Image Upload
+        document.getElementById('fileUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             const reader = new FileReader();
             reader.onloadend = function() {
-                localStorage.setItem('nm_photo', reader.result);
-                document.getElementById('userPhoto').src = reader.result;
+                localStorage.setItem('nemi_master_pic', reader.result);
+                document.getElementById('userImg').src = reader.result;
+                showToast("Profile Picture Updated!");
             }
-            if (file) reader.readAsDataURL(file);
+            if(file) reader.readAsDataURL(file);
         });
 
-        // --- MODAL CONTROLS ---
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
-            document.getElementById('mainBody').classList.add('no-scroll');
+        // 6. Edit System
+        function openProfileEdit() {
+            const saved = JSON.parse(localStorage.getItem('nemi_master_user'));
+            document.getElementById('edit_name').value = saved.name;
+            document.getElementById('edit_email').value = saved.email;
+            document.getElementById('editModal').style.display = 'flex';
         }
 
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-            document.getElementById('mainBody').classList.remove('no-scroll');
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+
+        function saveEdits() {
+            let saved = JSON.parse(localStorage.getItem('nemi_master_user'));
+            saved.name = document.getElementById('edit_name').value;
+            saved.email = document.getElementById('edit_email').value;
+            localStorage.setItem('nemi_master_user', JSON.stringify(saved));
+            syncProfile();
+            closeEditModal();
+            showToast("Identity Updated!");
         }
 
-        // --- FLOATING ICONS ---
-        const iconStyles = ['fa-shopping-bag', 'fa-cart-shopping', 'fa-star', 'fa-leaf', 'fa-tag', 'fa-bolt', 'fa-heart'];
-        const container = document.getElementById('iconBox');
-        for (let i = 0; i < 18; i++) {
-            const icon = document.createElement('i');
-            icon.className = `fa-solid ${iconStyles[Math.floor(Math.random() * iconStyles.length)]}`;
-            const radius = Math.floor(Math.random() * 160) + 110;
-            const duration = Math.floor(Math.random() * 12) + 12;
-            const delay = Math.floor(Math.random() * 20) * -1;
-            icon.style.setProperty('--r', `${radius}px`);
-            icon.style.setProperty('--d', `${duration}s`);
-            icon.style.left = '50%'; icon.style.top = '50%';
-            icon.style.animationDelay = `${delay}s`;
-            container.appendChild(icon);
+        // 7. Logout
+        function triggerLogout() {
+            localStorage.removeItem('nemi_active_session');
+            showToast("Session Terminated Safely");
+            setTimeout(() => location.reload(), 1000);
         }
 
-        // Init
-        window.onload = loadUserData;
+        // 8. Toast Helper
+        function showToast(txt) {
+            const t = document.getElementById('toastMessage');
+            t.innerText = txt;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+
+        // 9. Background Animation Engine
+        function initBgAnimation() {
+            const icons = ['fa-leaf', 'fa-seedling', 'fa-wheat-awn', 'fa-bottle-droplet', 'fa-cart-plus', 'fa-star'];
+            const container = document.getElementById('dynamicBg');
+            for(let i=0; i<25; i++) {
+                const el = document.createElement('i');
+                el.className = `fa-solid ${icons[Math.floor(Math.random()*icons.length)]} bg-icon`;
+                el.style.setProperty('--r', `${Math.floor(Math.random()*200) + 120}px`);
+                el.style.setProperty('--d', `${Math.floor(Math.random()*15) + 10}s`);
+                el.style.left = '50%'; el.style.top = '50%';
+                el.style.animationDelay = `${Math.random() * -20}s`;
+                container.appendChild(el);
+            }
+        }
+
+        // Auto Load
+        window.onload = function() {
+            initBgAnimation();
+            if(localStorage.getItem('nemi_active_session') === 'true') {
+                syncProfile();
+                toggleAuth('mainProfileUI');
+            } else {
+                toggleAuth('loginUI');
+            }
+        };
     </script>
 </body>
 </html>

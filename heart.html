@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Nemi Mart | My Favorites</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1A3E26;
+            --accent: #D4AF37;
+            --danger: #FF4D4D;
+            --white: #ffffff;
+            --bg-soft: #FDFBF7;
+            --glass: rgba(255, 255, 255, 0.9);
+            --shadow: 0 15px 35px rgba(26, 62, 38, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            background: var(--bg-soft); 
+            color: var(--primary); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            position: sticky; top: 0; z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .back-btn {
+            width: 45px; height: 45px; border-radius: 15px;
+            background: var(--white); border: 1px solid #eee;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary); text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .header-title { font-family: 'Outfit'; font-size: 20px; font-weight: 800; }
+
+        /* --- WISHLIST GRID --- */
+        .wishlist-container { padding: 20px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr); /* Mobile pe ek card bada dikhe */
+            gap: 20px;
+        }
+
+        @media (min-width: 480px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .wish-card {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 15px;
+            display: flex; gap: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+            animation: slideIn 0.5s ease backwards;
+            border: 1px solid rgba(212, 175, 55, 0.05);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .img-box {
+            width: 100px; height: 100px;
+            border-radius: 20px; overflow: hidden;
+            background: #f8f8f8; flex-shrink: 0;
+        }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .content h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+        .price { font-size: 18px; font-weight: 800; color: var(--accent); }
+
+        .actions {
+            display: flex; flex-direction: column; gap: 10px;
+            justify-content: space-between; align-items: flex-end;
+        }
+
+        .heart-btn {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: #FFF5F5; border: none;
+            color: var(--danger); font-size: 18px; cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .share-btn {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: #F0F7F2; border: none;
+            color: var(--primary); font-size: 16px; cursor: pointer;
+        }
+
+        /* --- EMPTY STATE --- */
+        .empty-state {
+            display: none; text-align: center; padding: 100px 40px;
+        }
+        .empty-icon {
+            font-size: 80px; color: #eee; margin-bottom: 20px;
+            display: inline-block; animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .empty-state h2 { font-family: 'Outfit'; color: var(--primary); margin-bottom: 10px; }
+        .shop-now {
+            display: inline-block; margin-top: 20px;
+            padding: 15px 35px; background: var(--primary);
+            color: var(--accent); border-radius: 15px;
+            text-decoration: none; font-weight: 800;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--primary); color: white; padding: 12px 25px;
+            border-radius: 50px; font-size: 14px; font-weight: 600;
+            z-index: 5000; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-chevron-left"></i></a>
+        <div class="header-title">My Favorites</div>
+        <div style="width: 45px;"></div> </div>
+
+    <div class="wishlist-container">
+        <div class="grid" id="wishlistGrid">
+            </div>
+
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon"><i class="fa-solid fa-heart-circle-xmark"></i></div>
+            <h2>Wishlist Khaali Hai!</h2>
+            <p style="color: var(--text-muted)">Bhai, kuch pasand toh karo pehle.</p>
+            <a href="index.html" class="shop-now">Chalo Shopping Karein</a>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Message here</div>
+
+    <script>
+        // Dummy Database (In reality, you'd fetch this from LocalStorage)
+        let wishlist = [
+            { id: 1, name: "Premium Kashmiri Kesar", price: "₹499", img: "https://images.unsplash.com/photo-1599307734170-4d372579120a?q=80&w=500" },
+            { id: 2, name: "Raw Forest Honey", price: "₹320", img: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=500" },
+            { id: 5, name: "Organic Anjeer", price: "₹650", img: "https://images.unsplash.com/photo-1621464010800-410a8c279a02?q=80&w=500" }
+        ];
+
+        function renderWishlist() {
+            const grid = document.getElementById('wishlistGrid');
+            const empty = document.getElementById('emptyState');
+
+            if (wishlist.length === 0) {
+                grid.innerHTML = "";
+                empty.style.display = "block";
+                return;
+            }
+
+            empty.style.display = "none";
+            grid.innerHTML = wishlist.map((item, index) => `
+                <div class="wish-card" id="item-${item.id}" style="animation-delay: ${index * 0.1}s">
+                    <div class="img-box">
+                        <img src="${item.img}" alt="${item.name}">
+                    </div>
+                    <div class="content">
+                        <h3>${item.name}</h3>
+                        <div class="price">${item.price}</div>
+                    </div>
+                    <div class="actions">
+                        <button class="heart-btn" onclick="removeFromWishlist(${item.id})">
+                            <i class="fa-solid fa-heart"></i>
+                        </button>
+                        <button class="share-btn" onclick="shareProduct('${item.name}')">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeFromWishlist(id) {
+            const element = document.getElementById(`item-${id}`);
+            // Pehle card ko exit animation dete hain
+            element.style.transform = "translateX(100px)";
+            element.style.opacity = "0";
+            element.style.transition = "0.4s";
+
+            setTimeout(() => {
+                wishlist = wishlist.filter(item => item.id !== id);
+                renderWishlist();
+                showToast("Removed from favorites");
+            }, 400);
+        }
+
+        async function shareProduct(name) {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Nemi Mart',
+                        text: `Check out this ${name} on Nemi Mart!`,
+                        url: window.location.href,
+                    });
+                } catch (err) {
+                    console.log("Error sharing", err);
+                }
+            } else {
+                showToast("Link Copied to Clipboard!");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = "block";
+            setTimeout(() => {
+                toast.style.display = "none";
+            }, 2500);
+        }
+
+        // Initial Render
+        renderWishlist();
+    </script>
+</body>
+</html>

@@ -2,262 +2,288 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEMI ADMIN PRO </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEMI ADMIN | MOBILE ELITE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* NEU-BRUTALISM INDUSTRIAL DESIGN */
         :root {
-            --bg: #ffffff;
-            --main: #000000;
-            --surface: #f0f0f0;
-            --accent: #2bff00;
-            --err: #ff003c;
-            --border-thk: 5px;
+            --primary: #4F46E5;
+            --secondary: #ec4899;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --glass: rgba(255, 255, 255, 0.95);
         }
 
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background: var(--bg); 
-            color: var(--main); 
-            font-family: 'Inter', -apple-system, sans-serif; 
+            background: #f1f5f9; 
             margin: 0; 
-            padding: 10px; 
-            font-weight: 800;
+            padding: 0; 
+            color: var(--dark);
+            padding-bottom: 80px; /* Space for bottom nav */
         }
 
-        /* CUSTOM SCROLLBAR */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--main); border: 2px solid var(--bg); }
-
-        .app-container { 
-            max-width: 1400px; 
-            margin: 0 auto; 
-            border: var(--border-thk) solid var(--main); 
-            padding: 30px;
-            min-height: 98vh;
-        }
-
-        header { 
-            border-bottom: var(--border-thk) solid var(--main); 
-            padding-bottom: 30px; 
-            margin-bottom: 50px;
+        /* TOP HEADER */
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .logo-text { font-size: 40px; text-transform: uppercase; letter-spacing: -3px; line-height: 0.9; }
-        .logo-sub { font-size: 12px; letter-spacing: 2px; margin-top: 5px; background: var(--main); color: var(--bg); display: inline-block; padding: 2px 8px; }
-
-        .btn-nav { 
-            background: var(--main); 
-            color: var(--bg); 
-            padding: 18px 30px; 
-            text-decoration: none; 
-            font-size: 14px;
-            border: 3px solid var(--main);
-            transition: 0.2s;
+        header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 1px; }
+        
+        .top-nav-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
             text-transform: uppercase;
         }
-        .btn-nav:hover { background: var(--bg); color: var(--main); }
 
-        /* INPUT GRID */
-        .form-engine { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
-        .control-group { display: flex; flex-direction: column; gap: 12px; }
-        .full-width { grid-column: 1 / -1; }
-        
-        label { text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
-        
-        input, textarea, select { 
-            border: var(--border-thk) solid var(--main); 
-            padding: 20px; 
-            font-size: 18px; 
-            font-weight: 800;
-            background: var(--bg);
-            border-radius: 0;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* MAIN CONTENT SCROLLER */
+        .content-section {
+            padding: 20px;
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.3s ease;
         }
 
-        input:focus { transform: translate(-5px, -5px); box-shadow: 8px 8px 0px var(--main); background: var(--surface); }
+        .active-section { display: block; }
 
-        /* IMAGE SLOT SYSTEM */
-        .media-vault { 
-            border: 4px dashed var(--main); 
-            padding: 30px; 
-            background: var(--surface);
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* PREMIUM CARDS */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
         }
-        .file-input-row { margin-bottom: 15px; border-bottom: 2px solid var(--main); padding-bottom: 10px; }
-        .btn-add-slot { 
-            background: var(--surface); 
-            border: 3px solid var(--main); 
-            padding: 15px; 
-            cursor: pointer; 
-            font-weight: 900;
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
+        
+        input, select, textarea {
             width: 100%;
-            text-transform: uppercase;
-        }
-
-        /* EXECUTE BUTTON */
-        #btnInject { 
-            background: var(--main); 
-            color: var(--bg); 
-            border: none; 
-            padding: 35px; 
-            font-size: 28px; 
-            font-weight: 900; 
-            width: 100%; 
-            margin-top: 60px; 
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            box-shadow: 12px 12px 0px #ccc;
-        }
-        #btnInject:active { transform: translate(4px, 4px); box-shadow: 4px 4px 0px #ccc; }
-        #btnInject:disabled { background: #999; cursor: not-allowed; }
-
-        /* PROGRESS LOGIC */
-        .progress-box { width: 100%; border: var(--border-thk) solid var(--main); height: 30px; margin-top: 25px; display: none; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: 0.2s; }
-
-        /* LIVE DATABASE FEED */
-        .inventory-logs { margin-top: 100px; }
-        .section-title { background: var(--main); color: var(--bg); padding: 15px 25px; text-transform: uppercase; font-size: 20px; display: inline-block; margin-bottom: 30px; }
-        
-        .product-card { 
-            border: var(--border-thk) solid var(--main); 
-            margin-bottom: 25px; 
-            padding: 25px; 
-            display: grid; 
-            grid-template-columns: auto 1fr auto; 
-            align-items: center; 
-            gap: 30px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
             transition: 0.3s;
         }
-        .product-card:hover { background: var(--surface); }
-        .product-card img { width: 120px; height: 120px; object-fit: cover; border: 4px solid var(--main); }
-        
-        .product-info h3 { margin: 0; font-size: 24px; text-transform: uppercase; }
-        .product-info p { margin: 10px 0 0 0; font-size: 14px; opacity: 0.6; }
 
-        .badge { padding: 8px 15px; font-size: 12px; border: 3px solid var(--main); text-transform: uppercase; display: inline-block; margin-bottom: 10px; }
-        .in-stock { background: var(--accent); }
-        .out-stock { background: var(--err); color: #fff; }
+        input:focus { border-color: var(--primary); outline: none; background: #f8fafc; }
 
-        .btn-group { display: flex; gap: 15px; }
-        .action-btn { padding: 15px 20px; border: 3px solid var(--main); font-size: 12px; cursor: pointer; background: var(--bg); font-weight: 900; text-transform: uppercase; }
-        .btn-wipe { background: var(--main); color: var(--bg); }
-
-        /* NOTIFICATION TOAST */
-        #notifier { 
-            position: fixed; top: 30px; right: 30px; z-index: 99999;
-            display: flex; flex-direction: column; gap: 15px;
-        }
-        .toast-msg {
-            background: var(--main); color: var(--bg); padding: 25px 50px;
-            border: 4px solid var(--main); font-weight: 900; text-transform: uppercase;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
-            animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        /* PHOTO UPLOADER */
+        .upload-zone {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
         }
 
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .btn-add-file {
+            background: var(--dark);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
 
-        @media (max-width: 900px) {
-            .product-card { grid-template-columns: 1fr; text-align: center; justify-items: center; }
-            .btn-group { width: 100%; flex-direction: column; }
+        /* MAIN ACTION BUTTON */
+        .btn-execute {
+            background: var(--dark);
+            color: white;
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-execute:active { transform: scale(0.98); }
+
+        /* LIVE FEED LIST */
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 15px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .list-item img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
+        .list-info { flex-grow: 1; }
+        .list-info h4 { margin: 0; font-size: 15px; }
+        .list-info p { margin: 3px 0 0; font-size: 12px; color: #64748b; }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+        .bg-in { background: #dcfce7; color: #166534; }
+        .bg-out { background: #fee2e2; color: #991b1b; }
+
+        /* BOTTOM NAVIGATION BAR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            border-top: 1px solid #e2e8f0;
+            z-index: 2000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            gap: 5px;
+        }
+
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 20px; }
+
+        /* TOAST SYSTEM */
+        #toast {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            right: 20px;
+            background: var(--dark);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+            z-index: 9999;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
 
-<div id="notifier"></div>
+<div id="toast">SYSTEM INITIALIZED</div>
 
-<div class="app-container">
-    <header>
-        <div class="brand">
-            <div class="logo-text">NEMI_PRO_v5</div>
-            <div class="logo-sub">SYSTEM: RTDB_LINK_ACTIVE</div>
-        </div>
-        <a href="admin2.html" class="btn-nav">Switch to Orders Console -></a>
-    </header>
+<header>
+    <h1>NEMI MASTER</h1>
+    <a href="admin2.html" class="top-nav-btn">Orders Portal</a>
+</header>
 
-    <form id="injectionForm">
-        <div class="form-engine">
-            <div class="control-group">
-                <label>Product Title [Master Name]</label>
-                <input type="text" id="title" required placeholder="Ex: Organic Almond Oil">
+<div id="addProduct" class="content-section active-section">
+    <div class="card">
+        <h2 style="margin-top:0; font-size:18px;">Inject New Product</h2>
+        <form id="productForm">
+            <div class="input-group">
+                <label>Product Identity</label>
+                <input type="text" id="title" required placeholder="Ex: Raw Cold-Pressed Oil">
             </div>
 
-            <div class="control-group">
-                <label>Inventory Category</label>
+            <div class="input-group">
+                <label>Category</label>
                 <select id="cat">
-                    <option value="organic">Organic Essentials</option>
-                    <option value="health">Healthcare & Wellness</option>
-                    <option value="seeds">Agriculture Seeds</option>
-                    <option value="skincare">Natural Skincare</option>
+                    <option value="organic">Organic Foods</option>
+                    <option value="health">Health & Wellness</option>
+                    <option value="seeds">Farming Seeds</option>
+                    <option value="skin">Natural Skincare</option>
                 </select>
             </div>
 
-            <div class="control-group">
-                <label>Price [Base INR]</label>
-                <input type="number" id="price" required placeholder="0.00">
-            </div>
-
-            <div class="control-group">
-                <label>Current Discount (%)</label>
-                <input type="number" id="disc" value="0">
-            </div>
-
-            <div class="control-group">
-                <label>Stock Count</label>
-                <input type="number" id="stock" required placeholder="100">
-            </div>
-
-            <div class="control-group">
-                <label>Media Payload [Multi-Image]</label>
-                <div class="media-vault" id="photoZone">
-                    <div class="file-input-row">
-                        <input type="file" class="p-files" accept="image/*" required>
-                    </div>
+            <div style="display:flex; gap:15px;">
+                <div class="input-group" style="flex:1;">
+                    <label>Price (₹)</label>
+                    <input type="number" id="price" required>
                 </div>
-                <button type="button" class="btn-add-slot" onclick="addNewSlot()">+ Add Another Photo</button>
+                <div class="input-group" style="flex:1;">
+                    <label>Disc (%)</label>
+                    <input type="number" id="disc" value="0">
+                </div>
             </div>
 
-            <div class="control-group full-width">
-                <label>Product One-Liner [Hero]</label>
-                <input type="text" id="hero" placeholder="Short description for the home page...">
+            <div class="input-group">
+                <label>Stock Quantity</label>
+                <input type="number" id="stock" required>
             </div>
 
-            <div class="control-group full-width">
-                <label>Full Content Story</label>
-                <textarea id="longDesc" rows="6" placeholder="Deep details about the product benefits..."></textarea>
+            <div class="input-group">
+                <label>Hero Statement</label>
+                <input type="text" id="hero" placeholder="Impactful single line...">
             </div>
 
-            <div class="control-group full-width">
-                <label>Ingredients / Specifications (Comma Separated)</label>
-                <textarea id="ing" rows="2" placeholder="Item 1, Item 2, Item 3..."></textarea>
+            <div class="input-group">
+                <label>Media Upload (Multi)</label>
+                <div class="upload-zone" id="fileZone">
+                    <input type="file" class="p-files" accept="image/*" required>
+                </div>
+                <button type="button" class="btn-add-file" onclick="addFileField()">+ Add More Images</button>
             </div>
 
-            <div class="control-group full-width">
-                <label>Usage Instructions</label>
-                <textarea id="usage" rows="2" placeholder="How to use this product for best results..."></textarea>
+            <div class="input-group">
+                <label>Full Specifications</label>
+                <textarea id="desc" rows="4"></textarea>
             </div>
-        </div>
 
-        <div class="progress-box" id="pBox"><div class="progress-bar" id="pBar"></div></div>
-        <button type="submit" id="btnInject">Infect Cloud Database</button>
-    </form>
-
-    <div class="inventory-logs">
-        <div class="section-title">Live RTDB Product Stream</div>
-        <div id="liveStream">
-            <div style="padding:50px; text-align:center;">SCANNING DATABASE PROTOCOLS...</div>
-        </div>
+            <button type="submit" class="btn-execute" id="btnSubmit">Save to Cloud</button>
+        </form>
     </div>
 </div>
+
+<div id="history" class="content-section">
+    <div style="padding: 0 5px 15px;">
+        <h2 style="margin:0; font-size:18px;">Inventory Stream</h2>
+        <p style="font-size:12px; color:#64748b;">Live updates from RTDB Protocol</p>
+    </div>
+    <div id="liveContainer">
+        </div>
+</div>
+
+<nav class="bottom-nav">
+    <a href="#" class="nav-item active" onclick="showSection('addProduct', this)">
+        <span class="nav-icon">➕</span>
+        <span>Add Product</span>
+    </a>
+    <a href="#" class="nav-item" onclick="showSection('history', this)">
+        <span class="nav-icon">📜</span>
+        <span>History</span>
+    </a>
+</nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -278,147 +304,110 @@
     const db = getDatabase(app);
     const storage = getStorage(app);
 
-    // DYNAMIC MEDIA SLOTS
-    window.addNewSlot = () => {
-        const zone = document.getElementById('photoZone');
-        const div = document.createElement('div');
-        div.className = 'file-input-row';
-        div.innerHTML = '<input type="file" class="p-files" accept="image/*">';
-        zone.appendChild(div);
+    // NAVIGATION LOGIC
+    window.showSection = (id, el) => {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active-section');
+        el.classList.add('active');
+        window.scrollTo(0,0);
     };
 
-    // PROFESSIONAL TOAST NOTIFIER
-    function notify(msg) {
-        const box = document.getElementById('notifier');
-        const el = document.createElement('div');
-        el.className = 'toast-msg';
-        el.innerText = `SYS_MSG: ${msg}`;
-        box.appendChild(el);
-        setTimeout(() => el.remove(), 4000);
+    window.addFileField = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.className = 'p-files';
+        input.accept = 'image/*';
+        input.style.marginTop = '10px';
+        document.getElementById('fileZone').appendChild(input);
+    };
+
+    function notify(m) {
+        const t = document.getElementById('toast');
+        t.innerText = m; t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
     }
 
-    // MAIN UPLOAD CORE
-    document.getElementById('injectionForm').addEventListener('submit', async (e) => {
+    // UPLOAD LOGIC
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('btnInject');
-        const pBar = document.getElementById('pBar');
-        const pBox = document.getElementById('pBox');
+        const btn = document.getElementById('btnSubmit');
+        btn.disabled = true; btn.innerText = "TRANSFERRING...";
 
-        btn.disabled = true;
-        btn.innerText = "TRANSFERRING PAYLOAD...";
-        pBox.style.display = 'block';
-
-        const fileInputs = document.querySelectorAll('.p-files');
-        const photoUrls = [];
+        const files = document.querySelectorAll('.p-files');
+        const urls = [];
 
         try {
-            // Step 1: Sequential Image Upload
-            for(let input of fileInputs) {
-                const file = input.files[0];
-                if(!file) continue;
-
-                const fileName = `nemi_v5_${Date.now()}_${file.name}`;
-                const storageRef = sRef(storage, `products/${fileName}`);
-                const uploadTask = uploadBytesResumable(storageRef, file);
-
-                await new Promise((resolve, reject) => {
-                    uploadTask.on('state_changed', 
-                        (snap) => {
-                            let prog = (snap.bytesTransferred / snap.totalBytes) * 100;
-                            pBar.style.width = prog + '%';
-                        }, 
-                        reject, 
-                        async () => {
-                            const url = await getDownloadURL(uploadTask.snapshot.ref);
-                            photoUrls.push(url);
-                            resolve();
-                        }
-                    );
-                });
+            for(let f of files) {
+                if(!f.files[0]) continue;
+                const sRefObj = sRef(storage, `nemi_v6/${Date.now()}_${f.files[0].name}`);
+                const snap = await uploadBytesResumable(sRefObj, f.files[0]);
+                const url = await getDownloadURL(snap.ref);
+                urls.push(url);
             }
 
-            // Step 2: RTDB Injection
-            const basePrice = parseFloat(document.getElementById('price').value);
-            const discPercent = parseFloat(document.getElementById('disc').value);
-            const newProdRef = push(ref(db, 'products'));
+            const p = parseFloat(document.getElementById('price').value);
+            const d = parseFloat(document.getElementById('disc').value);
 
-            await set(newProdRef, {
+            const newProd = push(ref(db, 'products'));
+            await set(newProd, {
                 title: document.getElementById('title').value,
                 category: document.getElementById('cat').value,
-                price: basePrice,
-                discount: discPercent,
-                finalPrice: basePrice - (basePrice * (discPercent/100)),
+                price: p,
+                discount: d,
+                finalPrice: p - (p * (d/100)),
                 stock: document.getElementById('stock').value,
-                images: photoUrls,
                 hero: document.getElementById('hero').value,
-                description: document.getElementById('longDesc').value,
-                ingredients: document.getElementById('ing').value.split(','),
-                usage: document.getElementById('usage').value,
+                images: urls,
+                description: document.getElementById('desc').value,
                 status: 'INSTOCK',
-                createdAt: Date.now()
+                timestamp: Date.now()
             });
 
-            notify("INJECTION SUCCESSFUL - DATABASE SYNCED");
-            document.getElementById('injectionForm').reset();
-            pBar.style.width = '0%';
-            
-        } catch (err) {
-            notify("CRITICAL ERROR: " + err.message);
+            notify("SUCCESS: CLOUD UPDATED");
+            document.getElementById('productForm').reset();
+            showSection('history', document.querySelectorAll('.nav-item')[1]);
+        } catch (e) {
+            notify("CRITICAL ERROR: " + e.message);
         } finally {
-            btn.disabled = false;
-            btn.innerText = "Infect Cloud Database";
-            pBox.style.display = 'none';
+            btn.disabled = false; btn.innerText = "Save to Cloud";
         }
     });
 
-    // REAL-TIME FETCH (NO REFRESH NEEDED)
+    // REALTIME FETCH
     onValue(ref(db, 'products'), (snapshot) => {
-        const stream = document.getElementById('liveStream');
-        stream.innerHTML = "";
+        const container = document.getElementById('liveContainer');
+        container.innerHTML = "";
         const data = snapshot.val();
-        
-        if(!data) {
-            stream.innerHTML = "<div style='padding:50px; text-align:center;'>DATABASE VACANT - READY FOR INJECTION</div>";
-            return;
-        }
+        if(!data) { container.innerHTML = "<p>Empty Database.</p>"; return; }
 
-        // Convert to array and sort by newest first
-        const sortedKeys = Object.keys(data).sort((a, b) => data[b].createdAt - data[a].createdAt);
-
-        sortedKeys.forEach(key => {
-            const p = data[key];
+        Object.keys(data).reverse().forEach(id => {
+            const p = data[id];
             const isOut = p.status === 'OUTSTOCK';
-
-            stream.innerHTML += `
-                <div class="product-card">
-                    <img src="${p.images ? p.images[0] : 'https://via.placeholder.com/120'}">
-                    <div class="product-info">
-                        <span class="badge ${isOut ? 'out-stock' : 'in-stock'}">${p.status}</span>
-                        <h3>${p.title}</h3>
-                        <p>ID: ${key}</p>
-                        <p style="color:var(--main); font-size:18px; margin-top:5px;">₹${p.finalPrice} <span style="font-size:12px; opacity:0.5;">(Stock: ${p.stock})</span></p>
+            container.innerHTML += `
+                <div class="list-item">
+                    <img src="${p.images ? p.images[0] : ''}">
+                    <div class="list-info">
+                        <span class="badge ${isOut ? 'bg-out' : 'bg-in'}">${p.status}</span>
+                        <h4>${p.title}</h4>
+                        <p>₹${p.finalPrice} | Stock: ${p.stock}</p>
                     </div>
-                    <div class="btn-group">
-                        <button class="action-btn" onclick="flipStatus('${key}', '${p.status}')">Toggle Status</button>
-                        <button class="action-btn btn-wipe" onclick="vaporize('${key}')">Wipe Data</button>
+                    <div style="display:flex; flex-direction:column; gap:5px;">
+                        <button onclick="flip('${id}', '${p.status}')" style="border:1px solid #ccc; background:none; padding:5px; border-radius:5px; font-size:10px;">FLIP</button>
+                        <button onclick="del('${id}')" style="background:var(--danger); color:white; border:none; padding:5px; border-radius:5px; font-size:10px;">DEL</button>
                     </div>
                 </div>
             `;
         });
     });
 
-    // CLOUD CONTROLS
-    window.flipStatus = (id, current) => {
-        const next = current === 'INSTOCK' ? 'OUTSTOCK' : 'INSTOCK';
-        update(ref(db, 'products/' + id), { status: next });
-        notify("STATUS FLIPPED");
+    window.flip = (id, s) => {
+        const next = s === 'INSTOCK' ? 'OUTSTOCK' : 'INSTOCK';
+        update(ref(db, `products/${id}`), { status: next });
     };
 
-    window.vaporize = (id) => {
-        if(confirm("VAPORIZE THIS PRODUCT FROM DATABASE?")) {
-            remove(ref(db, 'products/' + id));
-            notify("PRODUCT DELETED");
-        }
+    window.del = (id) => {
+        if(confirm("Permanent Delete?")) remove(ref(db, `products/${id}`));
     };
 
 </script>

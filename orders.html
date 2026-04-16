@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Nemi Mart | My Orders & Invoices</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@600;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #1A3E26; /* Deep Green */
+            --accent: #D4AF37;  /* Luxury Gold */
+            --creme: #FDFBF7;   /* Elegant Creme */
+            --white: #ffffff;
+            --text-main: #0A1F13;
+            --text-muted: #64748B;
+            --success: #22C55E;
+            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            background: var(--creme); 
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding-bottom: 50px;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(253, 251, 247, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .back-btn {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: var(--white); border: 1px solid #eee;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary); text-decoration: none;
+        }
+
+        .header-title { font-family: 'Outfit'; font-size: 22px; font-weight: 800; }
+
+        /* --- ORDERS LIST --- */
+        .orders-container { padding: 20px; max-width: 600px; margin: 0 auto; }
+
+        .order-card {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 35px rgba(26, 62, 38, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .order-id-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 15px; border-bottom: 1px dashed #eee;
+            margin-bottom: 15px;
+        }
+
+        .order-id { font-weight: 800; font-size: 14px; color: var(--text-muted); }
+        .status-badge {
+            background: #E8F5E9; color: var(--success);
+            padding: 5px 12px; border-radius: 50px; font-size: 12px; font-weight: 800;
+        }
+
+        .order-info { display: flex; gap: 15px; margin-bottom: 15px; }
+        .order-img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; background: #f9f9f9; }
+        
+        .order-details h3 { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+        .order-meta { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+        .price-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 15px; padding-top: 15px; border-top: 1px solid #f5f5f5;
+        }
+        .total-label { font-size: 14px; font-weight: 600; }
+        .total-amt { font-size: 20px; font-weight: 900; color: var(--primary); }
+
+        /* --- INVOICE BUTTON --- */
+        .download-btn {
+            width: 100%; margin-top: 15px; padding: 14px;
+            background: var(--primary); color: var(--accent);
+            border: none; border-radius: 18px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        .download-btn:active { transform: scale(0.97); background: #0A1F13; }
+
+        /* --- HIDDEN INVOICE TEMPLATE (This will be captured as Image) --- */
+        #invoice-template {
+            position: absolute; left: -9999px; /* Hide from view */
+            width: 500px; background: #fff; padding: 40px;
+            border: 15px solid var(--primary);
+        }
+
+        .inv-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .inv-logo { width: 120px; }
+        .inv-title { text-align: right; }
+        .inv-title h1 { font-family: 'Outfit'; color: var(--accent); font-size: 28px; }
+
+        .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .inv-box h4 { font-size: 12px; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; }
+        .inv-box p { font-size: 14px; font-weight: 600; line-height: 1.4; }
+
+        .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .inv-table th { background: #f8f8f8; text-align: left; padding: 12px; font-size: 12px; color: var(--primary); }
+        .inv-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+
+        .inv-total-section { float: right; width: 200px; }
+        .inv-total-row { display: flex; justify-content: space-between; padding: 8px 0; }
+        
+        .inv-footer { margin-top: 50px; padding-top: 20px; border-top: 2px solid var(--creme); }
+        .signature-box { margin-top: 20px; }
+        .sign { font-family: 'Dancing Script', cursive; font-size: 24px; color: #333; }
+        .sign-label { font-size: 12px; font-weight: 700; color: var(--accent); margin-top: 5px; }
+
+        /* Popup for Image View */
+        .preview-modal {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.9); z-index: 5000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        #previewImage { max-width: 100%; border-radius: 10px; box-shadow: 0 0 30px rgba(212,175,55,0.3); }
+        .modal-btns { display: flex; gap: 15px; margin-top: 20px; }
+        .m-btn { padding: 12px 25px; border-radius: 50px; border: none; font-weight: 700; cursor: pointer; }
+        .close-m { background: #fff; color: #000; }
+        .save-m { background: var(--accent); color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="header-title">My Orders</div>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <div class="orders-container">
+        
+        <div class="order-card">
+            <div class="order-id-row">
+                <span class="order-id">ORDER #NM_992104</span>
+                <span class="status-badge">Delivered</span>
+            </div>
+            <div class="order-info">
+                <img src="https://images.unsplash.com/photo-1599307734170-4d372579120a?q=80&w=500" class="order-img">
+                <div class="order-details">
+                    <h3>Premium Kashmiri Kesar (5g)</h3>
+                    <p class="order-meta">Ordered on: 12 April 2026, 02:30 PM</p>
+                    <p class="order-meta">Address: Ragho Majra, Patiala, Punjab</p>
+                </div>
+            </div>
+            <div class="price-row">
+                <span class="total-label">Amount Paid</span>
+                <span class="total-amt">₹499.00</span>
+            </div>
+            <button class="download-btn" onclick="generateInvoice('NM_992104', 'Kashmiri Kesar', '₹499', '12 April 2026')">
+                <i class="fa-solid fa-file-invoice"></i> Download Invoice
+            </button>
+        </div>
+
+        <div class="order-card">
+            <div class="order-id-row">
+                <span class="order-id">ORDER #NM_992088</span>
+                <span class="status-badge">Delivered</span>
+            </div>
+            <div class="order-info">
+                <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=500" class="order-img">
+                <div class="order-details">
+                    <h3>Organic Forest Honey (1kg)</h3>
+                    <p class="order-meta">Ordered on: 10 April 2026, 11:15 AM</p>
+                    <p class="order-meta">Address: Model Town, Patiala, Punjab</p>
+                </div>
+            </div>
+            <div class="price-row">
+                <span class="total-label">Amount Paid</span>
+                <span class="total-amt">₹320.00</span>
+            </div>
+            <button class="download-btn" onclick="generateInvoice('NM_992088', 'Forest Honey', '₹320', '10 April 2026')">
+                <i class="fa-solid fa-file-invoice"></i> Download Invoice
+            </button>
+        </div>
+
+    </div>
+
+    <div class="preview-modal" id="previewModal">
+        <h2 style="color:var(--accent); margin-bottom: 15px; font-family: 'Outfit';">Invoice Ready!</h2>
+        <img id="previewImage" src="">
+        <div class="modal-btns">
+            <button class="m-btn close-m" onclick="closeModal()">Close</button>
+            <button class="m-btn save-m" id="downloadTrigger">Save to Gallery</button>
+        </div>
+    </div>
+
+    <div id="invoice-template">
+        <div class="inv-header">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="inv-logo">
+            <div class="inv-title">
+                <h1>INVOICE</h1>
+                <p style="font-size: 12px; color: #777;">#<span id="inv-id-display"></span></p>
+            </div>
+        </div>
+
+        <div class="inv-grid">
+            <div class="inv-box">
+                <h4>Billed To:</h4>
+                <p>Akash Deep</p>
+                <p style="font-weight: 400; font-size: 12px;">Ragho Majra, Patiala, Punjab<br>India - 147001</p>
+            </div>
+            <div class="inv-box" style="text-align: right;">
+                <h4>Company:</h4>
+                <p>Nemi Mart Private Ltd.</p>
+                <p style="font-weight: 400; font-size: 12px;">nemimart@gmail.com<br>www.nemimart.com</p>
+            </div>
+        </div>
+
+        <table class="inv-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th style="text-align: right;">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="inv-item-name"></td>
+                    <td>1</td>
+                    <td style="text-align: right;" id="inv-item-price"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="inv-total-section">
+            <div class="inv-total-row">
+                <span>Subtotal:</span>
+                <span id="inv-sub"></span>
+            </div>
+            <div class="inv-total-row" style="color: var(--accent); font-weight: 800; border-top: 1px solid #eee; margin-top: 5px; padding-top: 10px;">
+                <span>Total Paid:</span>
+                <span id="inv-total"></span>
+            </div>
+        </div>
+
+        <div style="clear: both;"></div>
+
+        <div class="inv-footer">
+            <p style="font-size: 10px; color: #999;">This is a digitally generated invoice. No signature required in physical form, but verified by:</p>
+            <div class="signature-box">
+                <div class="sign">Naman Jain</div>
+                <div class="sign-label">Founder & CEO, Nemi Mart</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateInvoice(id, item, price, date) {
+            // Fill Template
+            document.getElementById('inv-id-display').innerText = id;
+            document.getElementById('inv-item-name').innerText = item;
+            document.getElementById('inv-item-price').innerText = price;
+            document.getElementById('inv-sub').innerText = price;
+            document.getElementById('inv-total').innerText = price;
+
+            // Use html2canvas to take snapshot
+            const target = document.getElementById('invoice-template');
+            
+            // Show temporarily for capture (but off-screen)
+            html2canvas(target, {
+                scale: 3, // High quality
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const previewImg = document.getElementById('previewImage');
+                previewImg.src = imgData;
+                
+                // Show Modal
+                document.getElementById('previewModal').style.display = 'flex';
+                
+                // Setup Download
+                document.getElementById('downloadTrigger').onclick = function() {
+                    const link = document.createElement('a');
+                    link.download = `Invoice_${id}.png`;
+                    link.href = imgData;
+                    link.click();
+                };
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

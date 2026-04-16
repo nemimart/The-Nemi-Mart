@@ -3,48 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Premium Profile</title>
+    <title>Nemi Mart | Member Dashboard</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #1A3E26; /* Deep Green */
-            --accent: #D4AF37;  /* Gold */
-            --creme: #FDFBF7;   /* Creme */
+            --primary: #1A3E26; 
+            --accent: #D4AF37;  
+            --creme: #FDFBF7;   
             --white: #ffffff;
             --text-main: #0A1F13;
             --text-muted: #64748B;
-            --glass: rgba(255, 255, 255, 0.9);
+            --danger: #FF4D4D;
             --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        body { 
-            background: var(--creme); 
-            color: var(--text-main); 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-        }
+        body { background: var(--creme); color: var(--text-main); overflow-x: hidden; padding-bottom: 30px; }
 
-        /* --- MAGIC FLOATING ICONS ANIMATION --- */
+        /* --- PREVENT SCROLL ON MODAL --- */
+        .no-scroll { overflow: hidden; }
+
+        /* --- DYNAMIC BACKGROUND & AVATAR --- */
         .profile-hero {
-            position: relative;
-            height: 320px;
+            position: relative; height: 380px;
             background: var(--primary);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden;
-            border-bottom-right-radius: 50px;
-            border-bottom-left-radius: 50px;
+            overflow: hidden; border-bottom-right-radius: 60px; border-bottom-left-radius: 60px;
         }
 
         .floating-icons i {
-            position: absolute;
-            color: rgba(212, 175, 55, 0.2);
-            font-size: 24px;
-            animation: rotateOrbit var(--d) linear infinite;
+            position: absolute; color: rgba(212, 175, 55, 0.15);
+            font-size: 26px; animation: rotateOrbit var(--d) linear infinite;
+            z-index: 1;
         }
 
         @keyframes rotateOrbit {
@@ -52,244 +46,327 @@
             to { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); }
         }
 
-        /* --- PROFILE IMAGE & NAME --- */
-        .avatar-container {
-            position: relative;
-            z-index: 10;
-            width: 120px; height: 120px;
-            border-radius: 40px;
-            background: var(--gold-gradient);
-            padding: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            margin-bottom: 15px;
+        .avatar-wrapper {
+            position: relative; z-index: 10;
+            width: 140px; height: 140px;
+            border-radius: 50px; background: var(--gold-gradient);
+            padding: 5px; box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            margin-bottom: 20px; transition: 0.5s;
         }
 
-        .avatar-container img {
-            width: 100%; height: 100%;
-            border-radius: 36px;
-            object-fit: cover;
-            border: 4px solid var(--primary);
+        .avatar-wrapper img {
+            width: 100%; height: 100%; border-radius: 45px;
+            object-fit: cover; border: 5px solid var(--primary);
         }
 
-        .user-name {
-            color: var(--white);
-            font-family: 'Outfit';
-            font-size: 28px;
-            font-weight: 800;
-            z-index: 10;
+        .edit-avatar-btn {
+            position: absolute; bottom: -5px; right: -5px;
+            width: 45px; height: 45px; background: var(--white);
+            border-radius: 15px; display: flex; align-items: center;
+            justify-content: center; color: var(--primary);
+            font-size: 18px; cursor: pointer; border: 2px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .user-tag {
-            color: var(--accent);
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            z-index: 10;
+        .profile-info h1 {
+            color: var(--white); font-family: 'Outfit';
+            font-size: 32px; font-weight: 900; text-align: center;
+        }
+
+        .member-badge {
+            display: block; text-align: center; color: var(--accent);
+            font-weight: 800; letter-spacing: 2px; font-size: 12px;
+            text-transform: uppercase; margin-top: 5px;
         }
 
         /* --- DASHBOARD TILES --- */
-        .content-area {
-            max-width: 500px;
-            margin: -40px auto 40px;
-            padding: 0 20px;
-            position: relative;
-            z-index: 20;
-        }
+        .content-area { max-width: 550px; margin: -50px auto 0; padding: 0 20px; position: relative; z-index: 20; }
 
         .menu-card {
-            background: var(--white);
-            border-radius: 30px;
-            padding: 10px;
-            box-shadow: 0 15px 35px rgba(26, 62, 38, 0.05);
-            margin-bottom: 25px;
-            border: 1px solid rgba(212, 175, 55, 0.1);
+            background: var(--white); border-radius: 35px;
+            padding: 12px; box-shadow: 0 20px 40px rgba(26, 62, 38, 0.08);
+            margin-bottom: 25px; border: 1px solid rgba(212, 175, 55, 0.1);
         }
 
         .menu-item {
-            display: flex; align-items: center;
-            padding: 18px 20px;
+            display: flex; align-items: center; padding: 20px;
             text-decoration: none; color: var(--text-main);
-            border-radius: 22px;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 25px; transition: 0.3s; margin-bottom: 5px;
+            cursor: pointer; border: none; background: transparent; width: 100%;
         }
 
-        .menu-item:hover {
-            background: var(--creme);
-            transform: translateX(8px);
-        }
+        .menu-item:last-child { margin-bottom: 0; }
+        .menu-item:hover { background: #F8FAF9; transform: scale(1.02); }
 
         .icon-box {
-            width: 45px; height: 45px;
-            border-radius: 14px;
-            background: #F0F4F1;
-            color: var(--primary);
+            width: 50px; height: 50px; border-radius: 18px;
+            background: #F0F4F1; color: var(--primary);
             display: flex; align-items: center; justify-content: center;
-            margin-right: 15px;
-            font-size: 18px;
-            transition: 0.3s;
+            margin-right: 18px; font-size: 20px; transition: 0.3s;
         }
 
-        .menu-item:hover .icon-box {
-            background: var(--primary);
-            color: var(--accent);
+        .menu-item:hover .icon-box { background: var(--primary); color: var(--accent); }
+
+        .menu-text { flex: 1; text-align: left; }
+        .menu-text span { display: block; font-weight: 800; font-size: 16px; margin-bottom: 2px; }
+        .menu-text small { color: var(--text-muted); font-size: 12px; font-weight: 500; }
+
+        .arrow { color: #CBD5E1; font-size: 14px; }
+
+        /* --- MODAL SYSTEM --- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px); z-index: 1000;
+            display: none; align-items: center; justify-content: center; padding: 20px;
         }
 
-        .menu-text { flex: 1; }
-        .menu-text span { display: block; font-weight: 700; font-size: 16px; }
-        .menu-text small { color: var(--text-muted); font-size: 12px; }
-
-        .arrow-right { color: #CBD5E1; font-size: 14px; }
-
-        /* --- T&C SECTION --- */
-        .info-section {
-            background: #F1F5F2;
-            border-radius: 30px;
-            padding: 25px;
-            margin-top: 30px;
+        .modal-content {
+            background: var(--white); width: 100%; max-width: 450px;
+            border-radius: 40px; padding: 30px; position: relative;
+            animation: modalSlide 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .info-section h4 {
-            font-family: 'Outfit';
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--primary);
-            display: flex; align-items: center; gap: 10px;
+        @keyframes modalSlide { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-header { margin-bottom: 25px; }
+        .modal-header h2 { font-family: 'Outfit'; font-size: 24px; color: var(--primary); }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 5px; }
+        .form-group input {
+            width: 100%; padding: 15px 20px; border-radius: 18px;
+            border: 2px solid #F1F5F9; background: #F8FAF9;
+            font-size: 15px; font-weight: 600; outline: none; transition: 0.3s;
         }
 
-        .tc-content {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            height: 150px;
-            overflow-y: auto;
-            padding-right: 10px;
+        .form-group input:focus { border-color: var(--accent); background: var(--white); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
+
+        .save-btn {
+            width: 100%; padding: 18px; background: var(--primary);
+            color: var(--accent); border: none; border-radius: 20px;
+            font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 10px;
         }
 
-        /* --- FOOTER CONTACT --- */
-        .contact-footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 20px;
-        }
+        .close-modal { position: absolute; top: 25px; right: 25px; font-size: 20px; color: #94A3B8; cursor: pointer; }
 
-        .email-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 25px;
-            background: var(--primary);
-            color: var(--accent);
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 14px;
-            box-shadow: 0 10px 20px rgba(26, 62, 38, 0.2);
+        /* --- LEGAL SECTION --- */
+        .legal-box { background: #E9F0EB; border-radius: 35px; padding: 30px; margin-top: 10px; }
+        .legal-box h3 { font-family: 'Outfit'; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .tc-text { font-size: 13px; color: var(--text-main); line-height: 1.7; opacity: 0.8; max-height: 150px; overflow-y: auto; }
+
+        .contact-btn {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            width: 100%; padding: 18px; background: var(--white);
+            border: 2px solid var(--primary); border-radius: 20px;
+            margin-top: 25px; text-decoration: none; color: var(--primary);
+            font-weight: 800; transition: 0.3s;
         }
+        .contact-btn:hover { background: var(--primary); color: var(--accent); }
+
     </style>
 </head>
-<body>
+<body id="mainBody">
 
     <div class="profile-hero">
-        <div class="floating-icons" id="iconBox">
-            </div>
+        <div class="floating-icons" id="iconBox"></div>
 
-        <div class="avatar-container">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Akash" alt="User">
+        <div class="avatar-wrapper">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Akash" id="userPhoto" alt="User">
+            <label for="uploadPhoto" class="edit-avatar-btn">
+                <i class="fa-solid fa-camera"></i>
+                <input type="file" id="uploadPhoto" hidden accept="image/*">
+            </label>
         </div>
-        <h1 class="user-name">Akash Deep</h1>
-        <p class="user-tag">Nemi Mart Gold Member</p>
+
+        <div class="profile-info">
+            <h1 id="displayName">Akash Deep</h1>
+            <span class="member-badge">Nemi Mart Gold Member</span>
+        </div>
     </div>
 
     <div class="content-area">
         
         <div class="menu-card">
-            <a href="#" class="menu-item">
-                <div class="icon-box"><i class="fa-solid fa-user-pen"></i></div>
+            <button class="menu-item" onclick="openModal('editProfileModal')">
+                <div class="icon-box"><i class="fa-solid fa-user-gear"></i></div>
                 <div class="menu-text">
-                    <span>Edit Profile</span>
-                    <small>Name, Email, Mobile Number</small>
+                    <span>Personal Details</span>
+                    <small id="displayEmail">akash@example.com</small>
                 </div>
-                <i class="fa-solid fa-chevron-right arrow-right"></i>
-            </a>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </button>
             
-            <a href="#" class="menu-item">
-                <div class="icon-box"><i class="fa-solid fa-map-location-dot"></i></div>
+            <button class="menu-item" onclick="openModal('addressModal')">
+                <div class="icon-box"><i class="fa-solid fa-map-pin"></i></div>
                 <div class="menu-text">
-                    <span>Saved Addresses</span>
-                    <small>Home, Office & others</small>
+                    <span>Delivery Address</span>
+                    <small id="displayAddress">Ragho Majra, Patiala, Punjab</small>
                 </div>
-                <i class="fa-solid fa-chevron-right arrow-right"></i>
-            </a>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </button>
         </div>
 
         <div class="menu-card">
             <a href="orders.html" class="menu-item">
-                <div class="icon-box"><i class="fa-solid fa-box-open"></i></div>
+                <div class="icon-box"><i class="fa-solid fa-clock-rotate-left"></i></div>
                 <div class="menu-text">
-                    <span>My Orders</span>
-                    <small>Track, Reorder & Invoices</small>
+                    <span>Order History</span>
+                    <small>Manage your past purchases</small>
                 </div>
-                <i class="fa-solid fa-chevron-right arrow-right"></i>
+                <i class="fa-solid fa-chevron-right arrow"></i>
             </a>
             
             <a href="heart.html" class="menu-item">
                 <div class="icon-box"><i class="fa-solid fa-heart"></i></div>
                 <div class="menu-text">
-                    <span>Wishlist</span>
-                    <small>Your favorite items</small>
+                    <span>My Wishlist</span>
+                    <small>Items you've loved</small>
                 </div>
-                <i class="fa-solid fa-chevron-right arrow-right"></i>
+                <i class="fa-solid fa-chevron-right arrow"></i>
             </a>
         </div>
 
-        <div class="info-section">
-            <h4><i class="fa-solid fa-shield-halved"></i> Terms & Conditions</h4>
-            <div class="tc-content">
-                <p>Welcome to Nemi Mart. By using our services, you agree to the following terms:</p><br>
-                <strong>1. Quality Guarantee:</strong> All organic products are sourced directly from farmers. Slight variations in color/texture are natural.<br><br>
-                <strong>2. Delivery:</strong> We aim to deliver within 24-48 hours in Patiala. Delays due to weather or logistics will be communicated.<br><br>
-                <strong>3. Cancellation:</strong> Orders can be cancelled before they are dispatched. Once out for delivery, a nominal fee may apply.<br><br>
-                <strong>4. Privacy:</strong> Your data (Name, Phone, Address) is strictly used for order processing and will never be shared with third parties.<br><br>
-                <strong>5. Payments:</strong> All digital transactions are secured. In case of failure, refunds are processed within 5-7 working days.
+        <div class="legal-box">
+            <h3><i class="fa-solid fa-fingerprint"></i> Terms of Service</h3>
+            <div class="tc-text">
+                <strong>1. User Account:</strong> You are responsible for maintaining the confidentiality of your Nemi Mart account. <br><br>
+                <strong>2. Service Quality:</strong> We promise 100% organic and fresh products sourced from Punjab's finest farmers.<br><br>
+                <strong>3. Privacy:</strong> Your personal data is encrypted and used only for fulfilling your orders in Patiala and surrounding areas.<br><br>
+                <strong>4. Returns:</strong> Fresh items are only returnable at the time of delivery if found damaged.
             </div>
         </div>
 
-        <div class="contact-footer">
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Need any help with your order?</p>
-            <a href="mailto:nemimart@gmail.com" class="email-link">
-                <i class="fa-solid fa-envelope"></i> Contact Us: nemimart@gmail.com
-            </a>
-            <p style="margin-top: 30px; font-size: 11px; color: #cbd5e1; font-weight: 600;">VERSION 2.0.4 • MADE IN PATIALA</p>
+        <a href="mailto:nemimart@gmail.com" class="contact-btn">
+            <i class="fa-solid fa-headset"></i> Need Help? Contact Support
+        </a>
+
+        <p style="text-align:center; font-size: 11px; color: #94A3B8; margin-top: 30px; font-weight: 700;">
+            VERSION 3.0.1 • POWERED BY ARHAM INSIGHTS
+        </p>
+    </div>
+
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal-content">
+            <i class="fa-solid fa-xmark close-modal" onclick="closeModal('editProfileModal')"></i>
+            <div class="modal-header">
+                <h2>Update Profile</h2>
+            </div>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="inputName" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="inputEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="inputPhone" placeholder="Mobile number">
+            </div>
+            <button class="save-btn" onclick="saveProfile()">Update Details</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="addressModal">
+        <div class="modal-content">
+            <i class="fa-solid fa-xmark close-modal" onclick="closeModal('addressModal')"></i>
+            <div class="modal-header">
+                <h2>Delivery Address</h2>
+            </div>
+            <div class="form-group">
+                <label>House / Flat No.</label>
+                <input type="text" id="inputHouse" placeholder="Ex: H.No 123, Ground Floor">
+            </div>
+            <div class="form-group">
+                <label>Landmark / Area</label>
+                <input type="text" id="inputArea" placeholder="Ex: Ragho Majra, Near Main Gate">
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" value="Patiala, Punjab" readonly style="background: #eee;">
+            </div>
+            <button class="save-btn" onclick="saveAddress()">Save Address</button>
         </div>
     </div>
 
     <script>
-        // JS to generate floating shopping icons
-        const iconStyles = [
-            'fa-shopping-bag', 'fa-cart-shopping', 'fa-star', 
-            'fa-leaf', 'fa-tag', 'fa-bolt', 'fa-heart'
-        ];
-        
+        // --- DATA MANAGEMENT ---
+        function loadUserData() {
+            const name = localStorage.getItem('nm_name') || 'Akash Deep';
+            const email = localStorage.getItem('nm_email') || 'akash@example.com';
+            const address = localStorage.getItem('nm_address') || 'Ragho Majra, Patiala, Punjab';
+            const photo = localStorage.getItem('nm_photo');
+
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('displayEmail').innerText = email;
+            document.getElementById('displayAddress').innerText = address;
+            if(photo) document.getElementById('userPhoto').src = photo;
+
+            // Fill inputs
+            document.getElementById('inputName').value = name;
+            document.getElementById('inputEmail').value = email;
+            document.getElementById('inputArea').value = address;
+        }
+
+        function saveProfile() {
+            const newName = document.getElementById('inputName').value;
+            const newEmail = document.getElementById('inputEmail').value;
+            localStorage.setItem('nm_name', newName);
+            localStorage.setItem('nm_email', newEmail);
+            loadUserData();
+            closeModal('editProfileModal');
+            alert('Profile Updated Successfully!');
+        }
+
+        function saveAddress() {
+            const house = document.getElementById('inputHouse').value;
+            const area = document.getElementById('inputArea').value;
+            const fullAddress = `${house}, ${area}`;
+            localStorage.setItem('nm_address', fullAddress);
+            loadUserData();
+            closeModal('addressModal');
+        }
+
+        // --- AVATAR UPLOAD ---
+        document.getElementById('uploadPhoto').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                localStorage.setItem('nm_photo', reader.result);
+                document.getElementById('userPhoto').src = reader.result;
+            }
+            if (file) reader.readAsDataURL(file);
+        });
+
+        // --- MODAL CONTROLS ---
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+            document.getElementById('mainBody').classList.add('no-scroll');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            document.getElementById('mainBody').classList.remove('no-scroll');
+        }
+
+        // --- FLOATING ICONS ---
+        const iconStyles = ['fa-shopping-bag', 'fa-cart-shopping', 'fa-star', 'fa-leaf', 'fa-tag', 'fa-bolt', 'fa-heart'];
         const container = document.getElementById('iconBox');
-        
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 18; i++) {
             const icon = document.createElement('i');
             icon.className = `fa-solid ${iconStyles[Math.floor(Math.random() * iconStyles.length)]}`;
-            
-            // Randomize orbit properties
-            const radius = Math.floor(Math.random() * 150) + 100; // Orbit radius
-            const duration = Math.floor(Math.random() * 10) + 15; // Speed
-            const delay = Math.floor(Math.random() * 20) * -1;    // Random start position
-            
+            const radius = Math.floor(Math.random() * 160) + 110;
+            const duration = Math.floor(Math.random() * 12) + 12;
+            const delay = Math.floor(Math.random() * 20) * -1;
             icon.style.setProperty('--r', `${radius}px`);
             icon.style.setProperty('--d', `${duration}s`);
-            icon.style.left = '50%';
-            icon.style.top = '50%';
+            icon.style.left = '50%'; icon.style.top = '50%';
             icon.style.animationDelay = `${delay}s`;
-            
             container.appendChild(icon);
         }
+
+        // Init
+        window.onload = loadUserData;
     </script>
 </body>
 </html>

@@ -1,250 +1,262 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEMI ADMIN v2.0 | PRODUCT INJECTION</title>
+    <title>NEMI ADMIN v3.0 | INSTANT CLOUD INJECTION</title>
     <style>
-        /* INDUSTRIAL WHITE THEME - MOBILE RESPONSIVE */
+        /* MINIMALIST INDUSTRIAL WHITE THEME */
         :root {
-            --black: #000000;
-            --white: #ffffff;
-            --gray: #f4f4f4;
-            --border: #dddddd;
-            --success: #28a745;
-            --danger: #dc3545;
+            --b: #000000;
+            --w: #ffffff;
+            --g: #f2f2f2;
+            --s: #00ff00;
+            --d: #ff0000;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        
         body { 
-            background-color: var(--white); 
-            color: var(--black); 
+            background-color: var(--w); 
+            color: var(--b); 
             font-family: 'Courier New', Courier, monospace; 
             margin: 0; 
-            padding: 10px; 
-            line-height: 1.6;
+            padding: 15px; 
+            font-weight: 500;
         }
 
-        .wrapper { 
+        .container { 
             max-width: 100%; 
             margin: 0 auto; 
-            border: 3px solid var(--black); 
-            padding: 15px;
+            border: 4px solid var(--b); 
+            padding: 20px;
         }
 
         header { 
-            border-bottom: 3px solid var(--black); 
-            padding-bottom: 15px; 
+            border-bottom: 4px solid var(--b); 
+            padding-bottom: 20px; 
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        h1 { font-size: 28px; text-transform: uppercase; margin: 0; letter-spacing: -2px; line-height: 1; }
+        
+        .nav-btn { 
+            display: inline-block; 
+            background: var(--b); 
+            color: var(--w); 
+            padding: 12px 20px; 
+            text-decoration: none; 
+            font-size: 14px;
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .section-tag { 
+            background: var(--b); 
+            color: var(--w); 
+            padding: 5px 12px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            display: inline-block;
+            font-size: 12px;
             margin-bottom: 20px;
         }
 
-        h1 { font-size: 22px; text-transform: uppercase; margin: 0; letter-spacing: -1px; }
-        .nav-link { 
-            display: inline-block; 
-            margin-top: 10px; 
-            background: var(--black); 
-            color: var(--white); 
-            padding: 8px 15px; 
-            text-decoration: none; 
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .section-header { 
-            background: var(--black); 
-            color: var(--white); 
-            padding: 5px 10px; 
-            font-weight: bold; 
-            text-transform: uppercase; 
-            margin-top: 25px;
-            font-size: 14px;
-        }
-
-        /* FORM SYSTEM */
-        .grid-system { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
-        .field { display: flex; flex-direction: column; }
-        label { font-weight: bold; text-transform: uppercase; font-size: 11px; margin-bottom: 5px; }
+        /* INPUT SYSTEM */
+        .master-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .input-group { display: flex; flex-direction: column; }
+        label { font-weight: 900; text-transform: uppercase; font-size: 12px; margin-bottom: 8px; }
         
         input, textarea, select { 
-            border: 2px solid var(--black); 
-            padding: 12px; 
+            border: 3px solid var(--b); 
+            padding: 15px; 
             font-size: 16px; 
             font-family: inherit;
-            outline: none;
+            width: 100%;
+            background: var(--w);
+            border-radius: 0;
+        }
+
+        input:focus, textarea:focus { background: var(--g); }
+
+        /* PHOTO ENGINE */
+        .photo-engine-box { 
+            border: 3px dashed var(--b); 
+            padding: 20px; 
+            background: var(--g);
+            margin-top: 10px;
+        }
+        .slot-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #000; }
+        .add-slot-cmd { 
+            background: var(--w); 
+            border: 2px solid var(--b); 
+            padding: 10px; 
+            font-size: 12px; 
+            cursor: pointer; 
+            font-weight: 900;
+            text-transform: uppercase;
             width: 100%;
         }
 
-        input:focus { background: var(--gray); }
-
-        /* MULTI-PHOTO SYSTEM */
-        .photo-upload-zone { 
-            border: 2px dashed var(--black); 
-            padding: 15px; 
-            margin-top: 5px; 
-            background: var(--gray);
-        }
-        .image-slot { margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-        .add-more-btn { 
-            background: #eee; 
-            border: 1px solid var(--black); 
-            padding: 5px; 
-            font-size: 11px; 
-            cursor: pointer; 
-            margin-top: 5px;
-            text-transform: uppercase;
-        }
-
-        /* BUTTONS */
-        #executeBtn { 
-            background: var(--black); 
-            color: var(--white); 
+        /* EXECUTION BUTTON */
+        #executeCmd { 
+            background: var(--b); 
+            color: var(--w); 
             border: none; 
-            padding: 20px; 
-            font-size: 18px; 
-            font-weight: bold; 
+            padding: 25px; 
+            font-size: 22px; 
+            font-weight: 900; 
             width: 100%; 
-            margin-top: 30px; 
+            margin-top: 40px; 
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 5px 5px 0px #ccc;
+            letter-spacing: 2px;
+            transition: 0.1s;
         }
-        #executeBtn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #ccc; }
-        #executeBtn:disabled { background: #999; }
+        #executeCmd:active { transform: scale(0.98); }
+        #executeCmd:disabled { background: #666; cursor: wait; }
 
-        /* PROGRESS BAR */
-        .p-container { width: 100%; border: 1px solid var(--black); height: 15px; margin-top: 10px; display: none; }
-        .p-bar { height: 100%; background: var(--black); width: 0%; transition: 0.3s; }
+        /* CLOUD PROGRESS */
+        .sync-container { width: 100%; border: 3px solid var(--b); height: 20px; margin-top: 15px; display: none; }
+        .sync-bar { height: 100%; background: var(--b); width: 0%; transition: 0.2s; }
 
-        /* HISTORY TABLE - MOBILE CARD VIEW */
-        .history-section { margin-top: 50px; }
-        .prod-card { 
-            border: 2px solid var(--black); 
-            margin-bottom: 15px; 
-            padding: 10px; 
+        /* REAL-TIME LOGS (HISTORY) */
+        .logs-wrapper { margin-top: 60px; }
+        .log-card { 
+            border: 3px solid var(--b); 
+            margin-bottom: 20px; 
+            padding: 15px; 
             position: relative;
+            background: var(--w);
         }
-        .prod-card img { width: 60px; height: 60px; object-fit: cover; border: 1px solid var(--black); }
-        .status-badge { 
-            position: absolute; 
-            top: 10px; 
-            right: 10px; 
-            padding: 3px 8px; 
-            font-size: 10px; 
-            font-weight: bold;
-            text-transform: uppercase;
+        .log-card img { width: 80px; height: 80px; object-fit: cover; border: 2px solid var(--b); margin-bottom: 10px; }
+        
+        .status-tag { 
+            position: absolute; top: 15px; right: 15px; 
+            padding: 4px 10px; font-size: 10px; font-weight: 900; 
+            text-transform: uppercase; border: 2px solid var(--b);
         }
-        .in-stock { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .out-stock { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .tag-active { background: var(--s); color: #000; }
+        .tag-out { background: var(--d); color: #fff; }
 
-        .action-btns { display: flex; gap: 5px; margin-top: 10px; }
-        .btn-sm { padding: 8px; border: 1px solid var(--black); font-size: 10px; cursor: pointer; background: var(--white); flex: 1; text-transform: uppercase; font-weight: bold; }
-        .btn-del { background: var(--black); color: var(--white); }
+        .control-panel { display: flex; gap: 10px; margin-top: 15px; }
+        .ctrl-btn { 
+            padding: 12px; border: 2px solid var(--b); font-size: 12px; 
+            cursor: pointer; background: var(--w); flex: 1; 
+            text-transform: uppercase; font-weight: 900; 
+        }
+        .ctrl-del { background: var(--b); color: var(--w); }
 
-        #notifBox { 
-            position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-            background: var(--black); color: var(--white); padding: 10px 20px;
-            font-size: 12px; z-index: 9999; display: none;
+        #alertBox { 
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--b); color: var(--w); padding: 15px 30px;
+            font-weight: 900; z-index: 10000; display: none; text-transform: uppercase;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
         }
 
         @media (min-width: 768px) {
-            .grid-system { display: grid; grid-template-columns: 1fr 1fr; }
-            .full { grid-column: span 2; }
-            h1 { font-size: 35px; }
+            .master-grid { grid-template-columns: 1fr 1fr; }
+            .span-full { grid-column: span 2; }
+            h1 { font-size: 45px; }
         }
     </style>
 </head>
 <body>
 
-<div id="notifBox">SYSTEM NOTIFICATION: NEW PRODUCT DETECTED</div>
+<div id="alertBox">SYSTEM SYNC COMPLETE</div>
 
-<div class="wrapper">
+<div class="container">
     <header>
-        <h1>NEMI_ADMIN_01</h1>
-        <a href="admin2.html" class="nav-link">SWITCH TO ORDERS (P3) -></a>
+        <h1>NEMI_MASTER_ADMIN_v3</h1>
+        <a href="admin2.html" class="nav-btn">GO TO ORDERS (NEMI MART 3) -></a>
     </header>
 
-    <div class="section-header">Core Database Injection (P2)</div>
+    <div class="section-tag">Target Database: Nemi Mart 2 (Products)</div>
 
-    <form id="megaForm">
-        <div class="grid-system">
-            <div class="field">
-                <label>Product Title</label>
-                <input type="text" id="p_title" required placeholder="Ex: Organic Himalayan Salt">
+    <form id="injectionForm">
+        <div class="master-grid">
+            <div class="input-group">
+                <label>Product Name / Identity</label>
+                <input type="text" id="m_title" required placeholder="Ex: Premium Raw Honey">
             </div>
 
-            <div class="field">
-                <label>Category Tag</label>
-                <select id="p_cat">
-                    <option value="organic">Organic Food</option>
-                    <option value="beauty">Beauty & Wellness</option>
-                    <option value="seeds">Agricultural Seeds</option>
-                    <option value="oils">Essential Oils</option>
+            <div class="input-group">
+                <label>Inventory Category</label>
+                <select id="m_cat">
+                    <option value="organic-food">Organic Food</option>
+                    <option value="wellness">Wellness & Health</option>
+                    <option value="farming">Farming Seeds</option>
+                    <option value="skincare">Natural Skincare</option>
                 </select>
             </div>
 
-            <div class="field">
-                <label>Base Price (₹)</label>
-                <input type="number" id="p_price" required placeholder="0.00">
+            <div class="input-group">
+                <label>Listing Price (₹)</label>
+                <input type="number" id="m_price" required placeholder="0.00">
             </div>
 
-            <div class="field">
-                <label>Discount (%)</label>
-                <input type="number" id="p_disc" value="0">
+            <div class="input-group">
+                <label>Markdown Discount (%)</label>
+                <input type="number" id="m_disc" value="0">
             </div>
 
-            <div class="field">
-                <label>Stock Count</label>
-                <input type="number" id="p_stock" required placeholder="99">
+            <div class="input-group">
+                <label>Stock Available</label>
+                <input type="number" id="m_stock" required placeholder="100">
             </div>
 
-            <div class="field">
-                <label>Product Media (Multiple Photos)</label>
-                <div class="photo-upload-zone" id="imageZone">
-                    <div class="image-slot">
-                        <input type="file" class="p-img-input" accept="image/*" required>
+            <div class="input-group">
+                <label>Media Injection (Multi-Photo)</label>
+                <div class="photo-engine-box" id="slotZone">
+                    <div class="slot-row">
+                        <input type="file" class="cloud-file" accept="image/*" required>
                     </div>
                 </div>
-                <button type="button" class="add-more-btn" onclick="addPhotoSlot()">+ Add Another Photo Slot</button>
+                <button type="button" class="add-slot-cmd" onclick="injectNewSlot()">+ Add Media Slot</button>
             </div>
 
-            <div class="field full">
-                <label>Hero Description (One Liner)</label>
-                <input type="text" id="p_hero" placeholder="The best salt from the hills...">
+            <div class="input-group span-full">
+                <label>Product Hero Line</label>
+                <input type="text" id="m_hero" placeholder="A single line impact statement...">
             </div>
 
-            <div class="field full">
-                <label>Full Content / Story</label>
-                <textarea id="p_long" rows="6" placeholder="Describe your product here..."></textarea>
+            <div class="input-group span-full">
+                <label>Detailed Specifications (Full Story)</label>
+                <textarea id="m_long" rows="7" placeholder="Write everything about the product here..."></textarea>
             </div>
 
-            <div class="field full">
-                <label>Ingredients (Comma separated)</label>
-                <textarea id="p_ing" rows="2" placeholder="Salt, Minerals, Trace Elements..."></textarea>
+            <div class="input-group span-full">
+                <label>Ingredients (Split by comma ',')</label>
+                <textarea id="m_ing" rows="2" placeholder="Item 1, Item 2, Item 3..."></textarea>
             </div>
 
-            <div class="field full">
-                <label>Application / Usage</label>
-                <textarea id="p_use" rows="2" placeholder="How to use this product..."></textarea>
+            <div class="input-group span-full">
+                <label>Usage Manual</label>
+                <textarea id="m_use" rows="2" placeholder="Step-by-step instructions..."></textarea>
             </div>
         </div>
 
-        <div class="p-container" id="pContainer"><div class="p-bar" id="pBar"></div></div>
-        <button type="submit" id="executeBtn">Execute Cloud Injection</button>
+        <div class="sync-container" id="syncBox"><div class="sync-bar" id="syncBar"></div></div>
+        <button type="submit" id="executeCmd">EXECUTE DATABASE UPLOAD</button>
     </form>
 
-    <div class="history-section">
-        <div class="section-header">Live Inventory Logs</div>
-        <div id="historyList" style="margin-top: 15px;">
+    <div class="logs-wrapper">
+        <div class="section-tag">Real-Time Inventory Stream</div>
+        <div id="realtimeLogs" style="margin-top: 20px;">
             </div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-    // PROJECT 2 CONFIG (Nemi Mart 2)
+    // PROJECT 2 CONFIG (NEMI MART 2)
     const firebaseConfig = {
         apiKey: "AIzaSyDVIz9_OlUcxl-Dy5oFa_yV6LPPNLp1M80",
         authDomain: "nemi-mart-2.firebaseapp.com",
@@ -258,142 +270,142 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // DYNAMIC PHOTO SLOTS
-    window.addPhotoSlot = () => {
-        const zone = document.getElementById('imageZone');
+    // DYNAMIC MEDIA SLOTS
+    window.injectNewSlot = () => {
+        const zone = document.getElementById('slotZone');
         const div = document.createElement('div');
-        div.className = 'image-slot';
-        div.innerHTML = '<input type="file" class="p-img-input" accept="image/*">';
+        div.className = 'slot-row';
+        div.innerHTML = '<input type="file" class="cloud-file" accept="image/*">';
         zone.appendChild(div);
     };
 
-    // NOTIFICATION TRIGGER
-    function triggerNotif(msg) {
-        const box = document.getElementById('notifBox');
+    // SYSTEM ALERTS
+    function sysAlert(msg) {
+        const box = document.getElementById('alertBox');
         box.innerText = msg;
         box.style.display = 'block';
-        setTimeout(() => box.style.display = 'none', 4000);
+        setTimeout(() => box.style.display = 'none', 3000);
     }
 
     // MAIN UPLOAD ENGINE
-    document.getElementById('megaForm').addEventListener('submit', async (e) => {
+    document.getElementById('injectionForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('executeBtn');
+        const btn = document.getElementById('executeCmd');
+        const sBar = document.getElementById('syncBar');
+        const sBox = document.getElementById('syncBox');
+        
         btn.disabled = true;
-        
-        const files = document.querySelectorAll('.p-img-input');
-        const imageUrls = [];
-        const pBar = document.getElementById('pBar');
-        const pContainer = document.getElementById('pContainer');
-        
-        pContainer.style.display = 'block';
+        btn.innerText = "UPLOADING MEDIA...";
+        sBox.style.display = 'block';
+
+        const fileInputs = document.querySelectorAll('.cloud-file');
+        const photoUrls = [];
 
         try {
-            // 1. UPLOAD MULTIPLE PHOTOS
-            for(let i=0; i < files.length; i++) {
-                const file = files[i].files[0];
+            // 1. Upload Loop
+            for(let input of fileInputs) {
+                const file = input.files[0];
                 if(!file) continue;
 
-                const sRef = ref(storage, `nemi_multi/${Date.now()}_${file.name}`);
-                const task = uploadBytesResumable(sRef, file);
+                const storageRef = ref(storage, `nemi_products/${Date.now()}_${file.name}`);
+                const uploadTask = uploadBytesResumable(storageRef, file);
 
                 await new Promise((resolve, reject) => {
-                    task.on('state_changed', 
+                    uploadTask.on('state_changed', 
                         (snap) => {
-                            let prog = (snap.bytesTransferred / snap.totalBytes) * 100;
-                            pBar.style.width = prog + '%';
-                        },
-                        reject,
+                            let p = (snap.bytesTransferred / snap.totalBytes) * 100;
+                            sBar.style.width = p + '%';
+                        }, 
+                        reject, 
                         async () => {
-                            const url = await getDownloadURL(task.snapshot.ref);
-                            imageUrls.push(url);
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            photoUrls.push(url);
                             resolve();
                         }
                     );
                 });
             }
 
-            // 2. SAVE TO FIRESTORE
-            const price = parseFloat(document.getElementById('p_price').value);
-            const disc = parseFloat(document.getElementById('p_disc').value);
+            // 2. Firestore Injection
+            const p = parseFloat(document.getElementById('m_price').value);
+            const d = parseFloat(document.getElementById('m_disc').value);
 
             await addDoc(collection(db, "products"), {
-                title: document.getElementById('p_title').value,
-                category: document.getElementById('p_cat').value,
-                price: price,
-                discount: disc,
-                finalPrice: price - (price * (disc/100)),
-                stock: parseInt(document.getElementById('p_stock').value),
-                images: imageUrls,
-                hero: document.getElementById('p_hero').value,
-                description: document.getElementById('p_long').value,
-                ingredients: document.getElementById('p_ing').value.split(','),
-                usage: document.getElementById('p_use').value,
+                title: document.getElementById('m_title').value,
+                category: document.getElementById('m_cat').value,
+                price: p,
+                discount: d,
+                finalPrice: p - (p * (d/100)),
+                stock: parseInt(document.getElementById('m_stock').value),
+                images: photoUrls,
+                hero: document.getElementById('m_hero').value,
+                description: document.getElementById('m_long').value,
+                ingredients: document.getElementById('m_ing').value.split(','),
+                usage: document.getElementById('m_use').value,
                 status: 'in-stock',
                 createdAt: serverTimestamp()
             });
 
-            triggerNotif("SUCCESS: PRODUCT INJECTED & NOTIFIED");
-            document.getElementById('megaForm').reset();
-            fetchLogs();
+            sysAlert("DATABASE UPDATED SUCCESSFULLY");
+            document.getElementById('injectionForm').reset();
             
         } catch (err) {
-            alert("CRITICAL ERROR: " + err.message);
+            alert("SYSTEM CRITICAL: " + err.message);
         } finally {
             btn.disabled = false;
-            pContainer.style.display = 'none';
+            btn.innerText = "EXECUTE DATABASE UPLOAD";
+            sBox.style.display = 'none';
         }
     });
 
-    // FETCH LOGS (HISTORY)
-    async function fetchLogs() {
-        const list = document.getElementById('historyList');
-        list.innerHTML = "LOGGING CLOUD DATA...";
-        
-        const snap = await getDocs(collection(db, "products"));
+    // REAL-TIME FETCH ENGINE (SNAPSHOT LISTENER)
+    const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        const list = document.getElementById('realtimeLogs');
         list.innerHTML = "";
         
-        snap.forEach(docSnap => {
+        if(snapshot.empty) {
+            list.innerHTML = "<p style='font-weight:900;'>- DATABASE EMPTY -</p>";
+            return;
+        }
+
+        snapshot.forEach((docSnap) => {
             const p = docSnap.data();
             const id = docSnap.id;
-            const statusClass = p.status === 'in-stock' ? 'in-stock' : 'out-stock';
-            
+            const isOut = p.status === 'out-of-stock';
+
             list.innerHTML += `
-                <div class="prod-card">
-                    <span class="status-badge ${statusClass}">${p.status}</span>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <img src="${p.images[0] || 'https://via.placeholder.com/60'}">
+                <div class="log-card">
+                    <span class="status-tag ${isOut ? 'tag-out' : 'tag-active'}">${p.status}</span>
+                    <div style="display:flex; flex-direction:column;">
+                        <img src="${p.images[0] || 'https://via.placeholder.com/80'}">
                         <div>
-                            <strong style="font-size:14px;">${p.title}</strong><br>
-                            <small>Stock: ${p.stock} | Price: ₹${p.finalPrice}</small>
+                            <strong style="font-size:16px;">${p.title}</strong><br>
+                            <span style="font-size:12px;">Price: ₹${p.finalPrice} | Stock: ${p.stock}</span>
                         </div>
                     </div>
-                    <div class="action-btns">
-                        <button class="btn-sm" onclick="toggleStock('${id}', '${p.status}')">Toggle Stock</button>
-                        <button class="btn-sm btn-del" onclick="vaporize('${id}')">Delete</button>
+                    <div class="control-panel">
+                        <button class="ctrl-btn" onclick="toggleCloudStock('${id}', '${p.status}')">Flip Status</button>
+                        <button class="ctrl-btn ctrl-del" onclick="wipeFromCloud('${id}')">Wipe Data</button>
                     </div>
                 </div>
             `;
         });
-    }
+    });
 
-    // TOGGLE STOCK
-    window.toggleStock = async (id, current) => {
+    // CLOUD CONTROLS
+    window.toggleCloudStock = async (id, current) => {
         const next = current === 'in-stock' ? 'out-of-stock' : 'in-stock';
         await updateDoc(doc(db, "products", id), { status: next });
-        fetchLogs();
     };
 
-    // DELETE (VAPORIZE)
-    window.vaporize = async (id) => {
-        if(confirm("VAPORIZE PRODUCT DATA?")) {
+    window.wipeFromCloud = async (id) => {
+        if(confirm("PERMANENTLY WIPE THIS PRODUCT FROM CLOUD?")) {
             await deleteDoc(doc(db, "products", id));
-            fetchLogs();
+            sysAlert("PRODUCT WIPED");
         }
     };
 
-    fetchLogs();
 </script>
-
 </body>
 </html>

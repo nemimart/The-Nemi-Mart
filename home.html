@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Nemi Mart | Premium Ayurveda</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
     <style>
+        /* ==========================================================================
+           1. CSS VARIABLES & BASE SETUP (TERA PREMIUM LAYOUT)
+           ========================================================================== */
         :root {
             --creme: #FFFDF5;
             --gold: #D4AF37;
@@ -20,7 +18,6 @@
             --white: #ffffff;
             --soft-shadow: 0 10px 40px rgba(0,0,0,0.08);
             --inner-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
-            --premium-gradient: linear-gradient(135deg, #1B3022 0%, #2D5A27 100%);
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
@@ -28,383 +25,493 @@
         body { background-color: var(--creme); color: var(--dark-green); padding-bottom: 120px; overflow-x: hidden; line-height: 1.6; }
 
         /* ==========================================================================
-           1. PREMIUM HEADER & NAVIGATION
+           2. HEADER & NAVIGATION
            ========================================================================== */
         header { background: var(--dark-green); padding: 15px 5%; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 30px rgba(0,0,0,0.2); }
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .logo-area { position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: var(--transition); }
+        .logo-area:hover { transform: scale(1.05); }
+        .main-logo { width: 45px; z-index: 5; position: relative; filter: drop-shadow(0 0 8px rgba(212,175,55,0.5)); }
         
-        .logo-area { position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; text-decoration: none; }
-        .main-logo { width: 45px; z-index: 5; filter: drop-shadow(0 0 8px rgba(212,175,55,0.5)); }
-        
-        .orbit-icons { position: absolute; width: 100%; height: 100%; animation: rotateFull 20s linear infinite; }
-        .orbit-icons i { position: absolute; font-size: 8px; color: var(--gold); opacity: 0.5; }
+        .orbit-icons { position: absolute; width: 100%; height: 100%; animation: rotateFull 15s linear infinite; }
+        .orbit-icons i { position: absolute; font-size: 10px; color: var(--gold); opacity: 0.6; }
         .oi1 { top: 0; left: 50%; } .oi2 { bottom: 0; left: 50%; } .oi3 { left: 0; top: 50%; } .oi4 { right: 0; top: 50%; }
         @keyframes rotateFull { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .address-box { flex: 1; margin-left: 15px; color: white; cursor: pointer; }
-        .address-box p { font-size: 9px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; }
-        .address-box h4 { font-size: 13px; font-weight: 600; color: var(--gold); display: flex; align-items: center; gap: 4px; }
+        .address-box { flex: 1; margin-left: 20px; color: white; text-decoration: none; transition: var(--transition); cursor: pointer; }
+        .address-box:hover { opacity: 0.8; transform: translateX(5px); }
+        .address-box p { font-size: 10px; opacity: 0.7; letter-spacing: 0.5px; text-transform: uppercase; }
+        .address-box h4 { font-size: 14px; font-weight: 600; color: var(--gold); display: flex; align-items: center; gap: 6px; }
 
-        .top-actions { display: flex; gap: 18px; font-size: 22px; }
-        .top-actions a { color: white; transition: var(--transition); }
-        .top-actions a:hover { color: var(--gold); transform: scale(1.1); }
+        .top-actions { display: flex; gap: 20px; font-size: 24px; }
+        .top-actions a { color: white; transition: var(--transition); cursor: pointer; }
+        .top-actions a:hover { color: var(--gold); transform: translateY(-3px) scale(1.1); }
 
-        /* Search Section */
-        .search-container { position: relative; max-width: 800px; margin: 8px auto 0; }
-        .search-fake-input { background: white; border-radius: 12px; height: 48px; display: flex; align-items: center; padding: 0 18px; color: #777; font-size: 13px; box-shadow: var(--inner-shadow); border: 1.5px solid transparent; transition: var(--transition); }
-        .search-fake-input:hover { border-color: var(--gold); }
+        .search-container { position: relative; max-width: 800px; margin: 5px auto 0; cursor: pointer; }
+        .search-fake-input { background: white; border-radius: 15px; height: 50px; display: flex; align-items: center; padding: 0 20px; color: #666; font-size: 14px; box-shadow: var(--inner-shadow); transition: var(--transition); border: 1px solid transparent; }
+        .search-fake-input:hover { border-color: var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
 
         /* ==========================================================================
-           2. DYNAMIC COMPONENTS (CATEGORIES & BANNERS)
+           3. DYNAMIC CATEGORY STRIP
            ========================================================================== */
-        .cat-strip { display: flex; overflow-x: auto; padding: 25px 5%; gap: 20px; background: white; scrollbar-width: none; }
+        .cat-strip { display: flex; overflow-x: auto; padding: 30px 5%; gap: 25px; background: white; scrollbar-width: none; justify-content: flex-start; }
         .cat-strip::-webkit-scrollbar { display: none; }
-        .cat-card { text-align: center; min-width: 75px; text-decoration: none; color: var(--dark-green); }
-        .icon-circle { width: 65px; height: 65px; background: #fcfcfc; border-radius: 20px; display: flex; justify-content: center; align-items: center; margin-bottom: 8px; border: 1px solid #eee; transition: var(--transition); }
-        .cat-card:hover .icon-circle { transform: translateY(-5px); background: var(--dark-green); border-color: var(--gold); }
+        .cat-card { text-align: center; min-width: 80px; text-decoration: none; color: var(--dark-green); transition: var(--transition); cursor: pointer; }
+        .icon-circle { width: 70px; height: 70px; background: #fafafa; border-radius: 22px; display: flex; justify-content: center; align-items: center; margin: 0 auto 12px; border: 1.5px solid #f0f0f0; transition: var(--transition); }
+        .cat-card:hover .icon-circle { transform: translateY(-8px) rotate(5deg); background: var(--dark-green); border-color: var(--gold); box-shadow: 0 10px 20px rgba(27,48,34,0.15); }
         .cat-card:hover i { color: var(--gold); }
-        .cat-card i { font-size: 24px; color: var(--leaf-green); }
-        .cat-card span { font-size: 11px; font-weight: 600; }
+        .cat-card:hover span { color: var(--leaf-green); font-weight: 700; }
+        .cat-card i { font-size: 28px; color: var(--leaf-green); transition: 0.3s; }
+        .cat-card span { font-size: 12px; font-weight: 600; display: block; }
 
-        /* Banner Carousel */
-        .banner-wrapper { margin: 15px auto; width: 92%; overflow: hidden; border-radius: 20px; box-shadow: var(--soft-shadow); }
-        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+        /* ==========================================================================
+           4. BANNER CAROUSEL
+           ========================================================================== */
+        .banner-wrapper { position: relative; margin: 20px auto; width: 95%; max-width: 1200px; overflow: hidden; border-radius: 25px; }
+        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; cursor: grab; }
+        .banner-container::-webkit-scrollbar { display: none; }
         .banner-slide { min-width: 100%; scroll-snap-align: start; }
-        .banner-slide img { width: 100%; aspect-ratio: 16/8; object-fit: cover; }
+        .banner-slide img { width: 100%; aspect-ratio: 16/7; object-fit: cover; display: block; transition: transform 0.8s ease; }
+        @media (max-width: 768px) { .banner-slide img { aspect-ratio: 16/9; height: 200px; } }
 
         /* ==========================================================================
-           3. PRODUCT GRID & CARDS
+           5. PRODUCT SECTIONS & GRIDS
            ========================================================================== */
-        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 30px 5% 15px; }
-        .section-header h2 { font-size: 18px; font-weight: 700; color: var(--dark-green); border-left: 4px solid var(--gold); padding-left: 10px; }
-        .view-all { font-size: 12px; font-weight: 600; color: var(--leaf-green); background: rgba(45, 90, 39, 0.08); padding: 5px 12px; border-radius: 8px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 40px 5% 20px; }
+        .section-header h2 { font-size: 20px; color: var(--dark-green); position: relative; font-weight: 700; }
+        .view-all { text-decoration: none; color: var(--leaf-green); font-size: 13px; font-weight: 600; background: rgba(45, 90, 39, 0.1); padding: 6px 15px; border-radius: 10px; transition: var(--transition); cursor: pointer; }
+        .view-all:hover { background: var(--leaf-green); color: white; }
 
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 4%; }
-        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 5%; }
+        @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; } }
 
-        .p-card { background: white; border-radius: 18px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: var(--transition); position: relative; border: 1px solid rgba(0,0,0,0.03); }
-        .p-card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(212,175,55,0.1); }
-        
-        .p-img-box { width: 100%; aspect-ratio: 1/1; background: #fdfdfd; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-        .p-img-box img { max-width: 85%; max-height: 85%; object-fit: contain; }
+        .p-card { background: white; border-radius: 20px; padding: 15px; box-shadow: var(--soft-shadow); transition: var(--transition); border: 1px solid rgba(0,0,0,0.02); display: flex; flex-direction: column; position: relative; overflow: hidden; animation: fadeInUp 0.8s ease forwards; opacity: 0; cursor: pointer; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .p-card:hover { transform: translateY(-8px); border-color: var(--gold); box-shadow: 0 15px 45px rgba(212,175,55,0.15); }
 
-        .p-tag { font-size: 8px; font-weight: 700; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .p-title { font-size: 12px; font-weight: 600; height: 32px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 10px; }
+        .p-img-box { width: 100%; aspect-ratio: 1/1; background: #f9f9f9; border-radius: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .p-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.5s; }
+        .p-card:hover .p-img-box img { transform: scale(1.1); }
+
+        .p-tag { font-size: 9px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .p-title { font-size: 13px; font-weight: 600; color: var(--dark-green); line-height: 1.3; margin-bottom: 15px; height: 34px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .p-price-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .p-price { color: var(--leaf-green); font-weight: 700; font-size: 16px; display: flex; flex-direction: column; }
+        .p-old-price { font-size: 10px; color: #999; text-decoration: line-through; font-weight: 400; }
         
-        .p-price-row { display: flex; justify-content: space-between; align-items: center; }
-        .p-price { font-weight: 700; color: var(--leaf-green); font-size: 15px; }
-        .p-price span { font-size: 10px; color: #aaa; text-decoration: line-through; margin-left: 4px; }
-        
-        .add-btn { background: var(--dark-green); color: white; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .add-btn:hover { background: var(--gold); }
+        .add-btn { background: var(--dark-green); color: white; border: none; width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: var(--transition); cursor: pointer; z-index: 10; }
+        .add-btn:hover { background: var(--gold); transform: scale(1.1); }
 
         /* ==========================================================================
-           4. ADMIN PANEL UI (HIDDEN)
+           6. BOTTOM NAVIGATION
            ========================================================================== */
-        #adminPanel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; padding: 20px; overflow-y: auto; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
-        .submit-btn { background: var(--leaf-green); color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: 700; margin-top: 10px; }
-        .close-admin { font-size: 24px; color: red; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 10px 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); border-radius: 25px 25px 0 0; z-index: 2000; }
+        .nav-item { text-align: center; text-decoration: none; color: #bbb; font-size: 10px; font-weight: 600; flex: 1; transition: 0.3s; cursor: pointer; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { color: var(--leaf-green); }
+
+        .cart-float { position: relative; margin-top: -60px; }
+        .cart-circle { width: 70px; height: 70px; background: var(--leaf-green); border: 6px solid var(--creme); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; box-shadow: 0 10px 20px rgba(45,90,39,0.3); transition: var(--transition); cursor: pointer; }
+        .cart-circle:hover { transform: translateY(-5px); background: var(--dark-green); }
+        .badge { position: absolute; top: 0; right: 0; background: #ff4444; color: white; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid white; font-weight: bold; transition: transform 0.3s; }
+
+        .spacer { height: 50px; }
 
         /* ==========================================================================
-           5. BOTTOM NAV & NOTIFICATIONS
+           7. CUSTOM TOAST NOTIFICATION SYSTEM (NO DEFAULT ALERTS)
            ========================================================================== */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); border-radius: 20px 20px 0 0; z-index: 2000; }
-        .nav-item { text-align: center; color: #ccc; font-size: 10px; text-decoration: none; flex: 1; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 3px; }
-        .nav-item.active { color: var(--leaf-green); }
-
-        .cart-float { margin-top: -50px; }
-        .cart-circle { width: 60px; height: 60px; background: var(--leaf-green); border: 5px solid var(--creme); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; position: relative; box-shadow: 0 8px 20px rgba(45,90,39,0.3); }
-        .badge { position: absolute; top: -5px; right: -5px; background: #ff4444; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid white; font-weight: bold; }
-
-        #toast-container { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 85%; }
-        .nemi-toast { background: var(--dark-green); color: white; padding: 12px 20px; border-radius: 12px; margin-top: 10px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--gold); animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Skeleton Loading Effect */
-        .skeleton { background: #eee; background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); border-radius: 10px; background-size: 200% 100%; animation: 1.5s shine linear infinite; }
-        @keyframes shine { to { background-position-x: -200%; } }
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; pointer-events: none; }
+        .nemi-toast { background: var(--dark-green); color: white; padding: 15px 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 10px 30px rgba(27,48,34,0.4); animation: toastEnter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 1px solid var(--gold); }
+        .nemi-toast i { color: var(--gold); font-size: 20px; }
+        .nemi-toast .toast-text { flex: 1; }
+        .nemi-toast h4 { font-size: 13px; margin-bottom: 2px; font-weight: 600; }
+        .nemi-toast p { font-size: 11px; opacity: 0.8; }
+        @keyframes toastEnter { 0% { opacity: 0; transform: translateY(-50px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes toastExit { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-30px) scale(0.8); } }
     </style>
 </head>
 <body>
-
-    <div id="adminPanel">
-        <div class="admin-header">
-            <h3>Nemi Admin Panel</h3>
-            <i class="fas fa-times-circle close-admin" onclick="toggleAdmin()"></i>
-        </div>
-        <div class="form-group">
-            <label>Product Name</label>
-            <input type="text" id="admName" placeholder="e.g. Amritprash Booster">
-        </div>
-        <div class="form-group">
-            <label>Price (₹)</label>
-            <input type="number" id="admPrice" placeholder="850">
-        </div>
-        <div class="form-group">
-            <label>Old Price (₹)</label>
-            <input type="number" id="admOldPrice" placeholder="1200">
-        </div>
-        <div class="form-group">
-            <label>Category Tag</label>
-            <input type="text" id="admTag" placeholder="Immunity / Hair Care">
-        </div>
-        <div class="form-group">
-            <label>Image URL</label>
-            <input type="text" id="admImg" placeholder="Link to product image">
-        </div>
-        <div class="form-group">
-            <label>Section</label>
-            <select id="admSection">
-                <option value="top">Top Selling</option>
-                <option value="premium">Premium Collection</option>
-                <option value="all">General Store</option>
-            </select>
-        </div>
-        <button class="submit-btn" onclick="FirebaseEngine.addProduct()">🚀 Upload Product to Store</button>
-    </div>
 
     <div id="toast-container"></div>
 
     <header>
         <div class="header-top">
-            <div class="logo-area" id="mainLogoTrigger">
+            <a href="index.html" class="logo-area">
                 <div class="orbit-icons">
-                    <i class="fas fa-leaf oi1"></i>
-                    <i class="fas fa-star oi2"></i>
-                    <i class="fas fa-plus oi3"></i>
-                    <i class="fas fa-heart oi4"></i>
+                    <i class="fas fa-plus oi1"></i>
+                    <i class="fas fa-heart oi2"></i>
+                    <i class="fas fa-star oi3"></i>
+                    <i class="fas fa-leaf oi4"></i>
                 </div>
-                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-logo" alt="Nemi Mart">
-            </div>
+                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-logo" alt="Logo">
+            </a>
 
             <div class="address-box" onclick="window.location.href='address.html'">
                 <p>Deliver to</p>
-                <h4>Akash, Patiala - 147001 <i class="fas fa-chevron-down"></i></h4>
+                <h4>Akash, Patiala - 147001 <i class="fas fa-chevron-down" style="font-size: 10px;"></i></h4>
             </div>
 
             <div class="top-actions">
-                <a href="heart.html"><i class="far fa-heart"></i></a>
-                <a href="profile.html"><i class="far fa-user-circle"></i></a>
+                <a onclick="window.location.href='heart.html'"><i class="far fa-heart"></i></a>
+                <a onclick="window.location.href='profile.html'"><i class="far fa-user-circle"></i></a>
             </div>
         </div>
 
         <div class="search-container" onclick="window.location.href='search.html'">
             <div class="search-fake-input">
-                <i class="fas fa-search" style="margin-right: 12px; color: var(--gold);"></i>
+                <i class="fas fa-search" style="margin-right: 15px; color: var(--gold);"></i>
                 Search Premium Ayurvedic products...
             </div>
         </div>
     </header>
 
-    <div class="cat-strip" id="catStrip">
-        </div>
+    <div class="cat-strip" id="dynamicCategories"></div>
 
     <div class="banner-wrapper">
-        <div class="banner-container" id="bannerContainer">
-            </div>
+        <div class="banner-container" id="dynamicBanner"></div>
     </div>
 
     <div class="section-header">
         <h2>Top Selling</h2>
-        <div class="view-all">View All</div>
+        <div class="view-all" onclick="window.location.href='allproduct.html?filter=topselling'">View All</div>
     </div>
-    <div class="product-grid" id="topSellingGrid">
-        <div class="skeleton" style="height: 200px;"></div>
-        <div class="skeleton" style="height: 200px;"></div>
-    </div>
+    <div class="product-grid" id="topSellingGrid"></div>
 
     <div class="section-header">
         <h2>Premium Collection</h2>
-        <div class="view-all">View All</div>
+        <div class="view-all" onclick="window.location.href='allproduct.html?filter=premium'">View All</div>
     </div>
-    <div class="product-grid" id="premiumGrid">
-        <div class="skeleton" style="height: 200px;"></div>
-        <div class="skeleton" style="height: 200px;"></div>
-    </div>
+    <div class="product-grid" id="premiumGrid"></div>
 
     <div class="section-header">
-        <h2>Our Full Store</h2>
+        <h2>Discover All Products</h2>
+        <div class="view-all" onclick="window.location.href='allproduct.html'">View Store</div>
     </div>
-    <div class="product-grid" id="fullStoreGrid"></div>
+    <div class="product-grid" id="allProductsGrid"></div>
+
+    <div class="spacer"></div>
+    <div class="spacer"></div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active"><i class="fas fa-home"></i>Home</a>
-        <a href="shop.html" class="nav-item"><i class="fas fa-store"></i>Shop</a>
-        <div class="cart-float" onclick="window.location.href='cart.html'">
-            <div class="cart-circle">
-                <i class="fas fa-shopping-basket" style="font-size: 22px;"></i>
-                <div class="badge" id="cartBadge">0</div>
-            </div>
+        <a onclick="window.location.href='index.html'" class="nav-item active"><i class="fas fa-home-alt"></i>Home</a>
+        <a onclick="window.location.href='allproduct.html'" class="nav-item"><i class="fas fa-store"></i>Shop</a>
+        <div class="cart-float">
+            <a onclick="window.location.href='cart.html'" style="text-decoration: none;">
+                <div class="cart-circle">
+                    <i class="fas fa-shopping-basket"></i>
+                    <div class="badge" id="cartBadge">0</div>
+                </div>
+            </a>
         </div>
-        <a href="alerts.html" class="nav-item"><i class="fas fa-bell"></i>Alerts</a>
-        <a href="orders.html" class="nav-item"><i class="fas fa-box"></i>Orders</a>
+        <a onclick="window.location.href='notifications.html'" class="nav-item"><i class="fas fa-bell"></i>Alerts</a>
+        <a onclick="window.location.href='orders.html'" class="nav-item"><i class="fas fa-box-open"></i>Orders</a>
     </nav>
 
     <script>
         /**
-         * THE NEMI MART - ENTERPRISE CORE ENGINE v4.0
-         * Architected by Akash (Arham Insights)
-         * Integration: Firebase Realtime DB & Premium UX Logic
+         * THE NEMI MART - ENTERPRISE CORE ENGINE v3.0
+         * Architected for Scalability, Dynamic Rendering, and Premium UX.
+         * Developer: Akash (Arham Insights)
          */
 
-        // 1. FIREBASE CONFIGURATION (Apne Firebase console se details yahan dalein)
-        const firebaseConfig = {
-            apiKey: "AIzaSy...", 
-            authDomain: "nemimart-db.firebaseapp.com",
-            databaseURL: "https://nemimart-db-default-rtdb.firebaseio.com",
-            projectId: "nemimart-db",
-            storageBucket: "nemimart-db.appspot.com",
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // 2. STATE MANAGEMENT
-        let localCart = JSON.parse(localStorage.getItem('nemi_cart')) || [];
-
-        // 3. FIREBASE ENGINE (CRUD Operations)
-        const FirebaseEngine = {
-            // Add Product to Firebase
-            addProduct: function() {
-                const newProduct = {
-                    id: Date.now(),
-                    name: document.getElementById('admName').value,
-                    price: document.getElementById('admPrice').value,
-                    oldPrice: document.getElementById('admOldPrice').value,
-                    tag: document.getElementById('admTag').value,
-                    img: document.getElementById('admImg').value || 'https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png',
-                    section: document.getElementById('admSection').value
-                };
-
-                db.ref('products/' + newProduct.id).set(newProduct)
-                .then(() => {
-                    alert("Product Live on Store! ✅");
-                    toggleAdmin();
-                });
-            },
-
-            // Live Sync from Firebase
-            syncStore: function() {
-                db.ref('products').on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    UIManager.renderAll(data);
-                });
-            }
-        };
-
-        // 4. UI MANAGER
-        const UIManager = {
-            renderAll: function(data) {
-                const grids = {
-                    top: document.getElementById('topSellingGrid'),
-                    premium: document.getElementById('premiumGrid'),
-                    all: document.getElementById('fullStoreGrid')
-                };
-
-                // Clear Grids
-                grids.top.innerHTML = '';
-                grids.premium.innerHTML = '';
-                grids.all.innerHTML = '';
-
-                if(!data) return;
-
-                Object.values(data).forEach(p => {
-                    const cardHtml = this.createCard(p);
-                    
-                    // Logic to put in sections
-                    if(p.section === 'top') grids.top.innerHTML += cardHtml;
-                    else if(p.section === 'premium') grids.premium.innerHTML += cardHtml;
-                    
-                    // Always put in full store
-                    grids.all.innerHTML += cardHtml;
-                });
-            },
-
-            createCard: function(p) {
-                return `
-                <div class="p-card" onclick="window.location.href='product.html?id=${p.id}'">
-                    <div class="p-img-box">
-                        <img src="${p.img}" alt="${p.name}">
-                    </div>
-                    <span class="p-tag">${p.tag}</span>
-                    <div class="p-title">${p.name}</div>
-                    <div class="p-price-row">
-                        <div class="p-price">₹${p.price} <span>₹${p.oldPrice}</span></div>
-                        <button class="add-btn" onclick="CartLogic.add('${p.id}', '${p.name}', ${p.price}, event)">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>`;
-            },
-
-            renderCategories: function() {
-                const cats = [
-                    {n: 'Immunity', i: 'fa-shield-virus'},
-                    {n: 'Hair Care', i: 'fa-hand-sparkles'},
-                    {n: 'Digestive', i: 'fa-leaf'},
-                    {n: 'Vitality', i: 'fa-bolt'},
-                    {n: 'Skin Care', i: 'fa-magic'}
-                ];
-                let html = '';
-                cats.forEach(c => {
-                    html += `
-                    <div class="cat-card">
-                        <div class="icon-circle"><i class="fas ${c.i}"></i></div>
-                        <span>${c.n}</span>
-                    </div>`;
-                });
-                document.getElementById('catStrip').innerHTML = html;
-            }
+        // --- 1. MOCK ADMIN DATABASE (Yeh tera Backend hai) ---
+        // Tu yahan admin panel se naye products aaraam se add kar sakta hai.
+        const ADMIN_DATABASE = {
+            categories: [
+                { id: "c1", name: "Immunity", icon: "fa-shield-heart", link: "immunity.html" },
+                { id: "c2", name: "Hair Care", icon: "fa-pump-soap", link: "hair-care.html" },
+                { id: "c3", name: "Gum Care", icon: "fa-teeth", link: "gum-care.html" },
+                { id: "c4", name: "Vitality", icon: "fa-hand-holding-heart", link: "vitality.html" },
+                { id: "c5", name: "Wellness", icon: "fa-mortar-pestle", link: "wellness.html" },
+                { id: "c6", name: "See All", icon: "fa-border-all", link: "allproduct.html" }
+            ],
+            banners: [
+                { id: "b1", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png", alt: "Amritprash Offer" },
+                { id: "b2", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png", alt: "Nyala Offer" },
+                { id: "b3", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png", alt: "Tulsi Offer" },
+                { id: "b4", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png", alt: "Dantvam Offer" }
+            ],
+            products: [
+                {
+                    id: 101,
+                    name: "Amritprash Power Booster 250gm",
+                    tag: "Natural Power",
+                    price: 850,
+                    oldPrice: 1200,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true,
+                    isPremium: false
+                },
+                {
+                    id: 102,
+                    name: "Nyala Herbal Hair Fall Control Oil",
+                    tag: "Anti-Hairfall",
+                    price: 350,
+                    oldPrice: 599,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true,
+                    isPremium: true
+                },
+                {
+                    id: 103,
+                    name: "Panch Tulsi Pure Extract Drops",
+                    tag: "Immunity",
+                    price: 195,
+                    oldPrice: 250,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true,
+                    isPremium: false
+                },
+                {
+                    id: 104,
+                    name: "Dantvam Premium Herbal Toothpaste",
+                    tag: "Premium Care",
+                    price: 95,
+                    oldPrice: 120,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false,
+                    isPremium: true
+                },
+                {
+                    id: 105,
+                    name: "Immunity & Vitality Duo Pack",
+                    tag: "Best Value",
+                    price: 1050,
+                    oldPrice: 1450,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false,
+                    isPremium: true
+                },
+                {
+                    id: 106,
+                    name: "Himalayan Pure Shilajit Resin 20g",
+                    tag: "Strength",
+                    price: 1499,
+                    oldPrice: 1999,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true,
+                    isPremium: true
+                },
+                {
+                    id: 107,
+                    name: "Aloe Vera Glow Hydration Gel",
+                    tag: "Skin Care",
+                    price: 249,
+                    oldPrice: 399,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false,
+                    isPremium: false
+                },
+                {
+                    id: 108,
+                    name: "Triphala Gut Cleanse Juice 500ml",
+                    tag: "Digestion",
+                    price: 399,
+                    oldPrice: 550,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false,
+                    isPremium: false
+                }
+            ]
         };
 
-        // 5. CART LOGIC
-        const CartLogic = {
-            add: function(id, name, price, e) {
-                e.stopPropagation();
-                localCart.push({id, name, price});
-                localStorage.setItem('nemi_cart', JSON.stringify(localCart));
-                this.updateUI();
-                
-                // Show Toast
+        // --- 2. PREMIUM NOTIFICATION MANAGER ---
+        class NotificationSystem {
+            static showToast(title, message) {
+                const container = document.getElementById('toast-container');
                 const toast = document.createElement('div');
                 toast.className = 'nemi-toast';
-                toast.innerHTML = `<i class="fas fa-shopping-bag"></i> <span>${name} added to cart!</span>`;
-                document.getElementById('toast-container').appendChild(toast);
-                setTimeout(() => toast.remove(), 2500);
-            },
-            updateUI: function() {
-                document.getElementById('cartBadge').innerText = localCart.length;
-            }
-        };
+                
+                toast.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <div class="toast-text">
+                        <h4>${title}</h4>
+                        <p>${message}</p>
+                    </div>
+                `;
+                
+                container.appendChild(toast);
+                
+                // Haptic Feedback for mobile users (Premium Touch)
+                if (window.navigator && window.navigator.vibrate) {
+                    window.navigator.vibrate([50, 30, 50]);
+                }
 
-        // 6. ADMIN TOGGLE LOGIC (Triple Tap on Logo)
-        let logoClicks = 0;
-        document.getElementById('mainLogoTrigger').addEventListener('click', () => {
-            logoClicks++;
-            if(logoClicks === 3) {
-                toggleAdmin();
-                logoClicks = 0;
+                // Remove logic
+                setTimeout(() => {
+                    toast.style.animation = 'toastExit 0.4s forwards';
+                    setTimeout(() => toast.remove(), 400);
+                }, 3000);
             }
-            setTimeout(() => logoClicks = 0, 2000);
-        });
-
-        function toggleAdmin() {
-            const panel = document.getElementById('adminPanel');
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Initialize
+        // --- 3. SHOPPING CART ENGINE (State Management) ---
+        class CartEngine {
+            constructor() {
+                this.cartKey = 'nemi_mart_cart_v2';
+                this.items = JSON.parse(localStorage.getItem(this.cartKey)) || [];
+                this.updateBadge();
+            }
+
+            addItem(product, event) {
+                // Prevent clicking the "add" button from triggering the product card click
+                if(event) event.stopPropagation();
+
+                const existingItem = this.items.find(item => item.id === product.id);
+                if (existingItem) {
+                    existingItem.qty += 1;
+                } else {
+                    this.items.push({ ...product, qty: 1 });
+                }
+                this.saveCart();
+                this.updateBadge();
+                
+                // Trigger custom animated notification
+                NotificationSystem.showToast("Added to Cart", `${product.name} has been added successfully.`);
+                
+                // Animate Badge
+                const badge = document.getElementById('cartBadge');
+                badge.style.transform = 'scale(1.5)';
+                setTimeout(() => badge.style.transform = 'scale(1)', 300);
+            }
+
+            saveCart() {
+                localStorage.setItem(this.cartKey, JSON.stringify(this.items));
+            }
+
+            updateBadge() {
+                const totalItems = this.items.reduce((sum, item) => sum + item.qty, 0);
+                document.getElementById('cartBadge').innerText = totalItems;
+            }
+        }
+
+        const AppCart = new CartEngine();
+
+        // --- 4. UI RENDERER (Takes DB and builds the page) ---
+        class UIManager {
+            static renderCategories() {
+                const container = document.getElementById('dynamicCategories');
+                let html = '';
+                ADMIN_DATABASE.categories.forEach(cat => {
+                    html += `
+                        <a onclick="window.location.href='${cat.link}'" class="cat-card">
+                            <div class="icon-circle"><i class="fas ${cat.icon}"></i></div>
+                            <span>${cat.name}</span>
+                        </a>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+
+            static renderBanners() {
+                const container = document.getElementById('dynamicBanner');
+                let html = '';
+                ADMIN_DATABASE.banners.forEach(b => {
+                    html += `<div class="banner-slide"><img src="${b.img}" alt="${b.alt}" loading="lazy"></div>`;
+                });
+                container.innerHTML = html;
+                this.initBannerScroll();
+            }
+
+            static initBannerScroll() {
+                const banner = document.getElementById('dynamicBanner');
+                const slides = banner.querySelectorAll('.banner-slide');
+                if(!slides.length) return;
+                
+                let index = 0;
+                let isPaused = false;
+
+                function autoScroll() {
+                    if(isPaused) return;
+                    index++;
+                    if (index >= slides.length) index = 0;
+                    banner.scrollTo({ left: index * banner.offsetWidth, behavior: 'smooth' });
+                }
+
+                let scrollInterval = setInterval(autoScroll, 4000);
+
+                // Pause on interaction
+                ['mousedown', 'touchstart'].forEach(evt => 
+                    banner.addEventListener(evt, () => { isPaused = true; clearInterval(scrollInterval); })
+                );
+                ['mouseup', 'touchend'].forEach(evt => 
+                    banner.addEventListener(evt, () => {
+                        setTimeout(() => {
+                            isPaused = false;
+                            clearInterval(scrollInterval);
+                            scrollInterval = setInterval(autoScroll, 4000);
+                        }, 3000);
+                    })
+                );
+            }
+
+            // Centralized Product Card Generator
+            static generateProductCard(product, delayIndex) {
+                // Notice the onclick handler -> redirects to product.html with query params
+                return `
+                    <div class="p-card" style="animation-delay: ${delayIndex * 0.1}s;" onclick="UIManager.goToProduct(${product.id})">
+                        <div class="p-img-box">
+                            <img src="${product.img}" alt="${product.name}" loading="lazy">
+                        </div>
+                        <span class="p-tag">${product.tag}</span>
+                        <div class="p-title">${product.name}</div>
+                        <div class="p-price-row">
+                            <div class="p-price">
+                                ₹${product.price}
+                                <span class="p-old-price">₹${product.oldPrice}</span>
+                            </div>
+                            <button class="add-btn" onclick="AppCart.addItem(${JSON.stringify(product).replace(/"/g, '&quot;')}, event)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            static renderProducts() {
+                const topGrid = document.getElementById('topSellingGrid');
+                const premGrid = document.getElementById('premiumGrid');
+                const allGrid = document.getElementById('allProductsGrid');
+
+                let topHtml = '', premHtml = '', allHtml = '';
+                
+                let topIdx = 0, premIdx = 0, allIdx = 0;
+
+                ADMIN_DATABASE.products.forEach(p => {
+                    // All products go to bottom grid
+                    allHtml += this.generateProductCard(p, allIdx++);
+                    
+                    // Filter logic controlled by Admin DB flags
+                    if (p.isTopSelling) {
+                        topHtml += this.generateProductCard(p, topIdx++);
+                    }
+                    if (p.isPremium) {
+                        premHtml += this.generateProductCard(p, premIdx++);
+                    }
+                });
+
+                topGrid.innerHTML = topHtml;
+                premGrid.innerHTML = premHtml;
+                allGrid.innerHTML = allHtml;
+            }
+
+            // Router Function for product details
+            static goToProduct(productId) {
+                // Yeh tujhe product.html par le jayega with specific ID
+                window.location.href = `product.html?id=${productId}`;
+            }
+        }
+
+        // --- 5. INITIALIZE APPLICATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("Nemi Mart Core v3 Initialized.");
             UIManager.renderCategories();
-            FirebaseEngine.syncStore();
-            CartLogic.updateUI();
+            UIManager.renderBanners();
+            UIManager.renderProducts();
         });
+
     </script>
 </body>
 </html>
+
  

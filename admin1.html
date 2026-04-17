@@ -3,182 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEMI ELITE v9 | CLOUD ADMIN</title>
+    <title>NEMI MASTER v10 | PRO BUSINESS</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
+            --primary: #4f46e5;
             --secondary: #f43f5e;
             --dark: #0f172a;
-            --glass: rgba(255, 255, 255, 0.9);
-            --bg: #f1f5f9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
         }
 
         * { box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--dark); overflow-x: hidden; }
+        body { background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--dark); }
 
         /* HEAVY LOADER */
         #mainLoader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--dark); z-index: 9999; display: none;
+            background: rgba(15, 23, 42, 0.95); z-index: 9999; display: none;
             flex-direction: column; justify-content: center; align-items: center; color: white;
         }
-        .spinner { width: 50px; height: 50px; border: 5px solid #334155; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* MODERN HEADER */
+        /* HEADER & TOP NAV */
         header {
-            background: var(--dark); padding: 25px 20px; color: white;
+            background: var(--dark); padding: 20px; color: white;
             display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: sticky; top: 0; z-index: 1000;
         }
-        header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 1px; }
-        .status-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 10px #22c55e; }
+        .top-admin-nav {
+            background: #1e293b; padding: 10px; display: flex; gap: 10px;
+            overflow-x: auto; border-bottom: 2px solid var(--primary);
+        }
+        .admin-btn {
+            background: var(--primary); color: white; padding: 8px 15px;
+            border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 700;
+            white-space: nowrap;
+        }
 
-        /* TAB SYSTEM */
-        .content-section { display: none; padding: 15px; animation: fadeIn 0.4s ease; }
+        /* CARDS & FORMS */
+        .content-section { display: none; padding: 15px; animation: slideUp 0.4s ease; }
         .active-section { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* FORM CARDS */
-        .card {
-            background: white; border-radius: 24px; padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03); margin-bottom: 20px;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        .group-title { font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; display: block; }
+        .card { background: white; border-radius: 24px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .section-h { font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; display: block; }
 
-        .input-grid { display: grid; gap: 15px; }
-        .field { display: flex; flex-direction: column; gap: 6px; }
-        label { font-size: 13px; font-weight: 700; color: #64748b; }
-        
+        .form-grid { display: grid; gap: 15px; }
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 12px; font-weight: 700; color: #64748b; }
         input, textarea, select {
-            background: #f8fafc; border: 2px solid #e2e8f0; padding: 16px;
-            border-radius: 16px; font-size: 16px; transition: 0.3s;
+            background: #f1f5f9; border: 2px solid transparent; padding: 14px;
+            border-radius: 12px; font-size: 15px; transition: 0.3s;
         }
-        input:focus { border-color: var(--primary); background: white; outline: none; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+        input:focus { border-color: var(--primary); background: white; outline: none; }
 
-        /* PHOTO UPLOAD ZONE */
-        .photo-zone {
-            border: 2px dashed var(--primary); background: #eef2ff;
-            padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;
+        /* MULTI PHOTO ZONE */
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .photo-box {
+            aspect-ratio: 1/1; background: #eef2ff; border: 2px dashed var(--primary);
+            border-radius: 12px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; cursor: pointer; font-size: 10px;
+            text-align: center; color: var(--primary); font-weight: 700;
         }
-        .photo-zone p { margin: 0; font-size: 14px; font-weight: 600; color: var(--primary); }
 
         /* BUTTONS */
-        .btn-deploy {
-            background: var(--dark); color: white; width: 100%; padding: 20px;
-            border-radius: 18px; border: none; font-size: 16px; font-weight: 800;
-            cursor: pointer; transition: 0.3s; margin-top: 10px;
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+        .btn-main {
+            background: linear-gradient(135deg, var(--dark), #1e293b); color: white;
+            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            font-size: 16px; font-weight: 800; margin-top: 10px;
         }
-        .btn-deploy:active { transform: scale(0.97); }
 
-        /* LIST VIEW */
-        .p-card {
-            display: flex; gap: 15px; background: white; padding: 15px;
-            border-radius: 20px; margin-bottom: 15px; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        /* HISTORY CARDS */
+        .p-item {
+            background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px;
+            display: flex; gap: 15px; align-items: center; position: relative;
         }
-        .p-card img { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; }
-        .p-info { flex: 1; }
-        .p-info h4 { margin: 0; font-size: 15px; }
-        .p-info b { color: var(--secondary); font-size: 13px; }
+        .p-img-thumb { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
+        .badge {
+            position: absolute; top: 10px; right: 10px; padding: 4px 10px;
+            border-radius: 20px; font-size: 10px; font-weight: 800; color: white;
+        }
+        .bg-instock { background: var(--success); }
+        .bg-low { background: var(--warning); }
+        .bg-out { background: var(--secondary); }
 
         /* BOTTOM NAV */
-        .nav-bar {
-            position: fixed; bottom: 0; width: 100%; background: var(--glass);
-            backdrop-filter: blur(10px); display: flex; justify-content: space-around;
-            padding: 15px 0 25px; border-top: 1px solid #e2e8f0; z-index: 2000;
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 12px 0 25px;
+            border-top: 1px solid #eee; z-index: 1000;
         }
-        .nav-item { text-decoration: none; color: #94a3b8; font-size: 11px; font-weight: 700; text-align: center; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
+        .nav-link { text-decoration: none; color: #94a3b8; font-size: 11px; font-weight: 700; text-align: center; }
+        .nav-link.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div id="mainLoader">
-    <div class="spinner"></div>
-    <p style="margin-top: 15px; font-weight: 600;">TELEGRAM CLOUD UPLOADING...</p>
-    <span id="loadMsg" style="font-size: 12px; opacity: 0.7;">Bhai ruko, team ko photo bhej raha hoon...</span>
+    <div style="font-size: 30px;">⏳</div>
+    <p>SYNCING CLOUD DATA...</p>
 </div>
 
 <header>
-    <h1><span class="status-dot"></span>NEMI ADMIN ELITE</h1>
-    <div style="font-size: 10px; font-weight: 800; opacity: 0.6;">v9.0.0</div>
+    <h2 style="margin:0; font-size:18px;">NEMI PRO v10</h2>
+    <div style="background:var(--success); padding:5px 10px; border-radius:20px; font-size:10px; font-weight:800;">LIVE ENGINE</div>
 </header>
 
+<div class="top-admin-nav">
+    <a href="admin2.html" class="admin-btn">📦 View Orders</a>
+    <a href="notification.html" class="admin-btn" style="background:var(--secondary);">🔔 Send Global Alert</a>
+</div>
+
 <div id="addPage" class="content-section active-section">
-    <span class="group-title">Deploy New Inventory</span>
+    <span class="section-h">Master Inventory Entry</span>
     <div class="card">
-        <form id="productForm">
-            <div class="input-grid">
-                <div class="field">
-                    <label>Product Title</label>
-                    <input type="text" id="title" required placeholder="Ex: Raw Organic Honey">
+        <form id="proForm">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Product Name</label>
+                    <input type="text" id="title" required placeholder="Ex: Premium Almonds 500g">
+                </div>
+
+                <div class="input-group">
+                    <label>Product Photos (3 Mandatory)</label>
+                    <div class="photo-grid">
+                        <div class="photo-box" onclick="document.getElementById('f1').click()">
+                            <span id="t1">Main Photo</span>
+                            <input type="file" id="f1" hidden onchange="checkImg(1)">
+                        </div>
+                        <div class="photo-box" onclick="document.getElementById('f2').click()">
+                            <span id="t2">Side View</span>
+                            <input type="file" id="f2" hidden onchange="checkImg(2)">
+                        </div>
+                        <div class="photo-box" onclick="document.getElementById('f3').click()">
+                            <span id="t3">Label/Back</span>
+                            <input type="file" id="f3" hidden onchange="checkImg(3)">
+                        </div>
+                    </div>
                 </div>
 
                 <div style="display: flex; gap: 10px;">
-                    <div class="field" style="flex:1;">
+                    <div class="input-group" style="flex:1;">
                         <label>Price (₹)</label>
                         <input type="number" id="price" required>
                     </div>
-                    <div class="field" style="flex:1;">
+                    <div class="input-group" style="flex:1;">
                         <label>Discount %</label>
                         <input type="number" id="disc" value="0">
                     </div>
                 </div>
 
-                <div class="field">
-                    <label>Product Image</label>
-                    <div class="photo-zone" onclick="document.getElementById('file').click()">
-                        <p id="fileText">📸 Select from Gallery</p>
-                        <input type="file" id="file" accept="image/*" hidden onchange="fileSelected()">
-                    </div>
+                <div class="input-group">
+                    <label>Stock Quantity (Total Packets)</label>
+                    <input type="number" id="stock" required>
                 </div>
 
-                <div class="field">
-                    <label>Stock Available</label>
-                    <input type="number" id="stock" required placeholder="0">
+                <div class="input-group">
+                    <label>How to Use / Dosage</label>
+                    <input type="text" id="usage" placeholder="Ex: Take 1 spoon with milk">
                 </div>
 
-                <div class="field">
-                    <label>Hero Tagline</label>
-                    <input type="text" id="hero" placeholder="Best for your health...">
+                <div class="input-group">
+                    <label>Product Benefits (Key points)</label>
+                    <textarea id="benefits" rows="3" placeholder="Ex: Rich in Protein, No Sugar..."></textarea>
                 </div>
 
-                <div class="field">
-                    <label>Full Specification</label>
-                    <textarea id="desc" rows="4" placeholder="Describe the product details here..."></textarea>
-                </div>
-
-                <div class="field">
-                    <label>Ingredients / Material</label>
-                    <input type="text" id="ing" placeholder="What's inside?">
-                </div>
-
-                <button type="submit" class="btn-deploy" id="subBtn">PUSH TO CLOUD</button>
+                <button type="submit" class="btn-main">DEPLOY TO APP & TELEGRAM</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="listPage" class="content-section">
-    <span class="group-title">Live Product Feed</span>
-    <div id="liveFeed"></div>
+<div id="historyPage" class="content-section">
+    <span class="section-h">Live Inventory Management</span>
+    <div id="inventoryFeed"></div>
 </div>
 
-<nav class="nav-bar">
-    <a href="#" class="nav-item active" onclick="switchTab('addPage', this)"><i>➕</i>Add Product</a>
-    <a href="#" class="nav-item" onclick="switchTab('listPage', this)"><i>📦</i>History</a>
+<nav class="bottom-nav">
+    <a href="#" class="nav-link active" onclick="tab('addPage', this)">➕ New Entry</a>
+    <a href="#" class="nav-link" onclick="tab('historyPage', this)">📊 Edit Stock</a>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // --- YOUR SECURE CREDENTIALS ---
     const TG_TOKEN = "8675459597:AAH2TsikJaT1PAXfsMQ9Utfzszs8-_TE2bI";
     const CHAT_ID = "8415600127";
     const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" };
@@ -186,106 +196,121 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    window.switchTab = (id, el) => {
+    window.tab = (id, el) => {
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active-section');
         el.classList.add('active');
-        window.scrollTo(0,0);
     };
 
-    window.fileSelected = () => {
-        const f = document.getElementById('file').files[0];
-        document.getElementById('fileText').innerText = f ? "✅ " + f.name : "📸 Select from Gallery";
+    window.checkImg = (n) => {
+        const file = document.getElementById('f'+n).files[0];
+        if(file) document.getElementById('t'+n).innerText = "✅ Done";
     };
 
-    // --- THE MASTER UPLOAD ENGINE ---
-    document.getElementById('productForm').addEventListener('submit', async (e) => {
+    // --- MEGA UPLOAD FUNCTION ---
+    document.getElementById('proForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const loader = document.getElementById('mainLoader');
-        const file = document.getElementById('file').files[0];
+        const files = [
+            document.getElementById('f1').files[0],
+            document.getElementById('f2').files[0],
+            document.getElementById('f3').files[0]
+        ];
 
-        if(!file) return alert("Bhai photo to daldo!");
+        if(!files[0] || !files[1] || !files[2]) return alert("Bhai 3 photo mandatory hain!");
+
         loader.style.display = 'flex';
+        let urls = [];
 
         try {
-            // STEP 1: Send Photo to Telegram Group
-            let formData = new FormData();
-            formData.append("chat_id", CHAT_ID);
-            formData.append("photo", file);
+            // Upload 3 Photos to TG Cloud
+            for(let i=0; i<3; i++){
+                let fd = new FormData();
+                fd.append("chat_id", CHAT_ID);
+                fd.append("photo", files[i]);
+                const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: "POST", body: fd });
+                const data = await res.json();
+                const fId = data.result.photo[data.result.photo.length-1].file_id;
+                const fPathRes = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/getFile?file_id=${fId}`);
+                const fPathData = await fPathRes.json();
+                urls.push(`https://api.telegram.org/file/bot${TG_TOKEN}/${fPathData.result.file_path}`);
+            }
 
-            const tgRes = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
-                method: "POST",
-                body: formData
-            });
-            const tgData = await tgRes.json();
-
-            if(!tgData.ok) throw new Error("Telegram Error: Check Token/ChatID");
-
-            // STEP 2: Extract Permanent File URL from Telegram
-            const fileId = tgData.result.photo[tgData.result.photo.length - 1].file_id;
-            const fileRes = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/getFile?file_id=${fileId}`);
-            const fileData = await fileRes.json();
-            const photoUrl = `https://api.telegram.org/file/bot${TG_TOKEN}/${fileData.result.file_path}`;
-
-            // STEP 3: Save to Firebase RTDB
             const p = parseFloat(document.getElementById('price').value);
             const d = parseFloat(document.getElementById('disc').value);
             const final = p - (p * (d/100));
+            const title = document.getElementById('title').value;
 
-            const newRef = push(ref(db, 'products'));
-            await set(newRef, {
-                title: document.getElementById('title').value,
+            // Save to Firebase
+            const newKey = push(ref(db, 'products')).key;
+            await set(ref(db, `products/${newKey}`), {
+                title: title,
                 price: p,
                 discount: d,
                 finalPrice: final,
-                stock: document.getElementById('stock').value,
-                image: photoUrl, // Ye link ab hamesha chalega
-                hero: document.getElementById('hero').value,
-                description: document.getElementById('desc').value,
-                ingredients: document.getElementById('ing').value,
+                stock: parseInt(document.getElementById('stock').value),
+                images: urls, // 3 Link Array
+                usage: document.getElementById('usage').value,
+                benefits: document.getElementById('benefits').value,
                 status: 'INSTOCK',
-                timestamp: Date.now()
+                time: Date.now()
             });
 
-            alert("Kamaal ho gaya! Product Team Group aur App dono jagah live hai.");
-            document.getElementById('productForm').reset();
-            document.getElementById('fileText').innerText = "📸 Select from Gallery";
-            switchTab('listPage', document.querySelectorAll('.nav-item')[1]);
+            // 🔔 SEND NOTIFICATION TO notification.html
+            await push(ref(db, 'notifications'), {
+                msg: `Naya Product: ${title} ab stock mein hai! Check karo.`,
+                time: Date.now(),
+                type: 'new_launch'
+            });
+
+            alert("Kamaal! Product live ho gaya aur notification bhi chala gaya.");
+            document.getElementById('proForm').reset();
+            tab('historyPage', document.querySelectorAll('.nav-link')[1]);
 
         } catch (err) {
-            alert(err.message);
+            alert("Error: " + err.message);
         } finally {
             loader.style.display = 'none';
         }
     });
 
-    // --- LIVE FEED ENGINE ---
+    // --- STOCK & HISTORY ENGINE ---
     onValue(ref(db, 'products'), (snap) => {
-        const feed = document.getElementById('liveFeed');
+        const feed = document.getElementById('inventoryFeed');
         feed.innerHTML = "";
         const data = snap.val();
         if(data) {
             Object.keys(data).reverse().forEach(key => {
-                const item = data[key];
+                const it = data[key];
+                const st = parseInt(it.stock);
+                let badge = `<span class="badge bg-instock">IN STOCK</span>`;
+                if(st <= 0) badge = `<span class="badge bg-out">SOLD OUT</span>`;
+                else if(st <= 5) badge = `<span class="badge bg-low">${st} Left Only!</span>`;
+
                 feed.innerHTML += `
-                    <div class="p-card">
-                        <img src="${item.image}">
-                        <div class="p-info">
-                            <h4>${item.title}</h4>
-                            <b>₹${item.finalPrice}</b> <small style="text-decoration:line-through; opacity:0.5;">₹${item.price}</small>
-                            <div style="font-size:10px; margin-top:5px; color:gray;">Stock: ${item.stock}</div>
+                    <div class="p-item">
+                        <img src="${it.images[0]}" class="p-img-thumb">
+                        <div style="flex:1">
+                            <h4 style="margin:0; font-size:14px;">${it.title}</h4>
+                            <p style="margin:5px 0; font-size:12px; font-weight:700;">₹${it.finalPrice}</p>
+                            <div style="display:flex; gap:5px;">
+                                <input type="number" value="${st}" style="width:60px; padding:5px; font-size:12px;" onchange="updateStock('${key}', this.value)">
+                                <button onclick="delItem('${key}')" style="background:none; border:none;">🗑️</button>
+                            </div>
                         </div>
-                        <button onclick="delItem('${key}')" style="border:none; background:none; font-size:18px;">🗑️</button>
+                        ${badge}
                     </div>
                 `;
             });
-        } else {
-            feed.innerHTML = "<center style='padding:50px; opacity:0.5;'>Abhi koi product nahi hai.</center>";
         }
     });
 
-    window.delItem = (key) => { if(confirm("Delete kardein?")) remove(ref(db, `products/${key}`)); };
+    window.updateStock = (key, val) => {
+        update(ref(db, `products/${key}`), { stock: parseInt(val) });
+    };
+
+    window.delItem = (key) => { if(confirm("Uda du?")) remove(ref(db, `products/${key}`)); };
 </script>
 </body>
 </html>

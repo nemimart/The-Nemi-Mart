@@ -1,311 +1,192 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEMI ADMIN | MOBILE ELITE</title>
+    <title>NEMI ELITE v9 | CLOUD ADMIN</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4F46E5;
-            --secondary: #ec4899;
+            --primary: #6366f1;
+            --secondary: #f43f5e;
             --dark: #0f172a;
-            --light: #f8fafc;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --glass: rgba(255, 255, 255, 0.95);
+            --glass: rgba(255, 255, 255, 0.9);
+            --bg: #f1f5f9;
         }
 
         * { box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background: #f1f5f9; 
-            margin: 0; 
-            padding: 0; 
-            color: var(--dark);
-            padding-bottom: 80px; /* Space for bottom nav */
-        }
+        body { background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--dark); overflow-x: hidden; }
 
-        /* TOP HEADER */
+        /* HEAVY LOADER */
+        #mainLoader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark); z-index: 9999; display: none;
+            flex-direction: column; justify-content: center; align-items: center; color: white;
+        }
+        .spinner { width: 50px; height: 50px; border: 5px solid #334155; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* MODERN HEADER */
         header {
-            background: var(--dark);
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: var(--dark); padding: 25px 20px; color: white;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
-
         header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 1px; }
-        
-        .top-nav-btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 8px 15px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
+        .status-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 10px #22c55e; }
 
-        /* MAIN CONTENT SCROLLER */
-        .content-section {
-            padding: 20px;
-            display: none; /* Hidden by default */
-            animation: fadeIn 0.3s ease;
-        }
-
+        /* TAB SYSTEM */
+        .content-section { display: none; padding: 15px; animation: fadeIn 0.4s ease; }
         .active-section { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* PREMIUM CARDS */
+        /* FORM CARDS */
         .card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            background: white; border-radius: 24px; padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03); margin-bottom: 20px;
             border: 1px solid rgba(0,0,0,0.05);
         }
+        .group-title { font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; display: block; }
 
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
+        .input-grid { display: grid; gap: 15px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 13px; font-weight: 700; color: #64748b; }
         
-        input, select, textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: 0.3s;
+        input, textarea, select {
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 16px;
+            border-radius: 16px; font-size: 16px; transition: 0.3s;
         }
+        input:focus { border-color: var(--primary); background: white; outline: none; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
 
-        input:focus { border-color: var(--primary); outline: none; background: #f8fafc; }
-
-        /* PHOTO UPLOADER */
-        .upload-zone {
-            background: #f8fafc;
-            border: 2px dashed #cbd5e1;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
+        /* PHOTO UPLOAD ZONE */
+        .photo-zone {
+            border: 2px dashed var(--primary); background: #eef2ff;
+            padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;
         }
+        .photo-zone p { margin: 0; font-size: 14px; font-weight: 600; color: var(--primary); }
 
-        .btn-add-file {
-            background: var(--dark);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 12px;
+        /* BUTTONS */
+        .btn-deploy {
+            background: var(--dark); color: white; width: 100%; padding: 20px;
+            border-radius: 18px; border: none; font-size: 16px; font-weight: 800;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
         }
+        .btn-deploy:active { transform: scale(0.97); }
 
-        /* MAIN ACTION BUTTON */
-        .btn-execute {
-            background: var(--dark);
-            color: white;
-            width: 100%;
-            padding: 20px;
-            border: none;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        /* LIST VIEW */
+        .p-card {
+            display: flex; gap: 15px; background: white; padding: 15px;
+            border-radius: 20px; margin-bottom: 15px; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
+        .p-card img { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; }
+        .p-info { flex: 1; }
+        .p-info h4 { margin: 0; font-size: 15px; }
+        .p-info b { color: var(--secondary); font-size: 13px; }
 
-        .btn-execute:active { transform: scale(0.98); }
-
-        /* LIVE FEED LIST */
-        .list-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: white;
-            padding: 15px;
-            border-radius: 18px;
-            margin-bottom: 12px;
-            border: 1px solid #f1f5f9;
+        /* BOTTOM NAV */
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%; background: var(--glass);
+            backdrop-filter: blur(10px); display: flex; justify-content: space-around;
+            padding: 15px 0 25px; border-top: 1px solid #e2e8f0; z-index: 2000;
         }
-
-        .list-item img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
-        .list-info { flex-grow: 1; }
-        .list-info h4 { margin: 0; font-size: 15px; }
-        .list-info p { margin: 3px 0 0; font-size: 12px; color: #64748b; }
-
-        .badge {
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 800;
-        }
-        .bg-in { background: #dcfce7; color: #166534; }
-        .bg-out { background: #fee2e2; color: #991b1b; }
-
-        /* BOTTOM NAVIGATION BAR */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 10px;
-            border-top: 1px solid #e2e8f0;
-            z-index: 2000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 600;
-            gap: 5px;
-        }
-
+        .nav-item { text-decoration: none; color: #94a3b8; font-size: 11px; font-weight: 700; text-align: center; }
         .nav-item.active { color: var(--primary); }
-        .nav-icon { font-size: 20px; }
-
-        /* TOAST SYSTEM */
-        #toast {
-            position: fixed;
-            top: 80px;
-            left: 20px;
-            right: 20px;
-            background: var(--dark);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            display: none;
-            z-index: 9999;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
-<div id="toast">SYSTEM INITIALIZED</div>
+<div id="mainLoader">
+    <div class="spinner"></div>
+    <p style="margin-top: 15px; font-weight: 600;">TELEGRAM CLOUD UPLOADING...</p>
+    <span id="loadMsg" style="font-size: 12px; opacity: 0.7;">Bhai ruko, team ko photo bhej raha hoon...</span>
+</div>
 
 <header>
-    <h1>NEMI MASTER</h1>
-    <a href="admin2.html" class="top-nav-btn">Orders Portal</a>
+    <h1><span class="status-dot"></span>NEMI ADMIN ELITE</h1>
+    <div style="font-size: 10px; font-weight: 800; opacity: 0.6;">v9.0.0</div>
 </header>
 
-<div id="addProduct" class="content-section active-section">
+<div id="addPage" class="content-section active-section">
+    <span class="group-title">Deploy New Inventory</span>
     <div class="card">
-        <h2 style="margin-top:0; font-size:18px;">Inject New Product</h2>
         <form id="productForm">
-            <div class="input-group">
-                <label>Product Identity</label>
-                <input type="text" id="title" required placeholder="Ex: Raw Cold-Pressed Oil">
-            </div>
-
-            <div class="input-group">
-                <label>Category</label>
-                <select id="cat">
-                    <option value="organic">Organic Foods</option>
-                    <option value="health">Health & Wellness</option>
-                    <option value="seeds">Farming Seeds</option>
-                    <option value="skin">Natural Skincare</option>
-                </select>
-            </div>
-
-            <div style="display:flex; gap:15px;">
-                <div class="input-group" style="flex:1;">
-                    <label>Price (₹)</label>
-                    <input type="number" id="price" required>
+            <div class="input-grid">
+                <div class="field">
+                    <label>Product Title</label>
+                    <input type="text" id="title" required placeholder="Ex: Raw Organic Honey">
                 </div>
-                <div class="input-group" style="flex:1;">
-                    <label>Disc (%)</label>
-                    <input type="number" id="disc" value="0">
+
+                <div style="display: flex; gap: 10px;">
+                    <div class="field" style="flex:1;">
+                        <label>Price (₹)</label>
+                        <input type="number" id="price" required>
+                    </div>
+                    <div class="field" style="flex:1;">
+                        <label>Discount %</label>
+                        <input type="number" id="disc" value="0">
+                    </div>
                 </div>
-            </div>
 
-            <div class="input-group">
-                <label>Stock Quantity</label>
-                <input type="number" id="stock" required>
-            </div>
-
-            <div class="input-group">
-                <label>Hero Statement</label>
-                <input type="text" id="hero" placeholder="Impactful single line...">
-            </div>
-
-            <div class="input-group">
-                <label>Media Upload (Multi)</label>
-                <div class="upload-zone" id="fileZone">
-                    <input type="file" class="p-files" accept="image/*" required>
+                <div class="field">
+                    <label>Product Image</label>
+                    <div class="photo-zone" onclick="document.getElementById('file').click()">
+                        <p id="fileText">📸 Select from Gallery</p>
+                        <input type="file" id="file" accept="image/*" hidden onchange="fileSelected()">
+                    </div>
                 </div>
-                <button type="button" class="btn-add-file" onclick="addFileField()">+ Add More Images</button>
-            </div>
 
-            <div class="input-group">
-                <label>Full Specifications</label>
-                <textarea id="desc" rows="4"></textarea>
-            </div>
+                <div class="field">
+                    <label>Stock Available</label>
+                    <input type="number" id="stock" required placeholder="0">
+                </div>
 
-            <button type="submit" class="btn-execute" id="btnSubmit">Save to Cloud</button>
+                <div class="field">
+                    <label>Hero Tagline</label>
+                    <input type="text" id="hero" placeholder="Best for your health...">
+                </div>
+
+                <div class="field">
+                    <label>Full Specification</label>
+                    <textarea id="desc" rows="4" placeholder="Describe the product details here..."></textarea>
+                </div>
+
+                <div class="field">
+                    <label>Ingredients / Material</label>
+                    <input type="text" id="ing" placeholder="What's inside?">
+                </div>
+
+                <button type="submit" class="btn-deploy" id="subBtn">PUSH TO CLOUD</button>
+            </div>
         </form>
     </div>
 </div>
 
-<div id="history" class="content-section">
-    <div style="padding: 0 5px 15px;">
-        <h2 style="margin:0; font-size:18px;">Inventory Stream</h2>
-        <p style="font-size:12px; color:#64748b;">Live updates from RTDB Protocol</p>
-    </div>
-    <div id="liveContainer">
-        </div>
+<div id="listPage" class="content-section">
+    <span class="group-title">Live Product Feed</span>
+    <div id="liveFeed"></div>
 </div>
 
-<nav class="bottom-nav">
-    <a href="#" class="nav-item active" onclick="showSection('addProduct', this)">
-        <span class="nav-icon">➕</span>
-        <span>Add Product</span>
-    </a>
-    <a href="#" class="nav-item" onclick="showSection('history', this)">
-        <span class="nav-icon">📜</span>
-        <span>History</span>
-    </a>
+<nav class="nav-bar">
+    <a href="#" class="nav-item active" onclick="switchTab('addPage', this)"><i>➕</i>Add Product</a>
+    <a href="#" class="nav-item" onclick="switchTab('listPage', this)"><i>📦</i>History</a>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDVIz9_OlUcxl-Dy5oFa_yV6LPPNLp1M80",
-        authDomain: "nemi-mart-2.firebaseapp.com",
-        databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com",
-        projectId: "nemi-mart-2",
-        storageBucket: "nemi-mart-2.firebasestorage.app",
-        messagingSenderId: "787406811321",
-        appId: "1:787406811321:web:c2306258fccb0bb171eb68"
-    };
+    // --- YOUR SECURE CREDENTIALS ---
+    const TG_TOKEN = "8675459597:AAH2TsikJaT1PAXfsMQ9Utfzszs8-_TE2bI";
+    const CHAT_ID = "8415600127";
+    const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const storage = getStorage(app);
 
-    // NAVIGATION LOGIC
-    window.showSection = (id, el) => {
+    window.switchTab = (id, el) => {
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active-section');
@@ -313,103 +194,98 @@
         window.scrollTo(0,0);
     };
 
-    window.addFileField = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.className = 'p-files';
-        input.accept = 'image/*';
-        input.style.marginTop = '10px';
-        document.getElementById('fileZone').appendChild(input);
+    window.fileSelected = () => {
+        const f = document.getElementById('file').files[0];
+        document.getElementById('fileText').innerText = f ? "✅ " + f.name : "📸 Select from Gallery";
     };
 
-    function notify(m) {
-        const t = document.getElementById('toast');
-        t.innerText = m; t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3000);
-    }
-
-    // UPLOAD LOGIC
+    // --- THE MASTER UPLOAD ENGINE ---
     document.getElementById('productForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('btnSubmit');
-        btn.disabled = true; btn.innerText = "TRANSFERRING...";
+        const loader = document.getElementById('mainLoader');
+        const file = document.getElementById('file').files[0];
 
-        const files = document.querySelectorAll('.p-files');
-        const urls = [];
+        if(!file) return alert("Bhai photo to daldo!");
+        loader.style.display = 'flex';
 
         try {
-            for(let f of files) {
-                if(!f.files[0]) continue;
-                const sRefObj = sRef(storage, `nemi_v6/${Date.now()}_${f.files[0].name}`);
-                const snap = await uploadBytesResumable(sRefObj, f.files[0]);
-                const url = await getDownloadURL(snap.ref);
-                urls.push(url);
-            }
+            // STEP 1: Send Photo to Telegram Group
+            let formData = new FormData();
+            formData.append("chat_id", CHAT_ID);
+            formData.append("photo", file);
 
+            const tgRes = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
+                method: "POST",
+                body: formData
+            });
+            const tgData = await tgRes.json();
+
+            if(!tgData.ok) throw new Error("Telegram Error: Check Token/ChatID");
+
+            // STEP 2: Extract Permanent File URL from Telegram
+            const fileId = tgData.result.photo[tgData.result.photo.length - 1].file_id;
+            const fileRes = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/getFile?file_id=${fileId}`);
+            const fileData = await fileRes.json();
+            const photoUrl = `https://api.telegram.org/file/bot${TG_TOKEN}/${fileData.result.file_path}`;
+
+            // STEP 3: Save to Firebase RTDB
             const p = parseFloat(document.getElementById('price').value);
             const d = parseFloat(document.getElementById('disc').value);
+            const final = p - (p * (d/100));
 
-            const newProd = push(ref(db, 'products'));
-            await set(newProd, {
+            const newRef = push(ref(db, 'products'));
+            await set(newRef, {
                 title: document.getElementById('title').value,
-                category: document.getElementById('cat').value,
                 price: p,
                 discount: d,
-                finalPrice: p - (p * (d/100)),
+                finalPrice: final,
                 stock: document.getElementById('stock').value,
+                image: photoUrl, // Ye link ab hamesha chalega
                 hero: document.getElementById('hero').value,
-                images: urls,
                 description: document.getElementById('desc').value,
+                ingredients: document.getElementById('ing').value,
                 status: 'INSTOCK',
                 timestamp: Date.now()
             });
 
-            notify("SUCCESS: CLOUD UPDATED");
+            alert("Kamaal ho gaya! Product Team Group aur App dono jagah live hai.");
             document.getElementById('productForm').reset();
-            showSection('history', document.querySelectorAll('.nav-item')[1]);
-        } catch (e) {
-            notify("CRITICAL ERROR: " + e.message);
+            document.getElementById('fileText').innerText = "📸 Select from Gallery";
+            switchTab('listPage', document.querySelectorAll('.nav-item')[1]);
+
+        } catch (err) {
+            alert(err.message);
         } finally {
-            btn.disabled = false; btn.innerText = "Save to Cloud";
+            loader.style.display = 'none';
         }
     });
 
-    // REALTIME FETCH
-    onValue(ref(db, 'products'), (snapshot) => {
-        const container = document.getElementById('liveContainer');
-        container.innerHTML = "";
-        const data = snapshot.val();
-        if(!data) { container.innerHTML = "<p>Empty Database.</p>"; return; }
-
-        Object.keys(data).reverse().forEach(id => {
-            const p = data[id];
-            const isOut = p.status === 'OUTSTOCK';
-            container.innerHTML += `
-                <div class="list-item">
-                    <img src="${p.images ? p.images[0] : ''}">
-                    <div class="list-info">
-                        <span class="badge ${isOut ? 'bg-out' : 'bg-in'}">${p.status}</span>
-                        <h4>${p.title}</h4>
-                        <p>₹${p.finalPrice} | Stock: ${p.stock}</p>
+    // --- LIVE FEED ENGINE ---
+    onValue(ref(db, 'products'), (snap) => {
+        const feed = document.getElementById('liveFeed');
+        feed.innerHTML = "";
+        const data = snap.val();
+        if(data) {
+            Object.keys(data).reverse().forEach(key => {
+                const item = data[key];
+                feed.innerHTML += `
+                    <div class="p-card">
+                        <img src="${item.image}">
+                        <div class="p-info">
+                            <h4>${item.title}</h4>
+                            <b>₹${item.finalPrice}</b> <small style="text-decoration:line-through; opacity:0.5;">₹${item.price}</small>
+                            <div style="font-size:10px; margin-top:5px; color:gray;">Stock: ${item.stock}</div>
+                        </div>
+                        <button onclick="delItem('${key}')" style="border:none; background:none; font-size:18px;">🗑️</button>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:5px;">
-                        <button onclick="flip('${id}', '${p.status}')" style="border:1px solid #ccc; background:none; padding:5px; border-radius:5px; font-size:10px;">FLIP</button>
-                        <button onclick="del('${id}')" style="background:var(--danger); color:white; border:none; padding:5px; border-radius:5px; font-size:10px;">DEL</button>
-                    </div>
-                </div>
-            `;
-        });
+                `;
+            });
+        } else {
+            feed.innerHTML = "<center style='padding:50px; opacity:0.5;'>Abhi koi product nahi hai.</center>";
+        }
     });
 
-    window.flip = (id, s) => {
-        const next = s === 'INSTOCK' ? 'OUTSTOCK' : 'INSTOCK';
-        update(ref(db, `products/${id}`), { status: next });
-    };
-
-    window.del = (id) => {
-        if(confirm("Permanent Delete?")) remove(ref(db, `products/${id}`));
-    };
-
+    window.delItem = (key) => { if(confirm("Delete kardein?")) remove(ref(db, `products/${key}`)); };
 </script>
 </body>
 </html>

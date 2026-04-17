@@ -50,7 +50,7 @@
         .field { display: flex; flex-direction: column; gap: 6px; }
         label { font-size: 12px; font-weight: 700; color: #64748b; }
         input, textarea, select { background: #f1f5f9; border: 2px solid transparent; padding: 14px; border-radius: 16px; font-size: 15px; transition: 0.3s; }
-        input:focus { border-color: var(--primary); background: white; outline: none; }
+        input:focus, select:focus { border-color: var(--primary); background: white; outline: none; }
 
         /* MULTI-PHOTO SYSTEM */
         .photo-container { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -85,7 +85,7 @@
 <div id="mainLoader">
     <div class="spinner"></div>
     <p style="margin-top: 20px; font-weight: 800; letter-spacing: 1px;">DEPLOYING TO CLOUD...</p>
-    <span id="loadProgress" style="font-size: 12px; color: #accent;">Uploading Images: 0/0</span>
+    <span id="loadProgress" style="font-size: 12px; color: var(--accent);">Uploading Images: 0/0</span>
 </div>
 
 <header>
@@ -103,6 +103,18 @@
                 <div class="field">
                     <label>Full Product Title</label>
                     <input type="text" id="title" required placeholder="Ex: Pure Ayurvedic Neem Oil">
+                </div>
+
+                <div class="field">
+                    <label>Product Category</label>
+                    <select id="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Skin Care">Skin Care</option>
+                        <option value="Hair Care">Hair Care</option>
+                        <option value="Oils">Oils</option>
+                        <option value="Health">Health</option>
+                        <option value="Personal Care">Personal Care</option>
+                    </select>
                 </div>
 
                 <div style="display: flex; gap: 10px;">
@@ -171,6 +183,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+    // Firebase & Telegram Configs
     const TG_TOKEN = "8675459597:AAH2TsikJaT1PAXfsMQ9Utfzszs8-_TE2bI";
     const CHAT_ID = "8415600127";
     const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" };
@@ -204,7 +217,7 @@
         let uploadedUrls = [];
 
         try {
-            // STEP 1: Loop through all selected photos
+            // STEP 1: Image Upload Loop
             for(let i=0; i < fileInputs.length; i++) {
                 let file = fileInputs[i].files[0];
                 if(file) {
@@ -223,24 +236,26 @@
                 }
             }
 
-            // STEP 2: Logic for Stock Status
+            // STEP 2: Stock Logic
             const sCount = parseInt(document.getElementById('stockCount').value);
             let sStatus = "INSTOCK";
             if(sCount <= 0) sStatus = "OUTOFSTOCK";
             else if(sCount < 5) sStatus = "LIMITED";
 
-            // STEP 3: Push to Firebase
+            // STEP 3: Pricing Logic
             const p = parseFloat(document.getElementById('price').value);
             const d = parseFloat(document.getElementById('disc').value);
             const final = p - (p * (d/100));
 
+            // STEP 4: Product Data Object
             const prodData = {
                 title: document.getElementById('title').value,
+                category: document.getElementById('category').value, // Added Category
                 price: p,
                 discount: d,
                 finalPrice: final,
                 stock: sCount,
-                images: uploadedUrls, // Array of all photos
+                images: uploadedUrls,
                 hero: document.getElementById('hero').value,
                 description: document.getElementById('desc').value,
                 usage: document.getElementById('usage').value,
@@ -252,28 +267,28 @@
             const newProdRef = push(ref(db, 'products'));
             await set(newProdRef, prodData);
 
-            // STEP 4: Push Notification
+            // STEP 5: Firebase Notification
             const notiRef = push(ref(db, 'notifications'));
             await set(notiRef, {
                 title: "Naya Maal Aa Gaya! 🔥",
-                message: `${prodData.title} ab store par live hai. Check karo!`,
+                message: `${prodData.title} ab store par live hai.`,
                 image: uploadedUrls[0],
                 time: Date.now()
             });
 
-            alert("Sab set hai bhai! Product aur Notification dono chale gaye.");
+            alert("Done! Product live ho gaya aur notification bhi chala gaya.");
             document.getElementById('proForm').reset();
             document.getElementById('photoList').innerHTML = `<div class="photo-row"><input type="file" class="photo-input" accept="image/*" required></div>`;
             showTab('listPage', document.querySelectorAll('.nav-link')[1]);
 
         } catch (err) {
-            alert("Kuch gadbad hai: " + err.message);
+            alert("Error: " + err.message);
         } finally {
             loader.style.display = 'none';
         }
     });
 
-    // --- HISTORY & STATUS MANAGER ---
+    // --- HISTORY MANAGER ---
     onValue(ref(db, 'products'), (snap) => {
         const feed = document.getElementById('masterFeed');
         feed.innerHTML = "";
@@ -289,8 +304,9 @@
                 <div class="hist-card">
                     <img src="${p.images[0]}">
                     <div class="hist-details">
+                        <small style="color:var(--primary); font-weight:800;">${p.category || 'NO CAT'}</small>
                         <h4>${p.title}</h4>
-                        <b>₹${p.finalPrice}</b>
+                        <b>₹${p.finalPrice}</b> <small style="text-decoration:line-through; color:gray;">₹${p.price}</small>
                         <br>
                         <span class="status-badge ${badgeClass}">${badgeText}</span>
                         <div class="action-btns">
@@ -309,7 +325,7 @@
     };
 
     window.delItem = (id) => {
-        if(confirm("Bhai delete karun?")) remove(ref(db, `products/${id}`));
+        if(confirm("Pakka delete karna hai?")) remove(ref(db, `products/${id}`));
     };
 </script>
 </body>

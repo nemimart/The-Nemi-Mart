@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEMI MASTER v10 | PRO BUSINESS</title>
+    <title>NEMI MASTER v10 | BUSINESS SUITE</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4f46e5;
             --secondary: #f43f5e;
             --dark: #0f172a;
-            --success: #10b981;
-            --warning: #f59e0b;
+            --accent: #10b981;
             --bg: #f8fafc;
         }
 
@@ -24,165 +23,148 @@
             background: rgba(15, 23, 42, 0.95); z-index: 9999; display: none;
             flex-direction: column; justify-content: center; align-items: center; color: white;
         }
+        .spinner { width: 60px; height: 60px; border: 6px solid #1e293b; border-top: 6px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* HEADER & TOP NAV */
+        /* PREMIUM HEADER */
         header {
-            background: var(--dark); padding: 20px; color: white;
+            background: linear-gradient(135deg, var(--dark), #1e293b);
+            padding: 20px; color: white; position: sticky; top: 0; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 4px solid var(--primary);
         }
-        .top-admin-nav {
-            background: #1e293b; padding: 10px; display: flex; gap: 10px;
-            overflow-x: auto; border-bottom: 2px solid var(--primary);
-        }
-        .admin-btn {
-            background: var(--primary); color: white; padding: 8px 15px;
-            border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 700;
-            white-space: nowrap;
-        }
+        .brand h1 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: 1px; }
+        .nav-btns { display: flex; gap: 10px; }
+        .btn-top { background: var(--primary); color: white; padding: 8px 15px; border-radius: 10px; text-decoration: none; font-size: 11px; font-weight: 700; border: none; cursor: pointer; }
+        .btn-order { background: var(--secondary); }
 
-        /* CARDS & FORMS */
-        .content-section { display: none; padding: 15px; animation: slideUp 0.4s ease; }
+        /* FORM & CARDS */
+        .content-section { display: none; padding: 15px; animation: slideIn 0.4s ease-out; }
         .active-section { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-        .card { background: white; border-radius: 24px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .section-h { font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; display: block; }
+        .card { background: white; border-radius: 28px; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .tag { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; }
 
-        .form-grid { display: grid; gap: 15px; }
-        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        .input-grid { display: grid; gap: 15px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
         label { font-size: 12px; font-weight: 700; color: #64748b; }
-        input, textarea, select {
-            background: #f1f5f9; border: 2px solid transparent; padding: 14px;
-            border-radius: 12px; font-size: 15px; transition: 0.3s;
-        }
+        input, textarea, select { background: #f1f5f9; border: 2px solid transparent; padding: 14px; border-radius: 16px; font-size: 15px; transition: 0.3s; }
         input:focus { border-color: var(--primary); background: white; outline: none; }
 
-        /* MULTI PHOTO ZONE */
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .photo-box {
-            aspect-ratio: 1/1; background: #eef2ff; border: 2px dashed var(--primary);
-            border-radius: 12px; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; cursor: pointer; font-size: 10px;
-            text-align: center; color: var(--primary); font-weight: 700;
-        }
+        /* MULTI-PHOTO SYSTEM */
+        .photo-container { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .photo-row { display: flex; gap: 10px; align-items: center; }
+        .photo-row input { flex: 1; }
+        .btn-add-photo { background: #e0e7ff; color: var(--primary); border: none; padding: 12px; border-radius: 14px; font-weight: 800; cursor: pointer; margin-top: 5px; }
 
-        /* BUTTONS */
-        .btn-main {
-            background: linear-gradient(135deg, var(--dark), #1e293b); color: white;
-            width: 100%; padding: 18px; border-radius: 15px; border: none;
-            font-size: 16px; font-weight: 800; margin-top: 10px;
-        }
+        .btn-main { background: var(--dark); color: white; width: 100%; padding: 20px; border-radius: 20px; border: none; font-size: 18px; font-weight: 800; margin-top: 15px; cursor: pointer; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.3); }
 
         /* HISTORY CARDS */
-        .p-item {
-            background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px;
-            display: flex; gap: 15px; align-items: center; position: relative;
-        }
-        .p-img-thumb { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
-        .badge {
-            position: absolute; top: 10px; right: 10px; padding: 4px 10px;
-            border-radius: 20px; font-size: 10px; font-weight: 800; color: white;
-        }
-        .bg-instock { background: var(--success); }
-        .bg-low { background: var(--warning); }
-        .bg-out { background: var(--secondary); }
+        .hist-card { background: white; border-radius: 22px; padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); align-items: flex-start; }
+        .hist-card img { width: 80px; height: 80px; border-radius: 15px; object-fit: cover; }
+        .hist-details { flex: 1; }
+        .hist-details h4 { margin: 0 0 5px 0; font-size: 16px; }
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; margin-top: 8px; }
+        .in-stock { background: #dcfce7; color: #166534; }
+        .out-stock { background: #fee2e2; color: #991b1b; }
+        .limited-stock { background: #fef9c3; color: #854d0e; }
+
+        .action-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-icon { background: #f1f5f9; border: none; padding: 8px; border-radius: 10px; cursor: pointer; }
 
         /* BOTTOM NAV */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 12px 0 25px;
-            border-top: 1px solid #eee; z-index: 1000;
-        }
+        nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0 30px; border-top: 1px solid #eee; z-index: 2000; }
         .nav-link { text-decoration: none; color: #94a3b8; font-size: 11px; font-weight: 700; text-align: center; }
         .nav-link.active { color: var(--primary); }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div id="mainLoader">
-    <div style="font-size: 30px;">⏳</div>
-    <p>SYNCING CLOUD DATA...</p>
+    <div class="spinner"></div>
+    <p style="margin-top: 20px; font-weight: 800; letter-spacing: 1px;">DEPLOYING TO CLOUD...</p>
+    <span id="loadProgress" style="font-size: 12px; color: #accent;">Uploading Images: 0/0</span>
 </div>
 
 <header>
-    <h2 style="margin:0; font-size:18px;">NEMI PRO v10</h2>
-    <div style="background:var(--success); padding:5px 10px; border-radius:20px; font-size:10px; font-weight:800;">LIVE ENGINE</div>
+    <div class="brand"><h1>NEMI MASTER <small style="font-size: 10px; color: var(--accent);">V10</small></h1></div>
+    <div class="nav-btns">
+        <a href="admin2.html" class="btn-top btn-order">📦 ORDERS</a>
+    </div>
 </header>
 
-<div class="top-admin-nav">
-    <a href="admin2.html" class="admin-btn">📦 View Orders</a>
-    <a href="notification.html" class="admin-btn" style="background:var(--secondary);">🔔 Send Global Alert</a>
-</div>
-
 <div id="addPage" class="content-section active-section">
-    <span class="section-h">Master Inventory Entry</span>
+    <span class="tag">Inventory Master Control</span>
     <div class="card">
         <form id="proForm">
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Product Name</label>
-                    <input type="text" id="title" required placeholder="Ex: Premium Almonds 500g">
-                </div>
-
-                <div class="input-group">
-                    <label>Product Photos (3 Mandatory)</label>
-                    <div class="photo-grid">
-                        <div class="photo-box" onclick="document.getElementById('f1').click()">
-                            <span id="t1">Main Photo</span>
-                            <input type="file" id="f1" hidden onchange="checkImg(1)">
-                        </div>
-                        <div class="photo-box" onclick="document.getElementById('f2').click()">
-                            <span id="t2">Side View</span>
-                            <input type="file" id="f2" hidden onchange="checkImg(2)">
-                        </div>
-                        <div class="photo-box" onclick="document.getElementById('f3').click()">
-                            <span id="t3">Label/Back</span>
-                            <input type="file" id="f3" hidden onchange="checkImg(3)">
-                        </div>
-                    </div>
+            <div class="input-grid">
+                <div class="field">
+                    <label>Full Product Title</label>
+                    <input type="text" id="title" required placeholder="Ex: Pure Ayurvedic Neem Oil">
                 </div>
 
                 <div style="display: flex; gap: 10px;">
-                    <div class="input-group" style="flex:1;">
-                        <label>Price (₹)</label>
+                    <div class="field" style="flex:1;">
+                        <label>Original Price</label>
                         <input type="number" id="price" required>
                     </div>
-                    <div class="input-group" style="flex:1;">
+                    <div class="field" style="flex:1;">
                         <label>Discount %</label>
                         <input type="number" id="disc" value="0">
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Stock Quantity (Total Packets)</label>
-                    <input type="number" id="stock" required>
+                <div class="field">
+                    <label>Unlimited Photos (Telegram Cloud)</label>
+                    <div id="photoList" class="photo-container">
+                        <div class="photo-row">
+                            <input type="file" class="photo-input" accept="image/*" required>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add-photo" onclick="addNewPhotoField()">+ Add More Photo</button>
                 </div>
 
-                <div class="input-group">
-                    <label>How to Use / Dosage</label>
-                    <input type="text" id="usage" placeholder="Ex: Take 1 spoon with milk">
+                <div class="field">
+                    <label>Current Stock Count</label>
+                    <input type="number" id="stockCount" required placeholder="Total units available">
                 </div>
 
-                <div class="input-group">
-                    <label>Product Benefits (Key points)</label>
-                    <textarea id="benefits" rows="3" placeholder="Ex: Rich in Protein, No Sugar..."></textarea>
+                <div class="field">
+                    <label>Marketing Tagline</label>
+                    <input type="text" id="hero" placeholder="Ex: Best for glowing skin!">
                 </div>
 
-                <button type="submit" class="btn-main">DEPLOY TO APP & TELEGRAM</button>
+                <div class="field">
+                    <label>Detailed Description</label>
+                    <textarea id="desc" rows="3" placeholder="Explain the product..."></textarea>
+                </div>
+
+                <div class="field">
+                    <label>How To Use (Process)</label>
+                    <textarea id="usage" rows="2" placeholder="Step 1, Step 2..."></textarea>
+                </div>
+
+                <div class="field">
+                    <label>Benefits & Saman (Ingredients)</label>
+                    <input type="text" id="ing" placeholder="Neem, Tulsi, Aloe Vera...">
+                </div>
+
+                <button type="submit" class="btn-main">PUSH LIVE & NOTIFY USERS</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="historyPage" class="content-section">
-    <span class="section-h">Live Inventory Management</span>
-    <div id="inventoryFeed"></div>
+<div id="listPage" class="content-section">
+    <span class="tag">Active Inventory Feed</span>
+    <div id="masterFeed"></div>
 </div>
 
-<nav class="bottom-nav">
-    <a href="#" class="nav-link active" onclick="tab('addPage', this)">➕ New Entry</a>
-    <a href="#" class="nav-link" onclick="tab('historyPage', this)">📊 Edit Stock</a>
+<nav>
+    <a href="#" class="nav-link active" onclick="showTab('addPage', this)"><i>🚀</i><span>Add New</span></a>
+    <a href="#" class="nav-link" onclick="showTab('listPage', this)"><i>📊</i><span>History</span></a>
 </nav>
 
 <script type="module">
@@ -196,121 +178,139 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    window.tab = (id, el) => {
+    window.showTab = (id, el) => {
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active-section');
         el.classList.add('active');
+        window.scrollTo(0,0);
     };
 
-    window.checkImg = (n) => {
-        const file = document.getElementById('f'+n).files[0];
-        if(file) document.getElementById('t'+n).innerText = "✅ Done";
+    window.addNewPhotoField = () => {
+        const div = document.createElement('div');
+        div.className = 'photo-row';
+        div.innerHTML = `<input type="file" class="photo-input" accept="image/*"> <button type="button" class="btn-icon" onclick="this.parentElement.remove()">❌</button>`;
+        document.getElementById('photoList').appendChild(div);
     };
 
-    // --- MEGA UPLOAD FUNCTION ---
+    // --- MEGA UPLOAD ENGINE ---
     document.getElementById('proForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const loader = document.getElementById('mainLoader');
-        const files = [
-            document.getElementById('f1').files[0],
-            document.getElementById('f2').files[0],
-            document.getElementById('f3').files[0]
-        ];
-
-        if(!files[0] || !files[1] || !files[2]) return alert("Bhai 3 photo mandatory hain!");
-
+        const progressText = document.getElementById('loadProgress');
+        const fileInputs = document.querySelectorAll('.photo-input');
+        
         loader.style.display = 'flex';
-        let urls = [];
+        let uploadedUrls = [];
 
         try {
-            // Upload 3 Photos to TG Cloud
-            for(let i=0; i<3; i++){
-                let fd = new FormData();
-                fd.append("chat_id", CHAT_ID);
-                fd.append("photo", files[i]);
-                const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: "POST", body: fd });
-                const data = await res.json();
-                const fId = data.result.photo[data.result.photo.length-1].file_id;
-                const fPathRes = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/getFile?file_id=${fId}`);
-                const fPathData = await fPathRes.json();
-                urls.push(`https://api.telegram.org/file/bot${TG_TOKEN}/${fPathData.result.file_path}`);
+            // STEP 1: Loop through all selected photos
+            for(let i=0; i < fileInputs.length; i++) {
+                let file = fileInputs[i].files[0];
+                if(file) {
+                    progressText.innerText = `Uploading Image: ${i+1}/${fileInputs.length}`;
+                    let formData = new FormData();
+                    formData.append("chat_id", CHAT_ID);
+                    formData.append("photo", file);
+
+                    const tgRes = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: "POST", body: formData });
+                    const tgData = await tgRes.json();
+                    
+                    const fileId = tgData.result.photo[tgData.result.photo.length - 1].file_id;
+                    const fileRes = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/getFile?file_id=${fileId}`);
+                    const fileData = await fileRes.json();
+                    uploadedUrls.push(`https://api.telegram.org/file/bot${TG_TOKEN}/${fileData.result.file_path}`);
+                }
             }
 
+            // STEP 2: Logic for Stock Status
+            const sCount = parseInt(document.getElementById('stockCount').value);
+            let sStatus = "INSTOCK";
+            if(sCount <= 0) sStatus = "OUTOFSTOCK";
+            else if(sCount < 5) sStatus = "LIMITED";
+
+            // STEP 3: Push to Firebase
             const p = parseFloat(document.getElementById('price').value);
             const d = parseFloat(document.getElementById('disc').value);
             const final = p - (p * (d/100));
-            const title = document.getElementById('title').value;
 
-            // Save to Firebase
-            const newKey = push(ref(db, 'products')).key;
-            await set(ref(db, `products/${newKey}`), {
-                title: title,
+            const prodData = {
+                title: document.getElementById('title').value,
                 price: p,
                 discount: d,
                 finalPrice: final,
-                stock: parseInt(document.getElementById('stock').value),
-                images: urls, // 3 Link Array
+                stock: sCount,
+                images: uploadedUrls, // Array of all photos
+                hero: document.getElementById('hero').value,
+                description: document.getElementById('desc').value,
                 usage: document.getElementById('usage').value,
-                benefits: document.getElementById('benefits').value,
-                status: 'INSTOCK',
+                ingredients: document.getElementById('ing').value,
+                status: sStatus,
+                time: Date.now()
+            };
+
+            const newProdRef = push(ref(db, 'products'));
+            await set(newProdRef, prodData);
+
+            // STEP 4: Push Notification
+            const notiRef = push(ref(db, 'notifications'));
+            await set(notiRef, {
+                title: "Naya Maal Aa Gaya! 🔥",
+                message: `${prodData.title} ab store par live hai. Check karo!`,
+                image: uploadedUrls[0],
                 time: Date.now()
             });
 
-            // 🔔 SEND NOTIFICATION TO notification.html
-            await push(ref(db, 'notifications'), {
-                msg: `Naya Product: ${title} ab stock mein hai! Check karo.`,
-                time: Date.now(),
-                type: 'new_launch'
-            });
-
-            alert("Kamaal! Product live ho gaya aur notification bhi chala gaya.");
+            alert("Sab set hai bhai! Product aur Notification dono chale gaye.");
             document.getElementById('proForm').reset();
-            tab('historyPage', document.querySelectorAll('.nav-link')[1]);
+            document.getElementById('photoList').innerHTML = `<div class="photo-row"><input type="file" class="photo-input" accept="image/*" required></div>`;
+            showTab('listPage', document.querySelectorAll('.nav-link')[1]);
 
         } catch (err) {
-            alert("Error: " + err.message);
+            alert("Kuch gadbad hai: " + err.message);
         } finally {
             loader.style.display = 'none';
         }
     });
 
-    // --- STOCK & HISTORY ENGINE ---
+    // --- HISTORY & STATUS MANAGER ---
     onValue(ref(db, 'products'), (snap) => {
-        const feed = document.getElementById('inventoryFeed');
+        const feed = document.getElementById('masterFeed');
         feed.innerHTML = "";
         const data = snap.val();
-        if(data) {
-            Object.keys(data).reverse().forEach(key => {
-                const it = data[key];
-                const st = parseInt(it.stock);
-                let badge = `<span class="badge bg-instock">IN STOCK</span>`;
-                if(st <= 0) badge = `<span class="badge bg-out">SOLD OUT</span>`;
-                else if(st <= 5) badge = `<span class="badge bg-low">${st} Left Only!</span>`;
+        if(!data) { feed.innerHTML = "<center>No Products Found</center>"; return; }
 
-                feed.innerHTML += `
-                    <div class="p-item">
-                        <img src="${it.images[0]}" class="p-img-thumb">
-                        <div style="flex:1">
-                            <h4 style="margin:0; font-size:14px;">${it.title}</h4>
-                            <p style="margin:5px 0; font-size:12px; font-weight:700;">₹${it.finalPrice}</p>
-                            <div style="display:flex; gap:5px;">
-                                <input type="number" value="${st}" style="width:60px; padding:5px; font-size:12px;" onchange="updateStock('${key}', this.value)">
-                                <button onclick="delItem('${key}')" style="background:none; border:none;">🗑️</button>
-                            </div>
+        Object.keys(data).reverse().forEach(id => {
+            const p = data[id];
+            const badgeClass = p.status === 'INSTOCK' ? 'in-stock' : (p.status === 'LIMITED' ? 'limited-stock' : 'out-stock');
+            const badgeText = p.status === 'LIMITED' ? `${p.stock} Left` : p.status;
+
+            feed.innerHTML += `
+                <div class="hist-card">
+                    <img src="${p.images[0]}">
+                    <div class="hist-details">
+                        <h4>${p.title}</h4>
+                        <b>₹${p.finalPrice}</b>
+                        <br>
+                        <span class="status-badge ${badgeClass}">${badgeText}</span>
+                        <div class="action-btns">
+                            <button class="btn-icon" onclick="updateStock('${id}', 'INSTOCK')">✅</button>
+                            <button class="btn-icon" onclick="updateStock('${id}', 'OUTOFSTOCK')">❌</button>
+                            <button class="btn-icon" onclick="delItem('${id}')">🗑️</button>
                         </div>
-                        ${badge}
                     </div>
-                `;
-            });
-        }
+                </div>
+            `;
+        });
     });
 
-    window.updateStock = (key, val) => {
-        update(ref(db, `products/${key}`), { stock: parseInt(val) });
+    window.updateStock = (id, newStatus) => {
+        update(ref(db, `products/${id}`), { status: newStatus });
     };
 
-    window.delItem = (key) => { if(confirm("Uda du?")) remove(ref(db, `products/${key}`)); };
+    window.delItem = (id) => {
+        if(confirm("Bhai delete karun?")) remove(ref(db, `products/${id}`));
+    };
 </script>
 </body>
 </html>

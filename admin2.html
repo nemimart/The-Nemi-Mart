@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEMI ADMIN 2 | COMMAND CENTER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --pending: #f59e0b;
+            --confirm: #10b981;
+            --deliver: #3b82f6;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --bg: #f1f5f9;
+        }
+
+        * { box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--dark); }
+
+        /* HEADER */
+        header {
+            background: var(--dark); padding: 20px; color: white;
+            position: sticky; top: 0; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 4px solid var(--primary);
+        }
+        header h1 { margin: 0; font-size: 18px; font-weight: 800; }
+        .stats-chip { background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+
+        /* TABS */
+        .content-section { display: none; padding: 15px; animation: slideUp 0.4s ease; }
+        .active-section { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ORDER CARDS */
+        .order-card {
+            background: white; border-radius: 24px; padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px;
+            border-left: 8px solid var(--pending);
+        }
+        .status-confirm { border-left-color: var(--confirm); }
+        .status-deliver { border-left-color: var(--deliver); }
+
+        .order-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .order-id { font-size: 12px; font-weight: 800; color: #64748b; }
+        .utr-tag { background: #eef2ff; color: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; }
+
+        .customer-box { background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        .customer-box h3 { margin: 0 0 5px 0; font-size: 16px; }
+        .customer-box p { margin: 2px 0; font-size: 13px; color: #475569; }
+
+        .item-list { border-top: 1px dashed #cbd5e1; padding-top: 10px; margin-bottom: 15px; }
+        .item-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
+
+        .price-summary { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 18px; color: var(--dark); }
+
+        /* ACTION BUTTONS */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .btn-act { border: none; padding: 12px; border-radius: 12px; color: white; font-weight: 800; font-size: 10px; cursor: pointer; text-transform: uppercase; }
+        .btn-p { background: var(--pending); }
+        .btn-c { background: var(--confirm); }
+        .btn-d { background: var(--deliver); }
+        .btn-del { background: #f1f5f9; color: var(--danger); }
+
+        /* USER LIST CARDS */
+        .user-card {
+            background: white; border-radius: 20px; padding: 15px;
+            display: flex; align-items: center; gap: 15px; margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .user-avatar { width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .user-info { flex: 1; }
+        .user-info h4 { margin: 0; font-size: 15px; }
+        .user-info span { font-size: 11px; color: #94a3b8; }
+        .btn-ban { background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 10px; font-weight: 700; font-size: 10px; }
+        .btn-unban { background: var(--confirm); }
+
+        /* NAVIGATION */
+        nav {
+            position: fixed; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 15px 0 30px;
+            border-top: 1px solid #e2e8f0; z-index: 2000;
+        }
+        .nav-link { text-decoration: none; color: #94a3b8; font-size: 11px; font-weight: 700; text-align: center; }
+        .nav-link.active { color: var(--primary); }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>NEMI COMMAND 2</h1>
+    <div class="stats-chip" id="orderCount">Orders: 0</div>
+</header>
+
+<div id="orderPage" class="content-section active-section">
+    <div id="ordersFeed">
+        </div>
+</div>
+
+<div id="userPage" class="content-section">
+    <div id="usersFeed">
+        </div>
+</div>
+
+<nav>
+    <a href="#" class="nav-link active" onclick="showTab('orderPage', this)"><i>📦</i>Orders</a>
+    <a href="#" class="nav-link" onclick="showTab('userPage', this)"><i>👥</i>Users</a>
+    <a href="admin.html" class="nav-link"><i>➕</i>Products</a>
+</nav>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, update, remove, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.showTab = (id, el) => {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active-section');
+        el.classList.add('active');
+    };
+
+    // --- ORDER ENGINE ---
+    onValue(ref(db, 'orders'), (snap) => {
+        const feed = document.getElementById('ordersFeed');
+        const countBox = document.getElementById('orderCount');
+        feed.innerHTML = "";
+        const data = snap.val();
+        
+        if(!data) { feed.innerHTML = "<center style='padding:40px;'>Koi order nahi hai abhi.</center>"; return; }
+        
+        const keys = Object.keys(data).reverse();
+        countBox.innerText = `Orders: ${keys.length}`;
+
+        keys.forEach(id => {
+            const o = data[id];
+            const statusClass = o.status === 'CONFIRMED' ? 'status-confirm' : (o.status === 'DELIVERED' ? 'status-deliver' : '');
+            
+            feed.innerHTML += `
+                <div class="order-card ${statusClass}">
+                    <div class="order-header">
+                        <span class="order-id">ID: #${id.slice(-6)}</span>
+                        <span class="utr-tag">UTR: ${o.utr || 'N/A'}</span>
+                    </div>
+                    
+                    <div class="customer-box">
+                        <h3>${o.userName}</h3>
+                        <p>📞 ${o.phone}</p>
+                        <p>📍 ${o.address}</p>
+                    </div>
+
+                    <div class="item-list">
+                        ${o.items.map(item => `
+                            <div class="item-row">
+                                <span>${item.title} x ${item.qty}</span>
+                                <span>₹${item.price * item.qty}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="price-summary">
+                        <span style="font-size:12px; color:gray;">Total Amount</span>
+                        <span>₹${o.totalAmount}</span>
+                    </div>
+
+                    <div class="action-grid">
+                        <button class="btn-act btn-c" onclick="updateStatus('${id}', 'CONFIRMED', '${o.userId}')">Confirm</button>
+                        <button class="btn-act btn-d" onclick="updateStatus('${id}', 'DELIVERED', '${o.userId}')">Deliver</button>
+                        <button class="btn-act btn-del" onclick="deleteOrder('${id}')">Delete</button>
+                    </div>
+                </div>
+            `;
+        });
+    });
+
+    // --- STATUS UPDATE & NOTIFICATION ---
+    window.updateStatus = async (orderId, newStatus, userId) => {
+        try {
+            // 1. Update Order Status
+            await update(ref(db, `orders/${orderId}`), { status: newStatus });
+
+            // 2. Push Notification to Frontend (User will see this)
+            const notiRef = push(ref(db, `notifications/${userId}`));
+            await set(notiRef, {
+                title: `Order ${newStatus}!`,
+                message: `Bhai tera order #${orderId.slice(-6)} ab ${newStatus.toLowerCase()} ho gaya hai.`,
+                time: Date.now(),
+                type: 'ORDER_UPDATE'
+            });
+
+            alert(`Order status updated to ${newStatus}`);
+        } catch (e) { alert("Error: " + e.message); }
+    };
+
+    // --- USER MANAGEMENT ENGINE ---
+    onValue(ref(db, 'users'), (snap) => {
+        const feed = document.getElementById('usersFeed');
+        feed.innerHTML = "";
+        const data = snap.val();
+        
+        if(!data) return;
+
+        Object.keys(data).forEach(uid => {
+            const u = data[uid];
+            const isBanned = u.isBanned === true;
+            
+            feed.innerHTML += `
+                <div class="user-card" style="${isBanned ? 'opacity:0.5; border:1px solid red;' : ''}">
+                    <div class="user-avatar">${u.name ? u.name[0] : 'U'}</div>
+                    <div class="user-info">
+                        <h4>${u.name || 'Anonymous User'}</h4>
+                        <span>${u.email || u.phone}</span><br>
+                        <span style="color:var(--primary); font-weight:800;">Orders: ${u.totalOrders || 0}</span>
+                    </div>
+                    <button class="btn-ban ${isBanned ? 'btn-unban' : ''}" onclick="toggleBan('${uid}', ${isBanned})">
+                        ${isBanned ? 'UNBAN' : 'BAN'}
+                    </button>
+                </div>
+            `;
+        });
+    });
+
+    window.toggleBan = (uid, currentStatus) => {
+        const action = currentStatus ? "unban" : "ban";
+        if(confirm(`Pakka is user ko ${action} karna hai?`)) {
+            update(ref(db, `users/${uid}`), { isBanned: !currentStatus });
+        }
+    };
+
+    window.deleteOrder = (id) => {
+        if(confirm("Order history se uda du?")) remove(ref(db, `orders/${id}`));
+    };
+</script>
+</body>
+</html>

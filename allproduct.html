@@ -1,252 +1,315 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Explore Products | The Nemi Mart</title>
+    <title>Premium Shop | The Nemi Mart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --creme: #FFFDF5; --gold: #D4AF37; --dark-green: #1B3022;
-            --leaf-green: #2D5A27; --white: #ffffff;
-            --transition: all 0.3s ease;
+            --leaf-green: #2D5A27; --white: #ffffff; --light-grey: #f4f4f4;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        body { background-color: var(--creme); color: var(--dark-green); padding-bottom: 100px; }
+        body { background-color: var(--creme); color: var(--dark-green); padding-bottom: 90px; overflow-x: hidden; }
 
-        /* --- HEADER --- */
+        /* --- STICKY HEADER --- */
         header {
-            background: var(--dark-green);
-            padding: 15px 5%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            background: var(--dark-green); padding: 15px 5%;
+            position: sticky; top: 0; z-index: 2000;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
-        header a { color: white; text-decoration: none; font-size: 20px; transition: var(--transition); }
-        header h2 { color: var(--gold); font-size: 18px; font-weight: 600; }
-
-        /* --- FILTER BAR --- */
-        .filter-container {
-            background: white;
-            padding: 15px 5%;
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none;
-            position: sticky;
-            top: 60px;
-            z-index: 999;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-left a { color: white; text-decoration: none; font-size: 20px; }
+        header h2 { color: var(--gold); font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+        .cart-icon-btn { position: relative; color: white; font-size: 22px; cursor: pointer; }
+        .cart-count { 
+            position: absolute; top: -8px; right: -10px; 
+            background: var(--gold); color: var(--dark-green); 
+            font-size: 10px; font-weight: 800; padding: 2px 6px; 
+            border-radius: 50%; border: 2px solid var(--dark-green);
         }
-        .filter-container::-webkit-scrollbar { display: none; }
 
-        .f-tag {
-            padding: 8px 18px;
-            background: #f1f1f1;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
+        /* --- ADVANCED SEARCH & FILTER --- */
+        .search-container { padding: 15px 5%; background: white; }
+        .search-box {
+            background: var(--light-grey); border-radius: 12px;
+            display: flex; align-items: center; padding: 10px 15px;
+            border: 1px solid #eee;
+        }
+        .search-box input {
+            border: none; background: none; outline: none;
+            width: 100%; padding-left: 10px; font-size: 14px;
+        }
+
+        .filter-wrapper {
+            background: white; padding: 10px 0 15px 0;
+            position: sticky; top: 60px; z-index: 1900;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        /* Horizontal Category Scroll */
+        .cat-scroll {
+            display: flex; gap: 10px; overflow-x: auto;
+            padding: 5px 5%; scrollbar-width: none;
+        }
+        .cat-scroll::-webkit-scrollbar { display: none; }
+        
+        .cat-chip {
+            padding: 8px 20px; background: #eee; border-radius: 50px;
+            font-size: 12px; font-weight: 600; white-space: nowrap;
+            cursor: pointer; transition: var(--transition);
             border: 1px solid transparent;
         }
-        .f-tag.active {
-            background: var(--dark-green);
-            color: white;
-            border-color: var(--gold);
+        .cat-chip.active { background: var(--dark-green); color: white; border-color: var(--gold); }
+
+        /* Price Pills */
+        .price-filters {
+            display: flex; gap: 8px; overflow-x: auto;
+            padding: 10px 5% 5px 5%; scrollbar-width: none;
         }
+        .price-chip {
+            font-size: 11px; padding: 5px 12px; border: 1px solid #ddd;
+            border-radius: 8px; color: #666; white-space: nowrap; cursor: pointer;
+        }
+        .price-chip.active { border-color: var(--leaf-green); color: var(--leaf-green); background: #e8f5e9; }
 
         /* --- PRODUCT GRID --- */
         .product-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 20px 5%;
-        }
-
-        @media (min-width: 1024px) {
-            .product-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; }
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 12px; padding: 15px;
         }
 
         .p-card {
-            background: white;
-            border-radius: 20px;
-            padding: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
+            background: white; border-radius: 18px; padding: 10px;
+            box-shadow: var(--shadow); position: relative;
+            display: flex; flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.03);
             transition: var(--transition);
-            animation: fadeIn 0.5s ease forwards;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .p-card:active { transform: scale(0.96); }
+
+        .wishlist-btn {
+            position: absolute; top: 15px; right: 15px;
+            z-index: 5; color: #ddd; font-size: 18px;
+        }
+        .wishlist-btn.active { color: #ff4757; }
 
         .p-img-box {
-            width: 100%;
-            aspect-ratio: 1/1;
-            background: #f9f9f9;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            width: 100%; aspect-ratio: 1/1;
+            background: #fdfdfd; border-radius: 12px;
+            margin-bottom: 12px; display: flex; align-items: center;
+            justify-content: center; overflow: hidden;
         }
-        .p-img-box img { max-width: 85%; max-height: 85%; object-fit: contain; }
+        .p-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
 
-        .p-cat-name { font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-        .p-name { font-size: 13px; font-weight: 600; color: var(--dark-green); height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 10px; }
-        
-        .p-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .p-price { font-weight: 700; color: var(--leaf-green); font-size: 16px; }
-        
+        .p-tag { font-size: 9px; font-weight: 700; color: var(--gold); text-transform: uppercase; margin-bottom: 2px; }
+        .p-name { 
+            font-size: 13px; font-weight: 600; color: var(--dark-green); 
+            line-height: 1.3; height: 34px; overflow: hidden;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        }
+
+        .p-rating { font-size: 10px; color: #ffa502; margin: 5px 0; }
+
+        .p-footer { 
+            display: flex; justify-content: space-between; 
+            align-items: center; margin-top: 8px; 
+        }
+        .price-area { display: flex; flex-direction: column; }
+        .old-price { font-size: 10px; text-decoration: line-through; color: #999; }
+        .current-price { font-size: 16px; font-weight: 700; color: var(--leaf-green); }
+
         .add-btn {
-            background: var(--dark-green);
-            color: white;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
+            background: var(--dark-green); color: white; border: none;
+            width: 35px; height: 35px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(27, 48, 34, 0.3);
         }
-        .add-btn:hover { background: var(--gold); transform: scale(1.1); }
 
-        /* --- EMPTY STATE --- */
-        .no-products { text-align: center; padding: 50px 20px; display: none; }
-        .no-products i { font-size: 50px; color: #ccc; margin-bottom: 15px; }
-
-        /* --- BOTTOM NAV (SIMPLIFIED) --- */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: white; 
-            display: flex; justify-content: space-around; padding: 12px 0;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05); border-radius: 20px 20px 0 0;
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 10px 0 20px 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.05); border-radius: 25px 25px 0 0; z-index: 2000;
         }
-        .nav-item { text-decoration: none; color: #bbb; font-size: 10px; text-align: center; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
+        .nav-item { text-decoration: none; color: #aaa; font-size: 11px; text-align: center; font-weight: 500; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
         .nav-item.active { color: var(--leaf-green); }
+
+        /* Animation */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .p-card { animation: slideUp 0.4s ease forwards; }
+
+        .no-results { text-align: center; padding: 50px; display: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="home.html"><i class="fas fa-chevron-left"></i></a>
-        <h2 id="category-title">All Products</h2>
+        <div class="nav-left">
+            <a href="home.html"><i class="fas fa-arrow-left"></i></a>
+            <h2>NEMI SHOP</h2>
+        </div>
+        <div class="cart-icon-btn">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" id="cart-count">0</span>
+        </div>
     </header>
 
-    <div class="filter-container" id="filter-bar">
-        <div class="f-tag active" onclick="filterProducts('all', this)">All</div>
-        <div class="f-tag" onclick="filterProducts('immunity', this)">Immunity</div>
-        <div class="f-tag" onclick="filterProducts('hair-care', this)">Hair Care</div>
-        <div class="f-tag" onclick="filterProducts('gum-care', this)">Gum Care</div>
-        <div class="f-tag" onclick="filterProducts('vitality', this)">Vitality</div>
-        <div class="f-tag" onclick="filterProducts('wellness', this)">Wellness</div>
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fas fa-search" style="color: #999;"></i>
+            <input type="text" id="searchInput" placeholder="Search Ayurveda, Oils, Health..." onkeyup="handleSearch()">
+        </div>
     </div>
 
-    <div class="product-grid" id="product-list">
+    <div class="filter-wrapper">
+        <div class="cat-scroll" id="catScroll">
+            <div class="cat-chip active" onclick="filterByCat('all', this)">All Items</div>
+            <div class="cat-chip" onclick="filterByCat('immunity', this)">Immunity</div>
+            <div class="cat-chip" onclick="filterByCat('hair-care', this)">Hair Care</div>
+            <div class="cat-chip" onclick="filterByCat('vitality', this)">Vitality</div>
+            <div class="cat-chip" onclick="filterByCat('gum-care', this)">Gum Care</div>
+            <div class="cat-chip" onclick="filterByCat('wellness', this)">Wellness</div>
         </div>
 
-    <div class="no-products" id="empty-state">
-        <i class="fas fa-box-open"></i>
-        <p>No products found in this category.</p>
+        <div class="price-filters">
+            <div class="price-chip active" onclick="filterByPrice('all', this)">Any Price</div>
+            <div class="price-chip" onclick="filterByPrice('under200', this)">Under ₹200</div>
+            <div class="price-chip" onclick="filterByPrice('200-500', this)">₹200 - ₹500</div>
+            <div class="price-chip" onclick="filterByPrice('above500', this)">Over ₹500</div>
+        </div>
+    </div>
+
+    <div class="product-grid" id="productGrid">
+        </div>
+
+    <div class="no-results" id="noResults">
+        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="80" style="opacity: 0.5;">
+        <p style="margin-top: 15px; color: #999;">Bhai, ye item toh nahi mila!</p>
     </div>
 
     <nav class="bottom-nav">
-        <a href="home.html" class="nav-item"><i class="fas fa-home"></i>Home</a>
-        <a href="all-products.html" class="nav-item active"><i class="fas fa-th-large"></i>Shop</a>
+        <a href="home.html" class="nav-item"><i class="fas fa-home-alt"></i>Home</a>
+        <a href="#" class="nav-item active"><i class="fas fa-th-large"></i>Shop</a>
         <a href="cart.html" class="nav-item"><i class="fas fa-shopping-cart"></i>Cart</a>
-        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i>Profile</a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>Profile</a>
     </nav>
 
     <script>
-        // Ye tera main database hai (Abhi ke liye)
+        // Database: Yahan saare products hain
         const products = [
-            { id: 1, name: "Amritprash Power Booster 250gm", price: 850, cat: "vitality", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
-            { id: 2, name: "Nyala Herbal Hair Fall Oil", price: 350, cat: "hair-care", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
-            { id: 3, name: "Panch Tulsi Pure Extract", price: 195, cat: "immunity", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
-            { id: 4, name: "Dantvam Herbal Toothpaste", price: 95, cat: "gum-care", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
-            { id: 5, name: "Immunity & Vitality Duo Pack", price: 1050, cat: "immunity", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
-            { id: 6, name: "Nyala Hair Oil Pack of 2", price: 650, cat: "hair-care", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
-            { id: 7, name: "Ashwagandha Wellness Kit", price: 450, cat: "wellness", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
-            { id: 8, name: "Dantvam Family Kit", price: 280, cat: "gum-care", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" }
+            { id: 1, name: "Amritprash Power Booster 250gm", price: 850, oldPrice: 999, cat: "vitality", rating: 4.8, img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
+            { id: 2, name: "Nyala Herbal Hair Fall Oil", price: 350, oldPrice: 450, cat: "hair-care", rating: 4.5, img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
+            { id: 3, name: "Panch Tulsi Pure Extract", price: 195, oldPrice: 250, cat: "immunity", rating: 4.9, img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
+            { id: 4, name: "Dantvam Herbal Toothpaste", price: 95, oldPrice: 120, cat: "gum-care", rating: 4.2, img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
+            { id: 5, name: "Ashwagandha Wellness Capsules", price: 499, oldPrice: 600, cat: "wellness", rating: 4.7, img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
+            { id: 6, name: "Neem & Giloy Tablets", price: 150, oldPrice: 180, cat: "immunity", rating: 4.4, img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
+            { id: 7, name: "Bhringraj Hair Revitalizer", price: 550, oldPrice: 700, cat: "hair-care", rating: 4.6, img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" },
+            { id: 8, name: "Natural Mouthwash 200ml", price: 180, oldPrice: 220, cat: "gum-care", rating: 4.0, img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" }
         ];
 
-        function renderProducts(filter = 'all') {
-            const list = document.getElementById('product-list');
-            const empty = document.getElementById('empty-state');
-            list.innerHTML = "";
-            
-            const filteredProducts = filter === 'all' 
-                ? products 
-                : products.filter(p => p.cat === filter);
+        let currentCat = 'all';
+        let currentPriceRange = 'all';
+        let searchTerm = '';
 
-            if (filteredProducts.length === 0) {
-                empty.style.display = 'block';
+        function renderAll() {
+            const grid = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+            grid.innerHTML = "";
+
+            const filtered = products.filter(p => {
+                const matchCat = currentCat === 'all' || p.cat === currentCat;
+                const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+                
+                let matchPrice = true;
+                if(currentPriceRange === 'under200') matchPrice = p.price < 200;
+                else if(currentPriceRange === '200-500') matchPrice = p.price >= 200 && p.price <= 500;
+                else if(currentPriceRange === 'above500') matchPrice = p.price > 500;
+
+                return matchCat && matchSearch && matchPrice;
+            });
+
+            if(filtered.length === 0) {
+                noResults.style.display = "block";
             } else {
-                empty.style.display = 'none';
-                filteredProducts.forEach(p => {
-                    list.innerHTML += `
-                        <div class="p-card">
+                noResults.style.display = "none";
+                filtered.forEach((p, index) => {
+                    grid.innerHTML += `
+                        <div class="p-card" style="animation-delay: ${index * 0.05}s">
+                            <i class="far fa-heart wishlist-btn" onclick="toggleFav(this)"></i>
                             <div class="p-img-box">
                                 <img src="${p.img}" alt="${p.name}">
                             </div>
-                            <span class="p-cat-name">${p.cat.replace('-', ' ')}</span>
+                            <span class="p-tag">${p.cat.replace('-', ' ')}</span>
                             <div class="p-name">${p.name}</div>
+                            <div class="p-rating">
+                                <i class="fas fa-star"></i> ${p.rating} | 50+ sold
+                            </div>
                             <div class="p-footer">
-                                <span class="p-price">₹${p.price}</span>
-                                <button class="add-btn"><i class="fas fa-plus"></i></button>
+                                <div class="price-area">
+                                    <span class="old-price">₹${p.oldPrice}</span>
+                                    <span class="current-price">₹${p.price}</span>
+                                </div>
+                                <button class="add-btn" onclick="addToCart(${p.id})">
+                                    <i class="fas fa-plus"></i>
+                                </button>
                             </div>
                         </div>
                     `;
                 });
             }
-            
-            // Title update
-            document.getElementById('category-title').innerText = 
-                filter === 'all' ? 'All Products' : filter.replace('-', ' ').toUpperCase();
         }
 
-        function filterProducts(cat, element) {
-            // UI Active Class
-            document.querySelectorAll('.f-tag').forEach(tag => tag.classList.remove('active'));
-            if(element) element.classList.add('active');
-
-            renderProducts(cat);
-            
-            // URL update (taaki refresh pe wahi category rahe)
-            const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?category=' + cat;
-            window.history.pushState({path:newurl},'',newurl);
+        // Filters
+        function filterByCat(cat, el) {
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            currentCat = cat;
+            renderAll();
         }
 
-        // Initialize on load
-        window.onload = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const cat = urlParams.get('category') || 'all';
-            
-            // Set active tag based on URL
-            const tags = document.querySelectorAll('.f-tag');
-            tags.forEach(tag => {
-                if(tag.innerText.toLowerCase().replace(' ', '-') === cat) {
-                    tag.classList.add('active');
-                } else if (cat === 'all') {
-                    tags[0].classList.add('active');
-                } else {
-                    tag.classList.remove('active');
-                }
-            });
+        function filterByPrice(range, el) {
+            document.querySelectorAll('.price-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            currentPriceRange = range;
+            renderAll();
+        }
 
-            renderProducts(cat);
-        };
+        function handleSearch() {
+            searchTerm = document.getElementById('searchInput').value;
+            renderAll();
+        }
+
+        // Cart Logic
+        let count = 0;
+        function addToCart(id) {
+            count++;
+            document.getElementById('cart-count').innerText = count;
+            // Animation for button
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            btn.style.background = "var(--leaf-green)";
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-plus"></i>';
+                btn.style.background = "var(--dark-green)";
+            }, 1000);
+        }
+
+        function toggleFav(el) {
+            el.classList.toggle('fas');
+            el.classList.toggle('far');
+            el.classList.toggle('active');
+        }
+
+        window.onload = renderAll;
     </script>
 </body>
 </html>

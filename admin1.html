@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@
         }
 
         * { box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--dark); }
+        body { background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--dark); overflow-x: hidden; }
 
         /* HEAVY LOADER */
         #mainLoader {
@@ -29,7 +29,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* TOAST NOTIFICATIONS */
-        #toastContainer { position: fixed; top: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 280px; }
         .toast { background: white; border-left: 5px solid var(--primary); padding: 15px 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); font-weight: 600; font-size: 14px; animation: slideInRight 0.3s ease-out forwards; display: flex; align-items: center; gap: 10px; }
         .toast.error { border-color: var(--secondary); }
         .toast.success { border-color: var(--accent); }
@@ -39,7 +39,7 @@
         /* PREMIUM HEADER */
         header {
             background: linear-gradient(135deg, var(--dark), #1e293b);
-            padding: 20px; color: white; position: sticky; top: 0; z-index: 1000;
+            padding: 15px 20px; color: white; position: sticky; top: 0; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 4px solid var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
@@ -55,64 +55,60 @@
         @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .card { background: white; border-radius: 28px; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .tag { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; }
+        .tag { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; padding-left: 5px; }
 
         .input-grid { display: grid; gap: 15px; }
         .field { display: flex; flex-direction: column; gap: 6px; }
         label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
-        input, textarea, select { background: #f1f5f9; border: 2px solid transparent; padding: 14px; border-radius: 16px; font-size: 15px; transition: 0.3s; color: var(--dark); font-weight: 500; }
+        input, textarea, select { background: #f1f5f9; border: 2px solid transparent; padding: 14px; border-radius: 16px; font-size: 15px; transition: 0.3s; color: var(--dark); font-weight: 500; -webkit-appearance: none; }
         input:focus, textarea:focus, select:focus { border-color: var(--primary); background: white; outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
         
         /* SEARCH BAR */
-        .search-bar { width: 100%; padding: 15px 20px; border-radius: 20px; border: 2px solid #e2e8f0; font-size: 15px; margin-bottom: 20px; outline: none; transition: 0.3s; }
+        .search-bar { width: 100%; padding: 15px 20px; border-radius: 20px; border: 2px solid #e2e8f0; font-size: 15px; margin-bottom: 20px; outline: none; transition: 0.3s; background: white; }
         .search-bar:focus { border-color: var(--primary); }
 
         /* MULTI-PHOTO SYSTEM */
         .photo-container { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .photo-row { display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 10px; border-radius: 16px; border: 1px dashed #cbd5e1; }
-        .photo-row input { flex: 1; padding: 8px; background: transparent; }
-        .btn-add-photo { background: #e0e7ff; color: var(--primary); border: none; padding: 12px; border-radius: 14px; font-weight: 800; cursor: pointer; margin-top: 5px; transition: 0.2s; }
-        .btn-add-photo:active { background: #c7d2fe; }
+        .photo-row input { flex: 1; padding: 8px; background: transparent; border: none; font-size: 12px; }
+        .btn-add-photo { background: #e0e7ff; color: var(--primary); border: none; padding: 12px; border-radius: 14px; font-weight: 800; cursor: pointer; margin-top: 5px; transition: 0.2s; width: 100%; }
 
         .btn-main { background: var(--dark); color: white; width: 100%; padding: 20px; border-radius: 20px; border: none; font-size: 18px; font-weight: 800; margin-top: 15px; cursor: pointer; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.3); transition: 0.3s; }
-        .btn-main:active { transform: translateY(2px); box-shadow: 0 5px 15px rgba(15, 23, 42, 0.2); }
+        .btn-main:active { transform: translateY(2px); background: #000; }
 
         /* HISTORY CARDS */
         .hist-card { background: white; border-radius: 22px; padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); align-items: flex-start; transition: 0.3s; position: relative; }
-        .hist-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        .hist-card img { width: 90px; height: 90px; border-radius: 15px; object-fit: cover; background: #f1f5f9; }
-        .hist-details { flex: 1; overflow: hidden; }
-        .hist-details h4 { margin: 0 0 5px 0; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .hist-card img { width: 85px; height: 85px; border-radius: 15px; object-fit: cover; background: #f1f5f9; flex-shrink: 0; }
+        .hist-details { flex: 1; min-width: 0; }
+        .hist-details h4 { margin: 0 0 5px 0; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
         .status-badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; margin-top: 8px; text-transform: uppercase; }
         .in-stock { background: #dcfce7; color: #166534; }
         .out-stock { background: #fee2e2; color: #991b1b; }
         .limited-stock { background: #fef9c3; color: #854d0e; }
 
-        .action-btns { display: flex; gap: 8px; margin-top: 12px; }
-        .btn-icon { background: #f1f5f9; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 14px; transition: 0.2s; font-weight: 600; display: flex; align-items: center; justify-content: center; color: var(--dark); }
-        .btn-icon:hover { background: #e2e8f0; }
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr 40px; gap: 5px; margin-top: 12px; }
+        .btn-icon { background: #f1f5f9; border: none; padding: 10px 5px; border-radius: 10px; cursor: pointer; font-size: 12px; transition: 0.2s; font-weight: 700; color: var(--dark); text-align: center; }
         .btn-icon.edit { background: #e0e7ff; color: var(--primary); }
         .btn-icon.del { background: #ffe4e6; color: var(--secondary); }
 
         /* EDIT MODAL */
         #editModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.8); z-index: 3000; display: none; justify-content: center; align-items: flex-end; backdrop-filter: blur(4px); }
-        .modal-content { background: white; width: 100%; border-radius: 30px 30px 0 0; padding: 25px; max-height: 85vh; overflow-y: auto; animation: slideUpModal 0.3s ease-out; }
-        @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-content { background: white; width: 100%; border-radius: 30px 30px 0 0; padding: 25px; max-height: 85vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-header h3 { margin: 0; font-size: 20px; font-weight: 800; }
-        .close-modal { background: #f1f5f9; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .close-modal { background: #f1f5f9; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; cursor: pointer; }
 
         /* BOTTOM NAV */
-        nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0 25px; border-top: 1px solid #eee; z-index: 2000; box-shadow: 0 -5px 20px rgba(0,0,0,0.03); }
-        .nav-link { text-decoration: none; color: #94a3b8; font-size: 11px; font-weight: 700; text-align: center; flex: 1; transition: 0.3s; }
-        .nav-link.active { color: var(--primary); transform: translateY(-3px); }
-        .nav-link i { font-size: 24px; display: block; margin-bottom: 4px; }
+        nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 20px; border-top: 1px solid #eee; z-index: 2000; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        .nav-link { text-decoration: none; color: #94a3b8; font-size: 10px; font-weight: 700; text-align: center; flex: 1; }
+        .nav-link.active { color: var(--primary); }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 2px; font-style: normal; }
         
         /* Stats Bar */
         .stats-bar { display: flex; gap: 10px; margin-bottom: 20px; }
         .stat-box { flex: 1; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); text-align: center; }
-        .stat-box h3 { margin: 0; font-size: 24px; color: var(--primary); font-weight: 800; }
-        .stat-box p { margin: 5px 0 0; font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+        .stat-box h3 { margin: 0; font-size: 20px; color: var(--primary); font-weight: 800; }
+        .stat-box p { margin: 5px 0 0; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -122,7 +118,7 @@
 <div id="mainLoader">
     <div class="spinner"></div>
     <p style="margin-top: 20px; font-weight: 800; letter-spacing: 1px; font-size: 18px;">DEPLOYING SECURELY...</p>
-    <span id="loadProgress" style="font-size: 13px; color: var(--accent); margin-top: 5px; font-weight: 600;">Processing System</span>
+    <span id="loadProgress" style="font-size: 13px; color: var(--accent); margin-top: 5px; font-weight: 600;">Connecting...</span>
 </div>
 
 <header>
@@ -156,7 +152,7 @@
 
                 <div style="display: flex; gap: 10px;">
                     <div class="field" style="flex:1;">
-                        <label>Original Price (₹)</label>
+                        <label>Price (₹)</label>
                         <input type="number" id="price" required min="0">
                     </div>
                     <div class="field" style="flex:1;">
@@ -166,7 +162,7 @@
                 </div>
 
                 <div class="field">
-                    <label>Permanent Photos (Cloudinary CDN)</label>
+                    <label>Product Photos (Multiple)</label>
                     <div id="photoList" class="photo-container">
                         <div class="photo-row">
                             <input type="file" class="photo-input" accept="image/*" required>
@@ -177,7 +173,7 @@
 
                 <div class="field">
                     <label>Current Stock Count</label>
-                    <input type="number" id="stockCount" required placeholder="Total units available" min="0">
+                    <input type="number" id="stockCount" required placeholder="Total units" min="0">
                 </div>
 
                 <div class="field">
@@ -191,12 +187,12 @@
                 </div>
 
                 <div class="field">
-                    <label>How To Use (Process)</label>
+                    <label>How To Use</label>
                     <textarea id="usage" rows="2" placeholder="Step 1, Step 2..."></textarea>
                 </div>
 
                 <div class="field">
-                    <label>Benefits & Saman (Ingredients)</label>
+                    <label>Benefits & Ingredients</label>
                     <input type="text" id="ing" placeholder="Neem, Tulsi, Aloe Vera...">
                 </div>
 
@@ -210,7 +206,7 @@
     <div class="stats-bar">
         <div class="stat-box">
             <h3 id="totalProducts">0</h3>
-            <p>Total Products</p>
+            <p>Total Items</p>
         </div>
         <div class="stat-box">
             <h3 id="activeProducts" style="color: var(--accent);">0</h3>
@@ -218,7 +214,7 @@
         </div>
     </div>
     
-    <input type="text" id="searchBox" class="search-bar" placeholder="🔍 Search products by name or category..." onkeyup="filterProducts()">
+    <input type="text" id="searchBox" class="search-bar" placeholder="🔍 Search by name or category..." onkeyup="filterProducts()">
     
     <span class="tag">Active Inventory Feed</span>
     <div id="masterFeed"></div>
@@ -258,24 +254,23 @@
 </div>
 
 <nav>
-    <a href="#" class="nav-link active" onclick="showTab('addPage', this)"><i>🚀</i><span>Deploy</span></a>
-    <a href="#" class="nav-link" onclick="showTab('listPage', this)"><i>📊</i><span>Database</span></a>
+    <a href="javascript:void(0)" class="nav-link active" onclick="showTab('addPage', this)"><i>🚀</i><span>Deploy</span></a>
+    <a href="javascript:void(0)" class="nav-link" onclick="showTab('listPage', this)"><i>📊</i><span>Database</span></a>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // --- CLOUDINARY API CONFIGURATIONS ---
+    // --- CONFIGS ---
     const CLOUD_NAME = "despxo7zb";
-    const UPLOAD_PRESET = "nemi_preset"; // Bhai, Cloudinary me jo unsigned preset banaya hai uska naam yaha dalna (agar alag ho toh)
-    
-    // --- FIREBASE CONFIGURATION ---
+    const UPLOAD_PRESET = "nemi_preset"; 
     const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" };
+    
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    let globalProducts = {}; // Store data locally for search/edit
+    let globalProducts = {};
 
     // --- UTILITIES ---
     window.showToast = (msg, type = "success") => {
@@ -291,18 +286,25 @@
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active-section');
-        el.classList.add('active');
+        if(el) el.classList.add('active');
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
     window.addNewPhotoField = () => {
         const div = document.createElement('div');
         div.className = 'photo-row';
-        div.innerHTML = `<input type="file" class="photo-input" accept="image/*"> <button type="button" class="btn-icon del" onclick="this.parentElement.remove()">❌</button>`;
+        div.innerHTML = `<input type="file" class="photo-input" accept="image/*"> <button type="button" class="btn-icon del" onclick="this.parentElement.remove()" style="padding:5px 10px">✕</button>`;
         document.getElementById('photoList').appendChild(div);
     };
 
-    // --- MEGA UPLOAD ENGINE (CLOUDINARY POWERED) ---
+    // --- FIREBASE DATA SYNC ---
+    // Note: Hume 'products' node use karna hai consistently
+    onValue(ref(db, 'products'), (snap) => {
+        globalProducts = snap.val() || {};
+        renderFeed(globalProducts);
+    });
+
+    // --- SUBMIT LOGIC ---
     document.getElementById('proForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const loader = document.getElementById('mainLoader');
@@ -313,49 +315,41 @@
         let uploadedUrls = [];
 
         try {
-            // STEP 1: Permanent Image Upload via Cloudinary
+            // Upload to Cloudinary
             for(let i=0; i < fileInputs.length; i++) {
                 let file = fileInputs[i].files[0];
                 if(file) {
-                    progressText.innerText = `Uploading Image to Cloudinary: ${i+1}/${fileInputs.length}`;
+                    progressText.innerText = `Photo ${i+1}/${fileInputs.length} Uploading...`;
                     
                     let formData = new FormData();
                     formData.append("file", file);
                     formData.append("upload_preset", UPLOAD_PRESET);
                     
-                    // Cloudinary Upload API Call
                     const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
                         method: "POST",
                         body: formData
                     });
                     
-                    const data = await res.json();
-                    
-                    if(data.secure_url) {
-                        uploadedUrls.push(data.secure_url); // This URL is fast and permanent
-                    } else {
-                        throw new Error(data.error ? data.error.message : "Image upload failed");
-                    }
+                    const cloudData = await res.json();
+                    if(cloudData.secure_url) uploadedUrls.push(cloudData.secure_url);
                 }
             }
 
-            progressText.innerText = `Saving to Firebase Database...`;
+            if(uploadedUrls.length === 0) throw new Error("Please upload at least one photo!");
 
-            // STEP 2: Stock Logic
+            progressText.innerText = `Saving to Firebase...`;
+
             const sCount = parseInt(document.getElementById('stockCount').value);
-            let sStatus = sCount <= 0 ? "OUTOFSTOCK" : (sCount < 5 ? "LIMITED" : "INSTOCK");
-
-            // STEP 3: Pricing Logic
             const p = parseFloat(document.getElementById('price').value);
             const d = parseFloat(document.getElementById('disc').value);
-            const final = p - (p * (d/100));
+            const final = Math.round(p - (p * (d/100)));
 
-            // STEP 4: Product Data Object
             const prodData = {
                 title: document.getElementById('title').value,
                 category: document.getElementById('category').value,
-                price: p, discount: d, finalPrice: Math.round(final),
-                stock: sCount, status: sStatus,
+                price: p, discount: d, finalPrice: final,
+                stock: sCount, 
+                status: sCount <= 0 ? "OUTOFSTOCK" : (sCount < 5 ? "LIMITED" : "INSTOCK"),
                 images: uploadedUrls,
                 hero: document.getElementById('hero').value,
                 description: document.getElementById('desc').value,
@@ -364,106 +358,91 @@
                 time: Date.now()
             };
 
-            const newProdRef = push(ref(db, 'products'));
-            await set(newProdRef, prodData);
+            // Push to 'products' node
+            const newRef = push(ref(db, 'products'));
+            await set(newRef, prodData);
 
-            showToast("Product successfully deployed to Firebase!");
+            showToast("Product Live Ho Gaya!");
             document.getElementById('proForm').reset();
             document.getElementById('photoList').innerHTML = `<div class="photo-row"><input type="file" class="photo-input" accept="image/*" required></div>`;
             showTab('listPage', document.querySelectorAll('.nav-link')[1]);
 
         } catch (err) {
-            console.error("Upload Error:", err);
-            showToast("Error: " + err.message, "error");
+            showToast(err.message, "error");
         } finally {
             loader.style.display = 'none';
         }
     });
 
-    // --- HISTORY MANAGER & RENDERER ---
-    onValue(ref(db, 'products'), (snap) => {
-        globalProducts = snap.val() || {};
-        renderFeed(globalProducts);
-    });
-
-    function renderFeed(dataObj) {
+    // --- RENDER FEED ---
+    window.renderFeed = (dataObj) => {
         const feed = document.getElementById('masterFeed');
         feed.innerHTML = "";
-        
         const keys = Object.keys(dataObj).reverse();
         
-        // Update Stats
         document.getElementById('totalProducts').innerText = keys.length;
         document.getElementById('activeProducts').innerText = keys.filter(k => dataObj[k].stock > 0).length;
 
-        if(keys.length === 0) { 
-            feed.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
-                <i style="font-size:40px;">📦</i><br><br>No products found in database.
-            </div>`; 
-            return; 
+        if(keys.length === 0) {
+            feed.innerHTML = `<div style="text-align:center; padding:50px; color:#94a3b8;">Empty Database</div>`;
+            return;
         }
 
         keys.forEach(id => {
             const p = dataObj[id];
-            let actualStatus = p.status;
-            if(p.stock <= 0) actualStatus = "OUTOFSTOCK";
-            
-            const badgeClass = actualStatus === 'INSTOCK' ? 'in-stock' : (actualStatus === 'LIMITED' ? 'limited-stock' : 'out-stock');
-            const badgeText = actualStatus === 'LIMITED' ? `⚠️ ${p.stock} Left` : actualStatus;
+            const badgeClass = p.stock <= 0 ? 'out-stock' : (p.stock < 5 ? 'limited-stock' : 'in-stock');
+            const badgeText = p.stock <= 0 ? 'OUT OF STOCK' : (p.stock < 5 ? `ONLY ${p.stock} LEFT` : 'IN STOCK');
 
             feed.innerHTML += `
-                <div class="hist-card" id="card-${id}">
-                    <img src="${p.images && p.images[0] ? p.images[0] : 'https://via.placeholder.com/90'}">
+                <div class="hist-card">
+                    <img src="${p.images ? p.images[0] : ''}" alt="img">
                     <div class="hist-details">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                            <small style="color:var(--primary); font-weight:800;">${p.category || 'NO CAT'}</small>
-                            <button class="btn-icon edit" onclick="openEdit('${id}')" style="padding:4px 8px;">✏️ Edit</button>
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <span style="font-size:9px; color:var(--primary); font-weight:800">${p.category}</span>
+                            <button class="btn-icon edit" onclick="openEdit('${id}')">EDIT</button>
                         </div>
                         <h4>${p.title}</h4>
-                        <b style="font-size:16px;">₹${p.finalPrice}</b> <small style="text-decoration:line-through; color:#94a3b8; margin-left:5px;">₹${p.price}</small>
-                        <br>
+                        <div style="margin: 5px 0;">
+                            <b style="font-size:16px;">₹${p.finalPrice}</b> 
+                            <span style="text-decoration:line-through; font-size:12px; color:#94a3b8; margin-left:5px;">₹${p.price}</span>
+                        </div>
                         <span class="status-badge ${badgeClass}">${badgeText}</span>
                         <div class="action-btns">
-                            <button class="btn-icon" onclick="quickStock('${id}', 10)">+10 Stock</button>
-                            <button class="btn-icon" onclick="quickStock('${id}', 0)">Mark 0</button>
+                            <button class="btn-icon" onclick="quickStock('${id}', ${parseInt(p.stock) + 10})">+10</button>
+                            <button class="btn-icon" onclick="quickStock('${id}', 0)">SET 0</button>
                             <button class="btn-icon del" onclick="delItem('${id}')">🗑️</button>
                         </div>
                     </div>
                 </div>
             `;
         });
-    }
+    };
 
-    // --- SEARCH/FILTER ---
+    // --- SEARCH ---
     window.filterProducts = () => {
-        const query = document.getElementById('searchBox').value.toLowerCase();
+        const q = document.getElementById('searchBox').value.toLowerCase();
         const filtered = {};
         Object.keys(globalProducts).forEach(id => {
             const p = globalProducts[id];
-            if(p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query)) {
-                filtered[id] = p;
-            }
+            if(p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) filtered[id] = p;
         });
         renderFeed(filtered);
     };
 
-    // --- QUICK ACTIONS ---
-    window.quickStock = (id, newStock) => {
-        let status = newStock <= 0 ? "OUTOFSTOCK" : (newStock < 5 ? "LIMITED" : "INSTOCK");
-        update(ref(db, `products/${id}`), { stock: newStock, status: status })
-            .then(() => showToast(`Stock updated to ${newStock}`))
-            .catch(e => showToast("Update failed", "error"));
+    // --- ACTIONS ---
+    window.quickStock = (id, num) => {
+        const stat = num <= 0 ? "OUTOFSTOCK" : (num < 5 ? "LIMITED" : "INSTOCK");
+        update(ref(db, `products/${id}`), { stock: num, status: stat })
+            .then(() => showToast("Stock Updated!"))
+            .catch(() => showToast("Error", "error"));
     };
 
     window.delItem = (id) => {
-        if(confirm("⚠️ Are you sure you want to permanently delete this product?")) {
-            remove(ref(db, `products/${id}`))
-                .then(() => showToast("Product deleted successfully"))
-                .catch(e => showToast("Delete failed", "error"));
+        if(confirm("Delete this product permanently?")) {
+            remove(ref(db, `products/${id}`)).then(() => showToast("Deleted!"));
         }
     };
 
-    // --- EDIT MODAL SYSTEM ---
     window.openEdit = (id) => {
         const p = globalProducts[id];
         document.getElementById('editId').value = id;
@@ -474,28 +453,23 @@
         document.getElementById('editModal').style.display = 'flex';
     };
 
-    window.closeEditModal = () => {
-        document.getElementById('editModal').style.display = 'none';
-    };
+    window.closeEditModal = () => document.getElementById('editModal').style.display = 'none';
 
     document.getElementById('editForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('editId').value;
-        const price = parseFloat(document.getElementById('editPrice').value);
-        const disc = parseFloat(document.getElementById('editDisc').value);
-        const finalPrice = Math.round(price - (price * (disc/100)));
-        const stock = parseInt(document.getElementById('editStock').value);
-        let status = stock <= 0 ? "OUTOFSTOCK" : (stock < 5 ? "LIMITED" : "INSTOCK");
-
+        const pr = parseFloat(document.getElementById('editPrice').value);
+        const ds = parseFloat(document.getElementById('editDisc').value);
+        const st = parseInt(document.getElementById('editStock').value);
+        
         update(ref(db, `products/${id}`), {
             title: document.getElementById('editTitle').value,
-            price: price, discount: disc, finalPrice: finalPrice,
-            stock: stock, status: status
+            price: pr, discount: ds, stock: st,
+            finalPrice: Math.round(pr - (pr * (ds/100))),
+            status: st <= 0 ? "OUTOFSTOCK" : (st < 5 ? "LIMITED" : "INSTOCK")
         }).then(() => {
             closeEditModal();
-            showToast("Product details updated!");
-        }).catch(err => {
-            showToast("Error updating product", "error");
+            showToast("Updated!");
         });
     });
 </script>

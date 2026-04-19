@@ -6,6 +6,10 @@
     <title>The Nemi Mart | Premium Ayurveda</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <style>
         /* ==========================================================================
            1. CSS VARIABLES & BASE SETUP (ENTERPRISE PREMIUM LAYOUT)
@@ -239,17 +243,26 @@
         }
         .add-btn:hover { background: var(--gold); transform: scale(1.1) rotate(90deg); }
         
-        /* The "Added" State class */
         .add-btn.added {
             background: var(--leaf-green);
             transform: scale(1);
-            pointer-events: none; /* Prevent double clicking if wanted, or leave to allow qty increase */
+            pointer-events: none; 
             box-shadow: 0 4px 10px rgba(45,90,39,0.4);
         }
         .add-btn.added i {
             animation: popIn 0.3s ease-out forwards;
         }
         @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.3); } 100% { transform: scale(1); } }
+
+        /* Loader Animation */
+        .loader {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: var(--leaf-green);
+            font-weight: 600;
+            grid-column: 1 / -1;
+        }
 
         /* ==========================================================================
            6. BOTTOM NAVIGATION (APP-LIKE FEEL)
@@ -338,7 +351,7 @@
         .footer-premium {
             background: var(--dark-green);
             color: white;
-            padding: 50px 5% 120px; /* padding bottom for bottom nav */
+            padding: 50px 5% 120px; 
             margin-top: 50px;
             text-align: center;
             border-top: 5px solid var(--gold);
@@ -397,27 +410,27 @@
         </div>
     </header>
 
-    <div class="cat-strip" id="dynamicCategories">
-        </div>
+    <div class="cat-strip" id="dynamicCategories"></div>
 
     <div class="banner-wrapper">
-        <div class="banner-container" id="dynamicBanner">
-            </div>
+        <div class="banner-container" id="dynamicBanner"></div>
     </div>
 
     <div class="section-header">
         <h2><i class="fas fa-fire"></i> Top Selling</h2>
-        <div class="view-all" onclick="document.getElementById('allProductsSection').scrollIntoView({behavior: 'smooth'})">View All</div>
+        <div class="view-all" onclick="window.location.href='allproduct.html'">View All</div>
     </div>
     <div class="product-grid" id="topSellingGrid">
-        </div>
+        <div class="loader">Fetching from Database...</div>
+    </div>
 
     <div class="section-header">
         <h2><i class="fas fa-crown"></i> Premium Range</h2>
-        <div class="view-all" onclick="document.getElementById('allProductsSection').scrollIntoView({behavior: 'smooth'})">View All</div>
+        <div class="view-all" onclick="window.location.href='allproduct.html'">View All</div>
     </div>
     <div class="product-grid" id="premiumGrid">
-        </div>
+        <div class="loader">Fetching from Database...</div>
+    </div>
 
     <div class="newsletter">
         <h3>Join The Nemi Mart Family</h3>
@@ -430,9 +443,8 @@
 
     <div class="section-header" id="allProductsSection" style="margin-top: 50px;">
         <h2><i class="fas fa-box-open"></i> Discover All Products</h2>
+        <div class="view-all" style="background: var(--gold); color: var(--dark-green);" onclick="window.location.href='allproduct.html'">Shop All Catalog <i class="fas fa-arrow-right"></i></div>
     </div>
-    <div class="product-grid" id="allProductsGrid">
-        </div>
 
     <footer class="footer-premium">
         <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart" class="footer-logo">
@@ -449,7 +461,8 @@
 
     <nav class="bottom-nav">
         <a onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="nav-item active"><i class="fas fa-home-alt"></i>Home</a>
-        <a onclick="document.getElementById('allProductsSection').scrollIntoView({behavior: 'smooth'})" class="nav-item"><i class="fas fa-store"></i>Shop</a>
+        
+        <a onclick="window.location.href='allproduct.html'" class="nav-item"><i class="fas fa-store"></i>Shop</a>
         
         <div class="cart-float">
             <a onclick="window.location.href='cart.html'" style="text-decoration: none;">
@@ -466,92 +479,28 @@
 
     <script>
         /**
-         * THE NEMI MART - ENTERPRISE CORE ENGINE v4.0
+         * THE NEMI MART - ENTERPRISE CORE ENGINE v4.0 (FIREBASE CONNECTED)
          * Architected for Scalability, Dynamic Rendering, and Premium UX.
          * Developer: Akash (Arham Insights)
          */
 
-        // --- 1. MOCK ADMIN DATABASE ---
-        // Maine database thoda bada kar diya taaki All Products section bhara-bhara aur accha dikhe.
-        const ADMIN_DATABASE = {
-            categories: [
-                { id: "c1", name: "Immunity", icon: "fa-shield-heart", link: "immunity.html" },
-                { id: "c2", name: "Hair Care", icon: "fa-pump-soap", link: "hair-care.html" },
-                { id: "c3", name: "Gum Care", icon: "fa-teeth", link: "gum-care.html" },
-                { id: "c4", name: "Vitality", icon: "fa-hand-holding-heart", link: "vitality.html" },
-                { id: "c5", name: "Wellness", icon: "fa-mortar-pestle", link: "wellness.html" },
-                { id: "c6", name: "Skincare", icon: "fa-spa", link: "skincare.html" }
-            ],
-            banners: [
-                { id: "b1", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png", alt: "Amritprash Offer" },
-                { id: "b2", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png", alt: "Nyala Offer" },
-                { id: "b3", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png", alt: "Tulsi Offer" },
-                { id: "b4", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png", alt: "Dantvam Offer" }
-            ],
-            products: [
-                {
-                    id: 101, name: "Amritprash Power Booster 250gm", tag: "Natural Power",
-                    price: 850, oldPrice: 1200, discount: 29,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: true, isPremium: false
-                },
-                {
-                    id: 102, name: "Nyala Herbal Hair Fall Control Oil", tag: "Anti-Hairfall",
-                    price: 350, oldPrice: 599, discount: 41,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: true, isPremium: true
-                },
-                {
-                    id: 103, name: "Panch Tulsi Pure Extract Drops", tag: "Immunity",
-                    price: 195, oldPrice: 250, discount: 22,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: true, isPremium: false
-                },
-                {
-                    id: 104, name: "Dantvam Premium Herbal Toothpaste", tag: "Premium Care",
-                    price: 95, oldPrice: 120, discount: 20,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: false, isPremium: true
-                },
-                {
-                    id: 105, name: "Immunity & Vitality Duo Pack", tag: "Best Value",
-                    price: 1050, oldPrice: 1450, discount: 27,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: false, isPremium: true
-                },
-                {
-                    id: 106, name: "Himalayan Pure Shilajit Resin 20g", tag: "Strength",
-                    price: 1499, oldPrice: 1999, discount: 25,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: true, isPremium: true
-                },
-                {
-                    id: 107, name: "Aloe Vera Glow Hydration Gel", tag: "Skin Care",
-                    price: 249, oldPrice: 399, discount: 37,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: false, isPremium: false
-                },
-                {
-                    id: 108, name: "Triphala Gut Cleanse Juice 500ml", tag: "Digestion",
-                    price: 399, oldPrice: 550, discount: 27,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: false, isPremium: false
-                },
-                // Added a few more generic products to make the "All Products" section robust
-                {
-                    id: 109, name: "Ashwagandha Stress Relief Tabs", tag: "Calm Mind",
-                    price: 450, oldPrice: 600, discount: 25,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: true, isPremium: false
-                },
-                {
-                    id: 110, name: "Neem & Turmeric Face Wash", tag: "Clear Skin",
-                    price: 180, oldPrice: 250, discount: 28,
-                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-                    isTopSelling: false, isPremium: false
-                }
-            ]
+        // ==========================================
+        // 1. FIREBASE CONFIGURATION (YAHAN APNI KEYS DAALEIN)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
 
         // --- 2. PREMIUM NOTIFICATION MANAGER ---
         class NotificationSystem {
@@ -582,35 +531,33 @@
             }
         }
 
-        // --- 3. SHOPPING CART ENGINE (With "Added" State Management) ---
+        // --- 3. SHOPPING CART ENGINE ---
         class CartEngine {
             constructor() {
-                this.cartKey = 'nemi_mart_cart_v3'; // Updated key
+                this.cartKey = 'nemi_mart_cart_v3';
                 this.items = JSON.parse(localStorage.getItem(this.cartKey)) || [];
                 this.updateBadge();
             }
 
-            // Checks if a product is already in the cart
             isProductInCart(productId) {
                 return this.items.some(item => item.id === productId);
             }
 
-            // Modified to accept the button element to change its state instantly
-            addItem(product, event, btnElement) {
-                event.stopPropagation(); // Prevents product card click event (goToProduct)
+            addItem(productStr, event, btnElement) {
+                event.stopPropagation(); 
+                
+                // Parse the product string back to an object
+                const product = JSON.parse(decodeURIComponent(productStr));
 
                 if (this.isProductInCart(product.id)) {
-                    // Item already in cart, maybe increase qty or just alert
                     NotificationSystem.showToast("Already in Cart", `${product.name} is already added.`);
                     return;
                 }
 
-                // Add to array
                 this.items.push({ ...product, qty: 1 });
                 this.saveCart();
                 this.updateBadge();
                 
-                // Change UI of the clicked button instantly
                 if (btnElement) {
                     btnElement.classList.add('added');
                     btnElement.innerHTML = '<i class="fas fa-check"></i>';
@@ -618,7 +565,6 @@
                 
                 NotificationSystem.showToast("Added to Cart", `${product.name} added successfully.`);
                 
-                // Bounce Badge
                 const badge = document.getElementById('cartBadge');
                 badge.style.transform = 'scale(1.5)';
                 setTimeout(() => badge.style.transform = 'scale(1)', 300);
@@ -629,146 +575,96 @@
             }
 
             updateBadge() {
-                const totalItems = this.items.reduce((sum, item) => sum + item.qty, 0);
-                document.getElementById('cartBadge').innerText = totalItems;
+                const badge = document.getElementById('cartBadge');
+                if (badge) badge.innerText = this.items.length;
             }
         }
 
-        const AppCart = new CartEngine();
+        const appCart = new CartEngine();
 
-        // --- 4. UI RENDERER ---
-        class UIManager {
-            static renderCategories() {
-                const container = document.getElementById('dynamicCategories');
-                let html = '';
-                ADMIN_DATABASE.categories.forEach(cat => {
-                    html += `
-                        <a onclick="window.location.href='${cat.link}'" class="cat-card">
-                            <div class="icon-circle"><i class="fas ${cat.icon}"></i></div>
-                            <span>${cat.name}</span>
-                        </a>
-                    `;
-                });
-                container.innerHTML = html;
+        // --- 4. FIREBASE PRODUCT FETCHING & RENDERING ---
+        
+        // Function to create HTML for a single product card
+        function createProductCardHTML(product) {
+            // Encode product object to pass in onclick safely
+            const productString = encodeURIComponent(JSON.stringify(product));
+            const inCartClass = appCart.isProductInCart(product.id) ? 'added' : '';
+            const inCartIcon = appCart.isProductInCart(product.id) ? '<i class="fas fa-check"></i>' : '<i class="fas fa-plus"></i>';
+            
+            // Calculate Discount if missing
+            let discountHTML = '';
+            if (product.oldPrice && product.oldPrice > product.price) {
+                let discountPercent = product.discount || Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
+                discountHTML = `<div class="discount-badge">${discountPercent}% OFF</div>`;
             }
 
-            static renderBanners() {
-                const container = document.getElementById('dynamicBanner');
-                let html = '';
-                ADMIN_DATABASE.banners.forEach(b => {
-                    html += `
-                    <div class="banner-slide">
-                        <img src="${b.img}" alt="${b.alt}" loading="lazy">
-                        <div class="banner-overlay"></div>
-                    </div>`;
-                });
-                container.innerHTML = html;
-                this.initBannerScroll();
-            }
+            return `
+                <div class="p-card" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                    ${discountHTML}
+                    <div class="p-img-box">
+                        <img src="${product.image || product.img}" alt="${product.name}">
+                    </div>
+                    <div class="p-tag">${product.tag || 'Premium'}</div>
+                    <div class="p-title">${product.name}</div>
+                    <div class="p-price-row">
+                        <div class="p-price">
+                            ₹${product.price}
+                            ${product.oldPrice ? `<span class="p-old-price">₹${product.oldPrice}</span>` : ''}
+                        </div>
+                        <button class="add-btn ${inCartClass}" onclick="appCart.addItem('${productString}', event, this)">
+                            ${inCartIcon}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
 
-            static initBannerScroll() {
-                const banner = document.getElementById('dynamicBanner');
-                const slides = banner.querySelectorAll('.banner-slide');
-                if(!slides.length) return;
+        // Fetch Data from Firebase
+        async function fetchProductsFromFirebase() {
+            try {
+                // Assumption: Your firestore collection is named 'products'
+                const snapshot = await db.collection('products').get();
+                const allProducts = [];
                 
-                let index = 0;
-                let isPaused = false;
+                snapshot.forEach(doc => {
+                    allProducts.push({ id: doc.id, ...doc.data() });
+                });
 
-                function autoScroll() {
-                    if(isPaused) return;
-                    index++;
-                    if (index >= slides.length) index = 0;
-                    banner.scrollTo({ left: index * banner.offsetWidth, behavior: 'smooth' });
+                if(allProducts.length === 0) {
+                    document.getElementById('topSellingGrid').innerHTML = '<div class="loader">No products found in database.</div>';
+                    document.getElementById('premiumGrid').innerHTML = '<div class="loader">No products found in database.</div>';
+                    return;
                 }
 
-                let scrollInterval = setInterval(autoScroll, 4000);
+                // Filter logic based on your fields (isTopSelling, isPremium)
+                const topSellingProducts = allProducts.filter(p => p.isTopSelling === true);
+                const premiumProducts = allProducts.filter(p => p.isPremium === true);
 
-                ['mousedown', 'touchstart'].forEach(evt => 
-                    banner.addEventListener(evt, () => { isPaused = true; clearInterval(scrollInterval); })
-                );
-                ['mouseup', 'touchend'].forEach(evt => 
-                    banner.addEventListener(evt, () => {
-                        setTimeout(() => {
-                            isPaused = false;
-                            clearInterval(scrollInterval);
-                            scrollInterval = setInterval(autoScroll, 4000);
-                        }, 3000);
-                    })
-                );
-            }
-
-            // Centralized Product Card Generator with Smart Button State
-            static generateProductCard(product, delayIndex) {
-                // Check if item is already in cart to apply the '.added' class
-                const inCart = AppCart.isProductInCart(product.id);
-                const btnClass = inCart ? 'add-btn added' : 'add-btn';
-                const btnIcon = inCart ? '<i class="fas fa-check"></i>' : '<i class="fas fa-plus"></i>';
-                
-                // Safe JSON string for onclick
-                const productJSON = JSON.stringify(product).replace(/"/g, '&quot;');
-
-                // Notice: Main card onclick redirects to product.html, Button onclick adds to cart.
-                return `
-                    <div class="p-card" style="animation-delay: ${delayIndex * 0.1}s;" onclick="UIManager.goToProduct(${product.id})">
-                        ${product.discount ? `<div class="discount-badge">${product.discount}% OFF</div>` : ''}
-                        <div class="p-img-box">
-                            <img src="${product.img}" alt="${product.name}" loading="lazy">
-                        </div>
-                        <span class="p-tag">${product.tag}</span>
-                        <div class="p-title">${product.name}</div>
-                        <div class="p-price-row">
-                            <div class="p-price">
-                                ₹${product.price}
-                                <span class="p-old-price">₹${product.oldPrice}</span>
-                            </div>
-                            <button class="${btnClass}" onclick="AppCart.addItem(${productJSON}, event, this)">
-                                ${btnIcon}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            static renderProducts() {
-                const topGrid = document.getElementById('topSellingGrid');
-                const premGrid = document.getElementById('premiumGrid');
-                const allGrid = document.getElementById('allProductsGrid'); // Now on the homepage!
-
-                let topHtml = '', premHtml = '', allHtml = '';
-                let topIdx = 0, premIdx = 0, allIdx = 0;
-
-                ADMIN_DATABASE.products.forEach(p => {
-                    // ALL products rendered in the bottom grid right here on the home page
-                    allHtml += this.generateProductCard(p, allIdx++);
-                    
-                    if (p.isTopSelling) {
-                        topHtml += this.generateProductCard(p, topIdx++);
-                    }
-                    if (p.isPremium) {
-                        premHtml += this.generateProductCard(p, premIdx++);
-                    }
+                // Render Top Selling
+                const topSellingGrid = document.getElementById('topSellingGrid');
+                topSellingGrid.innerHTML = ''; // clear loader
+                topSellingProducts.slice(0, 4).forEach(prod => { // Showing max 4 on home
+                    topSellingGrid.innerHTML += createProductCardHTML(prod);
                 });
 
-                topGrid.innerHTML = topHtml;
-                premGrid.innerHTML = premHtml;
-                allGrid.innerHTML = allHtml;
-            }
+                // Render Premium
+                const premiumGrid = document.getElementById('premiumGrid');
+                premiumGrid.innerHTML = ''; // clear loader
+                premiumProducts.slice(0, 4).forEach(prod => { // Showing max 4 on home
+                    premiumGrid.innerHTML += createProductCardHTML(prod);
+                });
 
-            // Router Function for product details
-            static goToProduct(productId) {
-                // Ye line seedha product.html par URL parameter (id) ke saath bhejegi
-                // Jisse tum product.html mein easily product details utha sakte ho.
-                window.location.href = `product.html?id=${productId}`;
+            } catch (error) {
+                console.error("Error fetching products: ", error);
+                document.getElementById('topSellingGrid').innerHTML = '<div class="loader">Error loading products.</div>';
+                document.getElementById('premiumGrid').innerHTML = '<div class="loader">Error loading products.</div>';
             }
         }
 
-        // --- 5. INITIALIZE APPLICATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("Nemi Mart Core v4 Initialized. All systems operational.");
-            UIManager.renderCategories();
-            UIManager.renderBanners();
-            UIManager.renderProducts();
-        });
+        // Initialize fetching on page load
+        window.onload = () => {
+            fetchProductsFromFirebase();
+        };
 
     </script>
 </body>

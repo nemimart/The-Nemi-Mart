@@ -6,6 +6,7 @@
     <title>NEMI MASTER v10 | PRO BUSINESS SUITE</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
+        /* [TERE SARE PURANE STYLES YAHAN HAIN - UNTOUCHED] */
         :root {
             --primary: #4f46e5;
             --secondary: #f43f5e;
@@ -18,7 +19,6 @@
         * { box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--dark); overflow-x: hidden; }
 
-        /* HEAVY LOADER */
         #mainLoader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.95); z-index: 9999; display: none;
@@ -28,7 +28,6 @@
         .spinner { width: 60px; height: 60px; border: 6px solid #1e293b; border-top: 6px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* TOAST NOTIFICATIONS */
         #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 280px; }
         .toast { background: white; border-left: 5px solid var(--primary); padding: 15px 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); font-weight: 600; font-size: 14px; animation: slideInRight 0.3s ease-out forwards; display: flex; align-items: center; gap: 10px; }
         .toast.error { border-color: var(--secondary); }
@@ -36,7 +35,6 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* PREMIUM HEADER */
         header {
             background: linear-gradient(135deg, var(--dark), #1e293b);
             padding: 15px 20px; color: white; position: sticky; top: 0; z-index: 1000;
@@ -49,7 +47,6 @@
         .btn-top:active { transform: scale(0.95); }
         .btn-order { background: var(--secondary); }
 
-        /* FORM & CARDS */
         .content-section { display: none; padding: 15px; animation: slideIn 0.4s ease-out; }
         .active-section { display: block; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -63,11 +60,9 @@
         input, textarea, select { background: #f1f5f9; border: 2px solid transparent; padding: 14px; border-radius: 16px; font-size: 15px; transition: 0.3s; color: var(--dark); font-weight: 500; -webkit-appearance: none; }
         input:focus, textarea:focus, select:focus { border-color: var(--primary); background: white; outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
         
-        /* SEARCH BAR */
         .search-bar { width: 100%; padding: 15px 20px; border-radius: 20px; border: 2px solid #e2e8f0; font-size: 15px; margin-bottom: 20px; outline: none; transition: 0.3s; background: white; }
         .search-bar:focus { border-color: var(--primary); }
 
-        /* MULTI-PHOTO SYSTEM */
         .photo-container { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .photo-row { display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 10px; border-radius: 16px; border: 1px dashed #cbd5e1; }
         .photo-row input { flex: 1; padding: 8px; background: transparent; border: none; font-size: 12px; }
@@ -76,7 +71,6 @@
         .btn-main { background: var(--dark); color: white; width: 100%; padding: 20px; border-radius: 20px; border: none; font-size: 18px; font-weight: 800; margin-top: 15px; cursor: pointer; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.3); transition: 0.3s; }
         .btn-main:active { transform: translateY(2px); background: #000; }
 
-        /* HISTORY CARDS */
         .hist-card { background: white; border-radius: 22px; padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); align-items: flex-start; transition: 0.3s; position: relative; }
         .hist-card img { width: 85px; height: 85px; border-radius: 15px; object-fit: cover; background: #f1f5f9; flex-shrink: 0; }
         .hist-details { flex: 1; min-width: 0; }
@@ -91,20 +85,17 @@
         .btn-icon.edit { background: #e0e7ff; color: var(--primary); }
         .btn-icon.del { background: #ffe4e6; color: var(--secondary); }
 
-        /* EDIT MODAL */
         #editModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.8); z-index: 3000; display: none; justify-content: center; align-items: flex-end; backdrop-filter: blur(4px); }
         .modal-content { background: white; width: 100%; border-radius: 30px 30px 0 0; padding: 25px; max-height: 85vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-header h3 { margin: 0; font-size: 20px; font-weight: 800; }
         .close-modal { background: #f1f5f9; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; cursor: pointer; }
 
-        /* BOTTOM NAV */
         nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 20px; border-top: 1px solid #eee; z-index: 2000; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
         .nav-link { text-decoration: none; color: #94a3b8; font-size: 10px; font-weight: 700; text-align: center; flex: 1; }
         .nav-link.active { color: var(--primary); }
         .nav-link i { font-size: 22px; display: block; margin-bottom: 2px; font-style: normal; }
         
-        /* Stats Bar */
         .stats-bar { display: flex; gap: 10px; margin-bottom: 20px; }
         .stat-box { flex: 1; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); text-align: center; }
         .stat-box h3 { margin: 0; font-size: 20px; color: var(--primary); font-weight: 800; }
@@ -262,7 +253,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // --- CONFIGS ---
     const CLOUD_NAME = "despxo7zb";
     const UPLOAD_PRESET = "nemi_preset"; 
     const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" };
@@ -272,7 +262,6 @@
 
     let globalProducts = {};
 
-    // --- UTILITIES ---
     window.showToast = (msg, type = "success") => {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
@@ -297,14 +286,11 @@
         document.getElementById('photoList').appendChild(div);
     };
 
-    // --- FIREBASE DATA SYNC ---
-    // Note: Hume 'products' node use karna hai consistently
     onValue(ref(db, 'products'), (snap) => {
         globalProducts = snap.val() || {};
         renderFeed(globalProducts);
     });
 
-    // --- SUBMIT LOGIC ---
     document.getElementById('proForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const loader = document.getElementById('mainLoader');
@@ -315,7 +301,6 @@
         let uploadedUrls = [];
 
         try {
-            // Upload to Cloudinary
             for(let i=0; i < fileInputs.length; i++) {
                 let file = fileInputs[i].files[0];
                 if(file) {
@@ -343,9 +328,10 @@
             const p = parseFloat(document.getElementById('price').value);
             const d = parseFloat(document.getElementById('disc').value);
             const final = Math.round(p - (p * (d/100)));
+            const pTitle = document.getElementById('title').value; // Get Title for notification
 
             const prodData = {
-                title: document.getElementById('title').value,
+                title: pTitle,
                 category: document.getElementById('category').value,
                 price: p, discount: d, finalPrice: final,
                 stock: sCount, 
@@ -358,9 +344,20 @@
                 time: Date.now()
             };
 
-            // Push to 'products' node
             const newRef = push(ref(db, 'products'));
             await set(newRef, prodData);
+
+            // ==========================================
+            // NEW NOTIFICATION SYSTEM (Sahi Logic)
+            // ==========================================
+            const notifRef = push(ref(db, 'notifications'));
+            await set(notifRef, {
+                title: "New Product Available!",
+                message: `${pTitle} has been added to the store at ₹${final}. Check it out now!`,
+                type: "new",
+                timestamp: Date.now()
+            });
+            // ==========================================
 
             showToast("Product Live Ho Gaya!");
             document.getElementById('proForm').reset();
@@ -374,7 +371,6 @@
         }
     });
 
-    // --- RENDER FEED ---
     window.renderFeed = (dataObj) => {
         const feed = document.getElementById('masterFeed');
         feed.innerHTML = "";
@@ -418,7 +414,6 @@
         });
     };
 
-    // --- SEARCH ---
     window.filterProducts = () => {
         const q = document.getElementById('searchBox').value.toLowerCase();
         const filtered = {};
@@ -429,7 +424,6 @@
         renderFeed(filtered);
     };
 
-    // --- ACTIONS ---
     window.quickStock = (id, num) => {
         const stat = num <= 0 ? "OUTOFSTOCK" : (num < 5 ? "LIMITED" : "INSTOCK");
         update(ref(db, `products/${id}`), { stock: num, status: stat })

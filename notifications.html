@@ -3,231 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Premium Updates</title>
+    <title>Nemi Mart | Elite Updates</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
+        /* --- GLOBAL DESIGN SYSTEM --- */
         :root {
-            --gold: #D4AF37;
-            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #F1D27B 100%);
-            --cream-bg: #FCFBF7;
-            --card-white: #FFFFFF;
-            --deep-slate: #1E293B;
-            --success-green: #059669;
-            --soft-red: #FFF1F2;
-            --text-main: #0F172A;
-            --text-muted: #64748B;
-            --shadow-lux: 0 20px 25px -5px rgba(212, 175, 55, 0.1), 0 8px 10px -6px rgba(212, 175, 55, 0.1);
+            --p-gold: #D4AF37;
+            --p-gold-deep: #B8860B;
+            --p-gold-light: rgba(212, 175, 55, 0.12);
+            --p-black: #050505;
+            --p-glass: rgba(255, 255, 255, 0.75);
+            --p-card-bg: #FFFFFF;
+            --p-soft-gray: #F8FAFC;
+            --p-border: rgba(212, 175, 55, 0.25);
+            --p-text-main: #1A1A1A;
+            --p-text-sub: #64748B;
+            --p-success: #10B981;
+            --p-error: #FF4757;
+            --p-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            --p-radius-lg: 32px;
+            --p-radius-md: 20px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        /* Basic Reset */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
         body {
-            background-color: var(--cream-bg);
-            background-image: radial-gradient(circle at 0% 0%, #FFF9E6 0%, transparent 50%),
-                              radial-gradient(circle at 100% 100%, #F5F1E6 0%, transparent 50%);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--text-main);
+            background-color: #FAF9F6;
+            color: var(--p-text-main);
+            overflow-x: hidden;
             min-height: 100vh;
-            line-height: 1.6;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.03) 0px, transparent 50%);
         }
 
-        /* --- MODERN HEADER --- */
-        .navbar {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+        /* --- LUXURY SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 0px; }
+
+        /* --- DYNAMIC ISLAND TOAST --- */
+        #toast {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: var(--p-black); color: white;
+            padding: 12px 24px; border-radius: 50px;
+            font-size: 14px; font-weight: 600; z-index: 9999;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #toast.show { top: 25px; }
+
+        /* --- NAVIGATION --- */
+        .nav-container {
             position: sticky; top: 0; z-index: 1000;
-            padding: 18px 24px;
+            background: var(--p-glass);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--p-border);
+            padding: 18px 25px;
             display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
         }
 
-        .nav-brand { display: flex; align-items: center; gap: 15px; }
+        .nav-left { display: flex; align-items: center; gap: 18px; }
         
-        .back-btn {
-            width: 44px; height: 44px; border-radius: 14px;
-            background: white; border: 1px solid #E2E8F0;
+        .btn-round {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: white; border: 1.5px solid var(--p-soft-gray);
             display: flex; align-items: center; justify-content: center;
-            color: var(--text-main); font-size: 18px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            color: var(--p-text-main); font-size: 18px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.04);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .back-btn:active { transform: scale(0.9); background: #F8FAFC; }
+        .btn-round:active { transform: scale(0.85); background: #F1F5F9; }
 
-        .nav-title h1 {
+        .brand-text h1 {
             font-family: 'Outfit', sans-serif;
-            font-size: 22px; font-weight: 800;
-            background: linear-gradient(to right, #1A1A1A, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 24px; font-weight: 900; letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--p-black) 0%, var(--p-gold-deep) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* --- FEED LAYOUT --- */
-        .container { max-width: 550px; margin: 0 auto; padding: 25px 20px; }
+        /* --- MAIN FEED CONTAINER --- */
+        .wrapper { max-width: 600px; margin: 0 auto; padding: 30px 20px 100px; }
 
-        .feed-header {
+        .header-section {
             display: flex; justify-content: space-between; align-items: flex-end;
-            margin-bottom: 28px; padding: 0 5px;
+            margin-bottom: 40px; padding: 0 10px;
         }
 
-        .feed-title-group h2 { font-size: 24px; font-weight: 800; font-family: 'Outfit'; }
-        .live-indicator {
+        .title-area h2 {
+            font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800;
+            color: var(--p-black); line-height: 1;
+        }
+        .sub-tag {
             display: inline-flex; align-items: center; gap: 6px;
-            background: #ECFDF5; color: var(--success-green);
-            padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 800;
-            letter-spacing: 0.5px; border: 1px solid rgba(5, 150, 105, 0.1);
+            font-size: 11px; font-weight: 800; color: var(--p-gold);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;
         }
-        .live-dot { width: 6px; height: 6px; background: var(--success-green); border-radius: 50%; animation: pulse 1.5s infinite; }
+        .pulse-icon { width: 8px; height: 8px; background: var(--p-gold); border-radius: 50%; animation: blink 1.2s infinite; }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        @keyframes blink { 0% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } 100% { opacity: 0.2; transform: scale(0.8); } }
 
-        .clear-btn {
-            color: #EF4444; font-size: 13px; font-weight: 700; cursor: pointer;
-            padding: 8px 12px; border-radius: 10px; transition: 0.2s;
+        .action-link {
+            font-size: 14px; font-weight: 700; color: var(--p-error);
+            cursor: pointer; opacity: 0.8; transition: 0.2s;
         }
-        .clear-btn:hover { background: var(--soft-red); }
+        .action-link:hover { opacity: 1; text-decoration: underline; }
 
-        /* --- PREMIUM CARDS --- */
-        .notif-card {
-            background: var(--card-white);
-            border-radius: 26px;
-            padding: 24px; margin-bottom: 20px;
-            display: flex; gap: 20px;
-            position: relative; overflow: hidden;
-            box-shadow: var(--shadow-lux);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        /* --- LOADING SHIMMER --- */
+        #loader { text-align: center; padding: 100px 0; }
+        .shimmer-circle {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: 4px solid var(--p-gold-light); border-top: 4px solid var(--p-gold);
+            margin: 0 auto 20px; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- NOTIFICATION CARDS --- */
+        .card-item {
+            background: var(--p-card-bg);
+            border-radius: var(--p-radius-lg);
+            padding: 24px; margin-bottom: 25px;
+            display: flex; gap: 20px; position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: var(--p-shadow);
+            transition: transform 0.4s cubic-bezier(0.2, 1, 0.2, 1), box-shadow 0.4s;
+            animation: cardEntrance 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        }
+        .card-item:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.12);
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .notif-card::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
-            background: var(--gold-gradient);
-        }
-
-        .icon-wrapper {
-            width: 56px; height: 56px; border-radius: 18px;
-            background: #FFFBEB; color: var(--gold);
+        .card-icon {
+            width: 64px; height: 64px; border-radius: 22px;
+            background: var(--p-gold-light);
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; flex-shrink: 0;
-            border: 1px solid #FEF3C7;
-            box-shadow: inset 0 2px 4px rgba(212, 175, 55, 0.1);
+            flex-shrink: 0; transition: 0.3s;
+        }
+        .card-icon i { font-size: 26px; color: var(--p-gold-deep); }
+
+        .card-body { flex: 1; }
+        .card-body h3 {
+            font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 800;
+            color: var(--p-black); margin-bottom: 8px; letter-spacing: -0.3px;
+        }
+        .card-body p {
+            font-size: 15px; color: var(--p-text-sub); line-height: 1.6;
+            margin-bottom: 18px; font-weight: 500;
         }
 
-        .content-wrapper { flex: 1; }
-        .content-wrapper h3 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 17px; font-weight: 700; color: var(--text-main);
-            margin-bottom: 6px;
+        .card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 15px; border-top: 1px solid var(--p-soft-gray);
         }
-        .content-wrapper p {
-            font-size: 14.5px; color: var(--text-muted);
-            line-height: 1.6; font-weight: 500;
+        .meta-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 700; color: var(--p-gold);
+            background: var(--p-gold-light); padding: 6px 14px; border-radius: 50px;
         }
-
-        .meta-info {
-            margin-top: 16px; display: flex; align-items: center; gap: 12px;
-        }
-        .time-badge {
-            font-size: 11px; font-weight: 800; color: var(--gold);
-            background: #FFFBEB; padding: 4px 10px; border-radius: 8px;
-            display: flex; align-items: center; gap: 5px;
-            text-transform: uppercase;
-        }
-        .verified-badge { font-size: 11px; font-weight: 700; color: var(--success-green); display: flex; align-items: center; gap: 4px; }
-
-        .delete-icon {
-            width: 34px; height: 34px; border-radius: 10px;
-            background: var(--soft-red); color: #EF4444;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border: none; font-size: 14px;
-            transition: all 0.2s ease;
-        }
-        .delete-icon:hover { background: #EF4444; color: white; transform: rotate(10deg); }
-
-        /* --- STATES --- */
-        #loader { text-align: center; padding: 60px; color: var(--gold); }
         
-        .empty-state {
-            text-align: center; padding: 80px 20px; display: none;
-            animation: fadeIn 0.5s ease;
+        .delete-trigger {
+            width: 38px; height: 38px; border-radius: 12px;
+            background: #FFF0F0; color: var(--p-error);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border: none; transition: 0.2s;
         }
-        .empty-state i { font-size: 70px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; opacity: 0.3; }
-        .empty-state h3 { font-family: 'Outfit'; font-size: 22px; margin-bottom: 10px; }
-        .empty-state p { color: var(--text-muted); font-size: 15px; }
+        .delete-trigger:hover { background: var(--p-error); color: white; transform: rotate(15deg); }
+
+        /* --- EMPTY STATE --- */
+        .empty-wrap {
+            text-align: center; padding: 100px 40px; display: none;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .empty-wrap i { font-size: 80px; color: var(--p-gold-light); margin-bottom: 25px; }
+        .empty-wrap h4 { font-family: 'Outfit'; font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+        .empty-wrap p { color: var(--p-text-sub); font-size: 16px; max-width: 250px; margin: 0 auto; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- TOAST --- */
-        .premium-toast {
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            background: var(--deep-slate); color: white;
-            padding: 14px 28px; border-radius: 18px;
-            font-size: 14px; font-weight: 700; z-index: 9999;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            display: none; border: 1px solid rgba(255,255,255,0.1);
-            animation: toastUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* --- SCROLL PROGRESS BAR --- */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; width: 0%; height: 4px;
+            background: var(--p-gold); z-index: 9999; border-radius: 0 2px 2px 0;
         }
-        @keyframes toastUp { from { bottom: -20px; opacity: 0; } to { bottom: 40px; opacity: 1; } }
 
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-brand">
-            <div class="back-btn" onclick="window.history.back()">
-                <i class="fa-solid fa-arrow-left"></i>
+    <div class="progress-bar" id="scrollProgress"></div>
+    <div id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toastMsg">Update Removed</span></div>
+
+    <nav class="nav-container">
+        <div class="nav-left">
+            <div class="btn-round" onclick="window.history.back()">
+                <i class="fa-solid fa-chevron-left"></i>
             </div>
-            <div class="nav-title">
+            <div class="brand-text">
                 <h1>Nemi Mart</h1>
             </div>
         </div>
-        <div class="icon-wrapper" style="width:40px; height:40px; font-size: 18px;">
-            <i class="fa-solid fa-bell"></i>
+        <div class="btn-round" style="border: none; background: transparent;">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
         </div>
     </nav>
 
-    <main class="container">
-        <div class="feed-header">
-            <div class="feed-title-group">
-                <div class="live-indicator">
-                    <span class="live-dot"></span> LIVE UPDATES
-                </div>
-                <h2>Exclusive Feed</h2>
+    <main class="wrapper">
+        <header class="header-section">
+            <div class="title-area">
+                <span class="sub-tag"><span class="pulse-icon"></span> Live Portal</span>
+                <h2>Recent Feed</h2>
             </div>
-            <span class="clear-btn" onclick="clearAll()">Clear All</span>
-        </div>
+            <div class="action-link" onclick="clearAll()">Clear All</div>
+        </header>
 
         <div id="loader">
-            <i class="fas fa-circle-notch fa-spin fa-2x"></i>
-            <p style="margin-top: 15px; font-weight: 700; font-size: 13px; letter-spacing: 1px;">SYNCING SECURELY...</p>
+            <div class="shimmer-circle"></div>
+            <p style="font-weight: 800; font-size: 12px; color: var(--p-gold); letter-spacing: 2px;">AUTHENTICATING...</p>
         </div>
         
-        <div id="notif-list"></div>
+        <div id="notif-feed"></div>
 
-        <div id="empty-view" class="empty-state">
-            <i class="fa-solid fa-box-open"></i>
-            <h3>You're All Caught Up</h3>
-            <p>New arrivals and offers will appear here.</p>
+        <div id="empty-view" class="empty-wrap">
+            <i class="fa-solid fa-crown"></i>
+            <h4>All Caught Up!</h4>
+            <p>You've seen all the premium updates from Nemi Mart.</p>
         </div>
     </main>
 
-    <div id="toast" class="premium-toast">Action Successful ✨</div>
-
     <script>
-        // 1. Firebase Configuration
+        // 1. Firebase Initialization (Logic kept same as requested)
         const firebaseConfig = {
             databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/"
         };
@@ -235,107 +255,107 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 2. Load Data Logic
+        // 2. Core Loader Logic
         function loadNotifications() {
-            const listDiv = document.getElementById('notif-list');
+            const feedDiv = document.getElementById('notif-feed');
             const loader = document.getElementById('loader');
-            const empty = document.getElementById('empty-view');
+            const emptyView = document.getElementById('empty-view');
 
             database.ref('notifications').on('value', (snapshot) => {
                 loader.style.display = 'none';
-                listDiv.innerHTML = '';
+                feedDiv.innerHTML = '';
                 
                 const data = snapshot.val();
 
                 if (!data) {
-                    empty.style.display = 'block';
+                    emptyView.style.display = 'block';
                     return;
                 }
 
-                empty.style.display = 'none';
+                emptyView.style.display = 'none';
                 
-                // Sorting: Latest entries first
+                // Show latest first
                 const entries = Object.entries(data).reverse();
 
                 entries.forEach(([id, item], index) => {
                     const card = document.createElement('div');
-                    card.className = 'notif-card';
-                    card.style.animationDelay = `${index * 0.1}s`; // Staggered Animation
+                    card.className = 'card-item';
+                    card.style.animationDelay = `${index * 0.08}s`;
                     
-                    // Logic for Icons
-                    let icon = 'fa-star';
-                    let iconColor = '#D4AF37';
-                    if(item.type === 'new') { icon = 'fa-bag-shopping'; }
-                    if(item.type === 'sale') { icon = 'fa-bolt'; }
-                    if(item.type === 'order') { icon = 'fa-box-open'; }
+                    // Icon logic based on type
+                    let iconClass = 'fa-gem';
+                    if(item.type === 'new') iconClass = 'fa-cart-plus';
+                    if(item.type === 'sale') iconClass = 'fa-fire-flame-curved';
+                    if(item.type === 'order') iconClass = 'fa-box-open';
 
                     card.innerHTML = `
-                        <div class="icon-wrapper">
-                            <i class="fa-solid ${icon}"></i>
+                        <div class="card-icon">
+                            <i class="fa-solid ${iconClass}"></i>
                         </div>
-                        <div class="content-wrapper">
-                            <h3>${item.title || 'Special Update'}</h3>
-                            <p>${item.message || 'Something exciting is waiting for you at Nemi Mart!'}</p>
-                            <div class="meta-info">
-                                <span class="time-badge">
+                        <div class="card-body">
+                            <h3>${item.title || 'Nemi Mart Elite'}</h3>
+                            <p>${item.message || 'Unlock exclusive access to our premium collections.'}</p>
+                            <div class="card-footer">
+                                <div class="meta-tag">
                                     <i class="fa-regular fa-clock"></i> 
-                                    ${formatTime(item.timestamp)}
-                                </span>
-                                <span class="verified-badge">
-                                    <i class="fa-solid fa-circle-check"></i> Official
-                                </span>
+                                    ${getTimeAgo(item.timestamp)}
+                                </div>
+                                <button class="delete-trigger" onclick="deleteItem('${id}')">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
                             </div>
                         </div>
-                        <button class="delete-icon" onclick="deleteItem('${id}')">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
                     `;
-                    listDiv.appendChild(card);
+                    feedDiv.appendChild(card);
                 });
-            }, (error) => {
-                console.error("Firebase Sync Error:", error);
-                loader.innerHTML = "<p>Connection Lost. Please Refresh.</p>";
             });
         }
 
-        // 3. Helper Functions
-        function formatTime(ts) {
-            if (!ts) return "Just Now";
-            const diff = Math.floor((Date.now() - ts) / 1000);
-            if (diff < 60) return "Just now";
-            if (diff < 3600) return Math.floor(diff/60) + "m ago";
-            if (diff < 86400) return Math.floor(diff/3600) + "h ago";
+        // 3. High-End Helper Functions
+        function getTimeAgo(ts) {
+            if (!ts) return "Recently";
+            const seconds = Math.floor((Date.now() - ts) / 1000);
+            if (seconds < 60) return "Just now";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes}m ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h ago`;
             return new Date(ts).toLocaleDateString();
         }
 
         function deleteItem(id) {
-            event.stopPropagation();
             database.ref('notifications/' + id).remove()
-                .then(() => showToast("Removed from feed"));
+                .then(() => showToast("Removed Successfully"));
         }
 
         function clearAll() {
-            if(confirm("Clear all notifications from your history?")) {
+            if(confirm("Confirm: Delete all feed history? This cannot be undone.")) {
                 database.ref('notifications').remove()
-                    .then(() => showToast("Inbox Cleared ✨"));
+                    .then(() => showToast("Feed Cleared ✨"));
             }
         }
 
         function showToast(msg) {
             const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.display = 'block';
+            const tMsg = document.getElementById('toastMsg');
+            tMsg.innerText = msg;
+            t.classList.add('show');
             setTimeout(() => { 
-                t.style.animation = 'fadeOut 0.4s forwards';
-                setTimeout(() => { 
-                    t.style.display = 'none'; 
-                    t.style.animation = 'toastUp 0.4s forwards';
-                }, 400);
-            }, 2500);
+                t.classList.remove('show'); 
+            }, 3000);
         }
 
-        // Initialize App
+        // Scroll Progress Logic
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollProgress").style.width = scrolled + "%";
+        };
+
+        // Run on start
         window.onload = loadNotifications;
+
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Premium Notifications</title>
+    <title>Nemi Mart | Advanced Notifications</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
@@ -13,228 +13,228 @@
 
     <style>
         /* ==========================================
-           1. CSS VARIABLES & BASE SETUP
+           1. CORE CSS VARIABLES (THEME ENGINE)
            ========================================== */
         :root {
             --primary: #1B3022;        /* Deep Forest Green */
             --accent: #D4AF37;         /* Premium Gold */
-            --bg-creme: #FFFDF5;       /* Soft Royal Creme */
+            --bg-body: #F8FAFC;        /* Light Grey/Blue Tint for modern look */
             --white: #FFFFFF;
-            --text-main: #0A1F13;
+            --text-dark: #0F172A;
             --text-muted: #64748B;
             --glass-border: rgba(212, 175, 55, 0.2);
-            --card-shadow: 0 12px 30px rgba(27, 48, 34, 0.05);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             
-            /* Notification Specific Colors */
-            --color-payment: #10B981;  /* Green */
-            --bg-payment: #D1FAE5;
-            
-            --color-newprod: #8B5CF6;  /* Purple */
-            --bg-newprod: #EDE9FE;
-            
-            --color-drop: #EF4444;     /* Red */
-            --bg-drop: #FEE2E2;
-            
-            --color-confirm: #F59E0B;  /* Orange */
-            --bg-confirm: #FEF3C7;
-            
-            --color-deliver: #06B6D4;  /* Cyan */
-            --bg-deliver: #CFFAFE;
+            /* Dynamic Type Colors */
+            --c-pay: #10B981; --bg-pay: #ECFDF5;
+            --c-ord: #3B82F6; --bg-ord: #EFF6FF;
+            --c-drp: #EF4444; --bg-drp: #FEF2F2;
+            --c-new: #8B5CF6; --bg-new: #F5F3FF;
         }
 
+        /* ==========================================
+           2. GLOBAL RESET & BASE STYLES
+           ========================================== */
         * {
             margin: 0; padding: 0; box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-creme);
-            color: var(--text-main);
+            background-color: var(--bg-body);
+            color: var(--text-dark);
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
-            min-height: 100vh;
+            line-height: 1.5;
+            padding-bottom: 50px;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
+        /* Custom Scrollbar for smooth scrolling */
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
 
         /* ==========================================
-           2. HEADER STYLES
+           3. APP HEADER (GLASSMORPHISM)
            ========================================== */
         .app-header {
-            background: rgba(255, 253, 245, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border-bottom: 1px solid #E2E8F0;
         }
 
-        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
 
         .btn-back {
-            width: 42px; height: 42px; border-radius: 14px;
+            width: 40px; height: 40px; border-radius: 12px;
             background: var(--white);
-            border: 1px solid var(--glass-border);
+            border: 1px solid #E2E8F0;
             display: flex; align-items: center; justify-content: center;
-            color: var(--primary); font-size: 18px;
+            color: var(--primary); font-size: 16px;
             cursor: pointer; transition: var(--transition);
-            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);
         }
 
-        .btn-back:hover { background: var(--primary); color: var(--accent); }
+        .btn-back:hover { background: var(--bg-body); transform: scale(0.95); }
 
         .header-title h1 {
             font-family: 'Outfit', sans-serif;
-            font-size: 22px; font-weight: 800; color: var(--primary);
-            letter-spacing: -0.5px;
+            font-size: 20px; font-weight: 800; color: var(--primary);
         }
 
         .clear-all {
-            font-size: 13px; font-weight: 700; color: var(--color-drop);
-            background: var(--bg-drop); padding: 8px 14px;
-            border-radius: 10px; cursor: pointer; transition: var(--transition);
+            font-size: 12px; font-weight: 700; color: var(--c-drp);
+            background: var(--bg-drp); padding: 6px 12px;
+            border-radius: 8px; cursor: pointer; transition: var(--transition);
         }
         .clear-all:hover { opacity: 0.8; }
 
-        /* Test Data Button (Admin Utility) */
-        .test-btn {
-            display: block; width: 90%; margin: 15px auto 0;
-            padding: 12px; background: var(--primary); color: var(--accent);
-            text-align: center; border-radius: 12px; font-weight: 700;
-            font-size: 14px; cursor: pointer; border: 1px solid var(--accent);
-            box-shadow: 0 10px 20px rgba(27, 48, 34, 0.2);
+        /* ==========================================
+           4. ADMIN TOOLS (HIDDEN BY DEFAULT)
+           ========================================== */
+        .admin-panel {
+            margin: 15px 20px; padding: 15px; border-radius: 16px;
+            background: var(--white); border: 1px dashed var(--accent);
+            text-align: center;
         }
-
-        .section-label {
-            padding: 20px 24px 5px; font-size: 13px; font-weight: 800;
-            color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+        
+        .test-btn {
+            background: var(--primary); color: var(--accent);
+            padding: 10px 20px; border-radius: 10px; font-weight: 700;
+            font-size: 13px; cursor: pointer; border: none; width: 100%;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
         }
 
         /* ==========================================
-           3. NOTIFICATION CARDS
+           5. NOTIFICATION LIST & CARDS
            ========================================== */
         .notifications-wrapper {
-            padding: 15px 20px 40px; display: flex; flex-direction: column; gap: 16px;
+            padding: 10px 20px; display: flex; flex-direction: column; gap: 14px;
         }
 
         .notif-card {
-            background: var(--white); border-radius: 22px; padding: 18px;
-            display: flex; gap: 16px; position: relative; overflow: hidden;
+            background: var(--white); border-radius: 20px; padding: 16px;
+            display: flex; gap: 14px; position: relative; overflow: hidden;
             box-shadow: var(--card-shadow);
-            border: 1px solid rgba(255,255,255,0.5);
+            border: 1px solid transparent;
             transition: var(--transition);
-            animation: fadeInCard 0.5s ease backwards;
-            cursor: pointer;
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
         }
 
-        @keyframes fadeInCard {
-            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .notif-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(27, 48, 34, 0.1);
-            border-color: var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
         }
 
-        /* Dynamic Icons */
-        .icon-box {
-            width: 55px; height: 55px; border-radius: 18px;
+        /* --- MEDIA CONTAINER (CLOUDINARY IMAGE OR ICON) --- */
+        .notif-media {
+            width: 60px; height: 60px; border-radius: 16px;
+            flex-shrink: 0; position: relative; overflow: hidden;
             display: flex; align-items: center; justify-content: center;
-            font-size: 22px; flex-shrink: 0; transition: var(--transition);
+            font-size: 24px; transition: var(--transition);
         }
-        .notif-card:hover .icon-box { transform: scale(1.1) rotate(5deg); }
 
-        /* Type Colors */
-        .type-payment { background: var(--bg-payment); color: var(--color-payment); }
-        .type-newprod { background: var(--bg-newprod); color: var(--color-newprod); }
-        .type-drop { background: var(--bg-drop); color: var(--color-drop); }
-        .type-confirm { background: var(--bg-confirm); color: var(--color-confirm); }
-        .type-deliver { background: var(--bg-deliver); color: var(--color-deliver); }
+        .notif-media img {
+            width: 100%; height: 100%; object-fit: cover;
+            border-radius: 16px; transition: var(--transition);
+        }
 
-        /* Content Formatting */
-        .notif-body { flex: 1; padding-right: 25px; }
+        .notif-card:hover .notif-media img { transform: scale(1.1); }
+        
+        /* Type Classes for Icons (when no image is present) */
+        .type-payment .notif-media { background: var(--bg-pay); color: var(--c-pay); }
+        .type-order .notif-media { background: var(--bg-ord); color: var(--c-ord); }
+        .type-drop .notif-media { background: var(--bg-drp); color: var(--c-drp); }
+        .type-new .notif-media { background: var(--bg-new); color: var(--c-new); }
+
+        /* --- CONTENT BODY --- */
+        .notif-body { flex: 1; padding-right: 20px; }
         
         .notif-body h3 {
-            font-size: 16px; font-weight: 800; color: var(--primary);
+            font-size: 15px; font-weight: 700; color: var(--text-dark);
             margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
         }
 
+        /* Dynamic Badges */
+        .badge {
+            font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px;
+        }
+        .badge-hot { background: #FFEDD5; color: #EA580C; }
+        .badge-success { background: #DCFCE7; color: #16A34A; }
+
         .notif-body p {
-            font-size: 13.5px; color: var(--text-muted); font-weight: 500;
-            line-height: 1.4;
+            font-size: 13px; color: var(--text-muted); font-weight: 500;
+            line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
 
         .notif-meta {
-            margin-top: 10px; font-size: 11px; font-weight: 700;
-            color: #94A3B8; display: flex; align-items: center; gap: 12px;
-            text-transform: uppercase;
+            margin-top: 8px; font-size: 11px; font-weight: 600;
+            color: #94A3B8; display: flex; align-items: center; gap: 10px;
         }
 
-        /* Delete Button Action */
+        /* --- ACTION BUTTONS --- */
         .delete-btn {
-            position: absolute; right: 18px; top: 18px;
-            width: 32px; height: 32px; border-radius: 10px;
-            background: #FFF0F0; color: #EF4444;
+            position: absolute; right: 15px; top: 15px;
+            width: 28px; height: 28px; border-radius: 8px;
+            background: #F1F5F9; color: #94A3B8;
             display: flex; align-items: center; justify-content: center;
-            opacity: 0; transform: translateX(10px); transition: var(--transition);
-            cursor: pointer; font-size: 14px;
+            opacity: 0; transition: var(--transition); cursor: pointer; font-size: 12px;
         }
-        .notif-card:hover .delete-btn { opacity: 1; transform: translateX(0); }
-        .delete-btn:hover { background: #EF4444; color: white; }
+        .notif-card:hover .delete-btn { opacity: 1; }
+        .delete-btn:hover { background: #FEE2E2; color: #EF4444; }
 
         /* ==========================================
-           4. EMPTY STATE & LOADERS
+           6. EMPTY STATE & SKELETON LOADERS
            ========================================== */
-        #emptyBox {
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            padding: 80px 30px; text-align: center;
+        #emptyState {
+            display: none; flex-direction: column; align-items: center;
+            padding: 60px 20px; text-align: center;
         }
-        #emptyBox img { width: 150px; margin-bottom: 25px; opacity: 0.8; }
-        #emptyBox h2 { font-family: 'Outfit'; font-size: 22px; color: var(--primary); margin-bottom: 8px; }
-        #emptyBox p { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+        #emptyState i { font-size: 60px; color: #CBD5E1; margin-bottom: 15px; }
+        #emptyState h2 { font-size: 18px; color: var(--text-dark); margin-bottom: 5px; }
+        #emptyState p { font-size: 14px; color: var(--text-muted); }
 
-        /* Skeleton Loader (Shows before Firebase loads) */
-        .skeleton-card {
-            background: var(--white); border-radius: 22px; padding: 18px;
-            display: flex; gap: 16px; border: 1px solid var(--glass-border);
+        .skeleton {
+            background: var(--white); border-radius: 20px; padding: 16px;
+            display: flex; gap: 14px; border: 1px solid #F1F5F9;
         }
-        .skeleton-icon { width: 55px; height: 55px; border-radius: 18px; background: #E2E8F0; animation: pulse 1.5s infinite; }
-        .skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-top: 5px; }
-        .skeleton-line { height: 12px; background: #E2E8F0; border-radius: 6px; animation: pulse 1.5s infinite; }
-        .skeleton-line.w-50 { width: 50%; }
-        .skeleton-line.w-80 { width: 80%; }
+        .sk-img { width: 60px; height: 60px; border-radius: 16px; background: #E2E8F0; animation: pulse 1.5s infinite; }
+        .sk-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; padding-top: 5px; }
+        .sk-line { height: 10px; background: #E2E8F0; border-radius: 4px; animation: pulse 1.5s infinite; }
+        .sk-w50 { width: 50%; } .sk-w80 { width: 80%; } .sk-w100 { width: 100%; }
         
-        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
         /* ==========================================
-           5. TOAST NOTIFICATIONS (Popups)
+           7. TOAST MESSAGES
            ========================================== */
-        #toastContainer {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+        #toastBox {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: flex; flex-direction: column; gap: 10px; z-index: 9999;
         }
         .toast {
-            background: var(--primary); color: white; padding: 12px 24px;
-            border-radius: 30px; font-size: 13px; font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--accent);
-            animation: toastEnter 0.4s ease forwards, toastExit 0.4s ease 2.5s forwards;
+            background: #1E293B; color: white; padding: 12px 20px;
+            border-radius: 12px; font-size: 13px; font-weight: 500;
             display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: slideUpToast 0.3s ease forwards, fadeOutToast 0.3s ease 2.5s forwards;
         }
-        @keyframes toastEnter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes toastExit { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
+        @keyframes slideUpToast { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOutToast { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
 
     </style>
 </head>
@@ -246,34 +246,31 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </div>
             <div class="header-title">
-                <h1>Notifications</h1>
+                <h1>Updates</h1>
             </div>
         </div>
-        <div class="clear-all" onclick="clearAllNotifs()"><i class="fa-solid fa-trash-can"></i> Clear All</div>
+        <div class="clear-all" onclick="clearAll()"><i class="fa-solid fa-trash-can"></i> Clear All</div>
     </header>
 
-    <div class="test-btn" onclick="injectTestData()">
-        <i class="fa-solid fa-database"></i> Push Demo Data To Firebase
+    <div class="admin-panel">
+        <button class="test-btn" onclick="pushCloudinaryDemoData()">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Push Cloudinary Demo Data
+        </button>
+        <p style="font-size: 10px; color: #94A3B8; margin-top: 5px;">Click to add sample data exactly like your Firebase screenshot</p>
     </div>
 
-    <div class="section-label" id="listLabel">Recent Updates</div>
-
-    <main class="notifications-wrapper" id="notifList">
-        <div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-lines"><div class="skeleton-line w-50"></div><div class="skeleton-line w-80"></div><div class="skeleton-line"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-lines"><div class="skeleton-line w-50"></div><div class="skeleton-line w-80"></div><div class="skeleton-line"></div></div></div>
+    <main class="notifications-wrapper" id="notificationList">
+        <div class="skeleton"><div class="sk-img"></div><div class="sk-lines"><div class="sk-line sk-w50"></div><div class="sk-line sk-w100"></div><div class="sk-line sk-w80"></div></div></div>
+        <div class="skeleton"><div class="sk-img"></div><div class="sk-lines"><div class="sk-line sk-w50"></div><div class="sk-line sk-w100"></div><div class="sk-line sk-w80"></div></div></div>
     </main>
 
-    <div id="emptyBox">
-        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5; margin-bottom: 20px;">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            <line x1="2" y1="2" x2="22" y2="22" stroke="#EF4444"></line>
-        </svg>
-        <h2>All Caught Up!</h2>
-        <p>Aapke paas filhal koi naya alert nahi hai.</p>
+    <div id="emptyState">
+        <i class="fa-regular fa-bell-slash"></i>
+        <h2>No Notifications</h2>
+        <p>You have caught up with everything!</p>
     </div>
 
-    <div id="toastContainer"></div>
+    <div id="toastBox"></div>
 
     <script>
         // 1. FIREBASE CONFIGURATION
@@ -281,157 +278,193 @@
             databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/" 
         };
         
-        // Initialize Firebase safely
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.database();
-        const userId = "user_akash"; // Unique User ID
+        
+        // As per your screenshot, data is directly in "notifications"
+        const NOTIF_PATH = "notifications"; 
 
-        // 2. REAL-TIME LISTENER
-        function syncNotifications() {
-            const notifRef = db.ref(`notifications/${userId}`);
+        // 2. REAL-TIME LISTENER (Main Function)
+        function listenToNotifications() {
+            const notifRef = db.ref(NOTIF_PATH);
             
             notifRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                const container = document.getElementById('notifList');
-                const empty = document.getElementById('emptyBox');
-                const label = document.getElementById('listLabel');
+                const container = document.getElementById('notificationList');
+                const emptyUI = document.getElementById('emptyState');
                 
-                container.innerHTML = ""; // Clear list (removes skeletons too)
+                container.innerHTML = ""; // Remove skeletons
 
+                // Check if data exists and is not empty
                 if (data && Object.keys(data).length > 0) {
-                    empty.style.display = 'none';
-                    container.style.display = 'flex';
-                    label.style.display = 'block';
-                    
-                    // Delay animation staggered
+                    let hasValidData = false;
                     let delay = 0;
-                    Object.keys(data).reverse().forEach(key => {
+
+                    // Convert to array and reverse to show latest first
+                    const keys = Object.keys(data).reverse();
+                    
+                    keys.forEach(key => {
                         const item = data[key];
-                        createNotifCard(key, item, delay);
-                        delay += 0.1;
+                        // Filter out empty items or that 'user_akash' folder if it exists in root
+                        if(typeof item === 'object' && item !== null && item.title) {
+                            hasValidData = true;
+                            renderCard(key, item, delay);
+                            delay += 0.08; // Staggered animation
+                        }
                     });
+
+                    if(hasValidData) {
+                        container.style.display = 'flex';
+                        emptyUI.style.display = 'none';
+                    } else {
+                        showEmptyState();
+                    }
+
                 } else {
-                    container.style.display = 'none';
-                    label.style.display = 'none';
-                    empty.style.display = 'flex';
+                    showEmptyState();
                 }
             });
         }
 
-        // 3. CREATE UI CARD DYNAMICALLY
-        function createNotifCard(id, data, delay) {
-            const container = document.getElementById('notifList');
+        function showEmptyState() {
+            document.getElementById('notificationList').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'flex';
+        }
+
+        // 3. RENDER INDIVIDUAL NOTIFICATION CARD
+        function renderCard(id, data, delay) {
+            const container = document.getElementById('notificationList');
             
-            let icon, typeClass;
-            
-            // LOGIC FOR DIFFERENT NOTIFICATION TYPES
-            switch(data.type) {
-                case 'payment':
-                    icon = "fa-check-double"; typeClass = "type-payment"; break;
-                case 'newprod':
-                    icon = "fa-sparkles"; typeClass = "type-newprod"; break;
-                case 'drop':
-                    icon = "fa-arrow-trend-down"; typeClass = "type-drop"; break;
-                case 'confirm':
-                    icon = "fa-clipboard-check"; typeClass = "type-confirm"; break;
-                case 'deliver':
-                    icon = "fa-truck-fast"; typeClass = "type-deliver"; break;
-                default:
-                    icon = "fa-bell"; typeClass = "type-newprod";
+            // Default styling
+            let icon = "fa-bell";
+            let typeClass = "type-new";
+            let badgeHtml = "";
+
+            // Custom logic based on type
+            if(data.type === 'payment') { icon = "fa-wallet"; typeClass = "type-payment"; badgeHtml = `<span class="badge badge-success">PAID</span>`; }
+            if(data.type === 'order') { icon = "fa-box-open"; typeClass = "type-order"; }
+            if(data.type === 'drop') { icon = "fa-arrow-trend-down"; typeClass = "type-drop"; badgeHtml = `<span class="badge badge-hot">SALE</span>`; }
+
+            // --- CLOUDINARY IMAGE LOGIC ---
+            // Agar database mein 'image' link hai, toh img tag dikhao, warna fontawesome icon
+            let mediaHtml = "";
+            if(data.image && data.image.trim() !== "") {
+                mediaHtml = `<img src="${data.image}" alt="Product Image" loading="lazy">`;
+            } else {
+                mediaHtml = `<i class="fa-solid ${icon}"></i>`;
             }
 
+            // Create HTML Element
             const card = document.createElement('div');
-            card.className = 'notif-card';
+            card.className = `notif-card ${typeClass}`;
             card.style.animationDelay = `${delay}s`;
             
             card.innerHTML = `
-                <div class="icon-box ${typeClass}">
-                    <i class="fa-solid ${icon}"></i>
+                <div class="notif-media">
+                    ${mediaHtml}
                 </div>
                 <div class="notif-body">
-                    <h3>${data.title}</h3>
+                    <h3>${data.title} ${badgeHtml}</h3>
                     <p>${data.message}</p>
                     <div class="notif-meta">
-                        <span><i class="fa-regular fa-clock"></i> ${timeAgo(data.timestamp)}</span>
-                        <span>•</span>
-                        <span>Nemi Mart</span>
+                        <span><i class="fa-regular fa-clock"></i> ${formatTime(data.timestamp)}</span>
                     </div>
                 </div>
-                <div class="delete-btn" onclick="removeSingleNotif(event, '${id}')">
-                    <i class="fa-solid fa-trash-can"></i>
+                <div class="delete-btn" onclick="deleteItem(event, '${id}')" title="Delete">
+                    <i class="fa-solid fa-xmark"></i>
                 </div>
             `;
             container.appendChild(card);
         }
 
-        // 4. RELATIVE TIME CALCULATOR (e.g. "Just now", "2 mins ago")
-        function timeAgo(timestamp) {
+        // 4. TIME FORMATTER
+        function formatTime(timestamp) {
             if (!timestamp) return "Just now";
-            const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
-            if (seconds < 60) return "Just now";
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `${minutes} min ago`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours} hr ago`;
-            return `${Math.floor(hours / 24)} days ago`;
+            const diff = Math.floor((new Date() - new Date(timestamp)) / 1000);
+            if (diff < 60) return "Just now";
+            const mins = Math.floor(diff / 60);
+            if (mins < 60) return `${mins} mins ago`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return `${hrs} hrs ago`;
+            return `${Math.floor(hrs / 24)} days ago`;
         }
 
-        // 5. DELETE OPERATIONS
-        function removeSingleNotif(event, id) {
-            event.stopPropagation(); // Prevent card click
-            db.ref(`notifications/${userId}/${id}`).remove()
-                .then(() => showToast("Notification deleted"));
+        // 5. DELETE ACTIONS
+        function deleteItem(event, id) {
+            event.stopPropagation();
+            db.ref(`${NOTIF_PATH}/${id}`).remove()
+                .then(() => triggerToast("Alert deleted successfully!"));
         }
 
-        function clearAllNotifs() {
-            db.ref(`notifications/${userId}`).once('value', snap => {
-                if(snap.exists()) {
-                    if(confirm("Are you sure you want to clear all notifications?")) {
-                        db.ref(`notifications/${userId}`).remove()
-                            .then(() => showToast("All notifications cleared!"));
-                    }
-                } else {
-                    showToast("Box is already empty!");
-                }
-            });
+        function clearAll() {
+            if(confirm("Are you sure you want to delete all updates?")) {
+                db.ref(NOTIF_PATH).remove()
+                    .then(() => triggerToast("All clear!"));
+            }
         }
 
         // 6. TOAST NOTIFICATION SYSTEM
-        function showToast(message) {
-            const container = document.getElementById('toastContainer');
+        function triggerToast(msg) {
+            const box = document.getElementById('toastBox');
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--accent)"></i> ${message}`;
-            container.appendChild(toast);
+            toast.innerHTML = `<i class="fa-solid fa-check-circle" style="color:#10B981;"></i> ${msg}`;
+            box.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
 
         // ==========================================
-        // 7. ADMIN TOOL: INJECT 5 DEMO NOTIFICATIONS
+        // 7. ADMIN FEATURE: PUSH TEST DATA WITH IMAGES
         // ==========================================
-        function injectTestData() {
-            const notifRef = db.ref(`notifications/${userId}`);
+        function pushCloudinaryDemoData() {
+            const notifRef = db.ref(NOTIF_PATH);
             const now = new Date().getTime();
             
-            const demoData = {
-                notif_1: { type: "payment", title: "Payment Received", message: "Aapka ₹1250 ka payment successfully receive ho gaya hai.", timestamp: now },
-                notif_2: { type: "confirm", title: "Order Confirmed", message: "Order #NM-9922 pack ho raha hai. Jald hi dispatch hoga.", timestamp: now - 3600000 },
-                notif_3: { type: "deliver", title: "Order Delivered", message: "Aapka Nemi Mart ka parcel deliver ho chuka hai. Enjoy!", timestamp: now - 86400000 },
-                notif_4: { type: "drop", title: "Price Drop Alert!", message: "Premium Kesar par 20% ki bhari choot aayi hai. Grab now!", timestamp: now - 172800000 },
-                notif_5: { type: "newprod", title: "New Arrival", message: "Naye organic dry fruits stock me aa chuke hain. Check them out.", timestamp: now - 259200000 }
-            };
-
-            notifRef.set(demoData).then(() => {
-                showToast("Demo Data Injected into Firebase!");
-            }).catch(error => {
-                alert("Error: " + error.message);
+            // Pushing separate objects exactly how Firebase generates auto-IDs (push())
+            
+            // Example 1: Image from Cloudinary (Price Drop)
+            notifRef.push({
+                title: "Kashmiri Kesar - 20% OFF!",
+                message: "Aapke favourite item par bhari choot. Abhi order karein aur bachayein ₹500.",
+                type: "drop",
+                image: "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg", // Cloudinary sample image
+                timestamp: now
             });
+
+            // Example 2: Normal Icon Notification (Payment)
+            notifRef.push({
+                title: "Payment Received",
+                message: "Order #NM-4509 ke liye ₹1,250 receive ho gaye hain.",
+                type: "payment",
+                image: "", // Empty image means it will show icon
+                timestamp: now - 3600000 // 1 hour ago
+            });
+
+            // Example 3: Another Product Image
+            notifRef.push({
+                title: "New Arrival: Premium Walnuts",
+                message: "Fresh stock available in Nemi Mart. Best quality guaranteed.",
+                type: "new",
+                image: "https://images.unsplash.com/photo-1590004953392-5aba2e72269a?w=150&q=80", // Demo Image
+                timestamp: now - 86400000 // 1 day ago
+            });
+
+            // Example 4: Order Status
+            notifRef.push({
+                title: "Order Dispatched",
+                message: "Aapka parcel nikal chuka hai. Delivery agent jald hi call karega.",
+                type: "order",
+                image: "", 
+                timestamp: now - 172800000
+            });
+
+            triggerToast("Cloudinary Demo Data Added! Check the list.");
         }
 
-        // Boot Up
-        window.onload = syncNotifications;
+        // Start fetching on load
+        window.onload = listenToNotifications;
 
     </script>
 </body>

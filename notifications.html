@@ -14,134 +14,220 @@
     <style>
         :root {
             --gold: #D4AF37;
-            --gold-light: #F9F1D7;
-            --cream: #FFFDF5;
-            --success: #10B981; /* Green Theme */
-            --dark: #1A1A1A;
-            --text-muted: #71717A;
-            --radius: 24px;
-            --shadow: 0 15px 35px -5px rgba(212, 175, 55, 0.15);
+            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #F1D27B 100%);
+            --cream-bg: #FCFBF7;
+            --card-white: #FFFFFF;
+            --deep-slate: #1E293B;
+            --success-green: #059669;
+            --soft-red: #FFF1F2;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --shadow-lux: 0 20px 25px -5px rgba(212, 175, 55, 0.1), 0 8px 10px -6px rgba(212, 175, 55, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--cream);
+            background-color: var(--cream-bg);
+            background-image: radial-gradient(circle at 0% 0%, #FFF9E6 0%, transparent 50%),
+                              radial-gradient(circle at 100% 100%, #F5F1E6 0%, transparent 50%);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--dark);
+            color: var(--text-main);
             min-height: 100vh;
+            line-height: 1.6;
         }
 
-        /* Top Navigation */
+        /* --- MODERN HEADER --- */
         .navbar {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             position: sticky; top: 0; z-index: 1000;
-            padding: 15px 20px;
+            padding: 18px 24px;
             display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1.5px solid var(--gold-light);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
         }
 
-        .nav-title h1 { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; }
+        .nav-brand { display: flex; align-items: center; gap: 15px; }
         
-        .back-circle {
-            width: 40px; height: 40px; border-radius: 12px;
-            background: white; border: 1px solid var(--gold-light);
+        .back-btn {
+            width: 44px; height: 44px; border-radius: 14px;
+            background: white; border: 1px solid #E2E8F0;
             display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .back-btn:active { transform: scale(0.9); background: #F8FAFC; }
+
+        .nav-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px; font-weight: 800;
+            background: linear-gradient(to right, #1A1A1A, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Feed Styling */
-        .container { max-width: 500px; margin: 0 auto; padding: 20px; }
+        /* --- FEED LAYOUT --- */
+        .container { max-width: 550px; margin: 0 auto; padding: 25px 20px; }
 
-        .feed-info {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px;
+        .feed-header {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 28px; padding: 0 5px;
         }
 
-        .badge-green {
-            background: #D1FAE5; color: var(--success);
-            padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: 800;
+        .feed-title-group h2 { font-size: 24px; font-weight: 800; font-family: 'Outfit'; }
+        .live-indicator {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #ECFDF5; color: var(--success-green);
+            padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 800;
+            letter-spacing: 0.5px; border: 1px solid rgba(5, 150, 105, 0.1);
         }
+        .live-dot { width: 6px; height: 6px; background: var(--success-green); border-radius: 50%; animation: pulse 1.5s infinite; }
 
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .clear-btn {
+            color: #EF4444; font-size: 13px; font-weight: 700; cursor: pointer;
+            padding: 8px 12px; border-radius: 10px; transition: 0.2s;
+        }
+        .clear-btn:hover { background: var(--soft-red); }
+
+        /* --- PREMIUM CARDS --- */
         .notif-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 20px; margin-bottom: 15px;
-            display: flex; gap: 15px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-            position: relative;
-            animation: popIn 0.5s ease backwards;
+            background: var(--card-white);
+            border-radius: 26px;
+            padding: 24px; margin-bottom: 20px;
+            display: flex; gap: 20px;
+            position: relative; overflow: hidden;
+            box-shadow: var(--shadow-lux);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
         }
 
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .icon-box {
-            width: 50px; height: 50px; border-radius: 16px;
-            background: var(--gold-light); color: var(--gold);
+        .notif-card::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
+            background: var(--gold-gradient);
+        }
+
+        .icon-wrapper {
+            width: 56px; height: 56px; border-radius: 18px;
+            background: #FFFBEB; color: var(--gold);
             display: flex; align-items: center; justify-content: center;
-            font-size: 22px; flex-shrink: 0;
+            font-size: 24px; flex-shrink: 0;
+            border: 1px solid #FEF3C7;
+            box-shadow: inset 0 2px 4px rgba(212, 175, 55, 0.1);
         }
 
-        .content-box { flex: 1; }
-        .content-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; color: var(--dark); }
-        .content-box p { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
-
-        .time-stamp {
-            margin-top: 10px; font-size: 11px; font-weight: 700;
-            color: var(--gold); display: flex; align-items: center; gap: 5px;
+        .content-wrapper { flex: 1; }
+        .content-wrapper h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px; font-weight: 700; color: var(--text-main);
+            margin-bottom: 6px;
+        }
+        .content-wrapper p {
+            font-size: 14.5px; color: var(--text-muted);
+            line-height: 1.6; font-weight: 500;
         }
 
-        .delete-btn {
-            position: absolute; right: 15px; top: 15px;
-            background: #FEE2E2; color: #EF4444;
-            border: none; padding: 6px; border-radius: 8px; font-size: 12px;
+        .meta-info {
+            margin-top: 16px; display: flex; align-items: center; gap: 12px;
         }
-
-        /* Loader & Empty */
-        #loader { text-align: center; padding: 50px; }
-        .empty-view { text-align: center; padding: 100px 20px; display: none; }
-        .empty-view i { font-size: 60px; color: var(--gold-light); margin-bottom: 15px; }
-
-        .toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--dark); color: white; padding: 12px 25px;
-            border-radius: 50px; font-size: 14px; z-index: 2000; display: none;
+        .time-badge {
+            font-size: 11px; font-weight: 800; color: var(--gold);
+            background: #FFFBEB; padding: 4px 10px; border-radius: 8px;
+            display: flex; align-items: center; gap: 5px;
+            text-transform: uppercase;
         }
+        .verified-badge { font-size: 11px; font-weight: 700; color: var(--success-green); display: flex; align-items: center; gap: 4px; }
+
+        .delete-icon {
+            width: 34px; height: 34px; border-radius: 10px;
+            background: var(--soft-red); color: #EF4444;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border: none; font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .delete-icon:hover { background: #EF4444; color: white; transform: rotate(10deg); }
+
+        /* --- STATES --- */
+        #loader { text-align: center; padding: 60px; color: var(--gold); }
+        
+        .empty-state {
+            text-align: center; padding: 80px 20px; display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .empty-state i { font-size: 70px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; opacity: 0.3; }
+        .empty-state h3 { font-family: 'Outfit'; font-size: 22px; margin-bottom: 10px; }
+        .empty-state p { color: var(--text-muted); font-size: 15px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- TOAST --- */
+        .premium-toast {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: var(--deep-slate); color: white;
+            padding: 14px 28px; border-radius: 18px;
+            font-size: 14px; font-weight: 700; z-index: 9999;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            display: none; border: 1px solid rgba(255,255,255,0.1);
+            animation: toastUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes toastUp { from { bottom: -20px; opacity: 0; } to { bottom: 40px; opacity: 1; } }
+
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="back-circle" onclick="window.history.back()"><i class="fa-solid fa-chevron-left"></i></div>
-        <div class="nav-title"><h1>Updates</h1></div>
-        <div style="width: 40px;"></div>
+        <div class="nav-brand">
+            <div class="back-btn" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </div>
+            <div class="nav-title">
+                <h1>Nemi Mart</h1>
+            </div>
+        </div>
+        <div class="icon-wrapper" style="width:40px; height:40px; font-size: 18px;">
+            <i class="fa-solid fa-bell"></i>
+        </div>
     </nav>
 
     <main class="container">
-        <div class="feed-info">
-            <span class="badge-green">LIVE UPDATES</span>
-            <span onclick="clearAll()" style="color: #EF4444; font-size: 12px; font-weight: 700; cursor: pointer;">Clear All</span>
+        <div class="feed-header">
+            <div class="feed-title-group">
+                <div class="live-indicator">
+                    <span class="live-dot"></span> LIVE UPDATES
+                </div>
+                <h2>Exclusive Feed</h2>
+            </div>
+            <span class="clear-btn" onclick="clearAll()">Clear All</span>
         </div>
 
-        <div id="loader"><i class="fas fa-spinner fa-spin" style="color: var(--gold);"></i> Connecting...</div>
+        <div id="loader">
+            <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+            <p style="margin-top: 15px; font-weight: 700; font-size: 13px; letter-spacing: 1px;">SYNCING SECURELY...</p>
+        </div>
         
         <div id="notif-list"></div>
 
-        <div id="empty-view" class="empty-view">
-            <i class="fa-solid fa-bell-slash"></i>
-            <h3>No Updates Yet</h3>
-            <p>Admin hasn't posted anything new.</p>
+        <div id="empty-view" class="empty-state">
+            <i class="fa-solid fa-box-open"></i>
+            <h3>You're All Caught Up</h3>
+            <p>New arrivals and offers will appear here.</p>
         </div>
     </main>
 
-    <div id="toast" class="toast">Action Done ✨</div>
+    <div id="toast" class="premium-toast">Action Successful ✨</div>
 
     <script>
-        // 1. Firebase Config
+        // 1. Firebase Configuration
         const firebaseConfig = {
             databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/"
         };
@@ -149,13 +235,12 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 2. Main Logic
+        // 2. Load Data Logic
         function loadNotifications() {
             const listDiv = document.getElementById('notif-list');
             const loader = document.getElementById('loader');
             const empty = document.getElementById('empty-view');
 
-            // Listening to 'notifications' node
             database.ref('notifications').on('value', (snapshot) => {
                 loader.style.display = 'none';
                 listDiv.innerHTML = '';
@@ -169,48 +254,70 @@
 
                 empty.style.display = 'none';
                 
-                // Latest first
+                // Sorting: Latest entries first
                 const entries = Object.entries(data).reverse();
 
-                entries.forEach(([id, item]) => {
+                entries.forEach(([id, item], index) => {
                     const card = document.createElement('div');
                     card.className = 'notif-card';
+                    card.style.animationDelay = `${index * 0.1}s`; // Staggered Animation
                     
-                    // Dynamic Icon based on type
+                    // Logic for Icons
                     let icon = 'fa-star';
-                    if(item.type === 'sale') icon = 'fa-tag';
-                    if(item.type === 'order') icon = 'fa-box';
+                    let iconColor = '#D4AF37';
+                    if(item.type === 'new') { icon = 'fa-bag-shopping'; }
+                    if(item.type === 'sale') { icon = 'fa-bolt'; }
+                    if(item.type === 'order') { icon = 'fa-box-open'; }
 
                     card.innerHTML = `
-                        <div class="icon-box"><i class="fa-solid ${icon}"></i></div>
-                        <div class="content-box">
-                            <h3>${item.title || 'Nemi Mart Update'}</h3>
-                            <p>${item.message || 'Check out our new premium collections.'}</p>
-                            <div class="time-stamp">
-                                <i class="fa-regular fa-clock"></i> 
-                                ${item.timestamp ? new Date(item.timestamp).toLocaleTimeString() : 'Just Now'}
+                        <div class="icon-wrapper">
+                            <i class="fa-solid ${icon}"></i>
+                        </div>
+                        <div class="content-wrapper">
+                            <h3>${item.title || 'Special Update'}</h3>
+                            <p>${item.message || 'Something exciting is waiting for you at Nemi Mart!'}</p>
+                            <div class="meta-info">
+                                <span class="time-badge">
+                                    <i class="fa-regular fa-clock"></i> 
+                                    ${formatTime(item.timestamp)}
+                                </span>
+                                <span class="verified-badge">
+                                    <i class="fa-solid fa-circle-check"></i> Official
+                                </span>
                             </div>
                         </div>
-                        <button class="delete-btn" onclick="deleteItem('${id}')"><i class="fa-solid fa-trash"></i></button>
+                        <button class="delete-icon" onclick="deleteItem('${id}')">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     `;
                     listDiv.appendChild(card);
                 });
             }, (error) => {
-                console.error("Firebase Error:", error);
-                loader.innerText = "Database Connection Failed!";
+                console.error("Firebase Sync Error:", error);
+                loader.innerHTML = "<p>Connection Lost. Please Refresh.</p>";
             });
         }
 
-        // 3. Database Functions
+        // 3. Helper Functions
+        function formatTime(ts) {
+            if (!ts) return "Just Now";
+            const diff = Math.floor((Date.now() - ts) / 1000);
+            if (diff < 60) return "Just now";
+            if (diff < 3600) return Math.floor(diff/60) + "m ago";
+            if (diff < 86400) return Math.floor(diff/3600) + "h ago";
+            return new Date(ts).toLocaleDateString();
+        }
+
         function deleteItem(id) {
-            database.ref('notifications/' + id).remove().then(() => {
-                showToast("Removed!");
-            });
+            event.stopPropagation();
+            database.ref('notifications/' + id).remove()
+                .then(() => showToast("Removed from feed"));
         }
 
         function clearAll() {
-            if(confirm("Sare notifications delete karein?")) {
-                database.ref('notifications').remove();
+            if(confirm("Clear all notifications from your history?")) {
+                database.ref('notifications').remove()
+                    .then(() => showToast("Inbox Cleared ✨"));
             }
         }
 
@@ -218,10 +325,16 @@
             const t = document.getElementById('toast');
             t.innerText = msg;
             t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 2000);
+            setTimeout(() => { 
+                t.style.animation = 'fadeOut 0.4s forwards';
+                setTimeout(() => { 
+                    t.style.display = 'none'; 
+                    t.style.animation = 'toastUp 0.4s forwards';
+                }, 400);
+            }, 2500);
         }
 
-        // Start
+        // Initialize App
         window.onload = loadNotifications;
     </script>
 </body>

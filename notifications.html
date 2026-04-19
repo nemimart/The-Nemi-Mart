@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,17 +12,35 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
+        /* ==========================================
+           1. CSS VARIABLES & BASE SETUP
+           ========================================== */
         :root {
-            --primary: #1B3022;    /* Deep Forest Green */
-            --accent: #D4AF37;     /* Premium Gold */
-            --bg-creme: #FFFDF5;   /* Soft Royal Creme */
+            --primary: #1B3022;        /* Deep Forest Green */
+            --accent: #D4AF37;         /* Premium Gold */
+            --bg-creme: #FFFDF5;       /* Soft Royal Creme */
             --white: #FFFFFF;
             --text-main: #0A1F13;
             --text-muted: #64748B;
-            --success: #2D5A27;
             --glass-border: rgba(212, 175, 55, 0.2);
-            --card-shadow: 0 15px 35px rgba(27, 48, 34, 0.08);
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --card-shadow: 0 12px 30px rgba(27, 48, 34, 0.05);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            
+            /* Notification Specific Colors */
+            --color-payment: #10B981;  /* Green */
+            --bg-payment: #D1FAE5;
+            
+            --color-newprod: #8B5CF6;  /* Purple */
+            --bg-newprod: #EDE9FE;
+            
+            --color-drop: #EF4444;     /* Red */
+            --bg-drop: #FEE2E2;
+            
+            --color-confirm: #F59E0B;  /* Orange */
+            --bg-confirm: #FEF3C7;
+            
+            --color-deliver: #06B6D4;  /* Cyan */
+            --bg-deliver: #CFFAFE;
         }
 
         * {
@@ -36,13 +54,21 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
-        /* --- Luxury Header --- */
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        /* ==========================================
+           2. HEADER STYLES
+           ========================================== */
         .app-header {
-            background: rgba(255, 253, 245, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(255, 253, 245, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 20px 24px;
             display: flex;
             align-items: center;
@@ -50,141 +76,165 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 2px solid var(--accent);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
 
-        .header-left { display: flex; align-items: center; gap: 16px; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
 
         .btn-back {
-            width: 45px; height: 45px; border-radius: 15px;
+            width: 42px; height: 42px; border-radius: 14px;
             background: var(--white);
             border: 1px solid var(--glass-border);
             display: flex; align-items: center; justify-content: center;
-            color: var(--primary);
+            color: var(--primary); font-size: 18px;
             cursor: pointer; transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);
         }
 
-        .btn-back:hover { background: var(--primary); color: var(--accent); transform: rotate(-10deg); }
+        .btn-back:hover { background: var(--primary); color: var(--accent); }
 
         .header-title h1 {
             font-family: 'Outfit', sans-serif;
-            font-size: 24px; font-weight: 800; color: var(--primary);
+            font-size: 22px; font-weight: 800; color: var(--primary);
+            letter-spacing: -0.5px;
         }
 
         .clear-all {
-            font-size: 12px; font-weight: 800; color: #8B0000;
-            text-transform: uppercase; cursor: pointer;
-            padding: 8px 12px; border-radius: 8px; background: rgba(139, 0, 0, 0.1);
+            font-size: 13px; font-weight: 700; color: var(--color-drop);
+            background: var(--bg-drop); padding: 8px 14px;
+            border-radius: 10px; cursor: pointer; transition: var(--transition);
+        }
+        .clear-all:hover { opacity: 0.8; }
+
+        /* Test Data Button (Admin Utility) */
+        .test-btn {
+            display: block; width: 90%; margin: 15px auto 0;
+            padding: 12px; background: var(--primary); color: var(--accent);
+            text-align: center; border-radius: 12px; font-weight: 700;
+            font-size: 14px; cursor: pointer; border: 1px solid var(--accent);
+            box-shadow: 0 10px 20px rgba(27, 48, 34, 0.2);
         }
 
-        /* --- Section Info --- */
-        .section-status {
-            padding: 20px 24px 10px;
-            display: flex; justify-content: space-between; align-items: center;
+        .section-label {
+            padding: 20px 24px 5px; font-size: 13px; font-weight: 800;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
         }
 
-        .status-label {
-            font-size: 12px; font-weight: 800; color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: 1.2px;
-        }
-
-        .online-dot {
-            padding: 4px 10px; background: var(--success); color: white;
-            border-radius: 20px; font-size: 10px; display: flex; align-items: center; gap: 5px;
-        }
-
-        /* --- Notification List --- */
+        /* ==========================================
+           3. NOTIFICATION CARDS
+           ========================================== */
         .notifications-wrapper {
-            padding: 10px 20px 120px;
-            display: flex; flex-direction: column; gap: 15px;
+            padding: 15px 20px 40px; display: flex; flex-direction: column; gap: 16px;
         }
 
-        /* --- Premium Card Styling --- */
         .notif-card {
-            background: var(--white);
-            border-radius: 24px;
-            padding: 20px;
-            display: flex; gap: 18px;
-            position: relative;
+            background: var(--white); border-radius: 22px; padding: 18px;
+            display: flex; gap: 16px; position: relative; overflow: hidden;
             box-shadow: var(--card-shadow);
-            border: 1px solid rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(255,255,255,0.5);
             transition: var(--transition);
-            animation: cardSlideUp 0.6s ease-out both;
+            animation: fadeInCard 0.5s ease backwards;
             cursor: pointer;
         }
 
-        @keyframes cardSlideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .notif-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 45px rgba(27, 48, 34, 0.15);
-            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(27, 48, 34, 0.1);
+            border-color: var(--glass-border);
         }
 
-        /* Icon Boxes */
+        /* Dynamic Icons */
         .icon-box {
-            width: 60px; height: 60px; border-radius: 20px;
+            width: 55px; height: 55px; border-radius: 18px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; flex-shrink: 0;
-            transition: var(--transition);
+            font-size: 22px; flex-shrink: 0; transition: var(--transition);
         }
+        .notif-card:hover .icon-box { transform: scale(1.1) rotate(5deg); }
 
-        .notif-card:hover .icon-box { transform: rotate(360deg); }
+        /* Type Colors */
+        .type-payment { background: var(--bg-payment); color: var(--color-payment); }
+        .type-newprod { background: var(--bg-newprod); color: var(--color-newprod); }
+        .type-drop { background: var(--bg-drop); color: var(--color-drop); }
+        .type-confirm { background: var(--bg-confirm); color: var(--color-confirm); }
+        .type-deliver { background: var(--bg-deliver); color: var(--color-deliver); }
 
-        /* Color Schemes */
-        .type-payment { background: #E8F5E9; color: var(--success); }
-        .type-order { background: #FFF9C4; color: #F57F17; }
-        .type-promo { background: #FCE4EC; color: #C2185B; }
-        .type-system { background: #E3F2FD; color: #1976D2; }
-
-        /* Content */
-        .notif-body { flex: 1; }
+        /* Content Formatting */
+        .notif-body { flex: 1; padding-right: 25px; }
+        
         .notif-body h3 {
-            font-size: 17px; font-weight: 800; margin-bottom: 5px;
-            color: var(--primary); display: flex; justify-content: space-between;
-        }
-
-        .badge-new {
-            background: var(--accent); color: var(--primary);
-            font-size: 9px; padding: 2px 8px; border-radius: 5px;
+            font-size: 16px; font-weight: 800; color: var(--primary);
+            margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
         }
 
         .notif-body p {
-            font-size: 14px; color: var(--text-muted); font-weight: 500;
+            font-size: 13.5px; color: var(--text-muted); font-weight: 500;
+            line-height: 1.4;
         }
 
         .notif-meta {
-            margin-top: 12px; font-size: 11px; font-weight: 700;
-            color: #A0AEC0; display: flex; gap: 15px;
+            margin-top: 10px; font-size: 11px; font-weight: 700;
+            color: #94A3B8; display: flex; align-items: center; gap: 12px;
+            text-transform: uppercase;
         }
 
-        /* Delete UI */
+        /* Delete Button Action */
         .delete-btn {
-            position: absolute; right: 15px; top: 15px;
-            color: #EF4444; opacity: 0; transition: 0.3s;
+            position: absolute; right: 18px; top: 18px;
+            width: 32px; height: 32px; border-radius: 10px;
+            background: #FFF0F0; color: #EF4444;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: translateX(10px); transition: var(--transition);
+            cursor: pointer; font-size: 14px;
         }
-        .notif-card:hover .delete-btn { opacity: 1; }
+        .notif-card:hover .delete-btn { opacity: 1; transform: translateX(0); }
+        .delete-btn:hover { background: #EF4444; color: white; }
 
-        /* --- Empty State --- */
+        /* ==========================================
+           4. EMPTY STATE & LOADERS
+           ========================================== */
         #emptyBox {
-            display: none; flex-direction: column; align-items: center;
-            padding: 100px 40px; text-align: center;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            padding: 80px 30px; text-align: center;
         }
-        #emptyBox i { font-size: 70px; color: var(--accent); opacity: 0.3; margin-bottom: 20px; }
+        #emptyBox img { width: 150px; margin-bottom: 25px; opacity: 0.8; }
+        #emptyBox h2 { font-family: 'Outfit'; font-size: 22px; color: var(--primary); margin-bottom: 8px; }
+        #emptyBox p { font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
-        /* Bottom Navbar */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%;
-            background: var(--primary); padding: 15px 0 25px;
-            display: flex; justify-content: space-around;
-            border-radius: 30px 30px 0 0; border-top: 3px solid var(--accent);
+        /* Skeleton Loader (Shows before Firebase loads) */
+        .skeleton-card {
+            background: var(--white); border-radius: 22px; padding: 18px;
+            display: flex; gap: 16px; border: 1px solid var(--glass-border);
         }
-        .nav-link { color: rgba(255,255,255,0.5); text-decoration: none; text-align: center; font-size: 12px; }
-        .nav-link.active { color: var(--accent); }
-        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .skeleton-icon { width: 55px; height: 55px; border-radius: 18px; background: #E2E8F0; animation: pulse 1.5s infinite; }
+        .skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-top: 5px; }
+        .skeleton-line { height: 12px; background: #E2E8F0; border-radius: 6px; animation: pulse 1.5s infinite; }
+        .skeleton-line.w-50 { width: 50%; }
+        .skeleton-line.w-80 { width: 80%; }
+        
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+        /* ==========================================
+           5. TOAST NOTIFICATIONS (Popups)
+           ========================================== */
+        #toastContainer {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; gap: 10px; z-index: 9999;
+        }
+        .toast {
+            background: var(--primary); color: white; padding: 12px 24px;
+            border-radius: 30px; font-size: 13px; font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--accent);
+            animation: toastEnter 0.4s ease forwards, toastExit 0.4s ease 2.5s forwards;
+            display: flex; align-items: center; gap: 10px;
+        }
+        @keyframes toastEnter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastExit { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
 
     </style>
 </head>
@@ -193,50 +243,52 @@
     <header class="app-header">
         <div class="header-left">
             <div class="btn-back" onclick="window.history.back()">
-                <i class="fa-solid fa-chevron-left"></i>
+                <i class="fa-solid fa-arrow-left"></i>
             </div>
             <div class="header-title">
-                <h1>Alerts</h1>
+                <h1>Notifications</h1>
             </div>
         </div>
-        <div class="clear-all" onclick="clearAllNotifs()">Clear</div>
+        <div class="clear-all" onclick="clearAllNotifs()"><i class="fa-solid fa-trash-can"></i> Clear All</div>
     </header>
 
-    <div class="section-status">
-        <div class="status-label">Recent Updates</div>
-        <div class="online-dot"><i class="fas fa-circle"></i> Live Sync</div>
+    <div class="test-btn" onclick="injectTestData()">
+        <i class="fa-solid fa-database"></i> Push Demo Data To Firebase
     </div>
+
+    <div class="section-label" id="listLabel">Recent Updates</div>
 
     <main class="notifications-wrapper" id="notifList">
-        </main>
+        <div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-lines"><div class="skeleton-line w-50"></div><div class="skeleton-line w-80"></div><div class="skeleton-line"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-lines"><div class="skeleton-line w-50"></div><div class="skeleton-line w-80"></div><div class="skeleton-line"></div></div></div>
+    </main>
 
     <div id="emptyBox">
-        <i class="fa-solid fa-wind"></i>
-        <h2>No New Messages</h2>
-        <p>Aap bilkul up-to-date hain!</p>
+        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5; margin-bottom: 20px;">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            <line x1="2" y1="2" x2="22" y2="22" stroke="#EF4444"></line>
+        </svg>
+        <h2>All Caught Up!</h2>
+        <p>Aapke paas filhal koi naya alert nahi hai.</p>
     </div>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a>
-        <a href="#" class="nav-link active"><i class="fas fa-bell"></i>Alerts</a>
-        <a href="orders.html" class="nav-link"><i class="fas fa-shopping-bag"></i>Orders</a>
-        <a href="profile.html" class="nav-link"><i class="fas fa-user-circle"></i>Profile</a>
-    </nav>
+    <div id="toastContainer"></div>
 
     <script>
         // 1. FIREBASE CONFIGURATION
-        // Yahan apni Firebase Console ki details dalo
         const firebaseConfig = {
             databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/" 
         };
         
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase safely
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
-        
-        // Maa ke naam se ya user ID se path setup karein
         const userId = "user_akash"; // Unique User ID
 
-        // 2. LISTEN FOR NOTIFICATIONS (Real-time)
+        // 2. REAL-TIME LISTENER
         function syncNotifications() {
             const notifRef = db.ref(`notifications/${userId}`);
             
@@ -244,71 +296,141 @@
                 const data = snapshot.val();
                 const container = document.getElementById('notifList');
                 const empty = document.getElementById('emptyBox');
+                const label = document.getElementById('listLabel');
                 
-                container.innerHTML = ""; // Clear current list to re-render
+                container.innerHTML = ""; // Clear list (removes skeletons too)
 
-                if (data) {
+                if (data && Object.keys(data).length > 0) {
                     empty.style.display = 'none';
                     container.style.display = 'flex';
+                    label.style.display = 'block';
                     
-                    // Object ko array mein badal kar reverse karein (Latest first)
+                    // Delay animation staggered
+                    let delay = 0;
                     Object.keys(data).reverse().forEach(key => {
                         const item = data[key];
-                        createNotifCard(key, item);
+                        createNotifCard(key, item, delay);
+                        delay += 0.1;
                     });
                 } else {
                     container.style.display = 'none';
+                    label.style.display = 'none';
                     empty.style.display = 'flex';
                 }
             });
         }
 
-        // 3. CREATE PREMIUM CARD HTML
-        function createNotifCard(id, data) {
+        // 3. CREATE UI CARD DYNAMICALLY
+        function createNotifCard(id, data, delay) {
             const container = document.getElementById('notifList');
             
-            // Determine Icon and Style based on Type
-            let icon = "fa-bell";
-            let typeClass = "type-system";
+            let icon, typeClass;
             
-            if(data.type === 'payment') { icon = "fa-credit-card"; typeClass = "type-payment"; }
-            if(data.type === 'order') { icon = "fa-box-open"; typeClass = "type-order"; }
-            if(data.type === 'promo') { icon = "fa-bolt"; typeClass = "type-promo"; }
+            // LOGIC FOR DIFFERENT NOTIFICATION TYPES
+            switch(data.type) {
+                case 'payment':
+                    icon = "fa-check-double"; typeClass = "type-payment"; break;
+                case 'newprod':
+                    icon = "fa-sparkles"; typeClass = "type-newprod"; break;
+                case 'drop':
+                    icon = "fa-arrow-trend-down"; typeClass = "type-drop"; break;
+                case 'confirm':
+                    icon = "fa-clipboard-check"; typeClass = "type-confirm"; break;
+                case 'deliver':
+                    icon = "fa-truck-fast"; typeClass = "type-deliver"; break;
+                default:
+                    icon = "fa-bell"; typeClass = "type-newprod";
+            }
 
-            const card = `
-                <div class="notif-card" id="${id}">
-                    <div class="icon-box ${typeClass}">
-                        <i class="fa-solid ${icon}"></i>
-                    </div>
-                    <div class="notif-body">
-                        <h3>${data.title} ${data.isNew ? '<span class="badge-new">NEW</span>' : ''}</h3>
-                        <p>${data.message}</p>
-                        <div class="notif-meta">
-                            <span><i class="fa-regular fa-clock"></i> ${data.time || 'Just Now'}</span>
-                            <span>•</span>
-                            <span>${data.category || 'Nemi Mart'}</span>
-                        </div>
-                    </div>
-                    <div class="delete-btn" onclick="removeSingleNotif('${id}')">
-                        <i class="fa-solid fa-xmark"></i>
+            const card = document.createElement('div');
+            card.className = 'notif-card';
+            card.style.animationDelay = `${delay}s`;
+            
+            card.innerHTML = `
+                <div class="icon-box ${typeClass}">
+                    <i class="fa-solid ${icon}"></i>
+                </div>
+                <div class="notif-body">
+                    <h3>${data.title}</h3>
+                    <p>${data.message}</p>
+                    <div class="notif-meta">
+                        <span><i class="fa-regular fa-clock"></i> ${timeAgo(data.timestamp)}</span>
+                        <span>•</span>
+                        <span>Nemi Mart</span>
                     </div>
                 </div>
+                <div class="delete-btn" onclick="removeSingleNotif(event, '${id}')">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
             `;
-            container.innerHTML += card;
+            container.appendChild(card);
         }
 
-        // 4. ACTION FUNCTIONS
-        function removeSingleNotif(id) {
-            db.ref(`notifications/${userId}/${id}`).remove();
+        // 4. RELATIVE TIME CALCULATOR (e.g. "Just now", "2 mins ago")
+        function timeAgo(timestamp) {
+            if (!timestamp) return "Just now";
+            const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
+            if (seconds < 60) return "Just now";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes} min ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} hr ago`;
+            return `${Math.floor(hours / 24)} days ago`;
+        }
+
+        // 5. DELETE OPERATIONS
+        function removeSingleNotif(event, id) {
+            event.stopPropagation(); // Prevent card click
+            db.ref(`notifications/${userId}/${id}`).remove()
+                .then(() => showToast("Notification deleted"));
         }
 
         function clearAllNotifs() {
-            if(confirm("Sare notifications delete kar dein?")) {
-                db.ref(`notifications/${userId}`).remove();
-            }
+            db.ref(`notifications/${userId}`).once('value', snap => {
+                if(snap.exists()) {
+                    if(confirm("Are you sure you want to clear all notifications?")) {
+                        db.ref(`notifications/${userId}`).remove()
+                            .then(() => showToast("All notifications cleared!"));
+                    }
+                } else {
+                    showToast("Box is already empty!");
+                }
+            });
         }
 
-        // Start the engine
+        // 6. TOAST NOTIFICATION SYSTEM
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--accent)"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ==========================================
+        // 7. ADMIN TOOL: INJECT 5 DEMO NOTIFICATIONS
+        // ==========================================
+        function injectTestData() {
+            const notifRef = db.ref(`notifications/${userId}`);
+            const now = new Date().getTime();
+            
+            const demoData = {
+                notif_1: { type: "payment", title: "Payment Received", message: "Aapka ₹1250 ka payment successfully receive ho gaya hai.", timestamp: now },
+                notif_2: { type: "confirm", title: "Order Confirmed", message: "Order #NM-9922 pack ho raha hai. Jald hi dispatch hoga.", timestamp: now - 3600000 },
+                notif_3: { type: "deliver", title: "Order Delivered", message: "Aapka Nemi Mart ka parcel deliver ho chuka hai. Enjoy!", timestamp: now - 86400000 },
+                notif_4: { type: "drop", title: "Price Drop Alert!", message: "Premium Kesar par 20% ki bhari choot aayi hai. Grab now!", timestamp: now - 172800000 },
+                notif_5: { type: "newprod", title: "New Arrival", message: "Naye organic dry fruits stock me aa chuke hain. Check them out.", timestamp: now - 259200000 }
+            };
+
+            notifRef.set(demoData).then(() => {
+                showToast("Demo Data Injected into Firebase!");
+            }).catch(error => {
+                alert("Error: " + error.message);
+            });
+        }
+
+        // Boot Up
         window.onload = syncNotifications;
 
     </script>

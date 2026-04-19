@@ -255,7 +255,11 @@
 
     const CLOUD_NAME = "despxo7zb";
     const UPLOAD_PRESET = "nemi_preset"; 
-    const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" };
+    
+    // Yahan Config bilkul stable hai
+    const firebaseConfig = { 
+        databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com" 
+    };
     
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
@@ -286,11 +290,13 @@
         document.getElementById('photoList').appendChild(div);
     };
 
+    // Product Listener
     onValue(ref(db, 'products'), (snap) => {
         globalProducts = snap.val() || {};
         renderFeed(globalProducts);
     });
 
+    // Form Submission Logic
     document.getElementById('proForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const loader = document.getElementById('mainLoader');
@@ -301,6 +307,7 @@
         let uploadedUrls = [];
 
         try {
+            // Cloudinary Upload Loop
             for(let i=0; i < fileInputs.length; i++) {
                 let file = fileInputs[i].files[0];
                 if(file) {
@@ -328,8 +335,9 @@
             const p = parseFloat(document.getElementById('price').value);
             const d = parseFloat(document.getElementById('disc').value);
             const final = Math.round(p - (p * (d/100)));
-            const pTitle = document.getElementById('title').value; // Get Title for notification
+            const pTitle = document.getElementById('title').value;
 
+            // Product Data Object
             const prodData = {
                 title: pTitle,
                 category: document.getElementById('category').value,
@@ -344,22 +352,20 @@
                 time: Date.now()
             };
 
-            const newRef = push(ref(db, 'products'));
-            await set(newRef, prodData);
+            // 1. Push Product
+            const newProRef = push(ref(db, 'products'));
+            await set(newProRef, prodData);
 
-            // ==========================================
-            // NEW NOTIFICATION SYSTEM (Sahi Logic)
-            // ==========================================
-            const notifRef = push(ref(db, 'notifications'));
-            await set(notifRef, {
+            // 2. Push Notification (Sahi Path)
+            const newNotifRef = push(ref(db, 'notifications'));
+            await set(newNotifRef, {
                 title: "New Product Available!",
                 message: `${pTitle} has been added to the store at ₹${final}. Check it out now!`,
                 type: "new",
                 timestamp: Date.now()
             });
-            // ==========================================
 
-            showToast("Product Live Ho Gaya!");
+            showToast("Product & Notification Live!");
             document.getElementById('proForm').reset();
             document.getElementById('photoList').innerHTML = `<div class="photo-row"><input type="file" class="photo-input" accept="image/*" required></div>`;
             showTab('listPage', document.querySelectorAll('.nav-link')[1]);
@@ -371,6 +377,7 @@
         }
     });
 
+    // Feed Rendering
     window.renderFeed = (dataObj) => {
         const feed = document.getElementById('masterFeed');
         feed.innerHTML = "";

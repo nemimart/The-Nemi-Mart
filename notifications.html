@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Premium</title>
+    <title>Nemi Mart | Premium Feed</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         :root {
-            --gold: #C5A059;
-            --premium-green: #0F5132;
-            --cream-bg: #FCFBF7;
-            --pure-white: #FFFFFF;
+            --p-green: #0F5132;
+            --p-gold: #C5A059;
+            --p-cream: #FCFBF7;
+            --white: #FFFFFF;
             --glass: rgba(255, 255, 255, 0.7);
             --border: rgba(197, 160, 89, 0.2);
         }
@@ -24,186 +24,135 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--cream-bg);
+            background-color: var(--p-cream);
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #1a1a1a;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at top right, #fdf5e6, transparent);
         }
 
         /* --- CLEAN HEADER --- */
-        .header {
-            padding: 30px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .top-bar {
+            padding: 20px 25px;
+            display: flex; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(252, 251, 247, 0.8);
+            backdrop-filter: blur(20px);
         }
 
-        .header h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            color: var(--premium-green);
+        .btn-back {
+            width: 45px; height: 45px; border-radius: 15px;
+            background: var(--white); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: var(--p-green);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .btn-back:active { transform: scale(0.9); }
+
+        .main-title {
+            flex: 1; text-align: center; margin-right: 45px;
+            font-family: 'Outfit', sans-serif; font-size: 20px;
+            font-weight: 900; letter-spacing: 1px; color: var(--p-green);
         }
 
-        .clear-all {
-            font-size: 12px;
-            font-weight: 800;
-            color: #ff4d4d;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
+        /* --- FEED AREA --- */
+        .content-area { max-width: 500px; margin: 0 auto; padding: 20px; }
+
+        .section-label {
+            font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900;
+            margin-bottom: 30px; padding-left: 10px; color: #1a1a1a;
         }
 
-        /* --- FEED CONTAINER --- */
-        .feed {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 0 20px 100px;
-        }
+        /* --- THE ORBITAL CARD --- */
+        .notif-wrapper { position: relative; margin-bottom: 25px; list-style: none; }
 
-        .card-container {
-            margin-bottom: 25px;
-            perspective: 1000px;
-        }
-
-        .nemi-card {
-            background: var(--pure-white);
+        .notif-card {
+            background: var(--white);
             border-radius: 35px;
             padding: 25px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            display: flex; align-items: center; gap: 20px;
             border: 1px solid var(--border);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
-            animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(197, 160, 89, 0.1);
+            position: relative; overflow: hidden;
+            animation: slideIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px) rotateX(-10deg); }
-            to { opacity: 1; transform: translateY(0) rotateX(0); }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- ADVANCED ICON MOTION --- */
-        .icon-scene {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* --- ORBIT ANIMATION --- */
+        .icon-container {
+            width: 80px; height: 80px; position: relative;
+            display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
 
         .main-icon {
-            width: 55px;
-            height: 55px;
-            background: var(--cream-bg);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: var(--gold);
+            width: 50px; height: 50px; border-radius: 50%;
+            background: var(--p-cream); color: var(--p-gold);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; border: 1px solid var(--border);
             z-index: 2;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 20px rgba(197, 160, 89, 0.1);
         }
 
-        /* Revolving Ring */
         .orbit-line {
-            position: absolute;
-            width: 75px;
-            height: 75px;
-            border: 1px dashed var(--gold);
-            border-radius: 50%;
-            animation: rotateOrbit 10s linear infinite;
-            opacity: 0.4;
+            position: absolute; width: 100%; height: 100%;
+            border: 1px dashed var(--p-gold);
+            border-radius: 50%; opacity: 0.3;
+            animation: rotate 8s linear infinite;
         }
 
-        @keyframes rotateOrbit {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* Floating Products around icon */
+        .floating-item {
+            position: absolute; font-size: 10px; color: var(--p-green);
+            animation: rotate 5s linear infinite;
+        }
+        .item-1 { top: 0; left: 50%; transform: translateX(-50%); }
+        .item-2 { bottom: 10px; right: 0; }
+        .item-3 { bottom: 10px; left: 0; }
+
+        @keyframes rotate { 
+            from { transform: rotate(0deg) translateX(35px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(35px) rotate(-360deg); }
         }
 
-        /* Floating Products/Particles */
-        .particle {
-            position: absolute;
-            font-size: 10px;
-            color: var(--premium-green);
-            opacity: 0.6;
-            animation: floatParticle 4s ease-in-out infinite;
+        .card-text { flex: 1; }
+        .card-text h3 { font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 5px; }
+        .card-text p { font-size: 13.5px; color: #666; line-height: 1.5; font-weight: 500; }
+
+        .card-time {
+            font-size: 10px; font-weight: 800; color: var(--p-gold);
+            margin-top: 12px; display: block; text-transform: uppercase;
         }
 
-        .p1 { top: 5px; right: 5px; animation-delay: 0s; }
-        .p2 { bottom: 10px; left: 0px; animation-delay: 1s; }
-        .p3 { top: 40%; left: -5px; animation-delay: 2s; }
-
-        @keyframes floatParticle {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1.2); }
+        .btn-del {
+            width: 35px; height: 35px; border-radius: 12px;
+            background: #fff0f0; color: #ff4d4d; border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; cursor: pointer; transition: 0.3s;
         }
-
-        /* --- CONTENT --- */
-        .card-content { flex: 1; }
-        .card-content h3 {
-            font-size: 18px;
-            font-weight: 800;
-            margin-bottom: 5px;
-            color: #111;
-        }
-        .card-content p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
-            font-weight: 500;
-        }
-
-        .card-meta {
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .time {
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--gold);
-            letter-spacing: 1px;
-        }
-
-        .del-btn {
-            background: transparent;
-            border: none;
-            color: #ccc;
-            cursor: pointer;
-            padding: 5px;
-            transition: 0.3s;
-        }
-        .del-btn:hover { color: #ff4d4d; }
+        .btn-del:hover { background: #ff4d4d; color: #fff; }
 
         /* --- LOADER --- */
         #loader {
-            position: fixed; inset: 0; background: var(--cream-bg);
-            display: flex; align-items: center; justify-content: center; z-index: 9999;
+            position: fixed; inset: 0; background: var(--p-cream);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
         .spinner {
-            width: 40px; height: 40px; border: 3px solid #eee;
-            border-top: 3px solid var(--gold); border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            width: 40px; height: 40px; border: 3px solid var(--border);
+            border-top: 3px solid var(--p-green); border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* --- TOAST --- */
         #toast {
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            background: #111; color: #fff; padding: 12px 30px;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #1a1a1a; color: #fff; padding: 12px 25px;
             border-radius: 50px; font-size: 13px; font-weight: 600;
-            display: none; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none; z-index: 2000; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -211,25 +160,34 @@
 
     <div id="loader"><div class="spinner"></div></div>
 
-    <div class="header">
-        <h1>Notifications</h1>
-        <div class="clear-all" onclick="clearAll()">Clear</div>
-    </div>
+    <nav class="top-bar">
+        <div class="btn-back" onclick="window.history.back()">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+        <div class="main-title">NOTIFICATIONS</div>
+    </nav>
 
-    <main class="feed" id="feed"></main>
+    <main class="content-area">
+        <h2 class="section-label">Feed</h2>
+        <div id="feed"></div>
 
-    <div id="toast">Action Confirmed</div>
+        <div id="empty" style="text-align: center; padding-top: 50px; display: none;">
+            <i class="fa-solid fa-cloud-moon" style="font-size: 50px; color: var(--p-gold); opacity: 0.3;"></i>
+            <p style="margin-top: 15px; font-weight: 600; color: #888;">No new updates</p>
+        </div>
+    </main>
+
+    <div id="toast">Update Removed</div>
 
     <script>
-        const firebaseConfig = {
-            databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/"
-        };
+        const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        function initApp() {
+        function loadFeed() {
             const feed = document.getElementById('feed');
             const loader = document.getElementById('loader');
+            const empty = document.getElementById('empty');
 
             db.ref('notifications').on('value', (snap) => {
                 loader.style.display = 'none';
@@ -237,45 +195,41 @@
                 const data = snap.val();
 
                 if (!data) {
-                    feed.innerHTML = `<div style="text-align:center; padding-top:100px; opacity:0.3;">
-                        <i class="fa-solid fa-cloud" style="font-size:50px;"></i>
-                        <p style="margin-top:10px; font-weight:700;">All Clear</p>
-                    </div>`;
+                    empty.style.display = 'block';
                     return;
                 }
+                empty.style.display = 'none';
 
-                Object.keys(data).reverse().forEach((key, idx) => {
+                const keys = Object.keys(data).reverse();
+                keys.forEach((key, i) => {
                     const item = data[key];
-                    let icon = 'fa-star';
+                    const card = document.createElement('div');
+                    card.className = 'notif-wrapper';
+
+                    // Dynamic Icons
+                    let icon = 'fa-crown';
                     if(item.type === 'sale') icon = 'fa-tag';
-                    if(item.type === 'new') icon = 'fa-bag-shopping';
                     if(item.type === 'order') icon = 'fa-box';
 
-                    const card = document.createElement('div');
-                    card.className = 'card-container';
                     card.innerHTML = `
-                        <div class="nemi-card" style="animation-delay: ${idx * 0.1}s">
-                            <div class="icon-scene">
+                        <div class="notif-card" style="animation-delay: ${i * 0.1}s">
+                            <div class="icon-container">
                                 <div class="orbit-line"></div>
-                                <div class="particle p1"><i class="fa-solid fa-circle"></i></div>
-                                <div class="particle p2"><i class="fa-solid fa-square"></i></div>
-                                <div class="particle p3"><i class="fa-solid fa-star"></i></div>
+                                <div class="floating-item item-1"><i class="fa-solid fa-bag-shopping"></i></div>
+                                <div class="floating-item item-2"><i class="fa-solid fa-gift"></i></div>
+                                <div class="floating-item item-3"><i class="fa-solid fa-star"></i></div>
                                 <div class="main-icon">
                                     <i class="fa-solid ${icon}"></i>
                                 </div>
                             </div>
-                            <div class="card-body" style="flex:1">
-                                <div class="card-content">
-                                    <h3>${item.title || 'Nemi Mart'}</h3>
-                                    <p>${item.message || 'Check out our latest update.'}</p>
-                                </div>
-                                <div class="card-meta">
-                                    <span class="time">${getTime(item.timestamp)}</span>
-                                    <button class="del-btn" onclick="deleteItem('${key}')">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-                                </div>
+                            <div class="card-text">
+                                <h3>${item.title || 'Nemi Mart'}</h3>
+                                <p>${item.message || 'Discover our premium collections today.'}</p>
+                                <span class="card-time">${getTime(item.timestamp)}</span>
                             </div>
+                            <button class="btn-del" onclick="deleteMe('${key}')">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         </div>
                     `;
                     feed.appendChild(card);
@@ -284,28 +238,22 @@
         }
 
         function getTime(ts) {
-            if(!ts) return "Just now";
-            const diff = Math.floor((Date.now() - ts)/1000);
-            if(diff < 60) return "Just now";
-            if(diff < 3600) return Math.floor(diff/60) + "m ago";
+            if (!ts) return "Just Now";
+            const diff = Math.floor((Date.now() - ts) / 1000);
+            if (diff < 60) return "Just Now";
+            if (diff < 3600) return Math.floor(diff/60) + "m ago";
             return new Date(ts).toLocaleDateString();
         }
 
-        function deleteItem(id) {
-            db.ref('notifications/' + id).remove().then(() => toast("Removed"));
+        function deleteMe(id) {
+            db.ref('notifications/' + id).remove().then(() => {
+                const toast = document.getElementById('toast');
+                toast.style.display = 'block';
+                setTimeout(() => toast.style.display = 'none', 2000);
+            });
         }
 
-        function clearAll() {
-            if(confirm("Wipe all?")) db.ref('notifications').remove();
-        }
-
-        function toast(m) {
-            const t = document.getElementById('toast');
-            t.innerText = m; t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 2000);
-        }
-
-        window.onload = initApp;
+        window.onload = loadFeed;
     </script>
 </body>
 </html>

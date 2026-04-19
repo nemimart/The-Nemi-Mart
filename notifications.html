@@ -3,254 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Premium Feed</title>
+    <title>Nemi Mart | Kinetic Inbox</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;800;900&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         :root {
+            --gold: #C5A059;
+            --gold-glow: rgba(197, 160, 89, 0.3);
             --p-green: #0F5132;
-            --p-gold: #C5A059;
-            --p-cream: #FCFBF7;
+            --cream: #FCFBF7;
             --white: #FFFFFF;
-            --glass: rgba(255, 255, 255, 0.7);
-            --border: rgba(197, 160, 89, 0.2);
+            --dark: #0A0A0A;
+            --glass: rgba(255, 255, 255, 0.9);
+            --border: rgba(197, 160, 89, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
+
         body {
-            background-color: var(--p-cream);
+            background-color: var(--cream);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #1a1a1a;
+            color: var(--dark);
+            min-height: 100vh;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(15, 81, 50, 0.05) 0%, transparent 40%);
         }
 
-        /* --- CLEAN HEADER --- */
-        .top-bar {
-            padding: 20px 25px;
+        /* --- KINETIC NAV --- */
+        .nav-bar {
+            position: sticky; top: 0; z-index: 2000;
+            padding: 25px;
             display: flex; align-items: center;
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(252, 251, 247, 0.8);
+            background: var(--glass);
             backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
         }
 
-        .btn-back {
+        .back-trigger {
             width: 45px; height: 45px; border-radius: 15px;
             background: var(--white); border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: var(--p-green);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            font-size: 18px; color: var(--dark);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
             transition: 0.3s;
         }
-        .btn-back:active { transform: scale(0.9); }
+        .back-trigger:active { transform: scale(0.9); }
 
-        .main-title {
+        .nav-label {
             flex: 1; text-align: center; margin-right: 45px;
-            font-family: 'Outfit', sans-serif; font-size: 20px;
-            font-weight: 900; letter-spacing: 1px; color: var(--p-green);
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px;
+            color: var(--p-green);
         }
 
-        /* --- FEED AREA --- */
-        .content-area { max-width: 500px; margin: 0 auto; padding: 20px; }
+        /* --- FEED CONTAINER --- */
+        .wrapper { max-width: 580px; margin: 0 auto; padding: 40px 20px; }
 
-        .section-label {
-            font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900;
-            margin-bottom: 30px; padding-left: 10px; color: #1a1a1a;
+        .header-box {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 50px; padding: 0 10px;
+        }
+        .header-box h2 { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900; }
+        .wipe-all {
+            font-size: 11px; font-weight: 800; color: #E63946;
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
         }
 
-        /* --- THE ORBITAL CARD --- */
-        .notif-wrapper { position: relative; margin-bottom: 25px; list-style: none; }
-
-        .notif-card {
-            background: var(--white);
-            border-radius: 35px;
-            padding: 25px;
-            display: flex; align-items: center; gap: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 15px 35px rgba(197, 160, 89, 0.1);
-            position: relative; overflow: hidden;
-            animation: slideIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- ORBIT ANIMATION --- */
-        .icon-container {
-            width: 80px; height: 80px; position: relative;
+        /* --- THE KINETIC ORBIT SYSTEM (MAGIC) --- */
+        .orbit-container {
+            width: 80px; height: 80px;
+            position: relative;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
 
-        .main-icon {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: var(--p-cream); color: var(--p-gold);
+        .main-icon-hub {
+            width: 55px; height: 55px; border-radius: 20px;
+            background: var(--white);
             display: flex; align-items: center; justify-content: center;
-            font-size: 22px; border: 1px solid var(--border);
-            z-index: 2;
+            font-size: 22px; color: var(--gold);
+            border: 1px solid var(--gold);
+            box-shadow: 0 0 20px var(--gold-glow);
+            z-index: 10;
         }
 
+        /* Orbital Line */
         .orbit-line {
-            position: absolute; width: 100%; height: 100%;
-            border: 1px dashed var(--p-gold);
-            border-radius: 50%; opacity: 0.3;
-            animation: rotate 8s linear infinite;
+            position: absolute; width: 85px; height: 85px;
+            border: 1px dashed var(--gold);
+            border-radius: 50%;
+            animation: spin-linear 10s linear infinite;
+            opacity: 0.4;
         }
 
-        /* Floating Products around icon */
+        /* Floating Products */
         .floating-item {
-            position: absolute; font-size: 10px; color: var(--p-green);
-            animation: rotate 5s linear infinite;
+            position: absolute; width: 100%; height: 100%;
+            animation: spin-linear var(--speed) linear infinite;
         }
-        .item-1 { top: 0; left: 50%; transform: translateX(-50%); }
-        .item-2 { bottom: 10px; right: 0; }
-        .item-3 { bottom: 10px; left: 0; }
-
-        @keyframes rotate { 
-            from { transform: rotate(0deg) translateX(35px) rotate(0deg); }
-            to { transform: rotate(360deg) translateX(35px) rotate(-360deg); }
-        }
-
-        .card-text { flex: 1; }
-        .card-text h3 { font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 5px; }
-        .card-text p { font-size: 13.5px; color: #666; line-height: 1.5; font-weight: 500; }
-
-        .card-time {
-            font-size: 10px; font-weight: 800; color: var(--p-gold);
-            margin-top: 12px; display: block; text-transform: uppercase;
+        .floating-item i {
+            position: absolute; top: 0; left: 50%;
+            transform: translateX(-50%);
+            background: var(--cream);
+            font-size: 10px; color: var(--p-green);
+            padding: 4px; border-radius: 50%; border: 1px solid var(--border);
         }
 
-        .btn-del {
+        @keyframes spin-linear { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* --- PREMIUM CARDS --- */
+        .notif-card {
+            background: var(--white);
+            border-radius: 35px;
+            padding: 25px; margin-bottom: 25px;
+            display: flex; gap: 20px; align-items: center;
+            position: relative;
+            border: 1px solid var(--border);
+            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.05);
+            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            animation: reveal 0.8s ease backwards;
+        }
+
+        @keyframes reveal { 
+            from { opacity: 0; transform: translateY(30px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .notif-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 45px -15px rgba(197, 160, 89, 0.2);
+            border-color: var(--gold);
+        }
+
+        .card-content { flex: 1; }
+        .card-content h3 {
+            font-family: 'Outfit', sans-serif; font-size: 18px;
+            font-weight: 800; color: var(--dark); margin-bottom: 6px;
+        }
+        .card-content p {
+            font-size: 14px; color: #666; line-height: 1.6; font-weight: 500;
+        }
+
+        .time-strip {
+            margin-top: 15px; font-size: 10px; font-weight: 800;
+            color: var(--gold); text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        .delete-btn {
             width: 35px; height: 35px; border-radius: 12px;
-            background: #fff0f0; color: #ff4d4d; border: none;
+            background: #FFF5F5; color: #FF4D4D;
+            border: none; cursor: pointer; transition: 0.3s;
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px; cursor: pointer; transition: 0.3s;
         }
-        .btn-del:hover { background: #ff4d4d; color: #fff; }
+        .delete-btn:hover { background: #FF4D4D; color: white; transform: rotate(90deg); }
 
-        /* --- LOADER --- */
+        /* --- STATES --- */
         #loader {
-            position: fixed; inset: 0; background: var(--p-cream);
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
+            position: fixed; inset: 0; background: var(--cream);
+            display: flex; align-items: center; justify-content: center; z-index: 5000;
         }
-        .spinner {
-            width: 40px; height: 40px; border: 3px solid var(--border);
-            border-top: 3px solid var(--p-green); border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .spin-gold {
+            width: 40px; height: 40px; border: 2px solid var(--border);
+            border-top: 2px solid var(--gold); border-radius: 50%;
+            animation: spin-linear 1s infinite;
         }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- TOAST --- */
-        #toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: #1a1a1a; color: #fff; padding: 12px 25px;
-            border-radius: 50px; font-size: 13px; font-weight: 600;
-            display: none; z-index: 2000; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        .empty-view {
+            text-align: center; padding: 80px 40px; display: none;
         }
+        .empty-view i { font-size: 60px; color: var(--gold-glow); margin-bottom: 20px; }
+        .empty-view h3 { font-family: 'Outfit'; font-size: 22px; margin-bottom: 10px; }
+
+        .toast {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: var(--dark); color: white; padding: 15px 30px;
+            border-radius: 20px; font-size: 13px; font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3000;
+            display: none; animation: toastUp 0.4s ease;
+        }
+        @keyframes toastUp { from { bottom: -20px; opacity: 0; } to { bottom: 40px; opacity: 1; } }
+
     </style>
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div></div>
+    <div id="loader">
+        <div class="spin-gold"></div>
+    </div>
 
-    <nav class="top-bar">
-        <div class="btn-back" onclick="window.history.back()">
+    <nav class="nav-bar">
+        <div class="back-trigger" onclick="window.history.back()">
             <i class="fa-solid fa-chevron-left"></i>
         </div>
-        <div class="main-title">NOTIFICATIONS</div>
+        <div class="nav-label">Notifications</div>
     </nav>
 
-    <main class="content-area">
-        <h2 class="section-label">Feed</h2>
-        <div id="feed"></div>
+    <main class="wrapper">
+        <div class="header-box">
+            <h2>Inbox</h2>
+            <div class="wipe-all" onclick="clearAll()">Clear All</div>
+        </div>
 
-        <div id="empty" style="text-align: center; padding-top: 50px; display: none;">
-            <i class="fa-solid fa-cloud-moon" style="font-size: 50px; color: var(--p-gold); opacity: 0.3;"></i>
-            <p style="margin-top: 15px; font-weight: 600; color: #888;">No new updates</p>
+        <div id="feed-list"></div>
+
+        <div id="empty-state" class="empty-view">
+            <i class="fa-solid fa-bell-slash"></i>
+            <h3>No Updates</h3>
+            <p style="color:#888; font-size: 14px;">Your notification feed is currently empty.</p>
         </div>
     </main>
 
-    <div id="toast">Update Removed</div>
+    <div id="toast" class="toast">Action Done ✨</div>
 
     <script>
-        const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/" };
+        // 1. Firebase Config
+        const firebaseConfig = {
+            databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/"
+        };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const database = firebase.database();
 
+        // 2. Load Notifications with Kinetic UI
         function loadFeed() {
-            const feed = document.getElementById('feed');
+            const list = document.getElementById('feed-list');
             const loader = document.getElementById('loader');
-            const empty = document.getElementById('empty');
+            const empty = document.getElementById('empty-state');
 
-            db.ref('notifications').on('value', (snap) => {
-                loader.style.display = 'none';
-                feed.innerHTML = '';
+            database.ref('notifications').on('value', (snap) => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+
+                list.innerHTML = '';
                 const data = snap.val();
 
                 if (!data) {
                     empty.style.display = 'block';
                     return;
                 }
-                empty.style.display = 'none';
 
+                empty.style.display = 'none';
                 const keys = Object.keys(data).reverse();
-                keys.forEach((key, i) => {
+
+                keys.forEach((key, idx) => {
                     const item = data[key];
                     const card = document.createElement('div');
-                    card.className = 'notif-wrapper';
+                    card.className = 'notif-card';
+                    card.style.animationDelay = `${idx * 0.1}s`;
 
-                    // Dynamic Icons
-                    let icon = 'fa-crown';
-                    if(item.type === 'sale') icon = 'fa-tag';
-                    if(item.type === 'order') icon = 'fa-box';
+                    // Kinetic Icon Logic
+                    let mainIcon = 'fa-star';
+                    if(item.type === 'sale') mainIcon = 'fa-tag';
+                    if(item.type === 'order') mainIcon = 'fa-box';
+                    if(item.type === 'new') mainIcon = 'fa-bag-shopping';
 
                     card.innerHTML = `
-                        <div class="notif-card" style="animation-delay: ${i * 0.1}s">
-                            <div class="icon-container">
-                                <div class="orbit-line"></div>
-                                <div class="floating-item item-1"><i class="fa-solid fa-bag-shopping"></i></div>
-                                <div class="floating-item item-2"><i class="fa-solid fa-gift"></i></div>
-                                <div class="floating-item item-3"><i class="fa-solid fa-star"></i></div>
-                                <div class="main-icon">
-                                    <i class="fa-solid ${icon}"></i>
-                                </div>
+                        <div class="orbit-container">
+                            <div class="orbit-line"></div>
+                            <div class="floating-item" style="--speed: 4s;"><i class="fa-solid fa-gem"></i></div>
+                            <div class="floating-item" style="--speed: 6s; transform: rotate(120deg);"><i class="fa-solid fa-gift"></i></div>
+                            <div class="floating-item" style="--speed: 8s; transform: rotate(240deg);"><i class="fa-solid fa-cart-shopping"></i></div>
+                            
+                            <div class="main-icon-hub">
+                                <i class="fa-solid ${mainIcon}"></i>
                             </div>
-                            <div class="card-text">
-                                <h3>${item.title || 'Nemi Mart'}</h3>
-                                <p>${item.message || 'Discover our premium collections today.'}</p>
-                                <span class="card-time">${getTime(item.timestamp)}</span>
-                            </div>
-                            <button class="btn-del" onclick="deleteMe('${key}')">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
                         </div>
+                        
+                        <div class="card-content">
+                            <h3>${item.title || 'Exclusive Update'}</h3>
+                            <p>${item.message || 'Discover our new arrivals and premium services.'}</p>
+                            <div class="time-strip">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                ${formatTime(item.timestamp)}
+                            </div>
+                        </div>
+
+                        <button class="delete-btn" onclick="deleteItem('${key}')">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     `;
-                    feed.appendChild(card);
+                    list.appendChild(card);
                 });
             });
         }
 
-        function getTime(ts) {
+        // 3. Logic Engines
+        function formatTime(ts) {
             if (!ts) return "Just Now";
             const diff = Math.floor((Date.now() - ts) / 1000);
-            if (diff < 60) return "Just Now";
+            if (diff < 60) return "Just now";
             if (diff < 3600) return Math.floor(diff/60) + "m ago";
+            if (diff < 86400) return Math.floor(diff/3600) + "h ago";
             return new Date(ts).toLocaleDateString();
         }
 
-        function deleteMe(id) {
-            db.ref('notifications/' + id).remove().then(() => {
-                const toast = document.getElementById('toast');
-                toast.style.display = 'block';
-                setTimeout(() => toast.style.display = 'none', 2000);
-            });
+        function deleteItem(id) {
+            database.ref('notifications/' + id).remove()
+                .then(() => showToast("Removed"));
+        }
+
+        function clearAll() {
+            if(confirm("Confirm: Clear all records?")) {
+                database.ref('notifications').remove()
+                    .then(() => showToast("Inbox Wiped"));
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
         }
 
         window.onload = loadFeed;

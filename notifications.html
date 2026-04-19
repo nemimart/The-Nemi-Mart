@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Kinetic Inbox</title>
+    <title>Nemi Mart | Premium</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -14,13 +14,10 @@
     <style>
         :root {
             --gold: #C5A059;
-            --gold-glow: rgba(197, 160, 89, 0.3);
-            --p-green: #0F5132;
+            --premium-green: #0F5132;
             --cream: #FCFBF7;
-            --white: #FFFFFF;
-            --dark: #0A0A0A;
             --glass: rgba(255, 255, 255, 0.9);
-            --border: rgba(197, 160, 89, 0.12);
+            --border: rgba(197, 160, 89, 0.15);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -28,220 +25,174 @@
         body {
             background-color: var(--cream);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--dark);
+            color: #1A1A1A;
             min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(15, 81, 50, 0.05) 0%, transparent 40%);
+            background-image: radial-gradient(circle at top right, #FDF7E7, transparent);
         }
 
-        /* --- KINETIC NAV --- */
+        /* --- CLEAN NAV --- */
         .nav-bar {
-            position: sticky; top: 0; z-index: 2000;
-            padding: 25px;
-            display: flex; align-items: center;
-            background: var(--glass);
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(252, 251, 247, 0.8);
             backdrop-filter: blur(20px);
+            padding: 15px 20px;
+            display: flex; align-items: center;
             border-bottom: 1px solid var(--border);
         }
 
-        .back-trigger {
-            width: 45px; height: 45px; border-radius: 15px;
-            background: var(--white); border: 1px solid var(--border);
+        .back-link {
+            width: 40px; height: 40px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: var(--dark);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            color: #1A1A1A; font-size: 18px; text-decoration: none;
             transition: 0.3s;
         }
-        .back-trigger:active { transform: scale(0.9); }
+        .back-link:active { background: #EEE; transform: scale(0.9); }
 
-        .nav-label {
-            flex: 1; text-align: center; margin-right: 45px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 18px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 2px;
-            color: var(--p-green);
+        .nav-title {
+            flex: 1; text-align: center;
+            font-family: 'Outfit', sans-serif; font-size: 18px;
+            font-weight: 700; letter-spacing: 1px; margin-right: 40px;
         }
 
-        /* --- FEED CONTAINER --- */
-        .wrapper { max-width: 580px; margin: 0 auto; padding: 40px 20px; }
+        /* --- FEED WRAPPER --- */
+        .feed-container { max-width: 500px; margin: 0 auto; padding: 25px 15px; }
 
-        .header-box {
+        .feed-top {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 50px; padding: 0 10px;
+            margin-bottom: 30px; padding: 0 5px;
         }
-        .header-box h2 { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900; }
-        .wipe-all {
-            font-size: 11px; font-weight: 800; color: #E63946;
-            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
-        }
+        .feed-top h2 { font-family: 'Outfit'; font-size: 26px; }
+        .wipe-btn { color: #FF4D4D; font-size: 12px; font-weight: 700; cursor: pointer; }
 
-        /* --- THE KINETIC ORBIT SYSTEM (MAGIC) --- */
+        /* --- ORBITING ICON SYSTEM (THE MAGIC) --- */
         .orbit-container {
-            width: 80px; height: 80px;
-            position: relative;
+            position: relative; width: 60px; height: 60px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
         }
 
-        .main-icon-hub {
-            width: 55px; height: 55px; border-radius: 20px;
-            background: var(--white);
+        /* The Main Center Icon */
+        .main-icon {
+            width: 45px; height: 45px; border-radius: 15px;
+            background: white; border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center;
-            font-size: 22px; color: var(--gold);
-            border: 1px solid var(--gold);
-            box-shadow: 0 0 20px var(--gold-glow);
-            z-index: 10;
+            font-size: 18px; color: var(--gold); z-index: 5;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        /* Orbital Line */
+        /* The Rotating Line */
         .orbit-line {
-            position: absolute; width: 85px; height: 85px;
-            border: 1px dashed var(--gold);
-            border-radius: 50%;
-            animation: spin-linear 10s linear infinite;
-            opacity: 0.4;
+            position: absolute; width: 65px; height: 65px;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            border-radius: 50%; border-top-color: var(--premium-green);
+            animation: spin 3s linear infinite;
         }
 
-        /* Floating Products */
-        .floating-item {
-            position: absolute; width: 100%; height: 100%;
-            animation: spin-linear var(--speed) linear infinite;
+        /* Floating Mini Product Icons */
+        .mini-product {
+            position: absolute; font-size: 10px; color: var(--gold);
+            animation: orbit 6s linear infinite; opacity: 0.6;
         }
-        .floating-item i {
-            position: absolute; top: 0; left: 50%;
-            transform: translateX(-50%);
-            background: var(--cream);
-            font-size: 10px; color: var(--p-green);
-            padding: 4px; border-radius: 50%; border: 1px solid var(--border);
+        .p1 { top: -5px; animation-delay: 0s; }
+        .p2 { right: -5px; animation-delay: -2s; }
+        .p3 { bottom: -5px; animation-delay: -4s; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(35px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(35px) rotate(-360deg); }
         }
 
-        @keyframes spin-linear { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* --- PREMIUM CARDS --- */
-        .notif-card {
-            background: var(--white);
-            border-radius: 35px;
-            padding: 25px; margin-bottom: 25px;
-            display: flex; gap: 20px; align-items: center;
-            position: relative;
-            border: 1px solid var(--border);
-            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.05);
-            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            animation: reveal 0.8s ease backwards;
+        /* --- COMPACT CARD --- */
+        .card-item {
+            background: white; border-radius: 22px;
+            padding: 18px; margin-bottom: 15px;
+            display: flex; gap: 15px; align-items: center;
+            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.03);
+            position: relative; overflow: hidden;
+            animation: slideIn 0.5s ease-out backwards;
         }
 
-        @keyframes reveal { 
-            from { opacity: 0; transform: translateY(30px); filter: blur(10px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-
-        .notif-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 45px -15px rgba(197, 160, 89, 0.2);
-            border-color: var(--gold);
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
         .card-content { flex: 1; }
-        .card-content h3 {
-            font-family: 'Outfit', sans-serif; font-size: 18px;
-            font-weight: 800; color: var(--dark); margin-bottom: 6px;
-        }
-        .card-content p {
-            font-size: 14px; color: #666; line-height: 1.6; font-weight: 500;
-        }
+        .card-content h3 { font-size: 15px; font-weight: 800; color: #111; margin-bottom: 3px; }
+        .card-content p { font-size: 13px; color: #666; line-height: 1.4; font-weight: 500; }
 
-        .time-strip {
-            margin-top: 15px; font-size: 10px; font-weight: 800;
-            color: var(--gold); text-transform: uppercase; letter-spacing: 1px;
-            display: flex; align-items: center; gap: 5px;
+        .card-meta {
+            margin-top: 10px; display: flex; align-items: center; justify-content: space-between;
         }
+        .time-text { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
 
-        .delete-btn {
-            width: 35px; height: 35px; border-radius: 12px;
-            background: #FFF5F5; color: #FF4D4D;
-            border: none; cursor: pointer; transition: 0.3s;
+        .bin-btn {
+            width: 32px; height: 32px; border-radius: 10px;
+            background: #FFF0F0; color: #FF4D4D; border: none;
             display: flex; align-items: center; justify-content: center;
+            font-size: 12px; cursor: pointer; transition: 0.2s;
         }
-        .delete-btn:hover { background: #FF4D4D; color: white; transform: rotate(90deg); }
+        .bin-btn:active { background: #FF4D4D; color: white; transform: scale(0.8); }
 
-        /* --- STATES --- */
-        #loader {
-            position: fixed; inset: 0; background: var(--cream);
-            display: flex; align-items: center; justify-content: center; z-index: 5000;
-        }
-        .spin-gold {
-            width: 40px; height: 40px; border: 2px solid var(--border);
-            border-top: 2px solid var(--gold); border-radius: 50%;
-            animation: spin-linear 1s infinite;
-        }
+        /* --- APP STATES --- */
+        #loader { text-align: center; padding: 100px 0; }
+        .loader-ring { width: 30px; height: 30px; border: 3px solid #EEE; border-top-color: var(--gold); border-radius: 50%; animation: spin 1s infinite linear; margin: 0 auto; }
 
-        .empty-view {
-            text-align: center; padding: 80px 40px; display: none;
-        }
-        .empty-view i { font-size: 60px; color: var(--gold-glow); margin-bottom: 20px; }
-        .empty-view h3 { font-family: 'Outfit'; font-size: 22px; margin-bottom: 10px; }
+        .empty-box { text-align: center; padding: 80px 20px; display: none; }
+        .empty-box i { font-size: 50px; color: #DDD; margin-bottom: 15px; }
+        .empty-box h3 { font-size: 18px; color: #999; }
 
-        .toast {
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            background: var(--dark); color: white; padding: 15px 30px;
-            border-radius: 20px; font-size: 13px; font-weight: 700;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3000;
-            display: none; animation: toastUp 0.4s ease;
+        /* --- TOAST --- */
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #1A1A1A; color: white; padding: 10px 20px;
+            border-radius: 50px; font-size: 13px; font-weight: 600;
+            display: none; z-index: 5000; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        @keyframes toastUp { from { bottom: -20px; opacity: 0; } to { bottom: 40px; opacity: 1; } }
-
     </style>
 </head>
 <body>
 
-    <div id="loader">
-        <div class="spin-gold"></div>
-    </div>
-
     <nav class="nav-bar">
-        <div class="back-trigger" onclick="window.history.back()">
+        <a href="javascript:history.back()" class="back-link">
             <i class="fa-solid fa-chevron-left"></i>
-        </div>
-        <div class="nav-label">Notifications</div>
+        </a>
+        <div class="nav-title">Notifications</div>
     </nav>
 
-    <main class="wrapper">
-        <div class="header-box">
-            <h2>Inbox</h2>
-            <div class="wipe-all" onclick="clearAll()">Clear All</div>
+    <main class="feed-container">
+        <div class="feed-top">
+            <h2>Updates</h2>
+            <div class="wipe-btn" onclick="clearAll()">Clear All</div>
         </div>
 
-        <div id="feed-list"></div>
+        <div id="loader"><div class="loader-ring"></div></div>
+        
+        <div id="notif-list"></div>
 
-        <div id="empty-state" class="empty-view">
+        <div id="empty-state" class="empty-box">
             <i class="fa-solid fa-bell-slash"></i>
-            <h3>No Updates</h3>
-            <p style="color:#888; font-size: 14px;">Your notification feed is currently empty.</p>
+            <h3>No new updates</h3>
         </div>
     </main>
 
-    <div id="toast" class="toast">Action Done ✨</div>
+    <div id="toast">Done ✨</div>
 
     <script>
-        // 1. Firebase Config
+        // 1. Firebase Setup
         const firebaseConfig = {
             databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/"
         };
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        // 2. Load Notifications with Kinetic UI
-        function loadFeed() {
-            const list = document.getElementById('feed-list');
+        // 2. Load Notifications
+        function fetchUpdates() {
+            const list = document.getElementById('notif-list');
             const loader = document.getElementById('loader');
             const empty = document.getElementById('empty-state');
 
-            database.ref('notifications').on('value', (snap) => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-
+            db.ref('notifications').on('value', (snap) => {
+                loader.style.display = 'none';
                 list.innerHTML = '';
                 const data = snap.val();
 
@@ -253,42 +204,37 @@
                 empty.style.display = 'none';
                 const keys = Object.keys(data).reverse();
 
-                keys.forEach((key, idx) => {
+                keys.forEach((key, i) => {
                     const item = data[key];
                     const card = document.createElement('div');
-                    card.className = 'notif-card';
-                    card.style.animationDelay = `${idx * 0.1}s`;
-
-                    // Kinetic Icon Logic
-                    let mainIcon = 'fa-star';
-                    if(item.type === 'sale') mainIcon = 'fa-tag';
+                    card.className = 'card-item';
+                    card.style.animationDelay = (i * 0.05) + 's';
+                    
+                    // Dynamic Icon Logic
+                    let mainIcon = 'fa-tag';
                     if(item.type === 'order') mainIcon = 'fa-box';
-                    if(item.type === 'new') mainIcon = 'fa-bag-shopping';
+                    if(item.type === 'new') mainIcon = 'fa-star';
 
                     card.innerHTML = `
                         <div class="orbit-container">
                             <div class="orbit-line"></div>
-                            <div class="floating-item" style="--speed: 4s;"><i class="fa-solid fa-gem"></i></div>
-                            <div class="floating-item" style="--speed: 6s; transform: rotate(120deg);"><i class="fa-solid fa-gift"></i></div>
-                            <div class="floating-item" style="--speed: 8s; transform: rotate(240deg);"><i class="fa-solid fa-cart-shopping"></i></div>
-                            
-                            <div class="main-icon-hub">
+                            <div class="mini-product p1"><i class="fa-solid fa-shirt"></i></div>
+                            <div class="mini-product p2"><i class="fa-solid fa-mobile-screen"></i></div>
+                            <div class="mini-product p3"><i class="fa-solid fa-bag-shopping"></i></div>
+                            <div class="main-icon">
                                 <i class="fa-solid ${mainIcon}"></i>
                             </div>
                         </div>
-                        
                         <div class="card-content">
-                            <h3>${item.title || 'Exclusive Update'}</h3>
-                            <p>${item.message || 'Discover our new arrivals and premium services.'}</p>
-                            <div class="time-strip">
-                                <i class="fa-solid fa-clock-rotate-left"></i>
-                                ${formatTime(item.timestamp)}
+                            <h3>${item.title || 'Nemi Mart'}</h3>
+                            <p>${item.message || 'Check out our latest update.'}</p>
+                            <div class="card-meta">
+                                <span class="time-text">${getRelativeTime(item.timestamp)}</span>
+                                <button class="bin-btn" onclick="deleteItem('${key}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         </div>
-
-                        <button class="delete-btn" onclick="deleteItem('${key}')">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
                     `;
                     list.appendChild(card);
                 });
@@ -296,24 +242,22 @@
         }
 
         // 3. Logic Engines
-        function formatTime(ts) {
-            if (!ts) return "Just Now";
-            const diff = Math.floor((Date.now() - ts) / 1000);
-            if (diff < 60) return "Just now";
-            if (diff < 3600) return Math.floor(diff/60) + "m ago";
-            if (diff < 86400) return Math.floor(diff/3600) + "h ago";
+        function getRelativeTime(ts) {
+            if(!ts) return "Just Now";
+            const s = Math.floor((Date.now() - ts) / 1000);
+            if(s < 60) return "Just now";
+            if(s < 3600) return Math.floor(s/60) + "m ago";
+            if(s < 86400) return Math.floor(s/3600) + "h ago";
             return new Date(ts).toLocaleDateString();
         }
 
         function deleteItem(id) {
-            database.ref('notifications/' + id).remove()
-                .then(() => showToast("Removed"));
+            db.ref('notifications/' + id).remove().then(() => showToast("Removed"));
         }
 
         function clearAll() {
-            if(confirm("Confirm: Clear all records?")) {
-                database.ref('notifications').remove()
-                    .then(() => showToast("Inbox Wiped"));
+            if(confirm("Clear all notifications?")) {
+                db.ref('notifications').remove().then(() => showToast("Cleared All"));
             }
         }
 
@@ -321,10 +265,10 @@
             const t = document.getElementById('toast');
             t.innerText = msg;
             t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 3000);
+            setTimeout(() => t.style.display = 'none', 2000);
         }
 
-        window.onload = loadFeed;
+        window.onload = fetchUpdates;
     </script>
 </body>
 </html>

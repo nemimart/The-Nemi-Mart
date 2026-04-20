@@ -4,25 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Nemi Mart | Premium Ayurveda</title>
-    
-    <meta name="description" content="Premium Ayurvedic Products by The Nemi Mart. Quality you can trust.">
-    <meta name="theme-color" content="#1B3022">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-
     <style>
         /* ==========================================================================
-           1. CSS VARIABLES & THEME SETUP
+           1. CSS VARIABLES & BASE SETUP (ENTERPRISE PREMIUM LAYOUT)
            ========================================================================== */
         :root {
             --creme: #FFFDF5;
             --gold: #D4AF37;
-            --gold-dark: #B8860B;
             --gold-light: #F3E5AB;
             --dark-green: #1B3022;
             --leaf-green: #2D5A27;
@@ -30,205 +20,346 @@
             --white: #ffffff;
             --text-dark: #333333;
             --text-muted: #888888;
-            --error: #ff4757;
             --soft-shadow: 0 10px 40px rgba(0,0,0,0.06);
             --card-shadow: 0 15px 35px rgba(27,48,34,0.08);
             --hover-shadow: 0 20px 50px rgba(212,175,55,0.2);
+            --inner-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--creme); color: var(--text-dark); padding-bottom: 100px; overflow-x: hidden; line-height: 1.6; }
         
-        body { 
-            background-color: var(--creme); 
-            color: var(--text-dark); 
-            padding-bottom: 100px; 
-            overflow-x: hidden; 
-            line-height: 1.6;
-        }
-
-        /* Smooth Scrollbar */
+        /* Scrollbar Styling */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--creme); }
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
         /* ==========================================================================
-           2. HEADER & SEARCH BAR
+           2. HEADER & NAVIGATION (STICKY & BLURRED)
            ========================================================================== */
         header { 
-            background: rgba(27, 48, 34, 0.96); 
-            backdrop-filter: blur(15px);
+            background: rgba(27, 48, 34, 0.95); 
+            backdrop-filter: blur(10px);
             padding: 15px 5%; 
             position: sticky; 
             top: 0; 
             z-index: 1000; 
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2); 
             border-bottom: 2px solid var(--gold);
         }
-
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
         
-        .logo-area { position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; text-decoration: none; }
-        .main-logo { width: 45px; z-index: 5; filter: drop-shadow(0 0 8px var(--gold)); transition: var(--transition); }
-        .logo-area:hover .main-logo { transform: scale(1.1) rotate(-5deg); }
-
-        .orbit-icons { position: absolute; width: 100%; height: 100%; animation: rotateFull 15s linear infinite; }
-        .orbit-icons i { position: absolute; font-size: 10px; color: var(--gold); opacity: 0.6; }
-        .oi1 { top: 0; left: 50%; } .oi2 { bottom: 0; left: 50%; } .oi3 { left: 0; top: 50%; } .oi4 { right: 0; top: 50%; }
+        .logo-area { position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: var(--transition); }
+        .logo-area:hover { transform: scale(1.08) rotate(5deg); }
+        .main-logo { width: 45px; z-index: 5; position: relative; filter: drop-shadow(0 0 10px rgba(212,175,55,0.6)); }
+        
+        .orbit-icons { position: absolute; width: 100%; height: 100%; animation: rotateFull 12s linear infinite; }
+        .orbit-icons i { position: absolute; font-size: 10px; color: var(--gold); opacity: 0.8; }
+        .oi1 { top: 0; left: 50%; transform: translateX(-50%); } 
+        .oi2 { bottom: 0; left: 50%; transform: translateX(-50%); } 
+        .oi3 { left: 0; top: 50%; transform: translateY(-50%); } 
+        .oi4 { right: 0; top: 50%; transform: translateY(-50%); }
         @keyframes rotateFull { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .address-box { flex: 1; margin-left: 15px; color: white; cursor: pointer; }
-        .address-box p { font-size: 10px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
-        .address-box h4 { font-size: 14px; color: var(--gold); display: flex; align-items: center; gap: 5px; }
+        .address-box { flex: 1; margin-left: 20px; color: white; text-decoration: none; transition: var(--transition); cursor: pointer; }
+        .address-box:hover { opacity: 0.9; transform: translateX(5px); }
+        .address-box p { font-size: 11px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; margin-bottom: -2px; }
+        .address-box h4 { font-size: 15px; font-weight: 600; color: var(--gold); display: flex; align-items: center; gap: 6px; }
 
-        .top-actions { display: flex; gap: 15px; }
-        .top-actions a { color: white; font-size: 22px; transition: 0.3s; }
-        .top-actions a:hover { color: var(--gold); transform: translateY(-2px); }
+        .top-actions { display: flex; gap: 20px; font-size: 22px; }
+        .top-actions a { color: white; transition: var(--transition); cursor: pointer; position: relative; }
+        .top-actions a:hover { color: var(--gold); transform: translateY(-3px); }
 
-        .search-container { 
+        .search-container { position: relative; max-width: 800px; margin: 5px auto 0; cursor: pointer; }
+        .search-fake-input { 
             background: white; 
-            border-radius: 15px; 
-            height: 45px; 
+            border-radius: 20px; 
+            height: 50px; 
             display: flex; 
             align-items: center; 
-            padding: 0 15px; 
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-            cursor: text;
+            padding: 0 20px; 
+            color: var(--text-muted); 
+            font-size: 14px; 
+            box-shadow: var(--inner-shadow); 
+            transition: var(--transition); 
+            border: 2px solid transparent; 
         }
-        .search-container input { 
-            border: none; 
-            outline: none; 
-            width: 100%; 
-            padding-left: 10px; 
-            font-size: 14px;
-            background: transparent;
-        }
+        .search-fake-input:hover { border-color: var(--gold); box-shadow: 0 5px 20px rgba(212,175,55,0.2); transform: translateY(-2px); }
 
         /* ==========================================================================
-           3. DYNAMIC ELEMENTS (CAT STRIP, BANNERS)
+           3. DYNAMIC CATEGORY STRIP (SMOOTH HORIZONTAL SCROLL)
            ========================================================================== */
         .cat-strip { 
             display: flex; 
             overflow-x: auto; 
-            padding: 25px 5%; 
-            gap: 20px; 
-            scrollbar-width: none;
-            background: white;
+            padding: 35px 5%; 
+            gap: 25px; 
+            background: white; 
+            scrollbar-width: none; 
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
         }
         .cat-strip::-webkit-scrollbar { display: none; }
+        .cat-card { text-align: center; min-width: 85px; text-decoration: none; color: var(--dark-green); transition: var(--transition); cursor: pointer; }
         
-        .cat-card { min-width: 80px; text-align: center; cursor: pointer; text-decoration: none; }
         .icon-circle { 
-            width: 65px; height: 65px; 
+            width: 75px; 
+            height: 75px; 
             background: var(--leaf-light); 
-            border-radius: 20px; 
-            display: flex; justify-content: center; align-items: center;
-            margin-bottom: 8px; transition: var(--transition);
+            border-radius: 24px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin: 0 auto 12px; 
+            border: 2px solid transparent; 
+            transition: var(--transition); 
             box-shadow: var(--soft-shadow);
         }
-        .cat-card i { font-size: 24px; color: var(--leaf-green); }
-        .cat-card span { font-size: 12px; font-weight: 600; color: var(--dark-green); }
-        .cat-card:hover .icon-circle { background: var(--dark-green); transform: translateY(-5px); }
-        .cat-card:hover i { color: var(--gold); }
-
-        .banner-wrapper { margin: 20px 5%; border-radius: 25px; overflow: hidden; box-shadow: var(--card-shadow); }
-        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-        .banner-slide { min-width: 100%; scroll-snap-align: start; }
-        .banner-slide img { width: 100%; height: 180px; object-fit: cover; }
+        .cat-card:hover .icon-circle { 
+            transform: translateY(-10px) rotate(8deg); 
+            background: var(--dark-green); 
+            border-color: var(--gold); 
+            box-shadow: var(--hover-shadow); 
+        }
+        .cat-card:hover i { color: var(--gold); transform: scale(1.1); }
+        .cat-card:hover span { color: var(--leaf-green); font-weight: 700; }
+        
+        .cat-card i { font-size: 30px; color: var(--leaf-green); transition: 0.4s; }
+        .cat-card span { font-size: 13px; font-weight: 600; display: block; transition: 0.3s; }
 
         /* ==========================================================================
-           4. PRODUCT GRID & CARDS
+           4. BANNER CAROUSEL
            ========================================================================== */
-        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 30px 5% 15px; }
-        .section-header h2 { font-size: 20px; color: var(--dark-green); font-weight: 700; }
-        .section-header h2 i { color: var(--gold); margin-right: 8px; }
+        .banner-wrapper { position: relative; margin: 30px auto; width: 95%; max-width: 1200px; overflow: hidden; border-radius: 30px; box-shadow: var(--card-shadow); border: 2px solid rgba(212,175,55,0.2); }
+        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; cursor: grab; }
+        .banner-container::-webkit-scrollbar { display: none; }
+        .banner-slide { min-width: 100%; scroll-snap-align: start; position: relative; }
+        .banner-slide img { width: 100%; aspect-ratio: 16/7; object-fit: cover; display: block; transition: transform 0.8s ease; }
+        .banner-slide:hover img { transform: scale(1.05); }
+        
+        .banner-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent); pointer-events: none; }
 
-        .product-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-            padding: 0 5%; 
+        @media (max-width: 768px) { .banner-slide img { aspect-ratio: 16/9; height: 220px; } }
+
+        /* ==========================================================================
+           5. PRODUCT SECTIONS & GRIDS
+           ========================================================================== */
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 45px 5% 25px; max-width: 1200px; margin: 0 auto; }
+        .section-header h2 { font-size: 24px; color: var(--dark-green); font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .section-header h2 i { color: var(--gold); font-size: 20px; }
+        
+        .view-all { 
+            text-decoration: none; 
+            color: var(--leaf-green); 
+            font-size: 14px; 
+            font-weight: 600; 
+            background: var(--leaf-light); 
+            padding: 8px 18px; 
+            border-radius: 12px; 
+            transition: var(--transition); 
+            cursor: pointer; 
+            border: 1px solid transparent;
         }
+        .view-all:hover { background: var(--dark-green); color: var(--gold); border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(27,48,34,0.2); }
+
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+        @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; } }
 
         .p-card { 
             background: white; 
-            border-radius: 20px; 
-            padding: 15px; 
-            position: relative;
-            box-shadow: var(--soft-shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(0,0,0,0.02);
+            border-radius: 24px; 
+            padding: 18px; 
+            box-shadow: var(--soft-shadow); 
+            transition: var(--transition); 
+            border: 1px solid rgba(0,0,0,0.03); 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            overflow: hidden; 
+            animation: fadeInUp 0.8s ease forwards; 
+            cursor: pointer; 
         }
-        .p-card:hover { transform: translateY(-8px); box-shadow: var(--hover-shadow); }
-
-        .discount-badge {
-            position: absolute; top: 10px; left: 10px;
-            background: var(--error); color: white;
-            font-size: 10px; font-weight: 700;
-            padding: 3px 8px; border-radius: 5px; z-index: 2;
-        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .p-card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: var(--hover-shadow); z-index: 10; }
 
         .p-img-box { 
-            width: 100%; aspect-ratio: 1/1; 
-            background: #f9f9f9; border-radius: 15px;
-            display: flex; justify-content: center; align-items: center;
-            margin-bottom: 12px; overflow: hidden;
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            background: #fbfbfb; 
+            border-radius: 18px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            position: relative; 
         }
-        .p-img-box img { max-width: 80%; transition: 0.5s; }
-        .p-card:hover .p-img-box img { transform: scale(1.1); }
+        .p-img-box img { max-width: 85%; max-height: 85%; object-fit: contain; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .p-card:hover .p-img-box img { transform: scale(1.15) rotate(2deg); }
 
-        .p-title { font-size: 13px; font-weight: 600; height: 40px; overflow: hidden; margin-bottom: 10px; }
-        .p-price-row { display: flex; justify-content: space-between; align-items: center; }
-        .p-price { font-weight: 700; color: var(--leaf-green); font-size: 16px; }
-        .p-old-price { font-size: 11px; color: var(--text-muted); text-decoration: line-through; margin-left: 5px; }
-
-        .add-btn {
-            background: var(--dark-green); color: white;
-            border: none; width: 35px; height: 35px;
-            border-radius: 10px; cursor: pointer; transition: 0.3s;
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff4757;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 8px;
+            z-index: 2;
         }
-        .add-btn.added { background: var(--gold); }
+
+        .p-tag { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+        .p-title { font-size: 14px; font-weight: 600; color: var(--dark-green); line-height: 1.4; margin-bottom: 18px; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        
+        .p-price-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .p-price { color: var(--leaf-green); font-weight: 800; font-size: 18px; display: flex; flex-direction: column; line-height: 1.2; }
+        .p-old-price { font-size: 11px; color: var(--text-muted); text-decoration: line-through; font-weight: 500; }
+        
+        /* ADD TO CART BUTTON (SMART STATE) */
+        .add-btn { 
+            background: var(--dark-green); 
+            color: white; 
+            border: none; 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 16px;
+            transition: var(--transition); 
+            cursor: pointer; 
+            z-index: 10; 
+            box-shadow: 0 4px 10px rgba(27,48,34,0.2);
+        }
+        .add-btn:hover { background: var(--gold); transform: scale(1.1) rotate(90deg); }
+        
+        /* The "Added" State class */
+        .add-btn.added {
+            background: var(--leaf-green);
+            transform: scale(1);
+            pointer-events: none; /* Prevent double clicking if wanted, or leave to allow qty increase */
+            box-shadow: 0 4px 10px rgba(45,90,39,0.4);
+        }
+        .add-btn.added i {
+            animation: popIn 0.3s ease-out forwards;
+        }
+        @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.3); } 100% { transform: scale(1); } }
 
         /* ==========================================================================
-           5. NOTIFICATIONS & NAVIGATION
+           6. BOTTOM NAVIGATION (APP-LIKE FEEL)
            ========================================================================== */
-        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; }
-        .nemi-toast {
-            background: var(--dark-green); color: white;
-            padding: 15px; border-radius: 12px; margin-bottom: 10px;
-            display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: slideDown 0.4s ease-out;
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: white; 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            padding: 12px 0 15px; 
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.08); 
+            border-radius: 30px 30px 0 0; 
+            z-index: 2000; 
+            border-top: 1px solid #eee;
         }
-        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .nav-item { text-align: center; text-decoration: none; color: #a0a0a0; font-size: 11px; font-weight: 600; flex: 1; transition: 0.3s; cursor: pointer; position: relative; }
+        .nav-item i { font-size: 24px; display: block; margin-bottom: 5px; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { color: var(--leaf-green); }
+        .nav-item.active i { transform: translateY(-3px); color: var(--gold); }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%;
-            background: white; display: flex; justify-content: space-around;
-            padding: 10px 0 25px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-            border-radius: 25px 25px 0 0; z-index: 1000;
+        .cart-float { position: relative; margin-top: -65px; }
+        .cart-circle { 
+            width: 75px; 
+            height: 75px; 
+            background: var(--leaf-green); 
+            border: 8px solid var(--creme); 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: white; 
+            font-size: 26px; 
+            box-shadow: 0 15px 25px rgba(45,90,39,0.4); 
+            transition: var(--transition); 
+            cursor: pointer; 
         }
-        .nav-item { text-align: center; color: #bbb; text-decoration: none; font-size: 10px; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-        .nav-item.active { color: var(--leaf-green); }
+        .cart-circle:hover { transform: translateY(-8px) scale(1.05); background: var(--dark-green); border-color: white; }
+        .badge { 
+            position: absolute; 
+            top: 2px; 
+            right: 5px; 
+            background: #ff4757; 
+            color: white; 
+            font-size: 11px; 
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            border: 3px solid white; 
+            font-weight: 800; 
+            transition: transform 0.3s; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
 
-        .cart-float { margin-top: -45px; }
-        .cart-circle {
-            width: 65px; height: 65px;
-            background: var(--leaf-green); border: 5px solid var(--creme);
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            color: white; font-size: 24px; position: relative;
+        /* ==========================================================================
+           7. CUSTOM TOAST NOTIFICATION SYSTEM
+           ========================================================================== */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 15px; width: 90%; max-width: 400px; pointer-events: none; }
+        .nemi-toast { 
+            background: var(--dark-green); 
+            color: white; 
+            padding: 16px 22px; 
+            border-radius: 18px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            box-shadow: 0 15px 40px rgba(27,48,34,0.5); 
+            animation: toastEnter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+            border: 1px solid var(--gold); 
         }
-        .cart-badge {
-            position: absolute; top: 0; right: 0;
-            background: var(--error); width: 20px; height: 20px;
-            border-radius: 50%; font-size: 10px; display: flex;
-            justify-content: center; align-items: center; border: 2px solid white;
-        }
+        .nemi-toast i { color: var(--gold); font-size: 24px; }
+        .nemi-toast .toast-text { flex: 1; }
+        .nemi-toast h4 { font-size: 14px; margin-bottom: 4px; font-weight: 700; letter-spacing: 0.5px; }
+        .nemi-toast p { font-size: 12px; opacity: 0.85; }
+        @keyframes toastEnter { 0% { opacity: 0; transform: translateY(-50px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes toastExit { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-30px) scale(0.8); } }
 
-        .loader { 
-            grid-column: 1/-1; text-align: center; padding: 50px; 
-            color: var(--leaf-green); font-weight: 600;
+        /* ==========================================================================
+           8. FOOTER & EXTRAS (ENTERPRISE FEEL)
+           ========================================================================== */
+        .footer-premium {
+            background: var(--dark-green);
+            color: white;
+            padding: 50px 5% 120px; /* padding bottom for bottom nav */
+            margin-top: 50px;
+            text-align: center;
+            border-top: 5px solid var(--gold);
         }
+        .footer-logo { width: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(212,175,55,0.5)); }
+        .footer-premium h3 { font-size: 22px; color: var(--gold); margin-bottom: 15px; }
+        .footer-premium p { font-size: 13px; opacity: 0.8; max-width: 600px; margin: 0 auto 25px; line-height: 1.8; }
+        .social-links { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .social-links a { 
+            width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.1); 
+            display: flex; justify-content: center; align-items: center; color: white; 
+            font-size: 20px; transition: var(--transition); text-decoration: none;
+        }
+        .social-links a:hover { background: var(--gold); color: var(--dark-green); transform: translateY(-5px); }
+
+        .newsletter { background: white; padding: 40px 5%; margin: 0 5% -40px; position: relative; z-index: 10; border-radius: 20px; box-shadow: var(--card-shadow); text-align: center; }
+        .newsletter h3 { color: var(--dark-green); margin-bottom: 10px; font-size: 20px; }
+        .input-group { display: flex; max-width: 500px; margin: 20px auto 0; box-shadow: var(--inner-shadow); border-radius: 30px; overflow: hidden; border: 1px solid #eee; }
+        .input-group input { flex: 1; padding: 15px 20px; border: none; outline: none; font-size: 14px; }
+        .input-group button { background: var(--gold); color: var(--dark-green); border: none; padding: 0 25px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .input-group button:hover { background: var(--dark-green); color: var(--gold); }
     </style>
 </head>
 <body>
@@ -237,201 +368,408 @@
 
     <header>
         <div class="header-top">
-            <a href="#" class="logo-area">
+            <a href="index.html" class="logo-area">
                 <div class="orbit-icons">
-                    <i class="fas fa-leaf oi1"></i>
-                    <i class="fas fa-star oi2"></i>
-                    <i class="fas fa-plus oi3"></i>
+                    <i class="fas fa-plus oi1"></i>
+                    <i class="fas fa-heart oi2"></i>
+                    <i class="fas fa-star oi3"></i>
+                    <i class="fas fa-leaf oi4"></i>
                 </div>
-                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-logo" alt="Nemi Mart">
+                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-logo" alt="Logo">
             </a>
-            <div class="address-box" onclick="location.href='address.html'">
+
+            <div class="address-box" onclick="window.location.href='address.html'">
                 <p>Deliver to</p>
-                <h4>Akash, Patiala... <i class="fas fa-chevron-down"></i></h4>
+                <h4>Akash, Patiala - 147001 <i class="fas fa-chevron-down" style="font-size: 12px;"></i></h4>
             </div>
+
             <div class="top-actions">
-                <a href="wishlist.html"><i class="far fa-heart"></i></a>
-                <a href="profile.html"><i class="far fa-user-circle"></i></a>
+                <a onclick="window.location.href='heart.html'"><i class="far fa-heart"></i></a>
+                <a onclick="window.location.href='profile.html'"><i class="far fa-user-circle"></i></a>
             </div>
         </div>
-        <div class="search-container">
-            <i class="fas fa-search" style="color: var(--gold);"></i>
-            <input type="text" id="mainSearch" placeholder="Search Ayurveda, Herbs, Health...">
+
+        <div class="search-container" onclick="window.location.href='search.html'">
+            <div class="search-fake-input">
+                <i class="fas fa-search" style="margin-right: 15px; color: var(--gold); font-size: 18px;"></i>
+                Search Premium Ayurvedic products...
+            </div>
         </div>
     </header>
 
-    <div class="cat-strip" id="catStrip">
+    <div class="cat-strip" id="dynamicCategories">
         </div>
 
     <div class="banner-wrapper">
-        <div class="banner-container">
-            <div class="banner-slide"><img src="https://res.cloudinary.com/demo/image/upload/v1652345678/docs/banner1.jpg" alt="Banner 1"></div>
-            <div class="banner-slide"><img src="https://res.cloudinary.com/demo/image/upload/v1652345678/docs/banner2.jpg" alt="Banner 2"></div>
+        <div class="banner-container" id="dynamicBanner">
+            </div>
+    </div>
+
+    <div class="section-header">
+        <h2><i class="fas fa-fire"></i> Top Selling</h2>
+        <div class="view-all" onclick="document.getElementById('allProductsSection').scrollIntoView({behavior: 'smooth'})">View All</div>
+    </div>
+    <div class="product-grid" id="topSellingGrid">
+        </div>
+
+    <div class="section-header">
+        <h2><i class="fas fa-crown"></i> Premium Range</h2>
+        <div class="view-all" onclick="document.getElementById('allProductsSection').scrollIntoView({behavior: 'smooth'})">View All</div>
+    </div>
+    <div class="product-grid" id="premiumGrid">
+        </div>
+
+    <div class="newsletter">
+        <h3>Join The Nemi Mart Family</h3>
+        <p style="font-size: 12px; color: var(--text-muted);">Get 10% off your first premium order.</p>
+        <div class="input-group">
+            <input type="email" placeholder="Enter your email address...">
+            <button onclick="NotificationSystem.showToast('Subscribed!', 'Welcome to The Nemi Mart Family.')">SUBSCRIBE</button>
         </div>
     </div>
 
-    <div class="section-header">
-        <h2><i class="fas fa-bolt"></i> Trending Now</h2>
-        <a href="all-products.html" style="color: var(--gold); font-size: 12px; font-weight: 700; text-decoration: none;">VIEW ALL</a>
+    <div class="section-header" id="allProductsSection" style="margin-top: 50px;">
+        <h2><i class="fas fa-box-open"></i> Discover All Products</h2>
     </div>
-    <div class="product-grid" id="trendingGrid">
-        <div class="loader">Loading Essentials...</div>
-    </div>
+    <div class="product-grid" id="allProductsGrid">
+        </div>
 
-    <div class="section-header">
-        <h2><i class="fas fa-crown"></i> Nemi Originals</h2>
-    </div>
-    <div class="product-grid" id="premiumGrid">
-        <div class="loader">Loading Premium...</div>
-    </div>
-
-    <footer style="padding: 40px 5%; background: var(--dark-green); color: white; margin-top: 50px; text-align: center; border-radius: 30px 30px 0 0;">
-        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" width="60" style="filter: brightness(0) invert(1); margin-bottom: 15px;">
-        <p style="font-size: 12px; opacity: 0.6;">&copy; 2026 Arham Insights. All Rights Reserved.</p>
+    <footer class="footer-premium">
+        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart" class="footer-logo">
+        <h3>The Nemi Mart</h3>
+        <p>Your trusted destination for Premium Ayurveda and Wellness. Authenticity guaranteed, straight from nature to your doorstep.</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p style="margin-top: 30px; font-size: 11px; opacity: 0.5;">&copy; 2026 Arham Insights & The Nemi Mart. All Rights Reserved.</p>
     </footer>
 
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active"><i class="fas fa-home"></i>Home</a>
-        <a href="shop.html" class="nav-item"><i class="fas fa-th-large"></i>Shop</a>
-        <div class="cart-float" onclick="location.href='cart.html'">
-            <div class="cart-circle">
-                <i class="fas fa-shopping-basket"></i>
-                <div class="cart-badge" id="cartCount">0</div>
-            </div>
+        <a onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="nav-item active"><i class="fas fa-home-alt"></i>Home</a>
+        <a onclick="document.getElementById('allProductsSection').scrollIntoView({behavior: 'smooth'})" class="nav-item"><i class="fas fa-store"></i>Shop</a>
+        
+        <div class="cart-float">
+            <a onclick="window.location.href='cart.html'" style="text-decoration: none;">
+                <div class="cart-circle">
+                    <i class="fas fa-shopping-basket"></i>
+                    <div class="badge" id="cartBadge">0</div>
+                </div>
+            </a>
         </div>
-        <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i>Alerts</a>
-        <a href="orders.html" class="nav-item"><i class="fas fa-box"></i>Orders</a>
+        
+        <a onclick="window.location.href='notifications.html'" class="nav-item"><i class="fas fa-bell"></i>Alerts</a>
+        <a onclick="window.location.href='orders.html'" class="nav-item"><i class="fas fa-box-open"></i>Orders</a>
     </nav>
 
     <script>
-        /* ==========================================================================
-           CORE ENGINE - V5.0
-           Developer: Akash (Arham Insights)
-           ========================================================================== */
+        /**
+         * THE NEMI MART - ENTERPRISE CORE ENGINE v4.0
+         * Architected for Scalability, Dynamic Rendering, and Premium UX.
+         * Developer: Akash (Arham Insights)
+         */
 
-        // 1. Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAs-EXAMPLE-KEY",
-            authDomain: "nemi-mart.firebaseapp.com",
-            projectId: "nemi-mart",
-            storageBucket: "nemi-mart.appspot.com",
-            appId: "1:123456789:web:abcdef"
-        };
-
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // 2. Data Management (Local & Cloud)
-        const categories = [
-            { name: 'Immunity', icon: 'fa-shield-virus' },
-            { name: 'Skincare', icon: 'fa-spa' },
-            { name: 'Haircare', icon: 'fa-wind' },
-            { name: 'Digestion', icon: 'fa-leaf' },
-            { name: 'Wellness', icon: 'fa-heartbeat' }
-        ];
-
-        const CartManager = {
-            key: 'NEMI_USER_CART',
-            items: JSON.parse(localStorage.getItem('NEMI_USER_CART')) || [],
-            
-            add(product) {
-                const exists = this.items.find(i => i.id === product.id);
-                if (exists) {
-                    Toast.show("Update", "Item quantity increased!");
-                    exists.qty++;
-                } else {
-                    this.items.push({...product, qty: 1});
-                    Toast.show("Success", "Added to your basket!");
+        // --- 1. MOCK ADMIN DATABASE ---
+        // Maine database thoda bada kar diya taaki All Products section bhara-bhara aur accha dikhe.
+        const ADMIN_DATABASE = {
+            categories: [
+                { id: "c1", name: "Immunity", icon: "fa-shield-heart", link: "immunity.html" },
+                { id: "c2", name: "Hair Care", icon: "fa-pump-soap", link: "hair-care.html" },
+                { id: "c3", name: "Gum Care", icon: "fa-teeth", link: "gum-care.html" },
+                { id: "c4", name: "Vitality", icon: "fa-hand-holding-heart", link: "vitality.html" },
+                { id: "c5", name: "Wellness", icon: "fa-mortar-pestle", link: "wellness.html" },
+                { id: "c6", name: "Skincare", icon: "fa-spa", link: "skincare.html" }
+            ],
+            banners: [
+                { id: "b1", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Amritprash%20(1).png", alt: "Amritprash Offer" },
+                { id: "b2", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Nyala%20Hair%20Oil.png", alt: "Nyala Offer" },
+                { id: "b3", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Panch%20Tulsi%20Oil.png", alt: "Tulsi Offer" },
+                { id: "b4", img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/Dantvam%20Herbal%20Toothpaste.png", alt: "Dantvam Offer" }
+            ],
+            products: [
+                {
+                    id: 101, name: "Amritprash Power Booster 250gm", tag: "Natural Power",
+                    price: 850, oldPrice: 1200, discount: 29,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true, isPremium: false
+                },
+                {
+                    id: 102, name: "Nyala Herbal Hair Fall Control Oil", tag: "Anti-Hairfall",
+                    price: 350, oldPrice: 599, discount: 41,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true, isPremium: true
+                },
+                {
+                    id: 103, name: "Panch Tulsi Pure Extract Drops", tag: "Immunity",
+                    price: 195, oldPrice: 250, discount: 22,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true, isPremium: false
+                },
+                {
+                    id: 104, name: "Dantvam Premium Herbal Toothpaste", tag: "Premium Care",
+                    price: 95, oldPrice: 120, discount: 20,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false, isPremium: true
+                },
+                {
+                    id: 105, name: "Immunity & Vitality Duo Pack", tag: "Best Value",
+                    price: 1050, oldPrice: 1450, discount: 27,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false, isPremium: true
+                },
+                {
+                    id: 106, name: "Himalayan Pure Shilajit Resin 20g", tag: "Strength",
+                    price: 1499, oldPrice: 1999, discount: 25,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true, isPremium: true
+                },
+                {
+                    id: 107, name: "Aloe Vera Glow Hydration Gel", tag: "Skin Care",
+                    price: 249, oldPrice: 399, discount: 37,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false, isPremium: false
+                },
+                {
+                    id: 108, name: "Triphala Gut Cleanse Juice 500ml", tag: "Digestion",
+                    price: 399, oldPrice: 550, discount: 27,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false, isPremium: false
+                },
+                // Added a few more generic products to make the "All Products" section robust
+                {
+                    id: 109, name: "Ashwagandha Stress Relief Tabs", tag: "Calm Mind",
+                    price: 450, oldPrice: 600, discount: 25,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: true, isPremium: false
+                },
+                {
+                    id: 110, name: "Neem & Turmeric Face Wash", tag: "Clear Skin",
+                    price: 180, oldPrice: 250, discount: 28,
+                    img: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
+                    isTopSelling: false, isPremium: false
                 }
-                this.save();
-                if (window.navigator.vibrate) window.navigator.vibrate(50);
-            },
-            
-            save() {
-                localStorage.setItem(this.key, JSON.stringify(this.items));
-                document.getElementById('cartCount').innerText = this.items.length;
-            }
+            ]
         };
 
-        const Toast = {
-            show(title, msg) {
+        // --- 2. PREMIUM NOTIFICATION MANAGER ---
+        class NotificationSystem {
+            static showToast(title, message) {
                 const container = document.getElementById('toast-container');
-                const div = document.createElement('div');
-                div.className = 'nemi-toast';
-                div.innerHTML = `<i class="fas fa-check-circle" style="color:var(--gold)"></i> 
-                                 <div><b>${title}</b><br><small>${msg}</small></div>`;
-                container.appendChild(div);
+                const toast = document.createElement('div');
+                toast.className = 'nemi-toast';
+                
+                toast.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <div class="toast-text">
+                        <h4>${title}</h4>
+                        <p>${message}</p>
+                    </div>
+                `;
+                
+                container.appendChild(toast);
+                
+                // Haptic Feedback for mobile users
+                if (window.navigator && window.navigator.vibrate) {
+                    window.navigator.vibrate([50, 30, 50]);
+                }
+
                 setTimeout(() => {
-                    div.style.opacity = '0';
-                    setTimeout(() => div.remove(), 500);
+                    toast.style.animation = 'toastExit 0.4s forwards';
+                    setTimeout(() => toast.remove(), 400);
                 }, 3000);
             }
-        };
-
-        // 3. Cloudinary Image Formatter
-        function getCloudinaryUrl(publicId) {
-            // Cloudinary transformation for optimized mobile delivery
-            return `https://res.cloudinary.com/demo/image/upload/c_scale,w_400,q_auto,f_auto/${publicId}`;
         }
 
-        // 4. UI Rendering Engine
-        function renderCategories() {
-            const container = document.getElementById('catStrip');
-            container.innerHTML = categories.map(cat => `
-                <div class="cat-card">
-                    <div class="icon-circle"><i class="fas ${cat.icon}"></i></div>
-                    <span>${cat.name}</span>
-                </div>
-            `).join('');
-        }
+        // --- 3. SHOPPING CART ENGINE (With "Added" State Management) ---
+        class CartEngine {
+            constructor() {
+                this.cartKey = 'nemi_mart_cart_v3'; // Updated key
+                this.items = JSON.parse(localStorage.getItem(this.cartKey)) || [];
+                this.updateBadge();
+            }
 
-        async function loadProducts() {
-            try {
-                // In production, use: const snapshot = await db.collection('products').get();
-                // Simulation data for demo:
-                const demoProducts = [
-                    { id: '1', name: 'Ashwagandha Gold Capsules', price: 499, oldPrice: 899, img: 'v1652345678/ashwa', isTrending: true },
-                    { id: '2', name: 'Pure Himalayan Shilajit', price: 1299, oldPrice: 1599, img: 'v1652345678/shilajit', isPremium: true },
-                    { id: '3', name: 'Organic Triphala Churna', price: 250, oldPrice: 400, img: 'v1652345678/triphala', isTrending: true },
-                    { id: '4', name: 'Kesar Face Oil', price: 799, oldPrice: 1200, img: 'v1652345678/kesar', isPremium: true }
-                ];
+            // Checks if a product is already in the cart
+            isProductInCart(productId) {
+                return this.items.some(item => item.id === productId);
+            }
 
-                renderGrid('trendingGrid', demoProducts.filter(p => p.isTrending));
-                renderGrid('premiumGrid', demoProducts.filter(p => p.isPremium));
+            // Modified to accept the button element to change its state instantly
+            addItem(product, event, btnElement) {
+                event.stopPropagation(); // Prevents product card click event (goToProduct)
+
+                if (this.isProductInCart(product.id)) {
+                    // Item already in cart, maybe increase qty or just alert
+                    NotificationSystem.showToast("Already in Cart", `${product.name} is already added.`);
+                    return;
+                }
+
+                // Add to array
+                this.items.push({ ...product, qty: 1 });
+                this.saveCart();
+                this.updateBadge();
                 
-            } catch (err) {
-                console.error("Firebase Error:", err);
+                // Change UI of the clicked button instantly
+                if (btnElement) {
+                    btnElement.classList.add('added');
+                    btnElement.innerHTML = '<i class="fas fa-check"></i>';
+                }
+                
+                NotificationSystem.showToast("Added to Cart", `${product.name} added successfully.`);
+                
+                // Bounce Badge
+                const badge = document.getElementById('cartBadge');
+                badge.style.transform = 'scale(1.5)';
+                setTimeout(() => badge.style.transform = 'scale(1)', 300);
+            }
+
+            saveCart() {
+                localStorage.setItem(this.cartKey, JSON.stringify(this.items));
+            }
+
+            updateBadge() {
+                const totalItems = this.items.reduce((sum, item) => sum + item.qty, 0);
+                document.getElementById('cartBadge').innerText = totalItems;
             }
         }
 
-        function renderGrid(targetId, products) {
-            const grid = document.getElementById(targetId);
-            grid.innerHTML = products.map(p => {
-                const disc = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+        const AppCart = new CartEngine();
+
+        // --- 4. UI RENDERER ---
+        class UIManager {
+            static renderCategories() {
+                const container = document.getElementById('dynamicCategories');
+                let html = '';
+                ADMIN_DATABASE.categories.forEach(cat => {
+                    html += `
+                        <a onclick="window.location.href='${cat.link}'" class="cat-card">
+                            <div class="icon-circle"><i class="fas ${cat.icon}"></i></div>
+                            <span>${cat.name}</span>
+                        </a>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+
+            static renderBanners() {
+                const container = document.getElementById('dynamicBanner');
+                let html = '';
+                ADMIN_DATABASE.banners.forEach(b => {
+                    html += `
+                    <div class="banner-slide">
+                        <img src="${b.img}" alt="${b.alt}" loading="lazy">
+                        <div class="banner-overlay"></div>
+                    </div>`;
+                });
+                container.innerHTML = html;
+                this.initBannerScroll();
+            }
+
+            static initBannerScroll() {
+                const banner = document.getElementById('dynamicBanner');
+                const slides = banner.querySelectorAll('.banner-slide');
+                if(!slides.length) return;
+                
+                let index = 0;
+                let isPaused = false;
+
+                function autoScroll() {
+                    if(isPaused) return;
+                    index++;
+                    if (index >= slides.length) index = 0;
+                    banner.scrollTo({ left: index * banner.offsetWidth, behavior: 'smooth' });
+                }
+
+                let scrollInterval = setInterval(autoScroll, 4000);
+
+                ['mousedown', 'touchstart'].forEach(evt => 
+                    banner.addEventListener(evt, () => { isPaused = true; clearInterval(scrollInterval); })
+                );
+                ['mouseup', 'touchend'].forEach(evt => 
+                    banner.addEventListener(evt, () => {
+                        setTimeout(() => {
+                            isPaused = false;
+                            clearInterval(scrollInterval);
+                            scrollInterval = setInterval(autoScroll, 4000);
+                        }, 3000);
+                    })
+                );
+            }
+
+            // Centralized Product Card Generator with Smart Button State
+            static generateProductCard(product, delayIndex) {
+                // Check if item is already in cart to apply the '.added' class
+                const inCart = AppCart.isProductInCart(product.id);
+                const btnClass = inCart ? 'add-btn added' : 'add-btn';
+                const btnIcon = inCart ? '<i class="fas fa-check"></i>' : '<i class="fas fa-plus"></i>';
+                
+                // Safe JSON string for onclick
+                const productJSON = JSON.stringify(product).replace(/"/g, '&quot;');
+
+                // Notice: Main card onclick redirects to product.html, Button onclick adds to cart.
                 return `
-                    <div class="p-card" onclick="location.href='product.html?id=${p.id}'">
-                        <div class="discount-badge">${disc}% OFF</div>
+                    <div class="p-card" style="animation-delay: ${delayIndex * 0.1}s;" onclick="UIManager.goToProduct(${product.id})">
+                        ${product.discount ? `<div class="discount-badge">${product.discount}% OFF</div>` : ''}
                         <div class="p-img-box">
-                            <img src="${getCloudinaryUrl(p.img)}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150'">
+                            <img src="${product.img}" alt="${product.name}" loading="lazy">
                         </div>
-                        <div class="p-title">${p.name}</div>
+                        <span class="p-tag">${product.tag}</span>
+                        <div class="p-title">${product.name}</div>
                         <div class="p-price-row">
-                            <div class="p-price">₹${p.price} <span class="p-old-price">₹${p.oldPrice}</span></div>
-                            <button class="add-btn" onclick="event.stopPropagation(); CartManager.add(${JSON.stringify(p).replace(/"/g, '&quot;')})">
-                                <i class="fas fa-plus"></i>
+                            <div class="p-price">
+                                ₹${product.price}
+                                <span class="p-old-price">₹${product.oldPrice}</span>
+                            </div>
+                            <button class="${btnClass}" onclick="AppCart.addItem(${productJSON}, event, this)">
+                                ${btnIcon}
                             </button>
                         </div>
                     </div>
                 `;
-            }).join('');
+            }
+
+            static renderProducts() {
+                const topGrid = document.getElementById('topSellingGrid');
+                const premGrid = document.getElementById('premiumGrid');
+                const allGrid = document.getElementById('allProductsGrid'); // Now on the homepage!
+
+                let topHtml = '', premHtml = '', allHtml = '';
+                let topIdx = 0, premIdx = 0, allIdx = 0;
+
+                ADMIN_DATABASE.products.forEach(p => {
+                    // ALL products rendered in the bottom grid right here on the home page
+                    allHtml += this.generateProductCard(p, allIdx++);
+                    
+                    if (p.isTopSelling) {
+                        topHtml += this.generateProductCard(p, topIdx++);
+                    }
+                    if (p.isPremium) {
+                        premHtml += this.generateProductCard(p, premIdx++);
+                    }
+                });
+
+                topGrid.innerHTML = topHtml;
+                premGrid.innerHTML = premHtml;
+                allGrid.innerHTML = allHtml;
+            }
+
+            // Router Function for product details
+            static goToProduct(productId) {
+                // Ye line seedha product.html par URL parameter (id) ke saath bhejegi
+                // Jisse tum product.html mein easily product details utha sakte ho.
+                window.location.href = `product.html?id=${productId}`;
+            }
         }
 
-        // Initialize
-        window.onload = () => {
-            renderCategories();
-            loadProducts();
-            CartManager.save(); // Sync badge
-        };
+        // --- 5. INITIALIZE APPLICATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Nemi Mart Core v4 Initialized. All systems operational.");
+            UIManager.renderCategories();
+            UIManager.renderBanners();
+            UIManager.renderProducts();
+        });
+
     </script>
 </body>
 </html>

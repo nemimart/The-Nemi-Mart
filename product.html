@@ -1,35 +1,50 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nemi Mart | Amritprash Elite Gold Luxury Edition</title>
+    <title>Nemi Mart | Premium Product</title>
     
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
     <style>
         /* ============================================================
-           1. CSS VARIABLES & CORE RESET
+           ROOT VARIABLES & RESET - PREMIUM AYURVEDA THEME
            ============================================================ */
         :root {
-            --cream-bg: #FDFBF7;
-            --cream-dark: #F5F1E6;
-            --green-dark: #0F2517;
-            --green-light: #1A3E26;
-            --gold-primary: #D4AF37;
-            --gold-hover: #B8860B;
+            --creme: #FDFBF7;
+            --creme-dark: #F5F1E6;
+            --gold: #D4AF37;
             --gold-light: #FAF4E5;
-            --text-main: #1F2937;
-            --text-muted: #5C6F63;
+            --gold-hover: #B8860B;
+            --dark-green: #0F2517;
+            --leaf-green: #1A3E26;
+            --leaf-light: #eaf2e9;
             --white: #FFFFFF;
-            --border-color: #EAE5D9;
+            --text-dark: #1F2937;
+            --text-muted: #5C6F63;
+            --heart-red: #EF4444;
+            --success-green: #059669;
+            --border-light: #EAE5D9;
+            
             --radius-xl: 32px;
             --radius-lg: 20px;
-            --radius-md: 12px;
-            --shadow-premium: 0 20px 40px rgba(15, 37, 23, 0.08);
-            --heart-red: #EF4444;
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            
+            --shadow-soft: 0 12px 28px rgba(0,0,0,0.04);
+            --shadow-card: 0 20px 40px -8px rgba(15,37,23,0.12);
+            --shadow-hover: 0 30px 55px -10px rgba(212,175,55,0.25);
+            --shadow-gold: 0 10px 30px rgba(212,175,55,0.15);
+            
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            --bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
 
         * {
@@ -41,28 +56,110 @@
         }
 
         body {
-            background-color: var(--cream-bg);
-            color: var(--green-dark);
+            background: var(--creme);
+            color: var(--text-dark);
             line-height: 1.7;
             overflow-x: hidden;
             width: 100%;
+            min-height: 100vh;
+            animation: pageLoad 0.6s ease-out;
+        }
+
+        @keyframes pageLoad {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--creme-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 12px; }
+
+        /* ============================================================
+           LOADER
+           ============================================================ */
+        #pageLoader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        
+        .loader-spinner {
+            width: 60px; height: 60px;
+            border: 4px solid var(--gold-light);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .loader-text {
+            margin-top: 20px;
+            font-weight: 700;
+            color: var(--dark-green);
+            letter-spacing: 2px;
+            font-size: 14px;
         }
 
         /* ============================================================
-           2. NAVIGATION BAR (PREMIUM STICKY)
+           TOAST NOTIFICATIONS
+           ============================================================ */
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 320px;
+        }
+        
+        .toast {
+            background: var(--dark-green);
+            color: white;
+            padding: 16px 22px;
+            border-radius: 16px;
+            border-left: 5px solid var(--gold);
+            box-shadow: var(--shadow-card);
+            animation: slideInRight 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .toast.success { border-left-color: var(--success-green); }
+        .toast.error { border-left-color: var(--heart-red); }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ============================================================
+           NAVIGATION BAR
            ============================================================ */
         nav {
             background: rgba(253, 251, 247, 0.96);
             backdrop-filter: blur(15px);
-            padding: 16px 6%;
+            padding: 14px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 2000;
-            border-bottom: 1px solid var(--border-color);
-            transition: var(--transition);
+            border-bottom: 2px solid var(--gold);
+            box-shadow: var(--shadow-soft);
         }
 
         .nav-logo {
@@ -70,37 +167,43 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            transition: var(--transition);
         }
+        
+        .nav-logo:hover { transform: scale(1.02); }
 
         .nav-logo img {
             width: 44px;
             height: 44px;
             border-radius: 12px;
             object-fit: cover;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
         .nav-logo h1 {
             font-family: 'Outfit', sans-serif;
             font-size: 22px;
             font-weight: 800;
-            color: var(--green-dark);
+            color: var(--dark-green);
             letter-spacing: 0.5px;
-            text-transform: uppercase;
+        }
+        
+        .nav-logo h1 span {
+            color: var(--gold);
         }
 
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
-        .nav-review-btn {
+        .nav-btn {
             background: var(--gold-light);
-            color: var(--gold-primary);
-            border: 1.5px solid var(--gold-primary);
-            padding: 8px 20px;
-            border-radius: 50px;
+            color: var(--gold);
+            border: 1.5px solid var(--gold);
+            padding: 8px 18px;
+            border-radius: 40px;
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
@@ -108,20 +211,22 @@
             align-items: center;
             gap: 8px;
             transition: var(--transition);
+            text-decoration: none;
         }
 
-        .nav-review-btn:hover {
-            background: var(--gold-primary);
+        .nav-btn:hover {
+            background: var(--gold);
             color: var(--white);
+            transform: translateY(-2px);
         }
 
         /* ============================================================
-           3. PRODUCT LAYOUT ENGINE
+           MAIN LAYOUT
            ============================================================ */
         .master-wrapper {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 6% 140px;
+            padding: 30px 5% 120px;
         }
 
         .product-container {
@@ -133,38 +238,42 @@
         @media (min-width: 1024px) {
             .product-container {
                 grid-template-columns: 1.1fr 0.9fr;
-                gap: 80px;
+                gap: 60px;
                 align-items: start;
             }
             .gallery-sticky {
                 position: sticky;
-                top: 110px;
+                top: 100px;
             }
         }
 
         /* ============================================================
-           4. IMAGE GALLERY SYSTEM
+           IMAGE GALLERY
            ============================================================ */
         .gallery-card {
             background: var(--white);
             border-radius: var(--radius-xl);
             position: relative;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-premium);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .main-slider {
             display: flex;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
             scrollbar-width: none;
-            -ms-overflow-style: none;
         }
 
-        .main-slider::-webkit-scrollbar {
-            display: none;
-        }
+        .main-slider::-webkit-scrollbar { display: none; }
 
         .main-slider img {
             min-width: 100%;
@@ -173,23 +282,34 @@
             object-fit: cover;
             scroll-snap-align: start;
             cursor: zoom-in;
-            padding: 10px;
+            padding: 15px;
             border-radius: var(--radius-xl);
+            transition: transform 0.3s;
+        }
+        
+        .main-slider img:hover {
+            transform: scale(1.02);
         }
 
         .promo-badge {
             position: absolute;
             top: 25px;
             left: 25px;
-            background: var(--gold-primary);
-            color: var(--white);
+            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
+            color: var(--dark-green);
             padding: 6px 16px;
-            border-radius: 50px;
+            border-radius: 40px;
             font-size: 11px;
             font-weight: 800;
             text-transform: uppercase;
             z-index: 10;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            box-shadow: var(--shadow-gold);
+            animation: glow 2s infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 4px 15px rgba(212,175,55,0.4); }
+            50% { box-shadow: 0 4px 25px rgba(212,175,55,0.7); }
         }
 
         .float-icons {
@@ -203,11 +323,11 @@
         }
 
         .btn-circle {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: var(--white);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-light);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -215,71 +335,110 @@
             color: var(--text-muted);
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-soft);
         }
 
         .btn-circle:hover {
-            color: var(--gold-primary);
-            border-color: var(--gold-primary);
-            transform: translateY(-3px);
+            color: var(--gold);
+            border-color: var(--gold);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--shadow-gold);
         }
 
         .btn-circle.liked {
             color: var(--heart-red);
             border-color: var(--heart-red);
+            animation: heartPop 0.4s var(--bounce);
+        }
+        
+        @keyframes heartPop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: var(--white);
+            border-top: 1px solid var(--border-light);
+            overflow-x: auto;
+        }
+        
+        .gallery-thumbs img {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            opacity: 0.7;
+        }
+        
+        .gallery-thumbs img:hover,
+        .gallery-thumbs img.active-thumb {
+            border-color: var(--gold);
+            opacity: 1;
+            transform: scale(1.05);
         }
 
         .gallery-indicator {
-            padding: 15px;
+            padding: 12px 15px;
             text-align: center;
-            background: var(--white);
-            border-top: 1px solid var(--border-color);
+            background: var(--gold-light);
         }
 
         .gallery-indicator span {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            color: var(--text-muted);
+            color: var(--gold);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
         /* ============================================================
-           5. PRODUCT DETAILS & PRICING
+           PRODUCT DETAILS
            ============================================================ */
         .info-header {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.6s ease-out 0.1s both;
         }
 
-        .tagline {
+        .category-tag {
             display: inline-block;
-            color: var(--gold-primary);
+            color: var(--gold);
             font-weight: 800;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            background: var(--gold-light);
+            padding: 4px 14px;
+            border-radius: 20px;
         }
 
         .product-title {
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(26px, 4vw, 38px);
+            font-size: clamp(26px, 4vw, 36px);
             font-weight: 800;
             line-height: 1.2;
-            color: var(--green-dark);
-            margin-bottom: 15px;
+            color: var(--dark-green);
+            margin-bottom: 12px;
         }
 
         .rating-inline {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
         }
 
         .stars-gold {
-            color: var(--gold-primary);
-            font-size: 14px;
+            color: var(--gold);
+            font-size: 16px;
+            letter-spacing: 2px;
         }
 
         .rating-count {
@@ -288,13 +447,24 @@
             font-weight: 600;
         }
 
+        .product-desc-short {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        /* ============================================================
+           PRICE BOX
+           ============================================================ */
         .price-box {
             background: var(--white);
             padding: 25px;
             border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-            margin-bottom: 35px;
-            box-shadow: var(--shadow-premium);
+            border: 1px solid var(--border-light);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-card);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
         }
 
         .price-row {
@@ -307,7 +477,7 @@
         .current-price {
             font-size: 42px;
             font-weight: 800;
-            color: var(--green-dark);
+            color: var(--dark-green);
         }
 
         .old-price {
@@ -317,10 +487,10 @@
         }
 
         .discount-pill {
-            background: var(--green-light);
+            background: var(--leaf-green);
             color: var(--white);
-            padding: 6px 14px;
-            border-radius: 8px;
+            padding: 6px 16px;
+            border-radius: 30px;
             font-weight: 700;
             font-size: 13px;
         }
@@ -330,26 +500,78 @@
             align-items: center;
             gap: 8px;
             margin-top: 15px;
-            font-size: 13px;
-            color: #059669;
+            font-size: 14px;
             font-weight: 700;
+        }
+        
+        .stock-status.in-stock { color: var(--success-green); }
+        .stock-status.limited { color: #EAB308; }
+        .stock-status.out-stock { color: var(--heart-red); }
+
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .qty-selector label {
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--creme-dark);
+            border: 1px solid var(--border-light);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--dark-green);
+        }
+        
+        .qty-btn:hover {
+            background: var(--gold);
+            color: white;
+        }
+        
+        #qtyInput {
+            width: 50px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 8px;
+            background: var(--white);
         }
 
         /* ============================================================
-           6. INGREDIENTS & FEATURES GRID
+           FEATURES GRID
            ============================================================ */
         .section-heading {
             font-family: 'Outfit', sans-serif;
             font-size: 22px;
             font-weight: 800;
-            margin: 40px 0 20px;
+            margin: 35px 0 20px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
         .section-heading i {
-            color: var(--gold-primary);
+            color: var(--gold);
+            font-size: 22px;
         }
 
         .features-grid {
@@ -359,43 +581,48 @@
         }
 
         @media (max-width: 480px) {
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
+            .features-grid { grid-template-columns: 1fr; }
         }
 
         .feature-item {
             background: var(--white);
             padding: 18px;
             border-radius: 16px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-light);
             display: flex;
             align-items: center;
             gap: 15px;
             transition: var(--transition);
+            animation: fadeInUp 0.6s ease-out both;
         }
+        
+        .feature-item:nth-child(1) { animation-delay: 0.1s; }
+        .feature-item:nth-child(2) { animation-delay: 0.15s; }
+        .feature-item:nth-child(3) { animation-delay: 0.2s; }
+        .feature-item:nth-child(4) { animation-delay: 0.25s; }
 
         .feature-item:hover {
-            border-color: var(--gold-primary);
-            transform: translateY(-3px);
+            border-color: var(--gold);
+            transform: translateY(-4px);
             background: var(--gold-light);
+            box-shadow: var(--shadow-gold);
         }
 
         .feature-icon {
-            width: 46px;
-            height: 46px;
-            background: var(--cream-dark);
-            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            background: var(--creme-dark);
+            border-radius: 14px;
             display: grid;
             place-items: center;
-            color: var(--gold-primary);
+            color: var(--gold);
             font-size: 20px;
         }
 
         .feature-info h4 {
             font-size: 15px;
             font-weight: 800;
-            color: var(--green-dark);
+            color: var(--dark-green);
         }
 
         .feature-info p {
@@ -404,24 +631,19 @@
         }
 
         /* ============================================================
-           7. ACCORDION & DESCRIPTION BOX
+           DESCRIPTION & ACCORDION
            ============================================================ */
         .description-card {
             background: var(--white);
             padding: 25px;
             border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-            margin-bottom: 30px;
-        }
-
-        .description-card p {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 25px;
         }
 
         .benefit-list {
             list-style: none;
+            margin-top: 15px;
         }
 
         .benefit-list li {
@@ -433,26 +655,30 @@
         }
 
         .benefit-list li i {
-            color: var(--gold-primary);
+            color: var(--gold);
             margin-top: 5px;
-            font-size: 16px;
         }
 
         .accordion {
-            margin-bottom: 40px;
+            margin-bottom: 35px;
         }
 
         .acc-item {
             background: var(--white);
             border-radius: var(--radius-md);
             margin-bottom: 12px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-light);
             overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .acc-item:hover {
+            border-color: var(--gold);
         }
 
         .acc-btn {
             width: 100%;
-            padding: 20px;
+            padding: 18px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -461,7 +687,7 @@
             cursor: pointer;
             font-weight: 700;
             font-size: 15px;
-            color: var(--green-dark);
+            color: var(--dark-green);
             text-align: left;
         }
 
@@ -470,7 +696,7 @@
             font-size: 14px;
             color: var(--text-muted);
             display: none;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-light);
             padding-top: 15px;
         }
 
@@ -480,94 +706,115 @@
 
         .acc-item.active .acc-btn i {
             transform: rotate(180deg);
-            color: var(--gold-primary);
+            color: var(--gold);
         }
 
         /* ============================================================
-           8. REVIEW SYSTEM (FULL DETAIL)
+           REVIEWS SECTION
            ============================================================ */
         .reviews-section {
             background: var(--white);
             padding: 30px;
             border-radius: var(--radius-xl);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-premium);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-card);
+            margin-bottom: 30px;
         }
 
         .review-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .big-rating h2 {
             font-size: 48px;
             line-height: 1;
-        }
-
-        .big-rating .stars-gold {
-            font-size: 22px;
-            margin-top: 5px;
+            color: var(--dark-green);
         }
 
         .review-form {
-            background: var(--cream-bg);
-            padding: 20px;
+            background: var(--creme);
+            padding: 22px;
             border-radius: 16px;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         .rating-input {
             margin-bottom: 15px;
             display: flex;
             gap: 8px;
-            font-size: 24px;
+            font-size: 28px;
             color: #D1D5DB;
         }
 
         .rating-input i {
             cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .rating-input i:hover {
+            transform: scale(1.2);
         }
 
         .rating-input i.selected {
-            color: var(--gold-primary);
+            color: var(--gold);
+        }
+
+        .review-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .review-input-group input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--border-light);
+            font-size: 14px;
+            background: var(--white);
         }
 
         .review-textarea {
             width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border-light);
             resize: none;
-            height: 110px;
-            margin-bottom: 15px;
+            height: 100px;
+            margin: 12px 0;
             font-size: 14px;
+            background: var(--white);
         }
 
         .submit-btn {
-            background: var(--green-dark);
+            background: var(--dark-green);
             color: var(--white);
             border: none;
-            padding: 12px 28px;
-            border-radius: 8px;
+            padding: 14px 32px;
+            border-radius: 40px;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
+            font-size: 14px;
         }
 
         .submit-btn:hover {
-            background: var(--gold-primary);
+            background: var(--gold);
+            color: var(--dark-green);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-gold);
         }
 
         .comment-item {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border-light);
         }
-
+        
         .comment-item:last-child {
             border-bottom: none;
             padding-bottom: 0;
@@ -582,6 +829,9 @@
         .user-info {
             font-weight: 800;
             font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .comment-date {
@@ -589,24 +839,66 @@
             color: var(--text-muted);
         }
 
-        .comment-text {
-            font-size: 14px;
-            color: var(--text-muted);
+        /* ============================================================
+           ZOOM MODAL
+           ============================================================ */
+        #zoomOverlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 37, 23, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #zoomOverlay img {
+            max-width: 95%;
+            max-height: 85%;
+            object-fit: contain;
+            border-radius: 20px;
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 50px rgba(212,175,55,0.3);
+        }
+
+        .close-zoom {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            color: var(--gold);
+            font-size: 45px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .close-zoom:hover {
+            transform: rotate(90deg);
+            background: var(--gold);
+            color: var(--dark-green);
         }
 
         /* ============================================================
-           9. BOTTOM ACTION BAR (STICKY)
+           STICKY FOOTER
            ============================================================ */
         .sticky-footer {
             position: fixed;
-            bottom: 0;
-            left: 0;
+            bottom: 0; left: 0;
             width: 100%;
             background: rgba(255, 255, 255, 0.98);
-            padding: 15px 6% 25px;
+            backdrop-filter: blur(15px);
+            padding: 15px 5% 25px;
             z-index: 1500;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.06);
-            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.08);
+            border-top: 2px solid var(--gold);
         }
 
         .btn-add-to-cart {
@@ -614,9 +906,9 @@
             max-width: 800px;
             margin: 0 auto;
             height: 62px;
-            background: var(--green-dark);
-            color: var(--gold-primary);
-            border: 2px solid var(--gold-primary);
+            background: var(--dark-green);
+            color: var(--gold);
+            border: 2px solid var(--gold);
             border-radius: 18px;
             font-size: 17px;
             font-weight: 800;
@@ -629,316 +921,677 @@
         }
 
         .btn-add-to-cart:hover {
-            background: var(--gold-primary);
+            background: var(--gold);
             color: var(--white);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-gold);
         }
 
         .btn-add-to-cart i {
             font-size: 20px;
             animation: pulse 2s infinite;
         }
+        
+        .btn-add-to-cart:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
+            0%, 100% { transform: scale(1); }
             50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
         }
 
         /* ============================================================
-           10. ZOOM MODAL
-           ============================================================ */
-        #zoomOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 37, 23, 0.98);
-            z-index: 3000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #zoomOverlay img {
-            max-width: 95%;
-            max-height: 85%;
-            object-fit: contain;
-            border-radius: 15px;
-        }
-
-        .close-zoom {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            color: var(--gold-primary);
-            font-size: 45px;
-            cursor: pointer;
-        }
-
-        /* ============================================================
-           11. MOBILE OVERRIDES (STRICT)
+           MOBILE ADJUSTMENTS
            ============================================================ */
         @media (max-width: 768px) {
             .nav-logo h1 { font-size: 18px; }
-            .master-wrapper { padding: 20px 5% 120px; }
-            .product-title { font-size: 26px; }
+            .master-wrapper { padding: 20px 4% 120px; }
+            .product-title { font-size: 24px; }
             .price-box { padding: 20px; }
             .current-price { font-size: 34px; }
-            .features-grid { grid-template-columns: 1fr; }
             .btn-add-to-cart { height: 56px; font-size: 15px; }
+            .reviews-section { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="#" class="nav-logo">
-            <img src="49779.jpg" alt="Nemi Mart">
-            <h1>NEMI MART</h1>
-        </a>
-        <div class="nav-actions">
-            <button class="nav-review-btn" onclick="document.getElementById('reviews-anchor').scrollIntoView({behavior:'smooth'})">
-                <i class="fas fa-star"></i> <span>REVIEWS</span>
-            </button>
-        </div>
-    </nav>
+<div id="toastContainer"></div>
+<div id="pageLoader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">LOADING PREMIUM PRODUCT...</div>
+</div>
 
-    <div id="zoomOverlay" onclick="this.style.display='none'">
-        <span class="close-zoom">&times;</span>
-        <img id="zoomedImage" src="">
+<div id="zoomOverlay" onclick="closeZoom()">
+    <span class="close-zoom">&times;</span>
+    <img id="zoomedImage" src="">
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+    <a href="index.html" class="nav-logo">
+        <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart">
+        <h1>NEMI<span>MART</span></h1>
+    </a>
+    <div class="nav-actions">
+        <a href="index.html" class="nav-btn"><i class="fas fa-home"></i> Home</a>
+        <a href="cart.html" class="nav-btn"><i class="fas fa-shopping-bag"></i> Cart</a>
     </div>
+</nav>
 
-    <main class="master-wrapper">
-        <div class="product-container">
+<main class="master-wrapper">
+    <div class="product-container">
+        
+        <!-- LEFT: GALLERY -->
+        <div class="gallery-sticky">
+            <div class="gallery-card">
+                <div class="promo-badge" id="promoBadge">
+                    <i class="fas fa-crown"></i> PREMIUM
+                </div>
+                
+                <div class="float-icons">
+                    <button class="btn-circle" id="heartBtn" onclick="toggleHeart()">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="btn-circle" onclick="shareProduct()">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+
+                <div class="main-slider" id="productSlider"></div>
+
+                <div class="gallery-thumbs" id="galleryThumbs"></div>
+
+                <div class="gallery-indicator">
+                    <span><i class="fas fa-arrows-left-right"></i> SWIPE • ZOOM ON TAP</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: DETAILS -->
+        <div class="details-column">
+            <div class="info-header">
+                <span class="category-tag" id="productCategory">Ayurveda</span>
+                <h1 class="product-title" id="productTitle">Loading...</h1>
+                <div class="rating-inline">
+                    <div class="stars-gold" id="ratingStars">★★★★★</div>
+                    <span class="rating-count" id="ratingCount">0 Reviews</span>
+                </div>
+                <p class="product-desc-short" id="productShortDesc">Loading product details...</p>
+            </div>
+
+            <div class="price-box">
+                <div class="price-row">
+                    <span class="current-price" id="currentPrice">₹0</span>
+                    <span class="old-price" id="oldPrice"></span>
+                    <span class="discount-pill" id="discountPill">0% OFF</span>
+                </div>
+                <div class="stock-status" id="stockStatus">
+                    <i class="fas fa-check-circle"></i> <span id="stockText">Checking stock...</span>
+                </div>
+                <div class="qty-selector">
+                    <label>Quantity:</label>
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                        <input type="number" id="qtyInput" value="1" min="1" max="10" readonly>
+                        <button class="qty-btn" onclick="changeQty(1)">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-heading"><i class="fas fa-gem"></i> Key Ingredients</h3>
+            <div class="features-grid" id="ingredientsGrid"></div>
+
+            <h3 class="section-heading"><i class="fas fa-file-alt"></i> Description</h3>
+            <div class="description-card" id="descriptionBox">
+                <p id="fullDescription">Loading description...</p>
+                <ul class="benefit-list" id="benefitsList"></ul>
+            </div>
+
+            <h3 class="section-heading"><i class="fas fa-question-circle"></i> How to Use</h3>
+            <div class="accordion">
+                <div class="acc-item active">
+                    <button class="acc-btn" onclick="toggleAcc(this)">
+                        Usage Instructions <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="acc-content" id="usageInstructions">
+                        Take as directed by your healthcare practitioner.
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEWS SECTION -->
+            <div id="reviewsSection" class="reviews-section">
+                <div class="review-header">
+                    <div class="big-rating">
+                        <h2 id="avgRating">0.0</h2>
+                        <div class="stars-gold" id="avgStars">☆☆☆☆☆</div>
+                    </div>
+                </div>
+
+                <div class="review-form">
+                    <h4 style="margin-bottom: 15px; color: var(--dark-green);">Write a Review</h4>
+                    <div class="review-input-group">
+                        <input type="text" id="reviewerName" placeholder="Your name" value="Akash">
+                    </div>
+                    <div class="rating-input" id="starInput">
+                        <i class="far fa-star" onclick="setRating(1)"></i>
+                        <i class="far fa-star" onclick="setRating(2)"></i>
+                        <i class="far fa-star" onclick="setRating(3)"></i>
+                        <i class="far fa-star" onclick="setRating(4)"></i>
+                        <i class="far fa-star" onclick="setRating(5)"></i>
+                    </div>
+                    <textarea id="reviewText" class="review-textarea" placeholder="Share your experience..."></textarea>
+                    <button class="submit-btn" onclick="submitReview()"><i class="fas fa-paper-plane"></i> Post Review</button>
+                </div>
+
+                <div id="commentsList"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="sticky-footer">
+    <button class="btn-add-to-cart" id="addToCartBtn" onclick="addToCart()">
+        <i class="fas fa-shopping-bag"></i>
+        <span id="cartBtnText">ADD TO CART</span>
+    </button>
+</div>
+
+<script>
+    // ============================================================
+    // FIREBASE CONFIG
+    // ============================================================
+    const firebaseConfig = {
+        databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    const CLOUD_NAME = "despxo7zb";
+    
+    // ============================================================
+    // GLOBAL STATE
+    // ============================================================
+    let currentProduct = null;
+    let productId = null;
+    let currentRating = 0;
+    let currentQty = 1;
+    let productImages = [];
+    let reviews = [];
+    
+    // ============================================================
+    // GET PRODUCT ID FROM URL
+    // ============================================================
+    function getProductIdFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('id');
+    }
+    
+    // ============================================================
+    // LOAD PRODUCT DATA
+    // ============================================================
+    async function loadProduct() {
+        productId = getProductIdFromUrl();
+        
+        if (!productId) {
+            showToast('No product specified', 'error');
+            setTimeout(() => window.location.href = 'index.html', 2000);
+            return;
+        }
+        
+        try {
+            const snapshot = await database.ref(`products/${productId}`).once('value');
+            const product = snapshot.val();
             
-            <div class="gallery-sticky">
-                <div class="gallery-card">
-                    <div class="promo-badge">Pure Gold Bhasma</div>
-                    
-                    <div class="float-icons">
-                        <button class="btn-circle" onclick="this.classList.toggle('liked')">
-                            <i class="fas fa-heart"></i>
-                        </button>
-                        <button class="btn-circle" onclick="shareMe()">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-                    </div>
-
-                    <div class="main-slider" id="productSlider">
-                        <img src="49779.jpg" onclick="openZoom(this.src)" alt="Elite Gold Front">
-                        <img src="49780.jpg" onclick="openZoom(this.src)" alt="Elite Gold Back">
-                        <img src="49781.jpg" onclick="openZoom(this.src)" alt="Elite Gold Ingredients">
-                    </div>
-
-                    <div class="gallery-indicator">
-                        <span><i class="fas fa-arrows-left-right"></i> SWIPE FOR MORE ANGLES</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="details-column">
-                <div class="info-header">
-                    <span class="tagline">Premium Ayurvedic Wellness</span>
-                    <h1 class="product-title">Amritprash Elite Gold Luxury Formula (500g)</h1>
-                    <div class="rating-inline">
-                        <div class="stars-gold">★★★★★</div>
-                        <span class="rating-count">4.9 | 1,280+ Reviews</span>
-                    </div>
-                    <p class="sub-desc">Infused with 24K Gold Bhasma, Kashmiri Saffron, and 40+ Rare Himalayan Herbs. A royal recipe for immunity, vitality, and brain power.</p>
-                </div>
-
-                <div class="price-box">
-                    <div class="price-row">
-                        <span class="current-price">₹850</span>
-                        <span class="old-price">₹1,499</span>
-                        <span class="discount-pill">45% OFF</span>
-                    </div>
-                    <div class="stock-status">
-                        <i class="fas fa-check-circle"></i> IN STOCK - READY TO SHIP
-                    </div>
-                </div>
-
-                <h3 class="section-heading"><i class="fas fa-gem"></i> Premium Ingredients</h3>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <div class="feature-icon"><i class="fas fa-crown"></i></div>
-                        <div class="feature-info">
-                            <h4>24K Gold Bhasma</h4>
-                            <p>Cellular Rejuvenation</p>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon"><i class="fas fa-sun"></i></div>
-                        <div class="feature-info">
-                            <h4>Kashmiri Kesar</h4>
-                            <p>Premium Saffron Glow</p>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon"><i class="fas fa-mountain"></i></div>
-                        <div class="feature-info">
-                            <h4>Pure Shilajit</h4>
-                            <p>Maximum Stamina</p>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon"><i class="fas fa-leaf"></i></div>
-                        <div class="feature-info">
-                            <h4>Wild Honey</h4>
-                            <p>No Artificial Sugar</p>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 class="section-heading"><i class="fas fa-file-alt"></i> Product Overview</h3>
-                <div class="description-card">
-                    <p>Amritprash Elite Gold represents the pinnacle of ancient wisdom combined with modern purity standards. Every jar is a source of holistic wellness.</p>
-                    <ul class="benefit-list">
-                        <li><i class="fas fa-check-circle"></i> <strong>Natural Shield:</strong> Builds a powerful immunity against seasonal issues.</li>
-                        <li><i class="fas fa-check-circle"></i> <strong>Brain Power:</strong> Enriched with Brahmi to improve focus and memory.</li>
-                        <li><i class="fas fa-check-circle"></i> <strong>Anti-Aging:</strong> Antioxidants that help maintain youthful energy.</li>
-                    </ul>
-                </div>
-
-                <h3 class="section-heading"><i class="fas fa-question-circle"></i> Help & FAQs</h3>
-                <div class="accordion">
-                    <div class="acc-item active">
-                        <button class="acc-btn" onclick="toggleAcc(this)">
-                            What is the best way to consume? <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="acc-content">
-                            Take 1 tablespoon (approx 10-12g) twice daily. Ideally with lukewarm milk or water, once in the morning on an empty stomach and once before bed.
-                        </div>
-                    </div>
-                    <div class="acc-item">
-                        <button class="acc-btn" onclick="toggleAcc(this)">
-                            Is it safe for long-term use? <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="acc-content">
-                            Yes, this is a 100% natural Ayurvedic formulation. It contains no synthetic chemicals or preservatives, making it safe for daily long-term consumption.
-                        </div>
-                    </div>
-                </div>
-
-                <div id="reviews-anchor" class="reviews-section">
-                    <div class="review-header">
-                        <div class="big-rating">
-                            <h2>4.9</h2>
-                            <div class="stars-gold">★★★★★</div>
-                        </div>
-                        <div style="text-align: right; color: var(--text-muted); font-size: 13px;">Verified Buyers Only</div>
-                    </div>
-
-                    <div class="review-form">
-                        <h4 style="margin-bottom: 15px;">Write a Review</h4>
-                        <div class="rating-input" id="starInput">
-                            <i class="fas fa-star" onclick="setRate(1)"></i>
-                            <i class="fas fa-star" onclick="setRate(2)"></i>
-                            <i class="fas fa-star" onclick="setRate(3)"></i>
-                            <i class="fas fa-star" onclick="setRate(4)"></i>
-                            <i class="fas fa-star" onclick="setRate(5)"></i>
-                        </div>
-                        <textarea id="revText" class="review-textarea" placeholder="Tell others about your experience..."></textarea>
-                        <button class="submit-btn" onclick="postReview()">Submit Review</button>
-                    </div>
-
-                    <div id="commentsList">
-                        <div class="comment-item">
-                            <div class="comment-meta">
-                                <span class="user-info">Arham Sharma <i class="fas fa-check-circle" style="color:#059669; font-size:10px;"></i></span>
-                                <span class="comment-date">3 days ago</span>
-                            </div>
-                            <div class="stars-gold" style="font-size:10px; margin-bottom:5px;">★★★★★</div>
-                            <p class="comment-text">Bhai sach bataun toh quality top hai. Packaging bahut premium hai aur taste bhi asli honey jaisa hai. Highly recommended!</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div class="sticky-footer">
-        <button class="btn-add-to-cart" onclick="addToCart()">
-            <i class="fas fa-shopping-bag"></i>
-            ADD TO CART • ₹850
-        </button>
-    </div>
-
-    <script>
-        // Zoom functionality
-        function openZoom(src) {
-            document.getElementById('zoomedImage').src = src;
-            document.getElementById('zoomOverlay').style.display = 'flex';
-        }
-
-        // Accordion Toggle
-        function toggleAcc(btn) {
-            const item = btn.parentElement;
-            item.classList.toggle('active');
-        }
-
-        // Share Function
-        function shareMe() {
-            if(navigator.share) {
-                navigator.share({title: 'Nemi Mart Elite Gold', url: window.location.href});
-            } else {
-                alert('Product link copied to clipboard!');
-            }
-        }
-
-        // Review Rating
-        let currentRate = 0;
-        function setRate(n) {
-            currentRate = n;
-            const stars = document.querySelectorAll('#starInput i');
-            stars.forEach((s, index) => {
-                if(index < n) s.classList.add('selected');
-                else s.classList.remove('selected');
-            });
-        }
-
-        // Post Review
-        function postReview() {
-            const txt = document.getElementById('revText').value;
-            if(currentRate === 0 || txt.trim() === "") {
-                alert("Please add stars and a comment!");
+            if (!product) {
+                showToast('Product not found', 'error');
+                setTimeout(() => window.location.href = 'index.html', 2000);
                 return;
             }
-            const list = document.getElementById('commentsList');
-            const item = document.createElement('div');
-            item.className = 'comment-item';
-            item.innerHTML = `
-                <div class="comment-meta">
-                    <span class="user-info">You (Verified)</span>
-                    <span class="comment-date">Just now</span>
+            
+            currentProduct = { id: productId, ...product };
+            
+            // Load reviews
+            const reviewsSnapshot = await database.ref(`reviews/${productId}`).once('value');
+            reviews = reviewsSnapshot.val() ? Object.values(reviewsSnapshot.val()) : [];
+            
+            renderProduct();
+            updateUI();
+            
+        } catch (error) {
+            console.error('Error loading product:', error);
+            showToast('Error loading product', 'error');
+        } finally {
+            document.getElementById('pageLoader').style.opacity = '0';
+            setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500);
+        }
+    }
+    
+    // ============================================================
+    // RENDER PRODUCT
+    // ============================================================
+    function renderProduct() {
+        const p = currentProduct;
+        
+        // Title & Category
+        document.getElementById('productTitle').textContent = p.title || p.name || 'Premium Product';
+        document.getElementById('productCategory').textContent = p.category || 'Ayurveda';
+        document.title = `Nemi Mart | ${p.title || p.name || 'Product'}`;
+        
+        // Description
+        document.getElementById('productShortDesc').textContent = p.hero || p.description || 'Premium Ayurvedic formulation';
+        document.getElementById('fullDescription').textContent = p.description || 'No description available.';
+        
+        // Usage
+        document.getElementById('usageInstructions').textContent = p.usage || 'Take as directed.';
+        
+        // Price
+        const price = p.price || 0;
+        const finalPrice = p.finalPrice || price;
+        const discount = p.discount || (price > finalPrice ? Math.round((1 - finalPrice/price)*100) : 0);
+        
+        document.getElementById('currentPrice').textContent = `₹${finalPrice}`;
+        if (discount > 0 && price > finalPrice) {
+            document.getElementById('oldPrice').textContent = `₹${price}`;
+            document.getElementById('discountPill').textContent = `${discount}% OFF`;
+        } else {
+            document.getElementById('oldPrice').style.display = 'none';
+            document.getElementById('discountPill').style.display = 'none';
+        }
+        
+        document.getElementById('cartBtnText').textContent = `ADD TO CART • ₹${finalPrice}`;
+        
+        // Stock
+        const stock = p.stock || 0;
+        const stockEl = document.getElementById('stockStatus');
+        const stockText = document.getElementById('stockText');
+        const qtyInput = document.getElementById('qtyInput');
+        
+        if (stock <= 0) {
+            stockEl.className = 'stock-status out-stock';
+            stockText.textContent = 'OUT OF STOCK';
+            document.getElementById('addToCartBtn').disabled = true;
+            qtyInput.max = 0;
+        } else if (stock < 5) {
+            stockEl.className = 'stock-status limited';
+            stockText.textContent = `ONLY ${stock} LEFT - HURRY!`;
+            qtyInput.max = stock;
+        } else {
+            stockEl.className = 'stock-status in-stock';
+            stockText.textContent = 'IN STOCK - READY TO SHIP';
+            qtyInput.max = Math.min(10, stock);
+        }
+        
+        // Premium badge
+        if (p.isPremium || p.premium) {
+            document.getElementById('promoBadge').innerHTML = '<i class="fas fa-crown"></i> PREMIUM ELITE';
+        }
+        
+        // Images
+        productImages = p.images || [p.img, p.image, p.cloudinaryUrl].filter(Boolean);
+        if (productImages.length === 0) {
+            productImages = ['https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png'];
+        }
+        
+        renderGallery();
+        renderIngredients();
+        renderBenefits();
+        renderReviews();
+        
+        // Check if in wishlist
+        checkWishlist();
+    }
+    
+    // ============================================================
+    // RENDER GALLERY
+    // ============================================================
+    function renderGallery() {
+        const slider = document.getElementById('productSlider');
+        const thumbs = document.getElementById('galleryThumbs');
+        
+        slider.innerHTML = productImages.map(url => `
+            <img src="${url}" onclick="openZoom('${url}')" alt="Product" loading="lazy">
+        `).join('');
+        
+        thumbs.innerHTML = productImages.map((url, i) => `
+            <img src="${url}" onclick="scrollToImage(${i})" class="${i === 0 ? 'active-thumb' : ''}" alt="Thumbnail">
+        `).join('');
+    }
+    
+    function scrollToImage(index) {
+        const slider = document.getElementById('productSlider');
+        const slideWidth = slider.clientWidth;
+        slider.scrollTo({ left: slideWidth * index, behavior: 'smooth' });
+        
+        document.querySelectorAll('.gallery-thumbs img').forEach((img, i) => {
+            img.classList.toggle('active-thumb', i === index);
+        });
+    }
+    
+    function openZoom(src) {
+        document.getElementById('zoomedImage').src = src;
+        document.getElementById('zoomOverlay').style.display = 'flex';
+    }
+    
+    function closeZoom() {
+        document.getElementById('zoomOverlay').style.display = 'none';
+    }
+    
+    // ============================================================
+    // RENDER INGREDIENTS
+    // ============================================================
+    function renderIngredients() {
+        const grid = document.getElementById('ingredientsGrid');
+        const ingredients = currentProduct.ingredients || currentProduct.keyIngredients || '';
+        const ingList = ingredients.split(',').filter(i => i.trim()).slice(0, 4);
+        
+        const defaultIngredients = [
+            { name: 'Pure Herbs', desc: 'Natural Goodness', icon: 'fa-leaf' },
+            { name: 'Ayurvedic Formula', desc: 'Traditional Recipe', icon: 'fa-mortar-pestle' },
+            { name: 'No Chemicals', desc: '100% Natural', icon: 'fa-flask' },
+            { name: 'Quality Assured', desc: 'Lab Tested', icon: 'fa-certificate' }
+        ];
+        
+        const items = ingList.length ? ingList.map(ing => ({
+            name: ing.trim(),
+            desc: 'Key Ingredient',
+            icon: 'fa-seedling'
+        })) : defaultIngredients;
+        
+        grid.innerHTML = items.slice(0, 4).map(item => `
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas ${item.icon}"></i></div>
+                <div class="feature-info">
+                    <h4>${item.name}</h4>
+                    <p>${item.desc}</p>
                 </div>
-                <div class="stars-gold" style="font-size:10px; margin-bottom:5px;">${'★'.repeat(currentRate)}${'☆'.repeat(5-currentRate)}</div>
-                <p class="comment-text">${txt}</p>
-            `;
-            list.prepend(item);
-            document.getElementById('revText').value = "";
-            alert("Thanks for your review!");
+            </div>
+        `).join('');
+    }
+    
+    function renderBenefits() {
+        const benefitsList = document.getElementById('benefitsList');
+        const benefits = currentProduct.benefits || 'Boosts immunity, Natural energy, Pure Ayurveda';
+        const benefitArray = benefits.split(',').filter(b => b.trim());
+        
+        benefitsList.innerHTML = benefitArray.map(b => `
+            <li><i class="fas fa-check-circle"></i> <strong>${b.trim()}</strong></li>
+        `).join('');
+    }
+    
+    // ============================================================
+    // REVIEWS SYSTEM
+    // ============================================================
+    function renderReviews() {
+        const commentsList = document.getElementById('commentsList');
+        const avgRatingEl = document.getElementById('avgRating');
+        const avgStarsEl = document.getElementById('avgStars');
+        const ratingCountEl = document.getElementById('ratingCount');
+        
+        if (reviews.length === 0) {
+            commentsList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No reviews yet. Be the first!</p>';
+            avgRatingEl.textContent = '0.0';
+            avgStarsEl.innerHTML = '☆☆☆☆☆';
+            ratingCountEl.textContent = '0 Reviews';
+            return;
         }
-
-        // Cart Action
-        function addToCart() {
-            const btn = document.querySelector('.btn-add-to-cart');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ADDING...`;
-            setTimeout(() => {
-                btn.innerHTML = `<i class="fas fa-check"></i> ADDED SUCCESSFULLY`;
-                btn.style.background = "#059669";
-                btn.style.borderColor = "#059669";
-                btn.style.color = "#fff";
-                setTimeout(() => {
-                    btn.innerHTML = `<i class="fas fa-shopping-bag"></i> ADD TO CART • ₹850`;
-                    btn.style.background = "var(--green-dark)";
-                    btn.style.borderColor = "var(--gold-primary)";
-                    btn.style.color = "var(--gold-primary)";
-                }, 2000);
-            }, 1000);
+        
+        const avg = reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length;
+        avgRatingEl.textContent = avg.toFixed(1);
+        
+        const fullStars = Math.round(avg);
+        avgStarsEl.innerHTML = '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+        ratingCountEl.textContent = `${reviews.length} Review${reviews.length > 1 ? 's' : ''}`;
+        
+        document.getElementById('ratingStars').innerHTML = '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+        
+        commentsList.innerHTML = reviews.slice(-5).reverse().map(r => `
+            <div class="comment-item">
+                <div class="comment-meta">
+                    <span class="user-info">
+                        ${r.userName || 'Anonymous'} 
+                        <i class="fas fa-check-circle" style="color: var(--success-green); font-size: 10px;"></i>
+                    </span>
+                    <span class="comment-date">${formatTime(r.timestamp)}</span>
+                </div>
+                <div class="stars-gold" style="font-size: 12px; margin-bottom: 5px;">
+                    ${'★'.repeat(r.rating || 0)}${'☆'.repeat(5 - (r.rating || 0))}
+                </div>
+                <p class="comment-text">${r.text || ''}</p>
+            </div>
+        `).join('');
+    }
+    
+    function formatTime(timestamp) {
+        if (!timestamp) return 'Recently';
+        const diff = Date.now() - timestamp;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        if (days === 0) return 'Today';
+        if (days === 1) return 'Yesterday';
+        if (days < 7) return `${days} days ago`;
+        return new Date(timestamp).toLocaleDateString();
+    }
+    
+    function setRating(rating) {
+        currentRating = rating;
+        const stars = document.querySelectorAll('#starInput i');
+        stars.forEach((star, i) => {
+            star.className = i < rating ? 'fas fa-star selected' : 'far fa-star';
+        });
+    }
+    
+    async function submitReview() {
+        const name = document.getElementById('reviewerName').value.trim() || 'Akash';
+        const text = document.getElementById('reviewText').value.trim();
+        
+        if (currentRating === 0) {
+            showToast('Please select a rating', 'error');
+            return;
         }
-    </script>
+        if (!text) {
+            showToast('Please write a review', 'error');
+            return;
+        }
+        
+        const review = {
+            userName: name,
+            rating: currentRating,
+            text: text,
+            timestamp: Date.now(),
+            productId: productId
+        };
+        
+        try {
+            const reviewRef = database.ref(`reviews/${productId}`).push();
+            await reviewRef.set(review);
+            
+            reviews.unshift(review);
+            renderReviews();
+            
+            document.getElementById('reviewText').value = '';
+            setRating(0);
+            
+            showToast('Review posted successfully!', 'success');
+        } catch (error) {
+            showToast('Error posting review', 'error');
+        }
+    }
+    
+    // ============================================================
+    // WISHLIST (HEART)
+    // ============================================================
+    function checkWishlist() {
+        const wishlist = JSON.parse(localStorage.getItem('nemi_wishlist')) || [];
+        const isLiked = wishlist.some(id => id === productId);
+        const heartBtn = document.getElementById('heartBtn');
+        
+        if (isLiked) {
+            heartBtn.classList.add('liked');
+            heartBtn.innerHTML = '<i class="fas fa-heart"></i>';
+        }
+    }
+    
+    function toggleHeart() {
+        const heartBtn = document.getElementById('heartBtn');
+        const wishlist = JSON.parse(localStorage.getItem('nemi_wishlist')) || [];
+        
+        if (heartBtn.classList.contains('liked')) {
+            heartBtn.classList.remove('liked');
+            heartBtn.innerHTML = '<i class="far fa-heart"></i>';
+            const newWishlist = wishlist.filter(id => id !== productId);
+            localStorage.setItem('nemi_wishlist', JSON.stringify(newWishlist));
+            showToast('Removed from wishlist');
+        } else {
+            heartBtn.classList.add('liked');
+            heartBtn.innerHTML = '<i class="fas fa-heart"></i>';
+            if (!wishlist.includes(productId)) {
+                wishlist.push(productId);
+                localStorage.setItem('nemi_wishlist', JSON.stringify(wishlist));
+            }
+            showToast('Added to wishlist!', 'success');
+        }
+    }
+    
+    // ============================================================
+    // SHARE
+    // ============================================================
+    function shareProduct() {
+        const url = window.location.href;
+        const title = currentProduct?.title || 'Premium Ayurvedic Product';
+        
+        if (navigator.share) {
+            navigator.share({ title, url });
+        } else {
+            navigator.clipboard?.writeText(url);
+            showToast('Link copied to clipboard!', 'success');
+        }
+    }
+    
+    // ============================================================
+    // CART
+    // ============================================================
+    function changeQty(delta) {
+        const input = document.getElementById('qtyInput');
+        const stock = currentProduct?.stock || 0;
+        let newQty = parseInt(input.value) + delta;
+        
+        if (newQty < 1) newQty = 1;
+        if (newQty > Math.min(10, stock)) newQty = Math.min(10, stock);
+        
+        input.value = newQty;
+        currentQty = newQty;
+        
+        const finalPrice = currentProduct?.finalPrice || currentProduct?.price || 0;
+        document.getElementById('cartBtnText').textContent = `ADD TO CART • ₹${finalPrice * currentQty}`;
+    }
+    
+    function addToCart() {
+        if (!currentProduct) return;
+        
+        const stock = currentProduct.stock || 0;
+        if (stock <= 0) {
+            showToast('Product out of stock!', 'error');
+            return;
+        }
+        
+        const cart = JSON.parse(localStorage.getItem('nemi_cart')) || [];
+        const qty = parseInt(document.getElementById('qtyInput').value);
+        
+        const existingIndex = cart.findIndex(item => item.id === productId);
+        
+        if (existingIndex > -1) {
+            cart[existingIndex].qty = Math.min(cart[existingIndex].qty + qty, stock);
+        } else {
+            cart.push({
+                id: productId,
+                name: currentProduct.title || currentProduct.name,
+                price: currentProduct.finalPrice || currentProduct.price,
+                img: productImages[0],
+                qty: qty
+            });
+        }
+        
+        localStorage.setItem('nemi_cart', JSON.stringify(cart));
+        
+        const btn = document.getElementById('addToCartBtn');
+        const originalText = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="fas fa-check"></i> ADDED TO CART!';
+        btn.style.background = 'var(--success-green)';
+        btn.style.color = 'white';
+        
+        showToast(`${currentProduct.title || 'Product'} added to cart!`, 'success');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = 'var(--dark-green)';
+            btn.style.color = 'var(--gold)';
+        }, 2000);
+    }
+    
+    // ============================================================
+    // UTILITIES
+    // ============================================================
+    function toggleAcc(btn) {
+        const item = btn.closest('.acc-item');
+        item.classList.toggle('active');
+    }
+    
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+        toast.innerHTML = `<span>${icons[type] || '🔔'}</span> ${message}`;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+    
+    function updateUI() {
+        // Slider scroll listener for thumbnails
+        const slider = document.getElementById('productSlider');
+        slider.addEventListener('scroll', () => {
+            const index = Math.round(slider.scrollLeft / slider.clientWidth);
+            document.querySelectorAll('.gallery-thumbs img').forEach((img, i) => {
+                img.classList.toggle('active-thumb', i === index);
+            });
+        });
+    }
+    
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        loadProduct();
+        
+        // Close zoom on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeZoom();
+        });
+    });
+    
+    // Expose functions to global
+    window.openZoom = openZoom;
+    window.closeZoom = closeZoom;
+    window.scrollToImage = scrollToImage;
+    window.toggleAcc = toggleAcc;
+    window.setRating = setRating;
+    window.submitReview = submitReview;
+    window.toggleHeart = toggleHeart;
+    window.shareProduct = shareProduct;
+    window.changeQty = changeQty;
+    window.addToCart = addToCart;
+</script>
 </body>
 </html>

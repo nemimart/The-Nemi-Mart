@@ -3,340 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Nemi Mart | Premium Ayurvedic Experience</title>
-    
+    <title>The Nemi Mart | Premium Ayurveda</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         :root {
-            --primary: #1B3022;
-            --accent: #D4AF37;
-            --accent-light: #F3E5AB;
-            --bg-creme: #FFFDF5;
+            --creme: #FFFDF5;
+            --gold: #D4AF37;
+            --gold-light: #F3E5AB;
+            --dark-green: #1B3022;
+            --leaf-green: #2D5A27;
+            --leaf-light: #eaf2e9;
             --white: #ffffff;
-            --text-main: #2D2D2D;
-            --text-light: #757575;
-            --success: #2D5A27;
-            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
-            --shadow-md: 0 12px 30px rgba(0,0,0,0.08);
-            --shadow-lg: 0 20px 50px rgba(27,48,34,0.15);
-            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            --text-dark: #333333;
+            --text-muted: #888888;
+            --soft-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            --card-shadow: 0 15px 35px rgba(27,48,34,0.08);
+            --hover-shadow: 0 20px 50px rgba(212,175,55,0.2);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* Base Setup */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg-creme); color: var(--text-main); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--creme); color: var(--text-dark); padding-bottom: 100px; overflow-x: hidden; line-height: 1.6; }
         
-        /* Premium Header */
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--creme); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        /* Header Style */
         header { 
-            background: rgba(27, 48, 34, 0.98); 
-            backdrop-filter: blur(15px);
-            padding: 12px 5%; 
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 2px solid var(--accent);
+            background: rgba(27, 48, 34, 0.95); 
+            backdrop-filter: blur(10px);
+            padding: 15px 5%; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2); 
+            border-bottom: 2px solid var(--gold);
         }
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
         
-        .header-main { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .logo-area { position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: var(--transition); }
+        .logo-area:hover { transform: scale(1.08) rotate(5deg); }
+        .main-logo { width: 45px; z-index: 5; position: relative; filter: drop-shadow(0 0 10px rgba(212,175,55,0.6)); }
         
-        .brand-logo { width: 50px; height: 50px; position: relative; cursor: pointer; transition: var(--transition); }
-        .brand-logo img { width: 100%; filter: drop-shadow(0 0 8px rgba(212,175,55,0.4)); }
-        .brand-logo:hover { transform: scale(1.1) rotate(5deg); }
+        .orbit-icons { position: absolute; width: 100%; height: 100%; animation: rotateFull 12s linear infinite; }
+        .orbit-icons i { position: absolute; font-size: 10px; color: var(--gold); opacity: 0.8; }
+        .oi1 { top: 0; left: 50%; transform: translateX(-50%); } 
+        .oi2 { bottom: 0; left: 50%; transform: translateX(-50%); } 
+        .oi3 { left: 0; top: 50%; transform: translateY(-50%); } 
+        .oi4 { right: 0; top: 50%; transform: translateY(-50%); }
+        @keyframes rotateFull { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .location-widget { flex: 1; color: var(--white); cursor: pointer; }
-        .location-widget p { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
-        .location-widget h4 { font-size: 14px; display: flex; align-items: center; gap: 5px; color: var(--accent); }
+        .address-box { flex: 1; margin-left: 20px; color: white; transition: var(--transition); cursor: pointer; }
+        .address-box p { font-size: 11px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; margin-bottom: -2px; }
+        .address-box h4 { font-size: 13px; font-weight: 600; color: var(--gold); display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
 
-        .nav-actions { display: flex; gap: 18px; color: var(--white); font-size: 20px; }
-        .nav-actions i { cursor: pointer; transition: 0.3s; }
-        .nav-actions i:hover { color: var(--accent); transform: translateY(-2px); }
+        .top-actions { display: flex; gap: 20px; font-size: 22px; }
+        .top-actions a { color: white; transition: var(--transition); cursor: pointer; }
+        .top-actions a:hover { color: var(--gold); transform: translateY(-3px); }
 
-        /* Modern Search Bar */
-        .search-wrapper { margin-top: 15px; position: relative; }
-        .search-bar { 
-            width: 100%; height: 48px; background: var(--white); 
-            border-radius: 15px; display: flex; align-items: center; 
-            padding: 0 20px; gap: 10px; border: 1.5px solid transparent;
-            transition: var(--transition); box-shadow: var(--shadow-sm);
+        .search-container { position: relative; max-width: 800px; margin: 5px auto 0; cursor: pointer; }
+        .search-fake-input { 
+            background: white; border-radius: 20px; height: 50px; 
+            display: flex; align-items: center; padding: 0 20px; 
+            color: var(--text-muted); font-size: 14px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); 
+            transition: var(--transition); border: 2px solid transparent; 
         }
-        .search-bar:focus-within { border-color: var(--accent); box-shadow: 0 0 20px rgba(212,175,55,0.2); }
-        .search-bar input { border: none; outline: none; width: 100%; font-size: 14px; font-weight: 500; }
+        .search-fake-input:hover { border-color: var(--gold); transform: translateY(-2px); }
 
-        /* Auto-Scroll Banner */
-        .hero-slider { 
-            margin: 20px auto; width: 92%; height: 200px; 
-            border-radius: 25px; overflow: hidden; position: relative;
-            box-shadow: var(--shadow-md);
+        /* Banner Auto-Slider */
+        .banner-wrapper { position: relative; margin: 20px auto; width: 95%; max-width: 1200px; border-radius: 25px; overflow: hidden; box-shadow: var(--card-shadow); }
+        .banner-container { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .banner-slide { min-width: 100%; position: relative; }
+        .banner-slide img { width: 100%; aspect-ratio: 16/7; object-fit: cover; display: block; }
+
+        /* Categories */
+        .cat-strip { display: flex; overflow-x: auto; padding: 25px 5%; gap: 20px; background: white; scrollbar-width: none; }
+        .cat-strip::-webkit-scrollbar { display: none; }
+        .cat-card { text-align: center; min-width: 80px; cursor: pointer; transition: var(--transition); }
+        .icon-circle { 
+            width: 70px; height: 70px; background: var(--leaf-light); 
+            border-radius: 22px; display: flex; justify-content: center; 
+            align-items: center; margin: 0 auto 10px; transition: var(--transition);
+            box-shadow: var(--soft-shadow);
         }
-        .slides-container { display: flex; width: 300%; height: 100%; transition: transform 0.8s ease-in-out; }
-        .slide { width: 100%; height: 100%; position: relative; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; }
-        .slide-overlay { 
-            position: absolute; bottom: 0; left: 0; width: 100%; 
-            padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); 
-            color: white; 
-        }
+        .cat-card i { font-size: 26px; color: var(--leaf-green); }
+        .cat-card span { font-size: 12px; font-weight: 600; color: var(--dark-green); }
+        .cat-card:hover .icon-circle { transform: translateY(-8px) rotate(5deg); background: var(--dark-green); }
+        .cat-card:hover i { color: var(--gold); }
 
-        /* Section Heads */
-        .section-box { padding: 30px 5%; max-width: 1300px; margin: 0 auto; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .section-header h2 { font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-        .section-header h2 span { width: 35px; height: 35px; background: var(--accent-light); display: flex; align-items: center; justify-content: center; border-radius: 10px; color: var(--accent); }
+        /* Product Grid */
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 30px 5% 15px; }
+        .section-header h2 { font-size: 20px; color: var(--dark-green); font-weight: 800; }
+        .section-header h2 i { color: var(--gold); margin-right: 8px; }
+        
+        .view-all { font-size: 12px; font-weight: 700; color: var(--leaf-green); background: var(--leaf-light); padding: 6px 15px; border-radius: 10px; cursor: pointer; }
 
-        /* Premium Product Card */
         .product-grid { 
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; 
+            padding: 0 5% 30px; max-width: 1200px; margin: 0 auto; 
         }
-        @media(min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        .product-card { 
-            background: var(--white); border-radius: 20px; padding: 15px;
-            position: relative; transition: var(--transition);
-            border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column;
-            box-shadow: var(--shadow-sm); overflow: hidden;
+        .p-card { 
+            background: white; border-radius: 22px; padding: 15px; 
+            box-shadow: var(--soft-shadow); transition: var(--transition); 
+            display: flex; flex-direction: column; position: relative;
+            border: 1px solid rgba(0,0,0,0.03); cursor: pointer;
         }
-        .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
-        
-        .img-container { 
-            width: 100%; aspect-ratio: 1/1; background: #F8F9FA; border-radius: 15px;
-            display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
-            overflow: hidden;
+        .p-card:hover { transform: translateY(-10px); box-shadow: var(--hover-shadow); border-color: var(--gold); }
+
+        .p-img-box { 
+            width: 100%; aspect-ratio: 1/1; background: #f9f9f9; 
+            border-radius: 15px; margin-bottom: 12px; display: flex; 
+            align-items: center; justify-content: center; overflow: hidden;
         }
-        .img-container img { width: 85%; object-fit: contain; transition: 0.6s; }
-        .product-card:hover .img-container img { transform: scale(1.15); }
+        .p-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.5s; }
+        .p-card:hover .p-img-box img { transform: scale(1.1); }
 
-        .badge-premium { position: absolute; top: 10px; left: 10px; background: var(--accent); color: white; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; z-index: 2; }
-        
-        .product-info h3 { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 5px; height: 40px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .product-info .category { font-size: 10px; color: var(--accent); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; }
-
-        .price-engine { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-        .price-tag { font-size: 18px; font-weight: 800; color: var(--success); }
-        .old-price { font-size: 12px; color: var(--text-light); text-decoration: line-through; margin-left: 5px; }
-
-        .add-cart-btn { 
-            width: 40px; height: 40px; border-radius: 12px; background: var(--primary); 
-            color: var(--white); border: none; cursor: pointer; transition: 0.3s;
+        .discount-badge { 
+            position: absolute; top: 10px; left: 10px; 
+            background: #ff4757; color: white; font-size: 10px; 
+            font-weight: 800; padding: 4px 8px; border-radius: 8px; z-index: 5;
         }
-        .add-cart-btn:hover { background: var(--accent); transform: rotate(90deg); }
 
-        /* Floating Navigation */
+        .p-title { font-size: 13px; font-weight: 600; color: var(--dark-green); height: 40px; overflow: hidden; margin-bottom: 10px; }
+        .p-price-row { display: flex; justify-content: space-between; align-items: center; }
+        .p-price { color: var(--leaf-green); font-weight: 800; font-size: 16px; }
+        .p-old-price { font-size: 11px; color: var(--text-muted); text-decoration: line-through; margin-left: 5px; }
+
+        .add-btn { 
+            background: var(--dark-green); color: white; border: none; 
+            width: 35px; height: 35px; border-radius: 10px; cursor: pointer; 
+            transition: 0.3s; 
+        }
+        .add-btn:hover { background: var(--gold); transform: scale(1.1); }
+
+        /* Bottom Nav */
         .bottom-nav { 
-            position: fixed; bottom: 20px; left: 5%; width: 90%; 
-            background: var(--primary); height: 70px; border-radius: 25px;
-            display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 15px 35px rgba(27,48,34,0.4); z-index: 2000;
+            position: fixed; bottom: 0; width: 100%; background: white; 
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 10px 0 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); 
+            border-radius: 25px 25px 0 0; z-index: 2000; 
         }
-        .nav-item { color: rgba(255,255,255,0.6); text-decoration: none; text-align: center; font-size: 10px; transition: 0.3s; }
+        .nav-item { text-align: center; text-decoration: none; color: #bbb; font-size: 10px; font-weight: 600; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
-        .nav-item.active { color: var(--accent); }
+        .nav-item.active { color: var(--leaf-green); }
 
-        .cart-trigger { 
-            width: 70px; height: 70px; background: var(--accent); 
-            border-radius: 50%; margin-top: -50px; border: 6px solid var(--bg-creme);
-            display: flex; align-items: center; justify-content: center; color: white;
-            box-shadow: 0 10px 20px rgba(212,175,55,0.4);
+        .cart-float { position: relative; margin-top: -50px; }
+        .cart-circle { 
+            width: 65px; height: 65px; background: var(--leaf-green); 
+            border: 6px solid var(--creme); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            color: white; font-size: 24px; box-shadow: 0 10px 20px rgba(45,90,39,0.3); 
         }
+        .badge { position: absolute; top: 0; right: 0; background: #ff4757; color: white; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid white; }
 
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .reveal { animation: fadeIn 0.8s ease-out forwards; }
+        /* Toasts */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 400px; }
+        .nemi-toast { background: var(--dark-green); color: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--gold); animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .loader-shimmer { background: #eee; background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); border-radius: 20px; background-size: 200% 100%; animation: 1.5s shine linear infinite; }
-        @keyframes shine { to { background-position-x: -200%; } }
+        .loader { text-align: center; padding: 50px; color: var(--gold); font-weight: 600; grid-column: 1/-1; }
     </style>
 </head>
 <body>
 
+    <div id="toast-container"></div>
+
     <header>
-        <div class="header-main">
-            <div class="brand-logo">
-                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart">
+        <div class="header-top">
+            <a href="index.html" class="logo-area">
+                <div class="orbit-icons">
+                    <i class="fas fa-plus oi1"></i><i class="fas fa-heart oi2"></i><i class="fas fa-star oi3"></i><i class="fas fa-leaf oi4"></i>
+                </div>
+                <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-logo" alt="Nemi Mart">
+            </a>
+            <div class="address-box" id="locationBtn">
+                <p>Deliver to</p>
+                <h4 id="userLocation">Detecting location... <i class="fas fa-location-arrow"></i></h4>
             </div>
-            <div class="location-widget" id="geo-location">
-                <p>Delivering to</p>
-                <h4 id="user-city"><i class="fas fa-location-dot"></i> Detecting location...</h4>
-            </div>
-            <div class="nav-actions">
-                <i class="far fa-heart" onclick="location.href='wishlist.html'"></i>
-                <i class="far fa-user-circle" onclick="location.href='profile.html'"></i>
+            <div class="top-actions">
+                <a onclick="window.location.href='heart.html'"><i class="far fa-heart"></i></a>
+                <a onclick="window.location.href='profile.html'"><i class="far fa-user-circle"></i></a>
             </div>
         </div>
-        <div class="search-wrapper">
-            <div class="search-bar">
-                <i class="fas fa-search" style="color: var(--accent)"></i>
-                <input type="text" placeholder="Search Ayurveda, Immunity, Skincare..." id="mainSearch">
-            </div>
+        <div class="search-container" onclick="window.location.href='search.html'">
+            <div class="search-fake-input"><i class="fas fa-search" style="margin-right:10px"></i> Search Ayurvedic Medicines...</div>
         </div>
     </header>
 
-    <div class="hero-slider">
-        <div class="slides-container" id="mainSlider">
-            <div class="slide">
-                <img src="https://images.unsplash.com/photo-1611073221707-e3e1339b7518?auto=format&fit=crop&w=1200&q=80" alt="Banner 1">
-                <div class="slide-overlay"><h3>Purest Shilajit from Himalayas</h3></div>
-            </div>
-            <div class="slide">
-                <img src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1200&q=80" alt="Banner 2">
-                <div class="slide-overlay"><h3>Winter Immunity Booster Deals</h3></div>
-            </div>
-            <div class="slide">
-                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80" alt="Banner 3">
-                <div class="slide-overlay"><h3>Glow Naturally with Kumkumadi</h3></div>
-            </div>
+    <div class="banner-wrapper">
+        <div class="banner-container" id="bannerSlider">
+            <div class="banner-slide"><img src="https://res.cloudinary.com/despxo7zb/image/upload/v1/banners/banner1" onerror="this.src='https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?w=1200'"></div>
+            <div class="banner-slide"><img src="https://res.cloudinary.com/despxo7zb/image/upload/v1/banners/banner2" onerror="this.src='https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=1200'"></div>
+            <div class="banner-slide"><img src="https://res.cloudinary.com/despxo7zb/image/upload/v1/banners/banner3" onerror="this.src='https://images.unsplash.com/photo-1609139003551-ee40f5f73ec0?w=1200'"></div>
         </div>
     </div>
 
-    <section class="section-box reveal">
-        <div class="section-header">
-            <h2><span><i class="fas fa-bolt"></i></span> Top Selling</h2>
-            <a href="allproduct.html" style="color: var(--accent); font-weight: 700; text-decoration: none;">View All</a>
-        </div>
-        <div class="product-grid" id="topSellingGrid">
-            <div class="loader-shimmer" style="height: 250px;"></div>
-            <div class="loader-shimmer" style="height: 250px;"></div>
-        </div>
-    </section>
+    <div class="cat-strip">
+        <div class="cat-card"><div class="icon-circle"><i class="fas fa-leaf"></i></div><span>Ayurveda</span></div>
+        <div class="cat-card"><div class="icon-circle"><i class="fas fa-heartbeat"></i></div><span>Wellness</span></div>
+        <div class="cat-card"><div class="icon-circle"><i class="fas fa-spa"></i></div><span>Skin</span></div>
+        <div class="cat-card"><div class="icon-circle"><i class="fas fa-tint"></i></div><span>Hair</span></div>
+        <div class="cat-card"><div class="icon-circle"><i class="fas fa-apple-alt"></i></div><span>Nutrition</span></div>
+    </div>
 
-    <section class="section-box reveal" style="background: #fdfaf0; border-radius: 40px 40px 0 0;">
-        <div class="section-header">
-            <h2><span><i class="fas fa-crown"></i></span> Premium Range</h2>
-            <a href="allproduct.html" style="color: var(--accent); font-weight: 700; text-decoration: none;">View All</a>
-        </div>
-        <div class="product-grid" id="premiumGrid">
-            <div class="loader-shimmer" style="height: 250px;"></div>
-            <div class="loader-shimmer" style="height: 250px;"></div>
-        </div>
-    </section>
+    <div class="section-header">
+        <h2><i class="fas fa-fire"></i> Top Selling</h2>
+        <div class="view-all" onclick="window.location.href='allproduct.html'">View All</div>
+    </div>
+    <div class="product-grid" id="topSellingGrid">
+        <div class="loader"><i class="fas fa-spinner fa-spin"></i> Loading Trends...</div>
+    </div>
 
-    <section class="section-box reveal">
-        <div class="section-header">
-            <h2><span><i class="fas fa-shop"></i></span> Our Collection</h2>
-        </div>
-        <div class="product-grid" id="allProductsGrid"></div>
-    </section>
+    <div class="section-header">
+        <h2><i class="fas fa-crown"></i> Premium Range</h2>
+        <div class="view-all" onclick="window.location.href='allproduct.html'">View All</div>
+    </div>
+    <div class="product-grid" id="premiumGrid">
+        <div class="loader"><i class="fas fa-spinner fa-spin"></i> Loading Luxury...</div>
+    </div>
+
+    <div class="section-header">
+        <h2><i class="fas fa-box-open"></i> All Products</h2>
+        <div class="view-all" onclick="window.location.href='allproduct.html'">Browse All</div>
+    </div>
+    <div class="product-grid" id="allProductsGrid"></div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active"><i class="fas fa-home"></i>Home</a>
-        <a href="allproduct.html" class="nav-item"><i class="fas fa-leaf"></i>Shop</a>
-        <div class="cart-trigger" onclick="location.href='cart.html'">
-            <i class="fas fa-shopping-bag fa-lg"></i>
-            <span id="cartCount" style="position: absolute; top: 10px; right: 10px; background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: 900;">0</span>
+        <a href="#" class="nav-item active"><i class="fas fa-home"></i>Home</a>
+        <a onclick="window.location.href='allproduct.html'" class="nav-item"><i class="fas fa-th-large"></i>Shop</a>
+        <div class="cart-float">
+            <a onclick="window.location.href='cart.html'">
+                <div class="cart-circle">
+                    <i class="fas fa-shopping-basket"></i>
+                    <div class="badge" id="cartBadge">0</div>
+                </div>
+            </a>
         </div>
-        <a href="orders.html" class="nav-item"><i class="fas fa-truck-fast"></i>Orders</a>
-        <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>Profile</a>
+        <a onclick="window.location.href='notifications.html'" class="nav-item"><i class="fas fa-bell"></i>Alerts</a>
+        <a onclick="window.location.href='orders.html'" class="nav-item"><i class="fas fa-user"></i>Profile</a>
     </nav>
 
     <script>
-        // 1. Database & Cloudinary Config
+        // --- 1. CONFIGURATION ---
         const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const database = firebase.database();
 
-        // 2. Geolocation Engine
-        async function fetchLocation() {
+        // --- 2. AUTO BANNER LOGIC ---
+        let currentSlide = 0;
+        function startBanner() {
+            const slider = document.getElementById('bannerSlider');
+            const slides = document.querySelectorAll('.banner-slide');
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            }, 3500);
+        }
+
+        // --- 3. GEOLOCATION ADDRESS ---
+        function initLocation() {
+            const locText = document.getElementById('userLocation');
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
+                navigator.geolocation.getCurrentPosition(async (position) => {
                     try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
+                        const { latitude, longitude } = position.coords;
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
                         const data = await res.json();
-                        const city = data.address.city || data.address.town || data.address.village || "Patiala";
-                        document.getElementById('user-city').innerHTML = `<i class="fas fa-location-dot"></i> ${city}, ${data.address.state}`;
+                        const city = data.address.city || data.address.town || data.address.village || "Punjab";
+                        const suburb = data.address.suburb || data.address.neighbourhood || "";
+                        locText.innerHTML = `${suburb}, ${city} <i class="fas fa-chevron-down"></i>`;
                     } catch (e) {
-                        document.getElementById('user-city').innerText = "Akash, Patiala";
+                        locText.innerHTML = "Patiala, Punjab <i class="fas fa-chevron-down"></i>";
                     }
                 }, () => {
-                    document.getElementById('user-city').innerText = "Akash, Patiala";
+                    locText.innerHTML = "Set Location <i class="fas fa-chevron-down"></i>";
                 });
             }
         }
 
-        // 3. Auto-Slider Engine
-        let currentSlide = 0;
-        function startSlider() {
-            const slider = document.getElementById('mainSlider');
-            setInterval(() => {
-                currentSlide = (currentSlide + 1) % 3;
-                slider.style.transform = `translateX(-${currentSlide * 33.33}%)`;
-            }, 4000);
+        // --- 4. DATA ENGINE ---
+        const cartKey = 'nemi_mart_cart_v2';
+        let cartItems = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+        function updateCartUI() {
+            document.getElementById('cartBadge').innerText = cartItems.length;
         }
 
-        // 4. Product Card Template
+        function addToCart(product, e) {
+            e.stopPropagation();
+            if (cartItems.some(item => item.id === product.id)) {
+                showToast("Notice", "Item already in cart!");
+                return;
+            }
+            cartItems.push({...product, qty: 1});
+            localStorage.setItem(cartKey, JSON.stringify(cartItems));
+            updateCartUI();
+            showToast("Success", `${product.name} added to cart!`);
+        }
+
+        function showToast(title, msg) {
+            const container = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = 'nemi-toast';
+            t.innerHTML = `<div><strong>${title}</strong><br><small>${msg}</small></div>`;
+            container.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
         function createCard(p) {
-            const img = p.image || p.img || 'https://res.cloudinary.com/despxo7zb/image/upload/v1/nemi-placeholder';
-            const oldPriceMarkup = p.oldPrice ? `<span class="old-price">₹${p.oldPrice}</span>` : '';
+            // Price calculation for discount badge
+            const discount = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
+            const pData = encodeURIComponent(JSON.stringify(p));
             
             return `
-                <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'">
-                    ${p.isPremium ? '<span class="badge-premium">PREMIUM</span>' : ''}
-                    <div class="img-container">
-                        <img src="${img}" alt="${p.name}" loading="lazy">
+                <div class="p-card" onclick="window.location.href='product-detail.html?id=${p.id}'">
+                    ${discount > 0 ? `<div class="discount-badge">-${discount}% OFF</div>` : ''}
+                    <div class="p-img-box">
+                        <img src="${p.image || p.img}" alt="${p.name}" loading="lazy">
                     </div>
-                    <div class="product-info">
-                        <p class="category">${p.category || 'Ayurveda'}</p>
-                        <h3>${p.name}</h3>
-                        <div class="price-engine">
-                            <div class="price-tag">₹${p.price} ${oldPriceMarkup}</div>
-                            <button class="add-cart-btn" onclick="addToCart(event, '${p.id}')">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
+                    <div class="p-title">${p.name}</div>
+                    <div class="p-price-row">
+                        <div class="p-price">₹${p.price} ${p.oldPrice ? `<span class="p-old-price">₹${p.oldPrice}</span>` : ''}</div>
+                        <button class="add-btn" onclick="addToCart(${JSON.parse(decodeURIComponent(pData))}, event)">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
                 </div>
             `;
         }
 
-        // 5. Data Fetching (Admin Driven)
         function loadProducts() {
-            db.ref('products').on('value', (snap) => {
+            database.ref('products').on('value', (snap) => {
                 const data = snap.val();
-                if (!data) return;
-
                 const topGrid = document.getElementById('topSellingGrid');
                 const premiumGrid = document.getElementById('premiumGrid');
                 const allGrid = document.getElementById('allProductsGrid');
 
-                topGrid.innerHTML = ''; premiumGrid.innerHTML = ''; allGrid.innerHTML = '';
+                if(!data) return;
 
-                Object.keys(data).forEach(key => {
-                    const p = { id: key, ...data[key] };
-                    const card = createCard(p);
+                topGrid.innerHTML = '';
+                premiumGrid.innerHTML = '';
+                allGrid.innerHTML = '';
 
-                    // Admin flags check
-                    if (p.isTopSelling === true || p.isTopSelling === "true") topGrid.innerHTML += card;
-                    if (p.isPremium === true || p.isPremium === "true") premiumGrid.innerHTML += card;
+                Object.keys(data).forEach(id => {
+                    const p = { id, ...data[id] };
+                    const html = createCard(p);
+
+                    // Admin Logic Check
+                    if (p.isTopSelling === true || p.isTopSelling === "true") {
+                        topGrid.innerHTML += html;
+                    } 
+                    if (p.isPremium === true || p.isPremium === "true") {
+                        premiumGrid.innerHTML += html;
+                    }
                     
-                    allGrid.innerHTML += card;
+                    // Always show in All Products
+                    allGrid.innerHTML += html;
                 });
-                
-                updateCartBadge();
+
+                // Fallback if Admin hasn't tagged any product yet
+                if(topGrid.innerHTML === '') topGrid.innerHTML = '<p style="padding:20px; font-size:12px; opacity:0.5">Special offers coming soon...</p>';
+                if(premiumGrid.innerHTML === '') premiumGrid.innerHTML = '<p style="padding:20px; font-size:12px; opacity:0.5">New arrivals coming soon...</p>';
             });
         }
 
-        // 6. Utility Functions
-        function addToCart(e, id) {
-            e.stopPropagation();
-            let cart = JSON.parse(localStorage.getItem('nemi_cart')) || [];
-            if(!cart.includes(id)) {
-                cart.push(id);
-                localStorage.setItem('nemi_cart', JSON.stringify(cart));
-                alert("Product added to Mart! 🌿");
-                updateCartBadge();
-            }
-        }
-
-        function updateCartBadge() {
-            const cart = JSON.parse(localStorage.getItem('nemi_cart')) || [];
-            document.getElementById('cartCount').innerText = cart.length;
-        }
-
-        // Initialize
+        // Boot
         window.onload = () => {
-            fetchLocation();
-            startSlider();
+            startBanner();
+            initLocation();
             loadProducts();
+            updateCartUI();
         };
     </script>
 </body>

@@ -1,12 +1,12 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Nemi Mart | Premium Ayurveda</title>
+    <title>The Nemi Mart | Premium Ayurveda Hub</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -14,374 +14,280 @@
         :root {
             --creme: #FFFDF5;
             --gold: #D4AF37;
-            --gold-light: #F3E5AB;
+            --gold-dark: #B8860B;
             --dark-green: #1B3022;
             --leaf-green: #2D5A27;
             --leaf-light: #eaf2e9;
             --white: #ffffff;
-            --text-dark: #333333;
-            --text-muted: #888888;
-            --soft-shadow: 0 10px 40px rgba(0,0,0,0.06);
-            --card-shadow: 0 15px 35px rgba(27,48,34,0.08);
-            --hover-shadow: 0 20px 50px rgba(212,175,55,0.2);
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --text-dark: #1a1a1a;
+            --text-muted: #666666;
+            --soft-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --premium-shadow: 0 20px 40px rgba(27,48,34,0.12);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--creme); color: var(--text-dark); padding-bottom: 100px; overflow-x: hidden; line-height: 1.6; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--creme); }
-        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--creme); color: var(--text-dark); padding-bottom: 100px; overflow-x: hidden; }
 
-        /* Header Style */
+        /* --- Header & Premium Branding --- */
         header { 
-            background: rgba(27, 48, 34, 0.95); 
-            backdrop-filter: blur(10px);
+            background: rgba(27, 48, 34, 0.98); 
             padding: 15px 5%; 
             position: sticky; 
             top: 0; 
             z-index: 1000; 
-            box-shadow: 0 4px 30px rgba(0,0,0,0.2); 
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
             border-bottom: 2px solid var(--gold);
         }
-        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; }
         
-        .logo-area { position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: var(--transition); }
-        .logo-area:hover { transform: scale(1.08) rotate(5deg); }
-        .main-logo { width: 45px; z-index: 5; position: relative; filter: drop-shadow(0 0 10px rgba(212,175,55,0.6)); }
+        .logo-area { position: relative; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; }
+        .main-logo { width: 45px; z-index: 10; filter: drop-shadow(0 0 8px rgba(212,175,55,0.4)); }
         
-        .orbit-icons { position: absolute; width: 100%; height: 100%; animation: rotateFull 12s linear infinite; }
-        .orbit-icons i { position: absolute; font-size: 10px; color: var(--gold); opacity: 0.8; }
-        .oi1 { top: 0; left: 50%; transform: translateX(-50%); } 
-        .oi2 { bottom: 0; left: 50%; transform: translateX(-50%); } 
-        .oi3 { left: 0; top: 50%; transform: translateY(-50%); } 
-        .oi4 { right: 0; top: 50%; transform: translateY(-50%); }
-        @keyframes rotateFull { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .address-box { flex: 1; margin: 0 20px; color: white; cursor: pointer; }
+        .address-box p { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+        .address-box h4 { font-size: 13px; font-weight: 500; color: var(--gold); display: flex; align-items: center; gap: 5px; }
 
-        .address-box { flex: 1; margin-left: 20px; color: white; transition: var(--transition); cursor: pointer; }
-        .address-box p { font-size: 11px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; margin-bottom: -2px; }
-        .address-box h4 { font-size: 13px; font-weight: 600; color: var(--gold); display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        .top-actions { display: flex; gap: 18px; font-size: 20px; color: white; }
 
-        .top-actions { display: flex; gap: 20px; font-size: 22px; }
-        .top-actions a { color: white; transition: var(--transition); cursor: pointer; }
-        .top-actions a:hover { color: var(--gold); transform: translateY(-3px); }
+        /* --- Auto-Scrolling Banner --- */
+        .banner-section { margin: 20px auto; width: 92%; position: relative; overflow: hidden; border-radius: 25px; box-shadow: var(--premium-shadow); height: 200px; }
+        .banner-track { display: flex; transition: transform 0.6s ease-in-out; height: 100%; }
+        .slide { min-width: 100%; height: 100%; position: relative; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.4), transparent); display: flex; align-items: center; padding-left: 30px; color: white; }
 
-        .search-container { position: relative; max-width: 800px; margin: 5px auto 0; cursor: pointer; }
-        .search-fake-input { 
-            background: white; border-radius: 20px; height: 50px; 
-            display: flex; align-items: center; padding: 0 20px; 
-            color: var(--text-muted); font-size: 14px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); 
-            transition: var(--transition); border: 2px solid transparent; 
-        }
-        .search-fake-input:hover { border-color: var(--gold); transform: translateY(-2px); }
-
-        /* Banner Auto-Slider */
-        .banner-wrapper { position: relative; margin: 20px auto; width: 95%; max-width: 1200px; border-radius: 25px; overflow: hidden; box-shadow: var(--card-shadow); }
-        .banner-container { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        .banner-slide { min-width: 100%; position: relative; }
-        .banner-slide img { width: 100%; aspect-ratio: 16/7; object-fit: cover; display: block; }
-
-        /* Categories */
-        .cat-strip { display: flex; overflow-x: auto; padding: 25px 5%; gap: 20px; background: white; scrollbar-width: none; }
+        /* --- Category Strip --- */
+        .cat-strip { display: flex; overflow-x: auto; padding: 25px 5%; gap: 20px; scrollbar-width: none; background: white; }
         .cat-strip::-webkit-scrollbar { display: none; }
-        .cat-card { text-align: center; min-width: 80px; cursor: pointer; transition: var(--transition); }
-        .icon-circle { 
-            width: 70px; height: 70px; background: var(--leaf-light); 
-            border-radius: 22px; display: flex; justify-content: center; 
-            align-items: center; margin: 0 auto 10px; transition: var(--transition);
-            box-shadow: var(--soft-shadow);
-        }
-        .cat-card i { font-size: 26px; color: var(--leaf-green); }
+        .cat-card { min-width: 80px; text-align: center; cursor: pointer; transition: var(--transition); }
+        .cat-icon { width: 65px; height: 65px; background: var(--leaf-light); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; color: var(--leaf-green); font-size: 24px; transition: var(--transition); }
+        .cat-card:hover .cat-icon { background: var(--dark-green); color: var(--gold); transform: translateY(-5px) rotate(5deg); }
         .cat-card span { font-size: 12px; font-weight: 600; color: var(--dark-green); }
-        .cat-card:hover .icon-circle { transform: translateY(-8px) rotate(5deg); background: var(--dark-green); }
-        .cat-card:hover i { color: var(--gold); }
 
-        /* Product Grid */
-        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 30px 5% 15px; }
-        .section-header h2 { font-size: 20px; color: var(--dark-green); font-weight: 800; }
-        .section-header h2 i { color: var(--gold); margin-right: 8px; }
+        /* --- Product Grid Styling --- */
+        .section-header { padding: 30px 5% 15px; display: flex; justify-content: space-between; align-items: center; }
+        .section-header h2 { font-size: 20px; font-weight: 700; color: var(--dark-green); border-left: 4px solid var(--gold); padding-left: 12px; }
         
-        .view-all { font-size: 12px; font-weight: 700; color: var(--leaf-green); background: var(--leaf-light); padding: 6px 15px; border-radius: 10px; cursor: pointer; }
-
-        .product-grid { 
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; 
-            padding: 0 5% 30px; max-width: 1200px; margin: 0 auto; 
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 5%; }
         @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .p-card { 
-            background: white; border-radius: 22px; padding: 15px; 
-            box-shadow: var(--soft-shadow); transition: var(--transition); 
-            display: flex; flex-direction: column; position: relative;
-            border: 1px solid rgba(0,0,0,0.03); cursor: pointer;
+            background: white; border-radius: 20px; padding: 15px; 
+            position: relative; transition: var(--transition); 
+            border: 1px solid rgba(0,0,0,0.04);
+            display: flex; flex-direction: column;
         }
-        .p-card:hover { transform: translateY(-10px); box-shadow: var(--hover-shadow); border-color: var(--gold); }
+        .p-card:hover { transform: translateY(-8px); box-shadow: var(--premium-shadow); border-color: var(--gold); }
+        
+        .p-img-container { width: 100%; aspect-ratio: 1/1; background: #f9f9f9; border-radius: 15px; margin-bottom: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .p-img-container img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.5s; }
+        .p-card:hover img { transform: scale(1.1); }
 
-        .p-img-box { 
-            width: 100%; aspect-ratio: 1/1; background: #f9f9f9; 
-            border-radius: 15px; margin-bottom: 12px; display: flex; 
-            align-items: center; justify-content: center; overflow: hidden;
-        }
-        .p-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; transition: 0.5s; }
-        .p-card:hover .p-img-box img { transform: scale(1.1); }
-
-        .discount-badge { 
-            position: absolute; top: 10px; left: 10px; 
-            background: #ff4757; color: white; font-size: 10px; 
-            font-weight: 800; padding: 4px 8px; border-radius: 8px; z-index: 5;
-        }
-
-        .p-title { font-size: 13px; font-weight: 600; color: var(--dark-green); height: 40px; overflow: hidden; margin-bottom: 10px; }
+        .badge-premium { position: absolute; top: 10px; left: 10px; background: var(--gold); color: white; font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: 700; z-index: 2; }
+        
+        .p-info h3 { font-size: 14px; font-weight: 600; color: var(--dark-green); margin-bottom: 8px; height: 40px; overflow: hidden; }
         .p-price-row { display: flex; justify-content: space-between; align-items: center; }
-        .p-price { color: var(--leaf-green); font-weight: 800; font-size: 16px; }
-        .p-old-price { font-size: 11px; color: var(--text-muted); text-decoration: line-through; margin-left: 5px; }
+        .price-group .current { font-size: 17px; font-weight: 800; color: var(--leaf-green); }
+        .price-group .old { font-size: 11px; text-decoration: line-through; color: #999; margin-left: 5px; }
 
-        .add-btn { 
-            background: var(--dark-green); color: white; border: none; 
-            width: 35px; height: 35px; border-radius: 10px; cursor: pointer; 
-            transition: 0.3s; 
+        .add-cart-btn { 
+            width: 38px; height: 38px; border-radius: 12px; border: none; 
+            background: var(--dark-green); color: white; cursor: pointer; transition: 0.3s;
         }
-        .add-btn:hover { background: var(--gold); transform: scale(1.1); }
+        .add-cart-btn:hover { background: var(--gold); transform: scale(1.1); }
+        .add-cart-btn.added { background: #27ae60; }
 
-        /* Bottom Nav */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: white; 
-            display: flex; justify-content: space-around; align-items: center; 
-            padding: 10px 0 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); 
-            border-radius: 25px 25px 0 0; z-index: 2000; 
-        }
-        .nav-item { text-align: center; text-decoration: none; color: #bbb; font-size: 10px; font-weight: 600; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        /* --- Navigation --- */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-radius: 25px 25px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); z-index: 2000; }
+        .nav-item { text-align: center; color: #bbb; text-decoration: none; font-size: 11px; font-weight: 600; }
         .nav-item.active { color: var(--leaf-green); }
+        .nav-item i { font-size: 22px; margin-bottom: 4px; display: block; }
 
-        .cart-float { position: relative; margin-top: -50px; }
-        .cart-circle { 
-            width: 65px; height: 65px; background: var(--leaf-green); 
-            border: 6px solid var(--creme); border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; 
-            color: white; font-size: 24px; box-shadow: 0 10px 20px rgba(45,90,39,0.3); 
-        }
-        .badge { position: absolute; top: 0; right: 0; background: #ff4757; color: white; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid white; }
+        .cart-float { margin-top: -50px; }
+        .cart-btn-circle { width: 65px; height: 65px; background: var(--leaf-green); border-radius: 50%; border: 6px solid var(--creme); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; position: relative; box-shadow: 0 10px 20px rgba(45,90,39,0.3); }
+        .cart-count { position: absolute; top: 0; right: 0; background: #e74c3c; color: white; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
 
-        /* Toasts */
-        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 400px; }
-        .nemi-toast { background: var(--dark-green); color: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--gold); animation: slideIn 0.4s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- Toasts --- */
+        #toast-box { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 5000; }
+        .toast { background: var(--dark-green); color: white; padding: 12px 25px; border-radius: 50px; font-size: 13px; border: 1px solid var(--gold); animation: fadeInUp 0.4s; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .loader { text-align: center; padding: 50px; color: var(--gold); font-weight: 600; grid-column: 1/-1; }
+        .loader { grid-column: 1/-1; text-align: center; padding: 50px; color: var(--gold); font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div id="toast-container"></div>
+    <div id="toast-box"></div>
 
     <header>
         <div class="header-top">
-            <a href="index.html" class="logo-area">
-                <div class="orbit-icons">
-                    <i class="fas fa-plus oi1"></i><i class="fas fa-heart oi2"></i><i class="fas fa-star oi3"></i><i class="fas fa-leaf oi4"></i>
-                </div>
+            <div class="logo-area">
                 <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-logo" alt="Nemi Mart">
-            </a>
+            </div>
             <div class="address-box" id="locationBtn">
                 <p>Deliver to</p>
-                <h4 id="userLocation">Detecting location... <i class="fas fa-location-arrow"></i></h4>
+                <h4 id="userAddress">Detecting Location... <i class="fas fa-location-arrow"></i></h4>
             </div>
             <div class="top-actions">
-                <a onclick="window.location.href='heart.html'"><i class="far fa-heart"></i></a>
-                <a onclick="window.location.href='profile.html'"><i class="far fa-user-circle"></i></a>
+                <i class="far fa-heart"></i>
+                <i class="far fa-user-circle"></i>
             </div>
-        </div>
-        <div class="search-container" onclick="window.location.href='search.html'">
-            <div class="search-fake-input"><i class="fas fa-search" style="margin-right:10px"></i> Search Ayurvedic Medicines...</div>
         </div>
     </header>
 
-    <div class="banner-wrapper">
-        <div class="banner-container" id="bannerSlider">
-            <div class="banner-slide"><img src="https://res.cloudinary.com/despxo7zb/image/upload/v1/banners/banner1" onerror="this.src='https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?w=1200'"></div>
-            <div class="banner-slide"><img src="https://res.cloudinary.com/despxo7zb/image/upload/v1/banners/banner2" onerror="this.src='https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=1200'"></div>
-            <div class="banner-slide"><img src="https://res.cloudinary.com/despxo7zb/image/upload/v1/banners/banner3" onerror="this.src='https://images.unsplash.com/photo-1609139003551-ee40f5f73ec0?w=1200'"></div>
+    <section class="banner-section">
+        <div class="banner-track" id="bannerTrack">
+            <div class="slide"><img src="https://images.unsplash.com/photo-1611073113567-2821cc339b39?auto=format&fit=crop&w=1000&q=80"><div class="slide-overlay"><h2>Pure Ayurveda</h2></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1000&q=80"><div class="slide-overlay"><h2>Natural Healing</h2></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=1000&q=80"><div class="slide-overlay"><h2>Premium Herbs</h2></div></div>
         </div>
-    </div>
+    </section>
 
     <div class="cat-strip">
-        <div class="cat-card"><div class="icon-circle"><i class="fas fa-leaf"></i></div><span>Ayurveda</span></div>
-        <div class="cat-card"><div class="icon-circle"><i class="fas fa-heartbeat"></i></div><span>Wellness</span></div>
-        <div class="cat-card"><div class="icon-circle"><i class="fas fa-spa"></i></div><span>Skin</span></div>
-        <div class="cat-card"><div class="icon-circle"><i class="fas fa-tint"></i></div><span>Hair</span></div>
-        <div class="cat-card"><div class="icon-circle"><i class="fas fa-apple-alt"></i></div><span>Nutrition</span></div>
+        <div class="cat-card"><div class="cat-icon"><i class="fas fa-leaf"></i></div><span>Herbs</span></div>
+        <div class="cat-card"><div class="cat-icon"><i class="fas fa-spa"></i></div><span>Wellness</span></div>
+        <div class="cat-card"><div class="cat-icon"><i class="fas fa-mortar-pestle"></i></div><span>Pills</span></div>
+        <div class="cat-card"><div class="cat-icon"><i class="fas fa-tint"></i></div><span>Oils</span></div>
+        <div class="cat-card"><div class="cat-icon"><i class="fas fa-apple-alt"></i></div><span>Diet</span></div>
     </div>
 
     <div class="section-header">
-        <h2><i class="fas fa-fire"></i> Top Selling</h2>
-        <div class="view-all" onclick="window.location.href='allproduct.html'">View All</div>
+        <h2>Top Selling</h2>
+        <span style="font-size: 12px; color: var(--gold); font-weight: 600;">View All</span>
     </div>
     <div class="product-grid" id="topSellingGrid">
-        <div class="loader"><i class="fas fa-spinner fa-spin"></i> Loading Trends...</div>
+        <div class="loader">Fetching Best Sellers...</div>
     </div>
 
     <div class="section-header">
-        <h2><i class="fas fa-crown"></i> Premium Range</h2>
-        <div class="view-all" onclick="window.location.href='allproduct.html'">View All</div>
+        <h2>Premium Range</h2>
+        <span style="font-size: 12px; color: var(--gold); font-weight: 600;">Explore</span>
     </div>
     <div class="product-grid" id="premiumGrid">
-        <div class="loader"><i class="fas fa-spinner fa-spin"></i> Loading Luxury...</div>
+        <div class="loader">Loading Luxury...</div>
     </div>
 
     <div class="section-header">
-        <h2><i class="fas fa-box-open"></i> All Products</h2>
-        <div class="view-all" onclick="window.location.href='allproduct.html'">Browse All</div>
+        <h2>Our Shop</h2>
     </div>
     <div class="product-grid" id="allProductsGrid"></div>
 
     <nav class="bottom-nav">
         <a href="#" class="nav-item active"><i class="fas fa-home"></i>Home</a>
-        <a onclick="window.location.href='allproduct.html'" class="nav-item"><i class="fas fa-th-large"></i>Shop</a>
+        <a href="#" class="nav-item"><i class="fas fa-th-large"></i>Catalog</a>
         <div class="cart-float">
-            <a onclick="window.location.href='cart.html'">
-                <div class="cart-circle">
-                    <i class="fas fa-shopping-basket"></i>
-                    <div class="badge" id="cartBadge">0</div>
-                </div>
-            </a>
+            <div class="cart-btn-circle">
+                <i class="fas fa-shopping-bag"></i>
+                <div class="cart-count" id="cartCount">0</div>
+            </div>
         </div>
-        <a onclick="window.location.href='notifications.html'" class="nav-item"><i class="fas fa-bell"></i>Alerts</a>
-        <a onclick="window.location.href='orders.html'" class="nav-item"><i class="fas fa-user"></i>Profile</a>
+        <a href="#" class="nav-item"><i class="fas fa-percent"></i>Offers</a>
+        <a href="#" class="nav-item"><i class="fas fa-history"></i>Orders</a>
     </nav>
 
     <script>
-        // --- 1. CONFIGURATION ---
+        // 1. Firebase & Config
         const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        // --- 2. AUTO BANNER LOGIC ---
+        // 2. Banner Logic
         let currentSlide = 0;
-        function startBanner() {
-            const slider = document.getElementById('bannerSlider');
-            const slides = document.querySelectorAll('.banner-slide');
-            setInterval(() => {
-                currentSlide = (currentSlide + 1) % slides.length;
-                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-            }, 3500);
-        }
+        const track = document.getElementById('bannerTrack');
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % 3;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }, 4000);
 
-        // --- 3. GEOLOCATION ADDRESS ---
+        // 3. Geolocation Logic (Patiala Default)
         function initLocation() {
-            const locText = document.getElementById('userLocation');
+            const addrDisplay = document.getElementById('userAddress');
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    try {
-                        const { latitude, longitude } = position.coords;
-                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-                        const data = await res.json();
-                        const city = data.address.city || data.address.town || data.address.village || "Punjab";
-                        const suburb = data.address.suburb || data.address.neighbourhood || "";
-                        locText.innerHTML = `${suburb}, ${city} <i class="fas fa-chevron-down"></i>`;
-                    } catch (e) {
-                        locText.innerHTML = "Patiala, Punjab <i class="fas fa-chevron-down"></i>";
-                    }
-                }, () => {
-                    locText.innerHTML = "Set Location <i class="fas fa-chevron-down"></i>";
-                });
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        try {
+                            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
+                            const data = await res.json();
+                            const city = data.address.city || data.address.town || "Patiala";
+                            const state = data.address.state || "Punjab";
+                            addrDisplay.innerHTML = `${city}, ${state} <i class="fas fa-chevron-down"></i>`;
+                        } catch (e) {
+                            addrDisplay.innerText = "Patiala, Punjab"; 
+                        }
+                    },
+                    () => { addrDisplay.innerText = "Patiala, Punjab"; }
+                );
             }
         }
 
-        // --- 4. DATA ENGINE ---
-        const cartKey = 'nemi_mart_cart_v2';
-        let cartItems = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-        function updateCartUI() {
-            document.getElementById('cartBadge').innerText = cartItems.length;
-        }
-
-        function addToCart(product, e) {
-            e.stopPropagation();
-            if (cartItems.some(item => item.id === product.id)) {
-                showToast("Notice", "Item already in cart!");
-                return;
-            }
-            cartItems.push({...product, qty: 1});
-            localStorage.setItem(cartKey, JSON.stringify(cartItems));
-            updateCartUI();
-            showToast("Success", `${product.name} added to cart!`);
-        }
-
-        function showToast(title, msg) {
-            const container = document.getElementById('toast-container');
-            const t = document.createElement('div');
-            t.className = 'nemi-toast';
-            t.innerHTML = `<div><strong>${title}</strong><br><small>${msg}</small></div>`;
-            container.appendChild(t);
-            setTimeout(() => t.remove(), 3000);
-        }
-
+        // 4. Product Engine
         function createCard(p) {
-            // Price calculation for discount badge
-            const discount = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
-            const pData = encodeURIComponent(JSON.stringify(p));
-            
+            const img = p.image || p.img || 'https://via.placeholder.com/300?text=Nemi+Mart';
             return `
-                <div class="p-card" onclick="window.location.href='product-detail.html?id=${p.id}'">
-                    ${discount > 0 ? `<div class="discount-badge">-${discount}% OFF</div>` : ''}
-                    <div class="p-img-box">
-                        <img src="${p.image || p.img}" alt="${p.name}" loading="lazy">
+                <div class="p-card">
+                    ${p.isPremium ? '<div class="badge-premium">PREMIUM</div>' : ''}
+                    <div class="p-img-container">
+                        <img src="${img}" alt="${p.name}">
                     </div>
-                    <div class="p-title">${p.name}</div>
-                    <div class="p-price-row">
-                        <div class="p-price">₹${p.price} ${p.oldPrice ? `<span class="p-old-price">₹${p.oldPrice}</span>` : ''}</div>
-                        <button class="add-btn" onclick="addToCart(${JSON.parse(decodeURIComponent(pData))}, event)">
-                            <i class="fas fa-plus"></i>
-                        </button>
+                    <div class="p-info">
+                        <h3>${p.name}</h3>
+                        <div class="p-price-row">
+                            <div class="price-group">
+                                <span class="current">₹${p.price}</span>
+                                ${p.oldPrice ? `<span class="old">₹${p.oldPrice}</span>` : ''}
+                            </div>
+                            <button class="add-cart-btn" onclick="addToCart('${p.id}', '${p.name}')">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
         function loadProducts() {
-            database.ref('products').on('value', (snap) => {
+            db.ref('products').on('value', (snap) => {
                 const data = snap.val();
-                const topGrid = document.getElementById('topSellingGrid');
-                const premiumGrid = document.getElementById('premiumGrid');
-                const allGrid = document.getElementById('allProductsGrid');
+                const grids = {
+                    top: document.getElementById('topSellingGrid'),
+                    prem: document.getElementById('premiumGrid'),
+                    all: document.getElementById('allProductsGrid')
+                };
 
-                if(!data) return;
+                if (!data) return;
 
-                topGrid.innerHTML = '';
-                premiumGrid.innerHTML = '';
-                allGrid.innerHTML = '';
+                Object.values(grids).forEach(g => g.innerHTML = '');
+                
+                const items = Object.keys(data).map(k => ({ id: k, ...data[k] }));
 
-                Object.keys(data).forEach(id => {
-                    const p = { id, ...data[id] };
-                    const html = createCard(p);
-
-                    // Admin Logic Check
-                    if (p.isTopSelling === true || p.isTopSelling === "true") {
-                        topGrid.innerHTML += html;
-                    } 
-                    if (p.isPremium === true || p.isPremium === "true") {
-                        premiumGrid.innerHTML += html;
-                    }
+                items.forEach(prod => {
+                    const html = createCard(prod);
+                    grids.all.innerHTML += html;
                     
-                    // Always show in All Products
-                    allGrid.innerHTML += html;
+                    if (prod.isTopSelling === true || prod.isTopSelling === "true") grids.top.innerHTML += html;
+                    if (prod.isPremium === true || prod.isPremium === "true") grids.prem.innerHTML += html;
                 });
 
-                // Fallback if Admin hasn't tagged any product yet
-                if(topGrid.innerHTML === '') topGrid.innerHTML = '<p style="padding:20px; font-size:12px; opacity:0.5">Special offers coming soon...</p>';
-                if(premiumGrid.innerHTML === '') premiumGrid.innerHTML = '<p style="padding:20px; font-size:12px; opacity:0.5">New arrivals coming soon...</p>';
+                // Fallback agar Admin ne flags nahi lagaye
+                if (!grids.top.innerHTML) items.slice(0, 2).forEach(i => grids.top.innerHTML += createCard(i));
+                if (!grids.prem.innerHTML) items.slice(2, 4).forEach(i => grids.prem.innerHTML += createCard(i));
             });
         }
 
-        // Boot
+        // 5. Cart Mock
+        let count = 0;
+        function addToCart(id, name) {
+            count++;
+            document.getElementById('cartCount').innerText = count;
+            const toast = document.getElementById('toast-box');
+            toast.innerHTML = `<div class="toast">Added ${name} to bag!</div>`;
+            setTimeout(() => toast.innerHTML = '', 2500);
+        }
+
         window.onload = () => {
-            startBanner();
             initLocation();
             loadProducts();
-            updateCartUI();
         };
     </script>
 </body>

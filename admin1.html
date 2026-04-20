@@ -243,7 +243,12 @@
         </form>
     </div>
 </div>
-
+<div class="field">
+    <label style="display: flex; align-items: center; gap: 10px;">
+        <input type="checkbox" id="isPremium" style="width: 20px; height: 20px;"> 
+        Mark as Premium Product
+    </label>
+</div>
 <nav>
     <a href="javascript:void(0)" class="nav-link active" onclick="showTab('addPage', this)"><i>🚀</i><span>Deploy</span></a>
     <a href="javascript:void(0)" class="nav-link" onclick="showTab('listPage', this)"><i>📊</i><span>Database</span></a>
@@ -382,7 +387,7 @@
         const feed = document.getElementById('masterFeed');
         feed.innerHTML = "";
         const keys = Object.keys(dataObj).reverse();
-        
+        isPremium: document.getElementById('isPremium').checked,
         document.getElementById('totalProducts').innerText = keys.length;
         document.getElementById('activeProducts').innerText = keys.filter(k => dataObj[k].stock > 0).length;
 

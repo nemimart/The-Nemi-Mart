@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Nemi Mart | Premium Ayurveda</title>
+    
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
     <style>
         /* ============================================================
            ROOT VARIABLES & RESET - PREMIUM AYURVEDA THEME
@@ -167,11 +172,30 @@
         .top-actions a { 
             color: white; 
             transition: var(--transition); 
+            text-decoration: none;
         }
         
         .top-actions a:hover { 
             color: var(--gold); 
             transform: scale(1.15) rotate(5deg); 
+        }
+        
+        .profile-icon-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .profile-name {
+            font-size: 8px;
+            color: var(--gold);
+            margin-top: -5px;
+            font-weight: 600;
+            white-space: nowrap;
+            max-width: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .search-fake-input { 
@@ -194,7 +218,7 @@
         }
 
         /* ============================================================
-           CATEGORIES STRIP
+           CATEGORIES STRIP - DYNAMIC FROM FIREBASE
            ============================================================ */
         .cat-strip { 
             display: flex; 
@@ -218,12 +242,6 @@
             animation: fadeInUp 0.5s ease-out forwards;
             opacity: 0;
         }
-        
-        .cat-card:nth-child(1) { animation-delay: 0.1s; }
-        .cat-card:nth-child(2) { animation-delay: 0.2s; }
-        .cat-card:nth-child(3) { animation-delay: 0.3s; }
-        .cat-card:nth-child(4) { animation-delay: 0.4s; }
-        .cat-card:nth-child(5) { animation-delay: 0.5s; }
         
         @keyframes fadeInUp {
             0% { opacity: 0; transform: translateY(20px); }
@@ -256,7 +274,7 @@
         }
 
         /* ============================================================
-           BANNERS - 1200x600 ASPECT
+           BANNERS - FIXED FOR ANY URL
            ============================================================ */
         .banner-wrapper { 
             margin: 24px 5%; 
@@ -294,6 +312,13 @@
             object-fit: cover; 
             display: block; 
             transition: transform 0.6s; 
+            background: var(--creme-dark);
+        }
+        
+        .banner-slide img[src=""], 
+        .banner-slide img:not([src]), 
+        .banner-slide img[src="#"] {
+            display: none;
         }
         
         .banner-slide:hover img { 
@@ -716,8 +741,13 @@
             </h4>
         </div>
         <div class="top-actions">
-            <a href="heart.html"><i class="far fa-heart"></i></a>
-            <a href="profile.html"><i class="far fa-user-circle"></i></a>
+            <a href="heart.html" class="profile-icon-container">
+                <i class="far fa-heart"></i>
+            </a>
+            <a href="profile.html" class="profile-icon-container" id="profileLink">
+                <i class="far fa-user-circle"></i>
+                <span class="profile-name" id="profileNameDisplay">Login</span>
+            </a>
         </div>
     </div>
     <div class="search-container" onclick="window.location.href='search.html'">
@@ -746,16 +776,16 @@
 <!-- ============================================================ -->
 <div class="section-header">
     <h2><i class="fas fa-fire"></i> Top Selling</h2>
-    <a href="allproduct.html" style="color: var(--leaf-green); font-size: 12px; font-weight: 600; transition: var(--transition);" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">View All <i class="fas fa-arrow-right"></i></a>
+    <a href="allproduct.html" style="color: var(--leaf-green); font-size: 12px; font-weight: 600; transition: var(--transition); text-decoration: none;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">View All <i class="fas fa-arrow-right"></i></a>
 </div>
 <div class="product-grid" id="topSellingGrid"></div>
 
 <!-- ============================================================ -->
-<!-- TOP SELLING SECTION 2 (REPLACED PREMIUM) -->
+<!-- TRENDING NOW SECTION -->
 <!-- ============================================================ -->
 <div class="section-header">
     <h2><i class="fas fa-star"></i> Trending Now</h2>
-    <a href="allproduct.html" style="color: var(--leaf-green); font-size: 12px; font-weight: 600; transition: var(--transition);" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">View All <i class="fas fa-arrow-right"></i></a>
+    <a href="allproduct.html" style="color: var(--leaf-green); font-size: 12px; font-weight: 600; transition: var(--transition); text-decoration: none;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">View All <i class="fas fa-arrow-right"></i></a>
 </div>
 <div class="product-grid" id="trendingGrid"></div>
 
@@ -764,7 +794,7 @@
 <!-- ============================================================ -->
 <div class="section-header">
     <h2><i class="fas fa-box-open"></i> All Products</h2>
-    <a href="allproduct.html" style="color: var(--leaf-green); font-size: 12px; font-weight: 600; transition: var(--transition);" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">View All <i class="fas fa-arrow-right"></i></a>
+    <a href="allproduct.html" style="color: var(--leaf-green); font-size: 12px; font-weight: 600; transition: var(--transition); text-decoration: none;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">View All <i class="fas fa-arrow-right"></i></a>
 </div>
 <div class="product-grid" id="allProductsGrid"></div>
 
@@ -782,9 +812,9 @@
 <!-- BOTTOM NAVIGATION -->
 <!-- ============================================================ -->
 <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active"><i class="fas fa-home-alt"></i>Home</a>
+    <a href="home.html" class="nav-item active"><i class="fas fa-home-alt"></i>Home</a>
     <a href="allproduct.html" class="nav-item"><i class="fas fa-store"></i>Shop</a>
-    <div class="cart-float">
+    <div>
         <a href="cart.html">
             <div class="cart-circle">
                 <i class="fas fa-shopping-basket"></i>
@@ -816,25 +846,29 @@
         const CART_KEY = 'nemi_cart';
         
         // ============================================================
-        // BANNER IMAGES (4 SLIDES)
+        // BANNER IMAGES - KOI BHI LINK CHALEGA (FIXED)
         // ============================================================
         const BANNER_IMAGES = [
-            "https://github.com/nemimart/The-Nemi-Mart/blob/main/Panch%20Tulsi%20Oil.png",
+            "https://github.com/nemimart/The-Nemi-Mart/blob/main/Panch%20Tulsi%20Oil.png?raw=true",
             "https://res.cloudinary.com/despxo7zb/image/upload/v1/samples/landscapes/nature-mountains",
             "https://res.cloudinary.com/despxo7zb/image/upload/v1/samples/people/boy-snow-hoodie",
             "https://res.cloudinary.com/despxo7zb/image/upload/v1/samples/animals/three-dogs"
         ];
         
-        // ============================================================
-        // DEFAULT CATEGORIES
-        // ============================================================
-        const DEFAULT_CATEGORIES = [
-            { id: "cat1", name: "Immunity", icon: "fa-shield-heart" },
-            { id: "cat2", name: "Hair Care", icon: "fa-pump-soap" },
-            { id: "cat3", name: "Vitality", icon: "fa-bolt" },
-            { id: "cat4", name: "Wellness", icon: "fa-mortar-pestle" },
-            { id: "cat5", name: "Skin", icon: "fa-spa" }
-        ];
+        // Default category icons mapping
+        const CATEGORY_ICONS = {
+            'immunity': 'fa-shield-heart',
+            'hair care': 'fa-pump-soap',
+            'vitality': 'fa-bolt',
+            'wellness': 'fa-mortar-pestle',
+            'skin': 'fa-spa',
+            'oils': 'fa-oil-can',
+            'health': 'fa-heart-pulse',
+            'personal care': 'fa-hand-sparkles',
+            'herbal': 'fa-leaf',
+            'tea': 'fa-mug-hot',
+            'default': 'fa-box'
+        };
 
         // ============================================================
         // GLOBAL STATE
@@ -848,27 +882,43 @@
         const catContainer = document.getElementById('categoryContainer');
         const cartBadge = document.getElementById('cartBadge');
         const locationText = document.getElementById('locationText');
+        const profileNameDisplay = document.getElementById('profileNameDisplay');
+
+        // ============================================================
+        // CHECK LOGIN STATUS & DISPLAY NAME
+        // ============================================================
+        function updateProfileDisplay() {
+            const savedUser = localStorage.getItem('nemi_current_user');
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    const firstName = user.name ? user.name.split(' ')[0] : 'User';
+                    profileNameDisplay.textContent = firstName.length > 8 ? firstName.substring(0, 7) + '..' : firstName;
+                } catch(e) {
+                    profileNameDisplay.textContent = 'User';
+                }
+            } else {
+                profileNameDisplay.textContent = 'Login';
+            }
+        }
 
         // ============================================================
         // AUTO-DETECT USER LOCATION (IP-BASED)
         // ============================================================
         async function detectUserLocation() {
             try {
-                // Try browser geolocation first
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(async (position) => {
                         const { latitude, longitude } = position.coords;
                         await fetchAddressFromCoords(latitude, longitude);
                     }, async () => {
-                        // Fallback to IP-based location
                         await fetchIPLocation();
                     });
                 } else {
                     await fetchIPLocation();
                 }
             } catch (error) {
-                console.log("Location detection fallback");
-                locationText.innerText = "Patiala, 147001";
+                locationText.innerText = "1";
             }
         }
 
@@ -899,13 +949,43 @@
         }
 
         // ============================================================
-        // INITIALIZE BANNERS WITH AUTO-SCROLL
+        // GET ICON FOR CATEGORY
+        // ============================================================
+        function getCategoryIcon(categoryName) {
+            if (!categoryName) return CATEGORY_ICONS.default;
+            const lowerName = categoryName.toLowerCase();
+            for (let key in CATEGORY_ICONS) {
+                if (lowerName.includes(key)) {
+                    return CATEGORY_ICONS[key];
+                }
+            }
+            return CATEGORY_ICONS.default;
+        }
+
+        // ============================================================
+        // INITIALIZE BANNERS - KOI BHI LINK CHALEGA
         // ============================================================
         function initBanners() {
             const container = document.getElementById('bannerContainer');
             const dotsDiv = document.getElementById('bannerDots');
-            container.innerHTML = BANNER_IMAGES.map(url => `<div class="banner-slide"><img src="${url}" alt="banner" loading="lazy"></div>`).join('');
-            dotsDiv.innerHTML = BANNER_IMAGES.map((_, i) => `<span class="dot ${i===0?'active':''}" data-index="${i}"></span>`).join('');
+            
+            // Filter out invalid URLs and fix GitHub raw URLs
+            const validBanners = BANNER_IMAGES.filter(url => url && url.trim() !== '').map(url => {
+                // Fix GitHub blob URLs to raw URLs
+                if (url.includes('github.com') && url.includes('/blob/')) {
+                    return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+                }
+                return url;
+            });
+            
+            if (validBanners.length === 0) {
+                container.innerHTML = `<div class="banner-slide"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="banner"></div>`;
+                dotsDiv.innerHTML = `<span class="dot active"></span>`;
+                return;
+            }
+            
+            container.innerHTML = validBanners.map(url => `<div class="banner-slide"><img src="${url}" alt="banner" loading="lazy" onerror="this.style.display='none'"></div>`).join('');
+            dotsDiv.innerHTML = validBanners.map((_, i) => `<span class="dot ${i===0?'active':''}" data-index="${i}"></span>`).join('');
             
             const dots = dotsDiv.querySelectorAll('.dot');
             container.addEventListener('scroll', () => {
@@ -917,23 +997,23 @@
                 container.scrollTo({ left: container.clientWidth * parseInt(e.target.dataset.index), behavior: 'smooth' });
             }));
             
-            // Auto-scroll every 4.5 seconds
             setInterval(() => {
-                if (!container) return;
+                if (!container || validBanners.length === 0) return;
                 const w = container.clientWidth;
-                const next = (Math.round(container.scrollLeft / w) + 1) % BANNER_IMAGES.length;
+                const next = (Math.round(container.scrollLeft / w) + 1) % validBanners.length;
                 container.scrollTo({ left: next * w, behavior: 'smooth' });
             }, 4500);
         }
 
         // ============================================================
-        // FETCH PRODUCTS FROM FIREBASE (REALTIME)
+        // FETCH PRODUCTS AND CATEGORIES FROM FIREBASE
         // ============================================================
         function fetchProducts() {
             [topGrid, trendingGrid, allGrid].forEach(g => {
                 if (g) g.innerHTML = '<div class="global-loader"><div class="spinner"></div></div>';
             });
             
+            // Fetch products
             database.ref('products').on('value', (snap) => {
                 const data = snap.val();
                 masterProducts = [];
@@ -959,7 +1039,7 @@
                             images: p.images || [productImage],
                             stock: p.stock || 0,
                             isPremium: p.isPremium || p.premium || false,
-                            isTopSelling: p.isTopSelling || p.topSelling || true, // Default true for new products
+                            isTopSelling: p.isTopSelling || p.topSelling || true,
                             hero: p.hero || "",
                             description: p.description || "",
                             status: p.status || "INSTOCK",
@@ -968,29 +1048,42 @@
                     });
                 }
                 
-                // Sort by newest first (time field)
                 masterProducts.sort((a, b) => (b.time || 0) - (a.time || 0));
-                
-                database.ref('categories').once('value').then(catSnap => {
-                    categories = catSnap.val() ? Object.values(catSnap.val()) : DEFAULT_CATEGORIES;
-                    renderCategories();
-                }).catch(() => {
-                    categories = DEFAULT_CATEGORIES;
-                    renderCategories();
-                });
-                
                 renderAllSections();
-                updateCartBadge();
+            });
+            
+            // Fetch categories from Firebase - REAL TIME
+            database.ref('categories').on('value', (snap) => {
+                const data = snap.val();
+                if (data) {
+                    categories = Array.isArray(data) ? data : Object.values(data);
+                } else {
+                    // Default categories if none exist
+                    categories = [
+                        { id: "cat1", name: "Immunity", icon: "fa-shield-heart" },
+                        { id: "cat2", name: "Hair Care", icon: "fa-pump-soap" },
+                        { id: "cat3", name: "Vitality", icon: "fa-bolt" },
+                        { id: "cat4", name: "Wellness", icon: "fa-mortar-pestle" },
+                        { id: "cat5", name: "Skin", icon: "fa-spa" }
+                    ];
+                }
+                renderCategories();
             });
         }
 
         function renderCategories() {
-            catContainer.innerHTML = categories.map(cat => `
-                <div class="cat-card" onclick="window.location.href='allproduct.html?cat=${encodeURIComponent(cat.name)}'">
-                    <div class="icon-circle"><i class="fas ${cat.icon}"></i></div>
-                    <span>${cat.name}</span>
-                </div>
-            `).join('');
+            if (!categories.length) return;
+            
+            catContainer.innerHTML = categories.map((cat, index) => {
+                const icon = cat.icon || getCategoryIcon(cat.name);
+                const animationDelay = index * 0.1;
+                return `
+                    <div class="cat-card" onclick="window.location.href='allproduct.html?cat=${encodeURIComponent(cat.name)}'" style="animation-delay: ${animationDelay}s">
+                        <div class="icon-circle"><i class="fas ${icon}"></i></div>
+                        <span>${cat.name}</span>
+                    </div>
+                `;
+            }).join('');
         }
 
         // ============================================================
@@ -1007,10 +1100,7 @@
 
             const inStockProducts = masterProducts.filter(p => p.stock > 0);
             
-            // TOP SELLING: Only 2 products, newest first (already sorted by time)
             const topItems = inStockProducts.slice(0, 2);
-            
-            // TRENDING: Next 4 products (or all remaining)
             const trendingItems = inStockProducts.slice(2, 6);
             
             if (topGrid) topGrid.innerHTML = buildGrid(topItems);
@@ -1051,7 +1141,7 @@
         }
 
         // ============================================================
-        // CART FUNCTIONALITY
+        // CART FUNCTIONALITY - REAL-TIME COUNTING
         // ============================================================
         window.handleAddToCart = function(e, id) {
             e.stopPropagation();
@@ -1069,7 +1159,6 @@
                 btn.classList.add('added');
                 btn.innerHTML = '<i class="fas fa-check"></i>';
                 
-                // Animate badge
                 const badge = document.getElementById('cartBadge');
                 badge.style.animation = 'none';
                 setTimeout(() => badge.style.animation = 'badgePop 0.3s var(--bounce)', 10);
@@ -1082,6 +1171,11 @@
             const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
             if (cartBadge) cartBadge.innerText = cart.length;
         }
+        
+        // Real-time cart listener
+        window.addEventListener('storage', (e) => {
+            if (e.key === CART_KEY) updateCartBadge();
+        });
 
         // ============================================================
         // TOAST NOTIFICATIONS
@@ -1115,17 +1209,15 @@
         // INITIALIZATION
         // ============================================================
         function init() {
+            updateProfileDisplay();
             detectUserLocation();
             initBanners();
             fetchProducts();
             updateCartBadge();
             
-            // Listen for cart changes across tabs
-            window.addEventListener('storage', (e) => {
-                if (e.key === CART_KEY) updateCartBadge();
-            });
+            // Check for profile updates
+            setInterval(updateProfileDisplay, 2000);
             
-            // Save address on location click
             document.querySelector('.address-box').addEventListener('click', function() {
                 saveAddressToLocal();
                 window.location.href = 'address.html';

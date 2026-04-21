@@ -7,7 +7,7 @@
     
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Outfit:wght@100;300;500;700;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Outfit:wght@100;300;500;700;900&display=swap" rel="stylesheet">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -34,9 +34,6 @@
             --success: #059669;
             --border-light: #EAE5D9;
             --google-blue: #4285F4;
-            --google-red: #EA4335;
-            --google-yellow: #FBBC05;
-            --google-green: #34A853;
             
             --radius-xl: 32px;
             --radius-lg: 24px;
@@ -213,16 +210,18 @@
             margin-bottom: 28px;
         }
         
-        .auth-logo i {
-            font-size: 56px;
-            color: var(--dark-green);
-            filter: drop-shadow(0 8px 15px rgba(212,175,55,0.3));
+        .auth-logo img {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
             animation: logoGlow 3s infinite;
         }
         
         @keyframes logoGlow {
-            0%, 100% { filter: drop-shadow(0 8px 15px rgba(212,175,55,0.3)); }
-            50% { filter: drop-shadow(0 8px 25px rgba(212,175,55,0.6)); }
+            0%, 100% { box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 8px 35px rgba(212, 175, 55, 0.6); }
         }
 
         .auth-header {
@@ -720,7 +719,7 @@
 <div class="auth-overlay" id="loginUI">
     <div class="auth-card">
         <div class="auth-logo">
-            <i class="fa-solid fa-shield-heart"></i>
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart Logo">
         </div>
         <div class="auth-header">
             <h2>Welcome Back</h2>
@@ -763,6 +762,9 @@
 <!-- ============================================================ -->
 <div class="auth-overlay" id="registerUI" style="display: none;">
     <div class="auth-card">
+        <div class="auth-logo">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart Logo">
+        </div>
         <div class="auth-header">
             <h2>Join Nemi Mart</h2>
             <p>Experience premium Ayurveda</p>
@@ -967,27 +969,17 @@
 
 <script>
     // ============================================================
-    // FIREBASE CONFIG
+    // FIREBASE CONFIG - USING REALTIME DATABASE ONLY (NO AUTH ERROR)
     // ============================================================
     const firebaseConfig = {
-        apiKey: "AIzaSyA-despxo7zb-REPLACE_WITH_YOUR_KEY",
-        authDomain: "nemi-mart-3.firebaseapp.com",
-        databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com",
-        projectId: "nemi-mart-3",
-        storageBucket: "nemi-mart-3.appspot.com",
-        messagingSenderId: "653743323596558",
-        appId: "1:653743323596558:web:example"
+        databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com"
     };
     
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-    const auth = firebase.auth();
-    
-    // Google Auth Provider
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
     
     // ============================================================
-    // GLOBAL STATE
+    // GLOBAL STATE (Using localStorage for auth to avoid API key error)
     // ============================================================
     let currentUser = null;
     let currentEditType = 'profile';
@@ -997,7 +989,9 @@
     // ============================================================
     document.getElementById('regName')?.addEventListener('input', function(e) {
         const name = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '_');
-        document.getElementById('regUsername').value = name + '_' + Math.floor(Math.random() * 1000);
+        if (name) {
+            document.getElementById('regUsername').value = name + '_' + Math.floor(Math.random() * 1000);
+        }
     });
     
     // ============================================================
@@ -1010,7 +1004,7 @@
     }
     
     // ============================================================
-    // CHECK IF USER EXISTS
+    // CHECK IF USER EXISTS IN DATABASE
     // ============================================================
     async function checkUserExists(email, username) {
         const snapshot = await database.ref('users').once('value');
@@ -1022,7 +1016,7 @@
     }
     
     // ============================================================
-    // HANDLE REGISTER
+    // HANDLE REGISTER (LocalStorage + Firebase Database)
     // ============================================================
     async function handleRegister() {
         const name = document.getElementById('regName').value.trim();
@@ -1054,30 +1048,38 @@
             return;
         }
         
+        // Generate unique ID
+        const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        // Save user data to Firebase
+        const userData = {
+            uid: userId,
+            name: name,
+            username: username,
+            email: email,
+            phone: phone,
+            password: btoa(password), // Simple encoding (not for production, just demo)
+            address: 'Patiala, Punjab 147001',
+            photoURL: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+            createdAt: Date.now()
+        };
+        
         try {
-            // Create Firebase Auth user
-            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-            const user = userCredential.user;
+            await database.ref('users/' + userId).set(userData);
             
-            // Save user data to database
-            const userData = {
-                uid: user.uid,
+            // Auto-login after register
+            localStorage.setItem('nemi_current_user', JSON.stringify({
+                uid: userId,
                 name: name,
                 username: username,
-                email: email,
-                phone: phone,
-                address: 'Patiala, Punjab 147001',
-                photoURL: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-                createdAt: Date.now()
-            };
-            
-            await database.ref('users/' + user.uid).set(userData);
+                email: email
+            }));
             
             showToast('Account created successfully!', 'success');
-            setTimeout(() => switchAuth('loginUI'), 1500);
+            setTimeout(() => loadProfile(), 1000);
             
         } catch (error) {
-            showToast(error.message, 'error');
+            showToast('Registration failed: ' + error.message, 'error');
         }
     }
     
@@ -1094,89 +1096,86 @@
         }
         
         try {
-            // Check if identifier is email
-            let email = identifier;
-            if (!identifier.includes('@')) {
-                // Find email by username
-                const snapshot = await database.ref('users').once('value');
-                const users = snapshot.val() || {};
-                const user = Object.values(users).find(u => u.username === identifier);
-                if (!user) {
-                    showToast('User not found!', 'error');
-                    return;
-                }
-                email = user.email;
+            const snapshot = await database.ref('users').once('value');
+            const users = snapshot.val() || {};
+            
+            // Find user by email or username
+            const user = Object.values(users).find(u => 
+                (u.email === identifier || u.username === identifier) && 
+                (u.password === btoa(password))
+            );
+            
+            if (!user) {
+                showToast('Invalid credentials!', 'error');
+                return;
             }
             
-            await auth.signInWithEmailAndPassword(email, password);
+            // Save session
+            localStorage.setItem('nemi_current_user', JSON.stringify({
+                uid: user.uid,
+                name: user.name,
+                username: user.username,
+                email: user.email
+            }));
+            
             showToast('Login successful!', 'success');
+            loadProfile();
             
         } catch (error) {
-            showToast('Invalid credentials!', 'error');
+            showToast('Login failed: ' + error.message, 'error');
         }
     }
     
     // ============================================================
-    // GOOGLE LOGIN
+    // GOOGLE LOGIN (Simulated - redirect to register with Google info)
     // ============================================================
-    async function handleGoogleLogin() {
-        try {
-            const result = await auth.signInWithPopup(googleProvider);
-            const user = result.user;
-            
-            // Check if user exists in database
-            const snapshot = await database.ref('users/' + user.uid).once('value');
-            if (!snapshot.exists()) {
-                // Create new user profile
-                const userData = {
-                    uid: user.uid,
-                    name: user.displayName || 'Google User',
-                    username: (user.email?.split('@')[0] || 'user') + '_' + Date.now().toString().slice(-4),
-                    email: user.email,
-                    phone: '',
-                    address: 'Patiala, Punjab 147001',
-                    photoURL: user.photoURL || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-                    createdAt: Date.now()
-                };
-                await database.ref('users/' + user.uid).set(userData);
-            }
-            
-            showToast('Google login successful!', 'success');
-            
-        } catch (error) {
-            showToast(error.message, 'error');
-        }
+    function handleGoogleLogin() {
+        // Simulate Google login - in production use real OAuth
+        const googleUser = {
+            name: 'Google User',
+            email: 'user@gmail.com',
+            photo: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+        };
+        
+        // Pre-fill register form and switch
+        document.getElementById('regName').value = googleUser.name;
+        document.getElementById('regEmail').value = googleUser.email;
+        document.getElementById('regUsername').value = googleUser.email.split('@')[0] + '_' + Math.floor(Math.random() * 1000);
+        
+        switchAuth('registerUI');
+        showToast('Please complete registration', 'info');
     }
     
     // ============================================================
-    // AUTH STATE OBSERVER
+    // LOAD PROFILE
     // ============================================================
-    auth.onAuthStateChanged(async (user) => {
+    async function loadProfile() {
+        const savedUser = localStorage.getItem('nemi_current_user');
+        if (!savedUser) {
+            document.getElementById('mainProfileUI').style.display = 'none';
+            document.getElementById('loginUI').style.display = 'flex';
+            return;
+        }
+        
+        currentUser = JSON.parse(savedUser);
+        
+        // Load full user data from Firebase
+        const snapshot = await database.ref('users/' + currentUser.uid).once('value');
+        const userData = snapshot.val();
+        
+        if (userData) {
+            displayUserData(userData);
+        }
+        
+        document.getElementById('loginUI').style.display = 'none';
+        document.getElementById('registerUI').style.display = 'none';
+        document.getElementById('mainProfileUI').style.display = 'block';
+        
         document.getElementById('pageLoader').style.opacity = '0';
         setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500);
         
-        if (user) {
-            currentUser = user;
-            
-            // Load user data
-            const snapshot = await database.ref('users/' + user.uid).once('value');
-            const userData = snapshot.val();
-            
-            if (userData) {
-                displayUserData(userData);
-            }
-            
-            document.getElementById('loginUI').style.display = 'none';
-            document.getElementById('registerUI').style.display = 'none';
-            document.getElementById('mainProfileUI').style.display = 'block';
-            
-            initBgAnimation();
-        } else {
-            currentUser = null;
-            document.getElementById('mainProfileUI').style.display = 'none';
-            document.getElementById('loginUI').style.display = 'flex';
-        }
-    });
+        initBgAnimation();
+    }
     
     // ============================================================
     // DISPLAY USER DATA
@@ -1230,23 +1229,24 @@
                 </div>
             `;
         } else if (type === 'address') {
+            const addrParts = (userData.address || 'Patiala, Punjab 147001').split(',');
             title.textContent = 'Edit Address';
             content.innerHTML = `
                 <div class="input-box">
                     <label>Street Address</label>
-                    <input type="text" id="editStreet" class="input-field" placeholder="House/Street">
+                    <input type="text" id="editStreet" class="input-field" value="${addrParts[0] || ''}" placeholder="House/Street">
                 </div>
                 <div class="input-box">
                     <label>City</label>
-                    <input type="text" id="editCity" class="input-field" value="Patiala">
+                    <input type="text" id="editCity" class="input-field" value="${addrParts[1] || 'Patiala'}">
                 </div>
                 <div class="input-box">
                     <label>State</label>
-                    <input type="text" id="editState" class="input-field" value="Punjab">
+                    <input type="text" id="editState" class="input-field" value="${addrParts[2] || 'Punjab'}">
                 </div>
                 <div class="input-box">
                     <label>Pincode</label>
-                    <input type="text" id="editPincode" class="input-field" value="147001">
+                    <input type="text" id="editPincode" class="input-field" value="${addrParts[3] || '147001'}">
                 </div>
             `;
         }
@@ -1310,13 +1310,12 @@
     // ============================================================
     // HANDLE LOGOUT
     // ============================================================
-    async function handleLogout() {
-        try {
-            await auth.signOut();
-            showToast('Logged out successfully', 'info');
-        } catch (error) {
-            showToast('Logout failed', 'error');
-        }
+    function handleLogout() {
+        localStorage.removeItem('nemi_current_user');
+        currentUser = null;
+        document.getElementById('mainProfileUI').style.display = 'none';
+        document.getElementById('loginUI').style.display = 'flex';
+        showToast('Logged out successfully', 'info');
     }
     
     // ============================================================
@@ -1370,6 +1369,19 @@
             setTimeout(() => toast.remove(), 300);
         }, 3000);
     }
+    
+    // ============================================================
+    // CHECK SESSION ON LOAD
+    // ============================================================
+    window.onload = function() {
+        const savedUser = localStorage.getItem('nemi_current_user');
+        if (savedUser) {
+            loadProfile();
+        } else {
+            document.getElementById('pageLoader').style.opacity = '0';
+            setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500);
+        }
+    };
     
     // Expose globally
     window.switchAuth = switchAuth;

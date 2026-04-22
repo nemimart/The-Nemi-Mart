@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -152,26 +152,50 @@
     <div id="toast-zone"></div>
 
     <script>
+        // ============================================================
+        // CONFIGURATION
+        // ============================================================
         const APP_CONFIG = {
             DB_URL: "https://nemi-mart-2-default-rtdb.firebaseio.com/products.json",
             DEFAULT_IMG: "https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png",
-            CURRENCY: "₹"
+            CURRENCY: "₹",
+            CART_KEY: "nemi_cart"
         };
 
+        // ============================================================
+        // GLOBAL STATE
+        // ============================================================
         const AppState = {
             rawProducts: [],
             activeCategory: 'All',
-            cartCount: parseInt(localStorage.getItem('nemi_cart_count')) || 0,
+            cartItems: JSON.parse(localStorage.getItem(APP_CONFIG.CART_KEY)) || [],
             searchQuery: "",
-            addedItems: new Set() // To track items added in current session
+            addedItems: new Set()
         };
 
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             initCart();
             fetchDatabase();
             setupSearchListener();
+            updateAddedItemsSet();
         });
 
+        // ============================================================
+        // UPDATE ADDED ITEMS SET FROM CART
+        // ============================================================
+        function updateAddedItemsSet() {
+            AppState.addedItems.clear();
+            AppState.cartItems.forEach(item => {
+                AppState.addedItems.add(item.id);
+            });
+        }
+
+        // ============================================================
+        // FETCH PRODUCTS FROM FIREBASE
+        // ============================================================
         async function fetchDatabase() {
             try {
                 const response = await fetch(APP_CONFIG.DB_URL);
@@ -180,9 +204,9 @@
                 
                 AppState.rawProducts = Object.keys(data).map(key => ({
                     id: key,
-                    name: data[key].title || "Premium Product",
-                    price: data[key].finalPrice || 0,
-                    oldPrice: data[key].price || 0,
+                    name: data[key].title || data[key].name || "Premium Product",
+                    price: data[key].finalPrice || data[key].price || 0,
+                    oldPrice: data[key].price || data[key].finalPrice || 0,
                     img: (data[key].images && data[key].images[0]) ? data[key].images[0] : APP_CONFIG.DEFAULT_IMG,
                     category: data[key].category || "General",
                     discount: data[key].discount || 0,
@@ -191,14 +215,21 @@
 
                 renderFilters();
                 processFiltersAndRender();
-            } catch (e) { renderEmpty("Check internet connection."); }
+            } catch (e) {
+                console.error('Fetch error:', e);
+                renderEmpty("Check internet connection.");
+            }
         }
 
+        // ============================================================
+        // RENDER CATEGORY FILTERS
+        // ============================================================
         function renderFilters() {
             const cats = new Set(["All"]);
             AppState.rawProducts.forEach(p => cats.add(p.category));
             const container = document.getElementById('categoryContainer');
             container.innerHTML = "";
+            
             cats.forEach(cat => {
                 const btn = document.createElement('div');
                 btn.className = `cat-btn ${cat === AppState.activeCategory ? 'active' : ''}`;
@@ -213,6 +244,9 @@
             });
         }
 
+        // ============================================================
+        // SEARCH LISTENER
+        // ============================================================
         function setupSearchListener() {
             document.getElementById('searchInput').addEventListener('input', (e) => {
                 AppState.searchQuery = e.target.value.toLowerCase().trim();
@@ -220,16 +254,35 @@
             });
         }
 
+        // ============================================================
+        // FILTER AND RENDER
+        // ============================================================
         function processFiltersAndRender() {
             let filtered = AppState.rawProducts;
-            if (AppState.activeCategory !== 'All') filtered = filtered.filter(p => p.category === AppState.activeCategory);
-            if (AppState.searchQuery) filtered = filtered.filter(p => p.name.toLowerCase().includes(AppState.searchQuery));
+            
+            if (AppState.activeCategory !== 'All') {
+                filtered = filtered.filter(p => p.category === AppState.activeCategory);
+            }
+            
+            if (AppState.searchQuery) {
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(AppState.searchQuery));
+            }
+            
             renderUI(filtered);
         }
 
+        // ============================================================
+        // RENDER PRODUCT GRID
+        // ============================================================
         function renderUI(products) {
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.length ? "" : renderEmpty("No results.");
+            
+            if (!products.length) {
+                grid.innerHTML = renderEmpty("No results found.");
+                return;
+            }
+            
+            grid.innerHTML = "";
             
             products.forEach(p => {
                 const isOut = p.stock <= 0;
@@ -237,9 +290,8 @@
                 
                 const card = document.createElement('div');
                 card.className = 'product-card';
-                // Pura card clickable for product.html
                 card.onclick = (e) => {
-                    if(!e.target.closest('.add-btn')) {
+                    if (!e.target.closest('.add-btn')) {
                         window.location.href = `product.html?id=${p.id}`;
                     }
                 };
@@ -249,57 +301,125 @@
                         ${p.discount > 0 ? `<span class="badge badge-discount">${p.discount}% OFF</span>` : ''}
                         ${isOut ? `<span class="badge badge-out">Sold Out</span>` : ''}
                     </div>
-                    <div class="image-box"><img src="${p.img}" loading="lazy"></div>
+                    <div class="image-box">
+                        <img src="${p.img}" loading="lazy" onerror="this.src='${APP_CONFIG.DEFAULT_IMG}'">
+                    </div>
                     <span class="product-category">${p.category}</span>
                     <h3 class="product-title">${p.name}</h3>
                     <div class="card-footer">
                         <div>
-                            <span class="price-old">₹${p.oldPrice}</span>
+                            ${p.oldPrice > p.price ? `<span class="price-old">₹${p.oldPrice}</span>` : ''}
                             <span class="price-new">₹${p.price}</span>
                         </div>
                         <button class="add-btn ${isAdded ? 'added' : ''}" 
-                            onclick="addToCart(event, '${p.id}', '${p.name.replace(/'/g, "\\'")}')"
+                            onclick="addToCart(event, '${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${p.img.replace(/'/g, "\\'")}')"
                             ${isOut || isAdded ? 'disabled' : ''}>
-                            ${isAdded ? 'Added' : (isOut ? '<i class="fas fa-ban"></i>' : '<i class="fas fa-plus"></i>')}
+                            ${isAdded ? '✓ Added' : (isOut ? '<i class="fas fa-ban"></i>' : '<i class="fas fa-plus"></i>')}
                         </button>
-                    </div>`;
+                    </div>
+                `;
                 grid.appendChild(card);
             });
         }
 
-        function addToCart(event, id, name) {
-            event.stopPropagation(); // Stop card click
-            AppState.cartCount++;
-            AppState.addedItems.add(id); // Mark as added
+        // ============================================================
+        // ADD TO CART - FIXED VERSION
+        // ============================================================
+        window.addToCart = function(event, id, name, price, img) {
+            event.stopPropagation();
             
-            localStorage.setItem('nemi_cart_count', AppState.cartCount);
-            document.getElementById('cartBadge').innerText = AppState.cartCount;
+            // Check if already in cart
+            const existingItem = AppState.cartItems.find(item => item.id === id);
+            if (existingItem) {
+                fireToast(`${name} already in cart!`, 'info');
+                return;
+            }
             
-            // Update button UI immediately
+            // Add to cart array
+            const cartItem = {
+                id: id,
+                name: name,
+                price: price,
+                img: img,
+                qty: 1
+            };
+            
+            AppState.cartItems.push(cartItem);
+            
+            // Save to localStorage
+            localStorage.setItem(APP_CONFIG.CART_KEY, JSON.stringify(AppState.cartItems));
+            
+            // Update state
+            AppState.addedItems.add(id);
+            
+            // Update cart badge
+            updateCartBadge();
+            
+            // Update button UI
             const btn = event.currentTarget;
             btn.classList.add('added');
-            btn.innerHTML = 'Added';
+            btn.innerHTML = '✓ Added';
             btn.disabled = true;
+            
+            // Show toast
+            fireToast(`${name} added to cart! 🛒`, 'success');
+            
+            // Dispatch storage event for other tabs
+            window.dispatchEvent(new Event('storage'));
+        };
 
-            fireToast(`${name} added!`);
+        // ============================================================
+        // UPDATE CART BADGE
+        // ============================================================
+        function updateCartBadge() {
+            const totalItems = AppState.cartItems.reduce((sum, item) => sum + (item.qty || 1), 0);
+            document.getElementById('cartBadge').innerText = totalItems;
         }
 
-        function fireToast(msg) {
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function fireToast(msg, type = 'success') {
             const zone = document.getElementById('toast-zone');
             const t = document.createElement('div');
             t.className = 'toast';
-            t.innerHTML = `<i class="fas fa-check-circle"></i> <span>${msg}</span>`;
+            
+            const icon = type === 'success' ? '✅' : 'ℹ️';
+            t.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
+            
             zone.appendChild(t);
-            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2000);
+            
+            setTimeout(() => {
+                t.style.opacity = '0';
+                t.style.transition = 'opacity 0.3s';
+                setTimeout(() => t.remove(), 400);
+            }, 2000);
         }
 
+        // ============================================================
+        // INITIALIZE CART BADGE
+        // ============================================================
         function initCart() {
-            document.getElementById('cartBadge').innerText = AppState.cartCount;
+            updateCartBadge();
+            
+            // Listen for storage changes
+            window.addEventListener('storage', (e) => {
+                if (e.key === APP_CONFIG.CART_KEY) {
+                    AppState.cartItems = JSON.parse(e.newValue) || [];
+                    updateAddedItemsSet();
+                    updateCartBadge();
+                    processFiltersAndRender();
+                }
+            });
         }
 
+        // ============================================================
+        // RENDER EMPTY STATE
+        // ============================================================
         function renderEmpty(msg) {
             return `<div style="grid-column:1/-1; text-align:center; padding:50px; opacity:0.5;">
-                <i class="fas fa-search" style="font-size:30px;"></i><p>${msg}</p>
+                <i class="fas fa-box-open" style="font-size:40px; margin-bottom:15px; color: var(--text-muted);"></i>
+                <p style="font-size:15px; font-weight:500;">${msg}</p>
             </div>`;
         }
     </script>

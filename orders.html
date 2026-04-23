@@ -1,314 +1,1420 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | My Orders & Invoices</title>
+    <title>Nemi Mart | My Orders & Premium Invoices</title>
     
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@600;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Dancing+Script:wght@400;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <!-- html2canvas for invoice generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
+    
     <style>
+        /* ============================================================
+           ROOT VARIABLES - PREMIUM GREEN/CREME/GOLD THEME
+           ============================================================ */
         :root {
-            --primary: #1A3E26; /* Deep Green */
-            --accent: #D4AF37;  /* Luxury Gold */
-            --creme: #FDFBF7;   /* Elegant Creme */
-            --white: #ffffff;
-            --text-main: #0A1F13;
-            --text-muted: #64748B;
-            --success: #22C55E;
-            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            --creme: #FDFBF7;
+            --creme-dark: #F5F1E6;
+            --gold: #D4AF37;
+            --gold-light: #FAF4E5;
+            --gold-hover: #B8860B;
+            --dark-green: #0A1F13;
+            --leaf-green: #1A3E26;
+            --leaf-light: #eaf2e9;
+            --white: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-muted: #5C6F63;
+            --danger: #EF4444;
+            --success: #059669;
+            --warning: #EAB308;
+            --info: #3B82F6;
+            --border-light: #EAE5D9;
+            
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+            
+            --shadow-soft: 0 8px 25px rgba(0,0,0,0.04);
+            --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
+            --shadow-hover: 0 25px 45px -10px rgba(212,175,55,0.25);
+            --shadow-gold: 0 10px 30px rgba(212,175,55,0.2);
+            --shadow-premium: 0 30px 60px -15px rgba(10,31,19,0.25);
+            
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            --bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body { 
-            background: var(--creme); 
-            color: var(--text-main); 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            padding-bottom: 50px;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- HEADER --- */
-        .header {
-            position: sticky; top: 0; z-index: 1000;
-            background: rgba(253, 251, 247, 0.95);
-            backdrop-filter: blur(15px);
-            padding: 20px;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        body {
+            background: var(--creme);
+            color: var(--text-dark);
+            line-height: 1.5;
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            animation: pageLoad 0.6s ease-out;
         }
 
-        .back-btn {
-            width: 40px; height: 40px; border-radius: 12px;
-            background: var(--white); border: 1px solid #eee;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--primary); text-decoration: none;
+        @keyframes pageLoad {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        .header-title { font-family: 'Outfit'; font-size: 22px; font-weight: 800; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--creme-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
-        /* --- ORDERS LIST --- */
-        .orders-container { padding: 20px; max-width: 600px; margin: 0 auto; }
-
-        .order-card {
-            background: var(--white);
-            border-radius: 30px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 15px 35px rgba(26, 62, 38, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-            animation: slideUp 0.6s ease-out;
+        /* ============================================================
+           LOADER
+           ============================================================ */
+        #pageLoader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        
+        .loader-spinner {
+            width: 55px; height: 55px;
+            border: 4px solid var(--gold-light);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .loader-text {
+            margin-top: 18px;
+            font-weight: 700;
+            color: var(--dark-green);
+            letter-spacing: 2px;
+            font-size: 14px;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
+        /* ============================================================
+           TOAST NOTIFICATIONS
+           ============================================================ */
+        #toastContainer {
+            position: fixed;
+            top: calc(15px + var(--safe-top));
+            left: 15px;
+            right: 15px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: var(--dark-green);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border-left: 5px solid var(--gold);
+            box-shadow: var(--shadow-card);
+            animation: slideDown 0.35s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            pointer-events: auto;
+        }
+        
+        .toast.success { border-left-color: var(--success); background: #0a3622; }
+        .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
+        .toast.info { border-left-color: var(--gold); }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .order-id-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding-bottom: 15px; border-bottom: 1px dashed #eee;
-            margin-bottom: 15px;
+        /* ============================================================
+           HEADER - PREMIUM STICKY
+           ============================================================ */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(253, 251, 247, 0.96);
+            backdrop-filter: blur(15px);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--gold);
+            box-shadow: var(--shadow-soft);
         }
 
-        .order-id { font-weight: 800; font-size: 14px; color: var(--text-muted); }
-        .status-badge {
-            background: #E8F5E9; color: var(--success);
-            padding: 5px 12px; border-radius: 50px; font-size: 12px; font-weight: 800;
+        .back-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-green);
+            text-decoration: none;
+            transition: var(--transition);
         }
 
-        .order-info { display: flex; gap: 15px; margin-bottom: 15px; }
-        .order-img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; background: #f9f9f9; }
+        .back-btn:active {
+            background: var(--gold);
+            color: white;
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark-green);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         
-        .order-details h3 { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-        .order-meta { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-
-        .price-row {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 15px; padding-top: 15px; border-top: 1px solid #f5f5f5;
-        }
-        .total-label { font-size: 14px; font-weight: 600; }
-        .total-amt { font-size: 20px; font-weight: 900; color: var(--primary); }
-
-        /* --- INVOICE BUTTON --- */
-        .download-btn {
-            width: 100%; margin-top: 15px; padding: 14px;
-            background: var(--primary); color: var(--accent);
-            border: none; border-radius: 18px; font-weight: 800;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            cursor: pointer; transition: 0.3s;
+        .header-title i {
+            color: var(--gold);
         }
 
-        .download-btn:active { transform: scale(0.97); background: #0A1F13; }
-
-        /* --- HIDDEN INVOICE TEMPLATE (This will be captured as Image) --- */
-        #invoice-template {
-            position: absolute; left: -9999px; /* Hide from view */
-            width: 500px; background: #fff; padding: 40px;
-            border: 15px solid var(--primary);
+        .header-actions {
+            display: flex;
+            gap: 8px;
         }
-
-        .inv-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .inv-logo { width: 120px; }
-        .inv-title { text-align: right; }
-        .inv-title h1 { font-family: 'Outfit'; color: var(--accent); font-size: 28px; }
-
-        .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
-        .inv-box h4 { font-size: 12px; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; }
-        .inv-box p { font-size: 14px; font-weight: 600; line-height: 1.4; }
-
-        .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        .inv-table th { background: #f8f8f8; text-align: left; padding: 12px; font-size: 12px; color: var(--primary); }
-        .inv-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
-
-        .inv-total-section { float: right; width: 200px; }
-        .inv-total-row { display: flex; justify-content: space-between; padding: 8px 0; }
         
-        .inv-footer { margin-top: 50px; padding-top: 20px; border-top: 2px solid var(--creme); }
-        .signature-box { margin-top: 20px; }
-        .sign { font-family: 'Dancing Script', cursive; font-size: 24px; color: #333; }
-        .sign-label { font-size: 12px; font-weight: 700; color: var(--accent); margin-top: 5px; }
+        .header-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--gold-light);
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .header-btn:active {
+            background: var(--gold);
+            color: white;
+            transform: scale(0.95);
+        }
 
-        /* Popup for Image View */
-        .preview-modal {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.9); z-index: 5000;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
+        /* ============================================================
+           STATS SUMMARY CARDS
+           ============================================================ */
+        .stats-container {
+            display: flex;
+            gap: 12px;
+            padding: 20px 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .stat-card {
+            flex: 1;
+            background: var(--white);
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 22px;
+        }
+        
+        .stat-content h3 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark-green);
+            line-height: 1.2;
+        }
+        
+        .stat-content p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============================================================
+           FILTER TABS
+           ============================================================ */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .filter-tabs::-webkit-scrollbar { display: none; }
+        
+        .filter-chip {
+            padding: 10px 18px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .filter-chip.active {
+            background: var(--dark-green);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+        
+        .filter-chip i {
+            margin-right: 6px;
+        }
+
+        /* ============================================================
+           ORDERS CONTAINER
+           ============================================================ */
+        .orders-container {
+            padding: 0 16px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .order-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
             padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+            animation: cardSlideIn 0.5s ease-out backwards;
+            position: relative;
+            overflow: hidden;
         }
-        #previewImage { max-width: 100%; border-radius: 10px; box-shadow: 0 0 30px rgba(212,175,55,0.3); }
-        .modal-btns { display: flex; gap: 15px; margin-top: 20px; }
-        .m-btn { padding: 12px 25px; border-radius: 50px; border: none; font-weight: 700; cursor: pointer; }
-        .close-m { background: #fff; color: #000; }
-        .save-m { background: var(--accent); color: var(--primary); }
+        
+        @keyframes cardSlideIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            transition: var(--transition);
+        }
+        
+        .order-card.pending::before { background: var(--warning); }
+        .order-card.confirmed::before { background: var(--info); }
+        .order-card.delivered::before { background: var(--success); }
+        .order-card.rejected::before { background: var(--danger); }
+        
+        .order-card:active {
+            transform: scale(0.99);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding-left: 8px;
+        }
+        
+        .order-id-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .order-id {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+        
+        .order-date {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .order-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        .status-pending { background: rgba(234, 179, 8, 0.15); color: var(--warning); }
+        .status-confirmed { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+        .status-delivered { background: rgba(5, 150, 105, 0.15); color: var(--success); }
+        .status-rejected { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        .order-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-left: 8px;
+        }
+        
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .item-image {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            object-fit: cover;
+            background: var(--creme-dark);
+            border: 1px solid var(--border-light);
+        }
+        
+        .item-details {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark-green);
+            margin-bottom: 2px;
+        }
+        
+        .item-qty {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        .item-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .delivery-info {
+            background: var(--creme-dark);
+            padding: 14px;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            margin-left: 8px;
+        }
+        
+        .delivery-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .delivery-info p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .delivery-info i {
+            width: 18px;
+            color: var(--gold);
+            margin-top: 2px;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            margin-top: 8px;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        .total-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .total-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .total-amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark-green);
+        }
+
+        .invoice-btn {
+            background: var(--dark-green);
+            color: var(--gold);
+            border: 1.5px solid var(--gold);
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .invoice-btn:active {
+            background: var(--gold);
+            color: var(--dark-green);
+            transform: scale(0.96);
+        }
+
+        /* ============================================================
+           EMPTY STATE
+           ============================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .empty-icon {
+            font-size: 80px;
+            color: var(--gold-light);
+            margin-bottom: 24px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .empty-state h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--dark-green);
+            margin-bottom: 12px;
+        }
+        
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .shop-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: var(--dark-green);
+            color: var(--gold);
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 700;
+            border: 2px solid var(--gold);
+        }
+
+        /* ============================================================
+           INVOICE MODAL - PREMIUM VIEW
+           ============================================================ */
+        .invoice-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 31, 19, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        
+        .invoice-modal-content {
+            background: var(--white);
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: var(--radius-xl);
+            padding: 0;
+            animation: modalPop 0.4s var(--bounce);
+            box-shadow: var(--shadow-premium);
+        }
+        
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.85) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .invoice-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 2px solid var(--gold);
+            background: linear-gradient(135deg, var(--dark-green), var(--leaf-green));
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+        
+        .invoice-preview-header h2 {
+            color: var(--gold);
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+        }
+        
+        .close-invoice {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #invoicePreviewImage {
+            width: 100%;
+            display: block;
+        }
+        
+        .invoice-actions {
+            display: flex;
+            gap: 12px;
+            padding: 20px 24px;
+            background: var(--creme-dark);
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+        }
+        
+        .invoice-action-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .download-invoice-btn {
+            background: var(--dark-green);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+        
+        .share-invoice-btn {
+            background: var(--gold-light);
+            color: var(--dark-green);
+            border: 2px solid var(--gold);
+        }
+        
+        .invoice-action-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ============================================================
+           HIDDEN INVOICE TEMPLATE - ULTRA PREMIUM
+           ============================================================ */
+        #invoiceTemplate {
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 600px;
+            background: var(--white);
+            padding: 45px 40px;
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--dark-green);
+            border: 15px solid var(--dark-green);
+            box-shadow: var(--shadow-premium);
+        }
+        
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 3px double var(--gold);
+            padding-bottom: 25px;
+        }
+        
+        .invoice-logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .invoice-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+        }
+        
+        .invoice-brand h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--dark-green);
+        }
+        
+        .invoice-brand p {
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .invoice-title-section {
+            text-align: right;
+        }
+        
+        .invoice-title {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--gold);
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .invoice-number {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+        
+        .invoice-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+        
+        .invoice-section h4 {
+            font-size: 13px;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        .invoice-section p {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 3px;
+        }
+        
+        .invoice-section .address {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        
+        .invoice-items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 35px;
+        }
+        
+        .invoice-items-table th {
+            background: var(--dark-green);
+            color: var(--gold);
+            padding: 14px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            text-align: left;
+        }
+        
+        .invoice-items-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .invoice-items-table tfoot td {
+            border-bottom: none;
+            padding-top: 20px;
+        }
+        
+        .invoice-total-box {
+            float: right;
+            width: 250px;
+            margin-top: 20px;
+        }
+        
+        .invoice-total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        
+        .invoice-grand-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            margin-top: 5px;
+            border-top: 2px solid var(--dark-green);
+            border-bottom: 2px double var(--gold);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--dark-green);
+        }
+        
+        .invoice-footer {
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-light);
+            clear: both;
+        }
+        
+        .invoice-footer p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 30px;
+        }
+        
+        .signature-box {
+            text-align: center;
+        }
+        
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 32px;
+            color: var(--dark-green);
+            margin-bottom: 5px;
+        }
+        
+        .signature-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .invoice-stamp {
+            width: 100px;
+            height: 100px;
+            border: 3px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-weight: 800;
+            font-size: 12px;
+            text-transform: uppercase;
+            transform: rotate(-15deg);
+        }
+        
+        .invoice-stamp i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-        <div class="header-title">My Orders</div>
-        <div style="width: 40px;"></div>
-    </div>
+<div id="toastContainer"></div>
+<div id="pageLoader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">LOADING YOUR ORDERS...</div>
+</div>
 
-    <div class="orders-container">
-        
-        <div class="order-card">
-            <div class="order-id-row">
-                <span class="order-id">ORDER #NM_992104</span>
-                <span class="status-badge">Delivered</span>
-            </div>
-            <div class="order-info">
-                <img src="https://images.unsplash.com/photo-1599307734170-4d372579120a?q=80&w=500" class="order-img">
-                <div class="order-details">
-                    <h3>Premium Kashmiri Kesar (5g)</h3>
-                    <p class="order-meta">Ordered on: 12 April 2026, 02:30 PM</p>
-                    <p class="order-meta">Address: Ragho Majra, Patiala, Punjab</p>
-                </div>
-            </div>
-            <div class="price-row">
-                <span class="total-label">Amount Paid</span>
-                <span class="total-amt">₹499.00</span>
-            </div>
-            <button class="download-btn" onclick="generateInvoice('NM_992104', 'Kashmiri Kesar', '₹499', '12 April 2026')">
-                <i class="fa-solid fa-file-invoice"></i> Download Invoice
+<!-- ============================================================ -->
+<!-- HEADER -->
+<!-- ============================================================ -->
+<div class="header">
+    <a href="index.html" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+    </a>
+    <div class="header-title">
+        <i class="fa-solid fa-box"></i>
+        My Orders
+    </div>
+    <div class="header-actions">
+        <button class="header-btn" onclick="window.location.href='cart.html'">
+            <i class="fa-solid fa-shopping-bag"></i>
+        </button>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- STATS SUMMARY -->
+<!-- ============================================================ -->
+<div class="stats-container">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fa-solid fa-truck"></i>
+        </div>
+        <div class="stat-content">
+            <h3 id="totalOrdersStat">0</h3>
+            <p>Total Orders</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+        </div>
+        <div class="stat-content">
+            <h3 id="totalSpentStat">₹0</h3>
+            <p>Total Spent</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FILTER TABS -->
+<!-- ============================================================ -->
+<div class="filter-tabs">
+    <div class="filter-chip active" onclick="filterOrders('all')">
+        <i class="fa-solid fa-list"></i> All Orders
+    </div>
+    <div class="filter-chip" onclick="filterOrders('pending')">
+        <i class="fa-solid fa-clock"></i> Pending
+    </div>
+    <div class="filter-chip" onclick="filterOrders('confirmed')">
+        <i class="fa-solid fa-check"></i> Confirmed
+    </div>
+    <div class="filter-chip" onclick="filterOrders('delivered')">
+        <i class="fa-solid fa-circle-check"></i> Delivered
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ORDERS CONTAINER -->
+<!-- ============================================================ -->
+<div class="orders-container" id="ordersContainer"></div>
+
+<!-- ============================================================ -->
+<!-- INVOICE PREVIEW MODAL -->
+<!-- ============================================================ -->
+<div class="invoice-modal" id="invoiceModal">
+    <div class="invoice-modal-content">
+        <div class="invoice-preview-header">
+            <h2><i class="fa-solid fa-file-invoice"></i> Premium Invoice</h2>
+            <button class="close-invoice" onclick="closeInvoiceModal()">
+                <i class="fa-solid fa-times"></i>
             </button>
         </div>
-
-        <div class="order-card">
-            <div class="order-id-row">
-                <span class="order-id">ORDER #NM_992088</span>
-                <span class="status-badge">Delivered</span>
-            </div>
-            <div class="order-info">
-                <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=500" class="order-img">
-                <div class="order-details">
-                    <h3>Organic Forest Honey (1kg)</h3>
-                    <p class="order-meta">Ordered on: 10 April 2026, 11:15 AM</p>
-                    <p class="order-meta">Address: Model Town, Patiala, Punjab</p>
-                </div>
-            </div>
-            <div class="price-row">
-                <span class="total-label">Amount Paid</span>
-                <span class="total-amt">₹320.00</span>
-            </div>
-            <button class="download-btn" onclick="generateInvoice('NM_992088', 'Forest Honey', '₹320', '10 April 2026')">
-                <i class="fa-solid fa-file-invoice"></i> Download Invoice
+        <img id="invoicePreviewImage" src="" alt="Invoice Preview">
+        <div class="invoice-actions">
+            <button class="invoice-action-btn download-invoice-btn" id="downloadInvoiceBtn">
+                <i class="fa-solid fa-download"></i> Download
+            </button>
+            <button class="invoice-action-btn share-invoice-btn" onclick="shareInvoice()">
+                <i class="fa-solid fa-share-nodes"></i> Share
             </button>
         </div>
-
     </div>
+</div>
 
-    <div class="preview-modal" id="previewModal">
-        <h2 style="color:var(--accent); margin-bottom: 15px; font-family: 'Outfit';">Invoice Ready!</h2>
-        <img id="previewImage" src="">
-        <div class="modal-btns">
-            <button class="m-btn close-m" onclick="closeModal()">Close</button>
-            <button class="m-btn save-m" id="downloadTrigger">Save to Gallery</button>
+<!-- ============================================================ -->
+<!-- HIDDEN INVOICE TEMPLATE - ULTRA PREMIUM -->
+<!-- ============================================================ -->
+<div id="invoiceTemplate">
+    <div class="invoice-header">
+        <div class="invoice-logo-section">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="invoice-logo" alt="Nemi Mart">
+            <div class="invoice-brand">
+                <h2>NEMI MART</h2>
+                <p>Pure Ayurveda</p>
+            </div>
+        </div>
+        <div class="invoice-title-section">
+            <div class="invoice-title">INVOICE</div>
+            <div class="invoice-number" id="invNumber">#NEMI-001</div>
         </div>
     </div>
-
-    <div id="invoice-template">
-        <div class="inv-header">
-            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="inv-logo">
-            <div class="inv-title">
-                <h1>INVOICE</h1>
-                <p style="font-size: 12px; color: #777;">#<span id="inv-id-display"></span></p>
-            </div>
+    
+    <div class="invoice-details-grid">
+        <div class="invoice-section">
+            <h4>Billed To:</h4>
+            <p id="invCustomerName">Akash Sharma</p>
+            <p class="address" id="invCustomerAddress">Patiala, Punjab - 147001</p>
+            <p style="margin-top: 12px;" id="invCustomerPhone">📞 +91 98765 43210</p>
         </div>
-
-        <div class="inv-grid">
-            <div class="inv-box">
-                <h4>Billed To:</h4>
-                <p>Akash Deep</p>
-                <p style="font-weight: 400; font-size: 12px;">Ragho Majra, Patiala, Punjab<br>India - 147001</p>
-            </div>
-            <div class="inv-box" style="text-align: right;">
-                <h4>Company:</h4>
-                <p>Nemi Mart Private Ltd.</p>
-                <p style="font-weight: 400; font-size: 12px;">nemimart@gmail.com<br>www.nemimart.com</p>
-            </div>
+        <div class="invoice-section" style="text-align: right;">
+            <h4>Order Details:</h4>
+            <p id="invOrderDate">April 23, 2026</p>
+            <p id="invPaymentMethod">Payment: UPI</p>
+            <p id="invUTR" style="font-size: 12px; margin-top: 8px;">UTR: 123456789012</p>
         </div>
-
-        <table class="inv-table">
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Qty</th>
-                    <th style="text-align: right;">Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td id="inv-item-name"></td>
-                    <td>1</td>
-                    <td style="text-align: right;" id="inv-item-price"></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="inv-total-section">
-            <div class="inv-total-row">
-                <span>Subtotal:</span>
-                <span id="inv-sub"></span>
-            </div>
-            <div class="inv-total-row" style="color: var(--accent); font-weight: 800; border-top: 1px solid #eee; margin-top: 5px; padding-top: 10px;">
-                <span>Total Paid:</span>
-                <span id="inv-total"></span>
-            </div>
-        </div>
-
-        <div style="clear: both;"></div>
-
-        <div class="inv-footer">
-            <p style="font-size: 10px; color: #999;">This is a digitally generated invoice. No signature required in physical form, but verified by:</p>
+    </div>
+    
+    <table class="invoice-items-table">
+        <thead>
+            <tr>
+                <th>Item Description</th>
+                <th style="text-align: center;">Qty</th>
+                <th style="text-align: right;">Price</th>
+                <th style="text-align: right;">Total</th>
+            </tr>
+        </thead>
+        <tbody id="invItemsBody">
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <div class="invoice-total-box">
+                        <div class="invoice-total-row">
+                            <span>Subtotal:</span>
+                            <span id="invSubtotal">₹0</span>
+                        </div>
+                        <div class="invoice-total-row">
+                            <span>Delivery Fee:</span>
+                            <span style="color: var(--success);">FREE</span>
+                        </div>
+                        <div class="invoice-total-row">
+                            <span>Platform Fee:</span>
+                            <span id="invPlatformFee">₹5</span>
+                        </div>
+                        <div class="invoice-grand-total">
+                            <span>TOTAL PAID:</span>
+                            <span id="invGrandTotal">₹0</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <div class="invoice-footer">
+        <p>This is a computer-generated invoice. Valid without signature. For any queries, contact support@nemimart.com</p>
+        <div class="signature-section">
             <div class="signature-box">
-                <div class="sign">Naman Jain</div>
-                <div class="sign-label">Founder & CEO, Nemi Mart</div>
+                <div class="signature">Arham Insights</div>
+                <div class="signature-label">Founder & CEO, Nemi Mart</div>
+            </div>
+            <div class="invoice-stamp">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>PAID</span>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function generateInvoice(id, item, price, date) {
-            // Fill Template
-            document.getElementById('inv-id-display').innerText = id;
-            document.getElementById('inv-item-name').innerText = item;
-            document.getElementById('inv-item-price').innerText = price;
-            document.getElementById('inv-sub').innerText = price;
-            document.getElementById('inv-total').innerText = price;
-
-            // Use html2canvas to take snapshot
-            const target = document.getElementById('invoice-template');
+<script>
+    // ============================================================
+    // FIREBASE CONFIG
+    // ============================================================
+    const firebaseConfig = {
+        databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    // ============================================================
+    // GLOBAL STATE
+    // ============================================================
+    let allOrders = [];
+    let currentFilter = 'all';
+    let currentUser = null;
+    let currentInvoiceData = null;
+    let generatedInvoiceImage = null;
+    
+    // ============================================================
+    // GET CURRENT USER
+    // ============================================================
+    function getCurrentUser() {
+        const saved = localStorage.getItem('nemi_current_user');
+        if (saved) {
+            try {
+                currentUser = JSON.parse(saved);
+            } catch(e) {
+                currentUser = null;
+            }
+        }
+        
+        // Fallback - check profile data
+        if (!currentUser) {
+            const profile = JSON.parse(localStorage.getItem('nemi_master_user')) || {};
+            if (profile.phone) {
+                currentUser = { name: profile.name, phone: profile.phone, email: profile.email };
+            }
+        }
+        
+        return currentUser;
+    }
+    
+    // ============================================================
+    // LOAD ORDERS FROM FIREBASE
+    // ============================================================
+    function loadOrders() {
+        const user = getCurrentUser();
+        
+        database.ref('orders').on('value', (snap) => {
+            const data = snap.val();
+            allOrders = [];
             
-            // Show temporarily for capture (but off-screen)
-            html2canvas(target, {
-                scale: 3, // High quality
-                useCORS: true,
-                backgroundColor: '#ffffff'
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const previewImg = document.getElementById('previewImage');
-                previewImg.src = imgData;
-                
-                // Show Modal
-                document.getElementById('previewModal').style.display = 'flex';
-                
-                // Setup Download
-                document.getElementById('downloadTrigger').onclick = function() {
-                    const link = document.createElement('a');
-                    link.download = `Invoice_${id}.png`;
-                    link.href = imgData;
-                    link.click();
-                };
-            });
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    allOrders.push({ id: key, ...data[key] });
+                });
+            }
+            
+            // Filter orders for current user
+            if (user && user.phone) {
+                allOrders = allOrders.filter(o => 
+                    o.customer?.phone === user.phone || 
+                    o.phone === user.phone ||
+                    o.uid === user.uid
+                );
+            }
+            
+            // Sort by newest first
+            allOrders.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            
+            updateStats();
+            renderOrders();
+            
+            document.getElementById('pageLoader').style.opacity = '0';
+            setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500);
+        });
+    }
+    
+    // ============================================================
+    // UPDATE STATS
+    // ============================================================
+    function updateStats() {
+        document.getElementById('totalOrdersStat').textContent = allOrders.length;
+        
+        const totalSpent = allOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+        document.getElementById('totalSpentStat').textContent = `₹${totalSpent.toLocaleString()}`;
+    }
+    
+    // ============================================================
+    // FILTER ORDERS
+    // ============================================================
+    window.filterOrders = function(filter) {
+        currentFilter = filter;
+        
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.classList.remove('active');
+        });
+        event.target.closest('.filter-chip').classList.add('active');
+        
+        renderOrders();
+    };
+    
+    // ============================================================
+    // RENDER ORDERS
+    // ============================================================
+    function renderOrders() {
+        const container = document.getElementById('ordersContainer');
+        
+        let filtered = allOrders;
+        if (currentFilter !== 'all') {
+            filtered = allOrders.filter(o => (o.status || 'pending').toLowerCase() === currentFilter);
         }
-
-        function closeModal() {
-            document.getElementById('previewModal').style.display = 'none';
+        
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fa-regular fa-clipboard"></i>
+                    </div>
+                    <h2>${currentFilter === 'all' ? 'No Orders Yet' : `No ${currentFilter} orders`}</h2>
+                    <p>Start shopping to see your orders here!</p>
+                    <a href="index.html" class="shop-btn">
+                        <i class="fa-solid fa-bag-shopping"></i> Shop Now
+                    </a>
+                </div>
+            `;
+            return;
         }
-    </script>
+        
+        container.innerHTML = filtered.map((order, index) => {
+            const status = order.status || 'pending';
+            const items = order.items || [];
+            const customer = order.customer || {};
+            const orderDate = order.timestamp ? new Date(order.timestamp).toLocaleDateString('en-IN', {
+                day: 'numeric', month: 'short', year: 'numeric'
+            }) : 'Recently';
+            
+            return `
+                <div class="order-card ${status}" style="animation-delay: ${index * 0.08}s">
+                    <div class="order-header">
+                        <div class="order-id-section">
+                            <span class="order-id">#${order.id?.slice(-8) || 'N/A'}</span>
+                            <span class="order-date">
+                                <i class="fa-regular fa-calendar"></i> ${orderDate}
+                            </span>
+                        </div>
+                        <span class="order-status status-${status}">${status.toUpperCase()}</span>
+                    </div>
+                    
+                    <div class="order-items">
+                        ${items.slice(0, 2).map(item => `
+                            <div class="order-item">
+                                <img src="${item.img || 'https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png'}" class="item-image" onerror="this.src='https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png'">
+                                <div class="item-details">
+                                    <div class="item-name">${item.name || 'Product'}</div>
+                                    <div class="item-qty">Qty: ${item.qty || 1}</div>
+                                </div>
+                                <div class="item-price">₹${(item.price || 0) * (item.qty || 1)}</div>
+                            </div>
+                        `).join('')}
+                        ${items.length > 2 ? `<div style="font-size: 12px; color: var(--text-muted); padding-left: 8px;">+${items.length - 2} more items</div>` : ''}
+                    </div>
+                    
+                    <div class="delivery-info">
+                        <p><i class="fa-solid fa-location-dot"></i> ${customer.address || 'Patiala, Punjab'}</p>
+                        <p><i class="fa-solid fa-receipt"></i> UTR: ${order.utr || 'N/A'}</p>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <div class="total-section">
+                            <span class="total-label">Total Paid</span>
+                            <span class="total-amount">₹${order.total || 0}</span>
+                        </div>
+                        <button class="invoice-btn" onclick="generateInvoice('${order.id}')">
+                            <i class="fa-solid fa-file-invoice"></i> Invoice
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // ============================================================
+    // GENERATE PREMIUM INVOICE
+    // ============================================================
+    window.generateInvoice = function(orderId) {
+        const order = allOrders.find(o => o.id === orderId);
+        if (!order) {
+            showToast('Order not found', 'error');
+            return;
+        }
+        
+        currentInvoiceData = order;
+        
+        // Populate template
+        const customer = order.customer || {};
+        const items = order.items || [];
+        const orderDate = order.timestamp ? new Date(order.timestamp).toLocaleDateString('en-IN', {
+            day: 'numeric', month: 'long', year: 'numeric'
+        }) : new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+        
+        document.getElementById('invNumber').textContent = `#${order.id?.slice(-8) || '001'}`;
+        document.getElementById('invCustomerName').textContent = customer.name || 'Valued Customer';
+        document.getElementById('invCustomerAddress').textContent = customer.address || 'Patiala, Punjab - 147001';
+        document.getElementById('invCustomerPhone').innerHTML = `📞 ${customer.phone || '+91 98765 43210'}`;
+        document.getElementById('invOrderDate').textContent = orderDate;
+        document.getElementById('invUTR').textContent = `UTR: ${order.utr || 'N/A'}`;
+        
+        // Populate items
+        const itemsBody = document.getElementById('invItemsBody');
+        itemsBody.innerHTML = items.map(item => `
+            <tr>
+                <td>${item.name || 'Premium Product'}</td>
+                <td style="text-align: center;">${item.qty || 1}</td>
+                <td style="text-align: right;">₹${item.price || 0}</td>
+                <td style="text-align: right;">₹${(item.price || 0) * (item.qty || 1)}</td>
+            </tr>
+        `).join('');
+        
+        const subtotal = order.subtotal || (order.total - 5) || 0;
+        document.getElementById('invSubtotal').textContent = `₹${subtotal}`;
+        document.getElementById('invGrandTotal').textContent = `₹${order.total || 0}`;
+        
+        // Generate image
+        const template = document.getElementById('invoiceTemplate');
+        
+        html2canvas(template, {
+            scale: 2.5,
+            backgroundColor: '#ffffff',
+            allowTaint: true,
+            useCORS: true
+        }).then(canvas => {
+            generatedInvoiceImage = canvas.toDataURL('image/png');
+            document.getElementById('invoicePreviewImage').src = generatedInvoiceImage;
+            document.getElementById('invoiceModal').style.display = 'flex';
+            
+            // Setup download
+            document.getElementById('downloadInvoiceBtn').onclick = function() {
+                const link = document.createElement('a');
+                link.download = `Nemi_Invoice_${order.id?.slice(-8)}.png`;
+                link.href = generatedInvoiceImage;
+                link.click();
+                showToast('Invoice downloaded!', 'success');
+            };
+        }).catch(error => {
+            console.error('Invoice generation error:', error);
+            showToast('Error generating invoice', 'error');
+        });
+    };
+    
+    // ============================================================
+    // CLOSE INVOICE MODAL
+    // ============================================================
+    window.closeInvoiceModal = function() {
+        document.getElementById('invoiceModal').style.display = 'none';
+    };
+    
+    // ============================================================
+    // SHARE INVOICE
+    // ============================================================
+    window.shareInvoice = async function() {
+        if (!generatedInvoiceImage) {
+            showToast('No invoice to share', 'error');
+            return;
+        }
+        
+        // Convert base64 to blob
+        const response = await fetch(generatedInvoiceImage);
+        const blob = await response.blob();
+        const file = new File([blob], 'Nemi_Invoice.png', { type: 'image/png' });
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Nemi Mart Invoice',
+                    text: 'Your premium invoice from Nemi Mart',
+                    files: [file]
+                });
+            } catch (err) {
+                console.log('Share cancelled');
+            }
+        } else {
+            // Fallback
+            const link = document.createElement('a');
+            link.download = 'Nemi_Invoice.png';
+            link.href = generatedInvoiceImage;
+            link.click();
+            showToast('Invoice saved to downloads', 'success');
+        }
+    };
+    
+    // ============================================================
+    // TOAST NOTIFICATION
+    // ============================================================
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const icons = { success: '✅', error: '❌', info: '💚' };
+        toast.innerHTML = `<span>${icons[type] || '🔔'}</span> ${message}`;
+        
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+    
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        loadOrders();
+        
+        // Close modal on overlay click
+        document.getElementById('invoiceModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('invoice-modal')) {
+                closeInvoiceModal();
+            }
+        });
+    });
+</script>
 </body>
 </html>

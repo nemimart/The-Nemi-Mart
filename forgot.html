@@ -1,701 +1,194 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Nemi Mart | Forgot Password</title>
     
-    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK - Full Auth Support -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <style>
-        /* ============================================================
-           ROOT VARIABLES - PREMIUM GREEN/CREME/GOLD THEME
-           ============================================================ */
         :root {
-            --creme: #FDFBF7;
-            --creme-dark: #F5F1E6;
-            --gold: #D4AF37;
-            --gold-light: #FAF4E5;
-            --gold-hover: #B8860B;
-            --dark-green: #0A1F13;
-            --leaf-green: #1A3E26;
-            --leaf-light: #eaf2e9;
-            --white: #FFFFFF;
-            --text-dark: #1F2937;
-            --text-muted: #5C6F63;
-            --danger: #EF4444;
-            --success: #059669;
-            --info: #3B82F6;
-            --border-light: #EAE5D9;
-            
-            --radius-xl: 32px;
-            --radius-lg: 24px;
-            --radius-md: 18px;
-            --radius-sm: 14px;
-            
-            --shadow-soft: 0 8px 25px rgba(0,0,0,0.04);
-            --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
-            --shadow-hover: 0 25px 45px -10px rgba(212,175,55,0.25);
-            --shadow-gold: 0 10px 30px rgba(212,175,55,0.2);
+            --creme: #FDFBF7; --creme-dark: #F5F1E6; --gold: #D4AF37; --gold-light: #FAF4E5;
+            --gold-hover: #B8860B; --dark-green: #0A1F13; --leaf-green: #1A3E26; --white: #FFFFFF;
+            --text-dark: #1F2937; --text-muted: #5C6F63; --danger: #EF4444; --success: #059669;
+            --border-light: #EAE5D9; --radius-xl: 32px; --radius-lg: 24px; --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
             --shadow-premium: 0 30px 60px -15px rgba(10,31,19,0.25);
-            
             --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             --bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; -webkit-tap-highlight-color:transparent; }
         body {
             background: linear-gradient(135deg, var(--creme) 0%, var(--gold-light) 50%, var(--creme-dark) 100%);
-            background-attachment: fixed;
-            color: var(--text-dark);
-            line-height: 1.5;
-            overflow-x: hidden;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            background-attachment: fixed; color: var(--text-dark); min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
             animation: pageLoad 0.8s ease-out;
-            position: relative;
         }
-
-        @keyframes pageLoad {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ============================================================
-           BACKGROUND ANIMATION - FLOATING PARTICLES
-           ============================================================ */
-        .bg-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            animation: floatParticle var(--duration) ease-in-out infinite;
-            animation-delay: var(--delay);
-            opacity: 0;
-        }
-
-        @keyframes floatParticle {
-            0% { opacity: 0; transform: translateY(0) translateX(0) scale(0); }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.2; }
-            100% { opacity: 0; transform: translateY(var(--moveY)) translateX(var(--moveX)) scale(1.5); }
-        }
-
-        /* ============================================================
-           TOAST NOTIFICATIONS
-           ============================================================ */
-        #toastContainer {
-            position: fixed;
-            top: calc(15px + var(--safe-top));
-            left: 15px;
-            right: 15px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
+        @keyframes pageLoad { 0% { opacity:0; transform:translateY(20px); } 100% { opacity:1; transform:translateY(0); } }
         
-        .toast {
-            background: var(--dark-green);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 18px;
-            border-left: 5px solid var(--gold);
-            box-shadow: var(--shadow-card);
-            animation: slideDown 0.4s ease-out;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            pointer-events: auto;
-        }
+        #toastContainer { position:fixed; top:15px; left:15px; right:15px; z-index:10000; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
+        .toast { background:var(--dark-green); color:white; padding:16px 20px; border-radius:18px; border-left:5px solid var(--gold); box-shadow:var(--shadow-card); animation:slideDown 0.4s ease-out; display:flex; align-items:center; gap:12px; font-weight:600; font-size:14px; pointer-events:auto; }
+        .toast.success { border-left-color:var(--success); background:#0a3622; }
+        .toast.error { border-left-color:var(--danger); background:#3b1e1e; }
+        .toast.info { border-left-color:var(--gold); }
+        @keyframes slideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
         
-        .toast.success { border-left-color: var(--success); background: #0a3622; }
-        .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
-        .toast.info { border-left-color: var(--info); }
+        #loadingOverlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(253,251,247,0.98); backdrop-filter:blur(10px); z-index:9999; display:none; flex-direction:column; justify-content:center; align-items:center; }
+        .loading-spinner { width:60px; height:60px; border:4px solid var(--gold-light); border-top-color:var(--gold); border-radius:50%; animation:spin 0.9s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        .loading-text { margin-top:20px; font-weight:700; color:var(--dark-green); letter-spacing:2px; font-size:14px; }
         
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ============================================================
-           LOADER OVERLAY
-           ============================================================ */
-        #loadingOverlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(253, 251, 247, 0.98);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .loading-spinner {
-            width: 60px; height: 60px;
-            border: 4px solid var(--gold-light);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-        }
-        
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .loading-text {
-            margin-top: 20px;
-            font-weight: 700;
-            color: var(--dark-green);
-            letter-spacing: 2px;
-            font-size: 14px;
-        }
-
-        /* ============================================================
-           MAIN CARD - ULTRA PREMIUM
-           ============================================================ */
-        .main-container {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 480px;
-        }
-
+        .main-container { position:relative; z-index:10; width:100%; max-width:480px; }
         .auth-card {
-            background: var(--white);
-            border-radius: var(--radius-xl);
-            padding: 40px 32px;
-            box-shadow: var(--shadow-premium);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            position: relative;
-            overflow: hidden;
-            animation: cardPop 0.7s var(--bounce);
-            backdrop-filter: blur(5px);
+            background:var(--white); border-radius:var(--radius-xl); padding:40px 32px;
+            box-shadow:var(--shadow-premium); border:1px solid rgba(212,175,55,0.3);
+            position:relative; overflow:hidden; animation:cardPop 0.7s var(--bounce);
         }
-
-        @keyframes cardPop {
-            0% { opacity: 0; transform: scale(0.85) translateY(30px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* Gold shimmer effect on card */
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
-            animation: shimmerBg 8s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes shimmerBg {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .auth-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--gold), var(--gold-hover), var(--gold));
-            animation: borderShine 3s ease-in-out infinite;
-        }
-
-        @keyframes borderShine {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        /* ============================================================
-           LOGO & HEADER
-           ============================================================ */
-        .logo-section {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--dark-green), var(--leaf-green));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            box-shadow: 0 15px 35px rgba(10,31,19,0.3);
-            animation: logoFloat 3s ease-in-out infinite;
-            border: 3px solid var(--gold);
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .logo-circle i {
-            font-size: 36px;
-            color: var(--gold);
-            animation: lockPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes lockPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .auth-header h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--dark-green);
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-        }
-
-        .auth-header p {
-            color: var(--text-muted);
-            font-size: 15px;
-            font-weight: 500;
-            line-height: 1.6;
-        }
-
-        /* ============================================================
-           FORM ELEMENTS
-           ============================================================ */
-        .input-group {
-            margin-bottom: 22px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--dark-green);
-            margin-bottom: 8px;
-            margin-left: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 18px 20px 18px 55px;
-            border-radius: 18px;
-            border: 2px solid var(--border-light);
-            background: var(--creme);
-            font-size: 15px;
-            font-weight: 600;
-            outline: none;
-            transition: var(--transition);
-            color: var(--text-dark);
-        }
-
-        .input-wrapper input:focus {
-            border-color: var(--gold);
-            background: var(--white);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
-            transform: scale(1.01);
-        }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 20px;
-            transition: var(--transition);
-        }
-
-        .input-wrapper input:focus + i,
-        .input-wrapper input:focus ~ i {
-            color: var(--gold);
-        }
-
-        /* ============================================================
-           BUTTONS
-           ============================================================ */
-        .btn-primary {
-            width: 100%;
-            padding: 18px;
-            background: var(--dark-green);
-            color: var(--gold);
-            border: 2px solid var(--gold);
-            border-radius: 18px;
-            font-size: 17px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: var(--shadow-gold);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: 0.5s;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(10,31,19,0.3);
-            background: var(--leaf-green);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .btn-secondary {
-            width: 100%;
-            padding: 16px;
-            background: transparent;
-            color: var(--dark-green);
-            border: 2px solid var(--border-light);
-            border-radius: 18px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 12px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--gold);
-            background: var(--gold-light);
-            transform: translateY(-2px);
-        }
-
-        /* ============================================================
-           SUCCESS STATE
-           ============================================================ */
-        .success-state {
-            display: none;
-            text-align: center;
-            padding: 20px 0;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .success-icon-wrapper {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--success), #047857);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            animation: successPop 0.6s var(--bounce);
-            box-shadow: 0 20px 40px rgba(5, 150, 105, 0.4);
-        }
-
-        @keyframes successPop {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .success-icon-wrapper i {
-            font-size: 50px;
-            color: white;
-            animation: checkDraw 0.8s ease-out forwards;
-        }
-
-        @keyframes checkDraw {
-            0% { opacity: 0; transform: scale(0) rotate(-90deg); }
-            100% { opacity: 1; transform: scale(1) rotate(0deg); }
-        }
-
-        .success-state h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--success);
-            margin-bottom: 12px;
-        }
-
-        .success-state p {
-            color: var(--text-muted);
-            font-size: 15px;
-            margin-bottom: 8px;
-            line-height: 1.6;
-        }
-
-        .sent-email-highlight {
-            background: var(--gold-light);
-            padding: 12px 20px;
-            border-radius: 14px;
-            display: inline-block;
-            font-weight: 700;
-            color: var(--dark-green);
-            margin: 10px 0 20px;
-            border: 1px solid var(--gold);
-        }
-
-        /* ============================================================
-           STEPS INDICATOR
-           ============================================================ */
-        .steps-bar {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .step-circle {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        .step-circle.active {
-            background: var(--dark-green);
-            color: var(--gold);
-            border: 2px solid var(--gold);
-            animation: stepGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes stepGlow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-            50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
-        }
-
-        .step-circle.inactive {
-            background: var(--creme-dark);
-            color: var(--text-muted);
-            border: 2px solid var(--border-light);
-        }
-
-        .step-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .step.active .step-label {
-            color: var(--dark-green);
-        }
-
-        /* ============================================================
-           MOBILE OPTIMIZATIONS
-           ============================================================ */
-        @media (max-width: 480px) {
-            .auth-card { padding: 30px 22px; }
-            .auth-header h1 { font-size: 26px; }
-            .logo-circle { width: 70px; height: 70px; }
-            .logo-circle i { font-size: 30px; }
-        }
-
-        /* ============================================================
-           ERROR SHAKE ANIMATION
-           ============================================================ */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
-        }
-
-        .shake {
-            animation: shake 0.5s ease-out;
-        }
+        @keyframes cardPop { 0% { opacity:0; transform:scale(0.85) translateY(30px); } 100% { opacity:1; transform:scale(1) translateY(0); } }
+        .auth-card::after { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, var(--gold), var(--gold-hover), var(--gold)); animation:borderShine 3s ease-in-out infinite; }
+        @keyframes borderShine { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+        
+        .logo-section { text-align:center; margin-bottom:30px; position:relative; z-index:1; }
+        .logo-circle { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--dark-green), var(--leaf-green)); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; box-shadow:0 15px 35px rgba(10,31,19,0.3); animation:logoFloat 3s ease-in-out infinite; border:3px solid var(--gold); }
+        @keyframes logoFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+        .logo-circle i { font-size:36px; color:var(--gold); animation:lockPulse 2s ease-in-out infinite; }
+        @keyframes lockPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.15); } }
+        
+        .auth-header { text-align:center; margin-bottom:30px; position:relative; z-index:1; }
+        .auth-header h1 { font-family:'Outfit',sans-serif; font-size:32px; font-weight:900; color:var(--dark-green); letter-spacing:-0.5px; margin-bottom:8px; }
+        .auth-header p { color:var(--text-muted); font-size:15px; font-weight:500; line-height:1.6; }
+        
+        .steps-bar { display:flex; justify-content:center; gap:30px; margin-bottom:30px; position:relative; z-index:1; }
+        .step { display:flex; flex-direction:column; align-items:center; gap:8px; }
+        .step-circle { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; transition:var(--transition); }
+        .step-circle.active { background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); animation:stepGlow 2s ease-in-out infinite; }
+        .step-circle.inactive { background:var(--creme-dark); color:var(--text-muted); border:2px solid var(--border-light); }
+        .step-circle.done { background:var(--success); color:white; border:2px solid var(--success); }
+        @keyframes stepGlow { 0%,100% { box-shadow:0 0 0 0 rgba(212,175,55,0.4); } 50% { box-shadow:0 0 0 15px rgba(212,175,55,0); } }
+        .step-label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; }
+        
+        .input-group { margin-bottom:22px; position:relative; z-index:1; }
+        .input-group label { display:block; font-size:12px; font-weight:800; color:var(--dark-green); margin-bottom:8px; margin-left:8px; text-transform:uppercase; letter-spacing:1.5px; }
+        .input-wrapper { position:relative; }
+        .input-wrapper input { width:100%; padding:18px 20px 18px 55px; border-radius:18px; border:2px solid var(--border-light); background:var(--creme); font-size:15px; font-weight:600; outline:none; transition:var(--transition); color:var(--text-dark); }
+        .input-wrapper input:focus { border-color:var(--gold); background:var(--white); box-shadow:0 8px 25px rgba(212,175,55,0.2); transform:scale(1.01); }
+        .input-wrapper i { position:absolute; left:20px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:20px; transition:var(--transition); }
+        .input-wrapper input:focus + i, .input-wrapper input:focus ~ i { color:var(--gold); }
+        
+        .btn-primary { width:100%; padding:18px; background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); border-radius:18px; font-size:17px; font-weight:800; cursor:pointer; box-shadow:0 10px 30px rgba(212,175,55,0.2); transition:var(--transition); margin-top:15px; display:flex; align-items:center; justify-content:center; gap:10px; position:relative; z-index:1; }
+        .btn-primary:hover { transform:translateY(-4px); box-shadow:0 20px 40px rgba(10,31,19,0.3); background:var(--leaf-green); }
+        .btn-primary:active { transform:translateY(0) scale(0.98); }
+        .btn-primary:disabled { opacity:0.5; cursor:not-allowed; pointer-events:none; }
+        .btn-secondary { width:100%; padding:16px; background:transparent; color:var(--dark-green); border:2px solid var(--border-light); border-radius:18px; font-size:15px; font-weight:700; cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; position:relative; z-index:1; }
+        .btn-secondary:hover { border-color:var(--gold); background:var(--gold-light); }
+        
+        .success-state { display:none; text-align:center; padding:20px 0; animation:fadeInUp 0.6s ease-out; }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        .success-icon-wrapper { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg, var(--success), #047857); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; animation:successPop 0.6s var(--bounce); box-shadow:0 20px 40px rgba(5,150,105,0.4); }
+        @keyframes successPop { 0% { transform:scale(0); opacity:0; } 50% { transform:scale(1.2); } 100% { transform:scale(1); opacity:1; } }
+        .success-icon-wrapper i { font-size:50px; color:white; }
+        .success-state h2 { font-family:'Outfit',sans-serif; font-size:26px; font-weight:800; color:var(--success); margin-bottom:12px; }
+        .success-state p { color:var(--text-muted); font-size:15px; margin-bottom:8px; line-height:1.6; }
+        .sent-email-highlight { background:var(--gold-light); padding:12px 20px; border-radius:14px; display:inline-block; font-weight:700; color:var(--dark-green); margin:10px 0 20px; border:1px solid var(--gold); }
+        .temp-password-box { background:#0a3622; color:var(--gold); padding:16px 20px; border-radius:14px; display:inline-block; font-weight:900; font-size:20px; margin:10px 0 20px; border:2px dashed var(--gold); letter-spacing:3px; }
+        
+        @media (max-width:480px) { .auth-card { padding:30px 22px; } .auth-header h1 { font-size:26px; } .logo-circle { width:70px; height:70px; } .logo-circle i { font-size:30px; } }
+        @keyframes shake { 0%,100% { transform:translateX(0); } 25% { transform:translateX(-8px); } 75% { transform:translateX(8px); } }
+        .shake { animation:shake 0.5s ease-out; }
     </style>
 </head>
 <body>
 
-<!-- ============================================================ -->
-<!-- BACKGROUND PARTICLES -->
-<!-- ============================================================ -->
-<div class="bg-particles" id="bgParticles"></div>
-
-<!-- ============================================================ -->
-<!-- TOAST CONTAINER -->
-<!-- ============================================================ -->
 <div id="toastContainer"></div>
-
-<!-- ============================================================ -->
-<!-- LOADING OVERLAY -->
-<!-- ============================================================ -->
 <div id="loadingOverlay">
     <div class="loading-spinner"></div>
-    <div class="loading-text">SENDING SECURE LINK...</div>
+    <div class="loading-text">VERIFYING ACCOUNT...</div>
 </div>
 
-<!-- ============================================================ -->
-<!-- MAIN CONTAINER -->
-<!-- ============================================================ -->
 <div class="main-container">
     <div class="auth-card">
         
         <div class="logo-section">
-            <div class="logo-circle">
-                <i class="fa-solid fa-lock"></i>
-            </div>
+            <div class="logo-circle"><i class="fa-solid fa-lock"></i></div>
         </div>
 
-        <!-- STEPS INDICATOR -->
         <div class="steps-bar">
-            <div class="step active">
+            <div class="step active" id="step1">
                 <div class="step-circle active">1</div>
-                <span class="step-label">Enter Email</span>
+                <span class="step-label">Verify</span>
             </div>
-            <div class="step">
+            <div class="step" id="step2">
                 <div class="step-circle inactive">2</div>
-                <span class="step-label">Check Inbox</span>
-            </div>
-            <div class="step">
-                <div class="step-circle inactive">3</div>
                 <span class="step-label">Reset</span>
             </div>
+            <div class="step" id="step3">
+                <div class="step-circle inactive">3</div>
+                <span class="step-label">Done</span>
+            </div>
         </div>
 
-        <!-- REQUEST FORM -->
-        <div id="requestForm">
+        <!-- STEP 1: VERIFY EMAIL -->
+        <div id="step1Content">
             <div class="auth-header">
                 <h1>Forgot Password?</h1>
-                <p>Don't worry! Enter your registered email address and we'll send you a secure link to reset your password.</p>
+                <p>Enter your registered email address and we'll help you reset your password securely.</p>
             </div>
-
             <div class="input-group">
-                <label><i class="fa-solid fa-envelope" style="margin-right: 6px;"></i> Registered Email Address</label>
+                <label><i class="fa-solid fa-envelope" style="margin-right:6px;"></i> Registered Email Address</label>
                 <div class="input-wrapper">
-                    <input type="email" id="forgotEmail" placeholder="yourname@email.com" autocomplete="email">
+                    <input type="email" id="forgotEmail" placeholder="Enter your email address" autocomplete="email">
                     <i class="fa-solid fa-at"></i>
                 </div>
             </div>
-
-            <button class="btn-primary" id="sendResetBtn" onclick="sendResetLink()">
-                <i class="fa-solid fa-paper-plane"></i> Send Reset Link
+            <button class="btn-primary" id="verifyBtn" onclick="verifyEmail()">
+                <i class="fa-solid fa-magnifying-glass"></i> Find Account
             </button>
-
             <button class="btn-secondary" onclick="window.location.href='profile.html'">
                 <i class="fa-solid fa-arrow-left"></i> Back to Login
             </button>
         </div>
 
-        <!-- SUCCESS STATE -->
-        <div class="success-state" id="successState">
-            <div class="success-icon-wrapper">
-                <i class="fa-solid fa-check"></i>
+        <!-- STEP 2: SET NEW PASSWORD -->
+        <div id="step2Content" style="display:none;">
+            <div class="auth-header">
+                <h1>Set New Password</h1>
+                <p>Choose a strong password for your account.</p>
             </div>
-            <h2>Reset Link Sent!</h2>
-            <p>We've sent a password reset link to:</p>
-            <div class="sent-email-highlight" id="sentEmailDisplay">yourname@email.com</div>
-            <p style="font-size: 13px; color: var(--text-muted);">
-                <i class="fa-solid fa-info-circle"></i> 
-                Check your inbox and spam folder. Link expires in 1 hour.
-            </p>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">
-                <i class="fa-solid fa-clock"></i>
-                Didn't receive it? Wait 2 minutes and try again.
-            </p>
-            
-            <button class="btn-primary" onclick="resetForm()" style="margin-top: 20px;">
-                <i class="fa-solid fa-rotate"></i> Send Again
+            <div class="input-group">
+                <label>New Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="newPassword" placeholder="Min. 8 characters" autocomplete="new-password">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Confirm New Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="confirmPassword" placeholder="Re-enter password">
+                    <i class="fa-solid fa-check-circle"></i>
+                </div>
+            </div>
+            <button class="btn-primary" id="resetBtn" onclick="resetPassword()">
+                <i class="fa-solid fa-shield-halved"></i> Reset Password
             </button>
-            
-            <button class="btn-secondary" onclick="window.location.href='profile.html'">
+            <button class="btn-secondary" onclick="goBackToStep1()">
+                <i class="fa-solid fa-arrow-left"></i> Try Different Email
+            </button>
+        </div>
+
+        <!-- STEP 3: SUCCESS -->
+        <div class="success-state" id="step3Content">
+            <div class="success-icon-wrapper"><i class="fa-solid fa-check"></i></div>
+            <h2>Password Updated!</h2>
+            <p>Your password has been successfully reset.</p>
+            <p style="font-size:13px; color:var(--text-muted);">
+                <i class="fa-solid fa-shield-check"></i> You can now login with your new password.
+            </p>
+            <button class="btn-primary" onclick="window.location.href='profile.html'" style="margin-top:20px;">
                 <i class="fa-solid fa-sign-in-alt"></i> Go to Login
             </button>
         </div>
@@ -704,243 +197,169 @@
 </div>
 
 <script>
-    // ============================================================
-    // FIREBASE CONFIGURATION
-    // ============================================================
-    const firebaseConfig = {
-        apiKey: "AIzaSyA-despxo7zb-YOUR_REAL_API_KEY_HERE",
-        authDomain: "nemi-mart-3.firebaseapp.com",
-        databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com",
-        projectId: "nemi-mart-3",
-        storageBucket: "nemi-mart-3.appspot.com",
-        messagingSenderId: "653743323596558",
-        appId: "1:653743323596558:web:example"
-    };
-    
-    try {
-        firebase.initializeApp(firebaseConfig);
-    } catch (e) {
-        console.log("Firebase already initialized");
-    }
-    
-    const auth = firebase.auth();
+    const firebaseConfig = { databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" };
+    firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
-    // ============================================================
-    // GLOBAL STATE
-    // ============================================================
-    let isSending = false;
+    let foundUserKey = null;
+    let foundUserData = null;
+    let isProcessing = false;
     
     // ============================================================
-    // INIT BACKGROUND PARTICLES
+    // STEP 1: VERIFY EMAIL EXISTS IN DATABASE
     // ============================================================
-    function initParticles() {
-        const container = document.getElementById('bgParticles');
-        const colors = ['#D4AF37', '#B8860B', '#1A3E26', '#0A1F13', '#FAF4E5'];
-        
-        for (let i = 0; i < 35; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            
-            const size = Math.floor(Math.random() * 8) + 2;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            
-            particle.style.cssText = `
-                width: ${size}px;
-                height: ${size}px;
-                background: ${color};
-                left: ${Math.random() * 100}%;
-                top: ${Math.random() * 100}%;
-                --duration: ${Math.floor(Math.random() * 15) + 10}s;
-                --delay: ${Math.random() * 10}s;
-                --moveY: ${Math.floor(Math.random() * 200) - 100}px;
-                --moveX: ${Math.floor(Math.random() * 200) - 100}px;
-            `;
-            
-            container.appendChild(particle);
-        }
-    }
-    
-    // ============================================================
-    // SEND PASSWORD RESET LINK
-    // ============================================================
-    window.sendResetLink = async function() {
-        if (isSending) return;
+    window.verifyEmail = async function() {
+        if (isProcessing) return;
         
         const emailInput = document.getElementById('forgotEmail');
         const email = emailInput.value.trim();
         const card = document.querySelector('.auth-card');
-        const sendBtn = document.getElementById('sendResetBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
         
-        // Validate email
-        if (!email) {
-            showToast('Please enter your email address', 'error');
-            emailInput.focus();
-            card.classList.add('shake');
-            setTimeout(() => card.classList.remove('shake'), 500);
-            return;
-        }
+        if (!email) { showToast('Please enter your email address', 'error'); emailInput.focus(); card.classList.add('shake'); setTimeout(() => card.classList.remove('shake'), 500); return; }
+        if (!isValidEmail(email)) { showToast('Please enter a valid email address', 'error'); card.classList.add('shake'); setTimeout(() => card.classList.remove('shake'), 500); return; }
         
-        if (!isValidEmail(email)) {
-            showToast('Please enter a valid email address', 'error');
-            card.classList.add('shake');
-            setTimeout(() => card.classList.remove('shake'), 500);
-            return;
-        }
+        isProcessing = true;
+        verifyBtn.disabled = true;
+        document.getElementById('loadingOverlay').style.display = 'flex';
         
-        // Check if email exists in our database first
         try {
             const snapshot = await database.ref('users').once('value');
             const users = snapshot.val() || {};
-            const userExists = Object.values(users).some(u => u.email === email);
             
-            if (!userExists) {
+            // Find user by email
+            const entries = Object.entries(users);
+            const found = entries.find(([key, user]) => user.email === email);
+            
+            document.getElementById('loadingOverlay').style.display = 'none';
+            
+            if (!found) {
                 showToast('No account found with this email address', 'error');
+                isProcessing = false;
+                verifyBtn.disabled = false;
                 return;
             }
-        } catch (dbError) {
-            console.log('Database check failed, proceeding with Firebase Auth:', dbError);
+            
+            foundUserKey = found[0];
+            foundUserData = found[1];
+            
+            // Move to step 2
+            document.getElementById('step1Content').style.display = 'none';
+            document.getElementById('step2Content').style.display = 'block';
+            
+            // Update steps
+            document.getElementById('step1').querySelector('.step-circle').classList.remove('active');
+            document.getElementById('step1').querySelector('.step-circle').classList.add('done');
+            document.getElementById('step2').querySelector('.step-circle').classList.remove('inactive');
+            document.getElementById('step2').querySelector('.step-circle').classList.add('active');
+            document.getElementById('step2').classList.add('active');
+            
+            showToast('Account found! Set your new password.', 'success');
+            setTimeout(() => document.getElementById('newPassword').focus(), 500);
+            
+        } catch (error) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            console.error('Error:', error);
+            showToast('Something went wrong. Please try again.', 'error');
+        } finally {
+            isProcessing = false;
+            verifyBtn.disabled = false;
         }
+    };
+    
+    // ============================================================
+    // STEP 2: RESET PASSWORD IN DATABASE
+    // ============================================================
+    window.resetPassword = async function() {
+        if (isProcessing) return;
         
-        // Send reset email via Firebase Auth
-        isSending = true;
-        sendBtn.disabled = true;
+        const newPass = document.getElementById('newPassword').value;
+        const confirmPass = document.getElementById('confirmPassword').value;
+        const card = document.querySelector('.auth-card');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        if (!newPass) { showToast('Please enter a new password', 'error'); card.classList.add('shake'); setTimeout(() => card.classList.remove('shake'), 500); return; }
+        if (newPass.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
+        if (newPass !== confirmPass) { showToast('Passwords do not match', 'error'); return; }
+        
+        isProcessing = true;
+        resetBtn.disabled = true;
         document.getElementById('loadingOverlay').style.display = 'flex';
+        document.querySelector('.loading-text').textContent = 'UPDATING PASSWORD...';
         
-        const actionCodeSettings = {
-            url: window.location.origin + '/profile.html',
-            handleCodeInApp: false
-        };
-        
-        auth.sendPasswordResetEmail(email, actionCodeSettings)
-            .then(() => {
-                // Success!
-                document.getElementById('loadingOverlay').style.display = 'none';
-                document.getElementById('requestForm').style.display = 'none';
-                document.getElementById('successState').style.display = 'block';
-                document.getElementById('sentEmailDisplay').textContent = email;
-                
-                // Update steps
-                updateSteps(2);
-                
-                showToast('Reset link sent successfully! ✅', 'success');
-                
-                // Reset after delay
-                setTimeout(() => {
-                    isSending = false;
-                    sendBtn.disabled = false;
-                }, 3000);
-            })
-            .catch((error) => {
-                document.getElementById('loadingOverlay').style.display = 'none';
-                isSending = false;
-                sendBtn.disabled = false;
-                
-                let message = 'Something went wrong. Please try again.';
-                
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        message = 'No account found with this email address';
-                        break;
-                    case 'auth/invalid-email':
-                        message = 'Please enter a valid email address';
-                        break;
-                    case 'auth/too-many-requests':
-                        message = 'Too many attempts. Please try again later.';
-                        break;
-                    case 'auth/network-request-failed':
-                        message = 'Network error. Check your internet connection.';
-                        break;
-                    default:
-                        console.error('Firebase Auth Error:', error);
-                }
-                
-                showToast(message, 'error');
+        try {
+            // Update password in database (same encoding as profile.html)
+            await database.ref('users/' + foundUserKey).update({
+                password: btoa(newPass)
             });
+            
+            document.getElementById('loadingOverlay').style.display = 'none';
+            
+            // Move to step 3
+            document.getElementById('step2Content').style.display = 'none';
+            document.getElementById('step3Content').style.display = 'block';
+            
+            // Update steps
+            document.getElementById('step2').querySelector('.step-circle').classList.remove('active');
+            document.getElementById('step2').querySelector('.step-circle').classList.add('done');
+            document.getElementById('step3').querySelector('.step-circle').classList.remove('inactive');
+            document.getElementById('step3').querySelector('.step-circle').classList.add('done');
+            
+            showToast('Password updated successfully! ✅', 'success');
+            
+        } catch (error) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            console.error('Error:', error);
+            showToast('Failed to update password. Try again.', 'error');
+        } finally {
+            isProcessing = false;
+            resetBtn.disabled = false;
+            document.querySelector('.loading-text').textContent = 'VERIFYING ACCOUNT...';
+        }
     };
     
     // ============================================================
-    // RESET FORM TO INITIAL STATE
+    // GO BACK TO STEP 1
     // ============================================================
-    window.resetForm = function() {
-        document.getElementById('requestForm').style.display = 'block';
-        document.getElementById('successState').style.display = 'none';
-        document.getElementById('forgotEmail').value = '';
-        updateSteps(1);
+    window.goBackToStep1 = function() {
+        document.getElementById('step1Content').style.display = 'block';
+        document.getElementById('step2Content').style.display = 'none';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+        foundUserKey = null;
+        foundUserData = null;
+        
+        // Reset steps
+        document.getElementById('step1').querySelector('.step-circle').classList.add('active');
+        document.getElementById('step1').querySelector('.step-circle').classList.remove('done');
+        document.getElementById('step2').querySelector('.step-circle').classList.add('inactive');
+        document.getElementById('step2').querySelector('.step-circle').classList.remove('active', 'done');
+        document.getElementById('step2').classList.remove('active');
     };
     
-    // ============================================================
-    // UPDATE STEPS INDICATOR
-    // ============================================================
-    function updateSteps(activeStep) {
-        const steps = document.querySelectorAll('.step');
-        steps.forEach((step, index) => {
-            const circle = step.querySelector('.step-circle');
-            if (index < activeStep) {
-                circle.classList.add('active');
-                circle.classList.remove('inactive');
-                step.classList.add('active');
-            } else {
-                circle.classList.remove('active');
-                circle.classList.add('inactive');
-                step.classList.remove('active');
-            }
-        });
-    }
-    
-    // ============================================================
-    // VALIDATE EMAIL
-    // ============================================================
     function isValidEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
     
-    // ============================================================
-    // TOAST NOTIFICATION
-    // ============================================================
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        
-        const icons = {
-            success: '✅',
-            error: '❌',
-            info: '💚'
-        };
-        
+        const icons = { success: '✅', error: '❌', info: '💚' };
         toast.innerHTML = `<span>${icons[type] || '🔔'}</span> ${message}`;
-        
         container.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(-10px)';
-            toast.style.transition = 'all 0.3s ease';
-            setTimeout(() => toast.remove(), 300);
-        }, 3500);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
     }
     
-    // ============================================================
-    // KEYBOARD SUPPORT - ENTER KEY TO SUBMIT
-    // ============================================================
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && document.getElementById('requestForm').style.display !== 'none') {
-            sendResetLink();
+        if (e.key === 'Enter') {
+            if (document.getElementById('step1Content').style.display !== 'none') verifyEmail();
+            else if (document.getElementById('step2Content').style.display !== 'none') resetPassword();
         }
     });
     
-    // ============================================================
-    // INITIALIZATION
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', function() {
-        initParticles();
-        
-        // Focus on email input
-        setTimeout(() => {
-            document.getElementById('forgotEmail')?.focus();
-        }, 800);
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => document.getElementById('forgotEmail')?.focus(), 800);
     });
 </script>
 </body>

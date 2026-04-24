@@ -12,7 +12,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     
     <style>
         /* ============================================================
@@ -33,7 +32,6 @@
             --danger: #EF4444;
             --success: #059669;
             --border-light: #EAE5D9;
-            --google-blue: #4285F4;
             
             --radius-xl: 32px;
             --radius-lg: 24px;
@@ -54,648 +52,113 @@
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent;
         }
-
         body {
-            background: var(--creme);
-            color: var(--text-dark);
-            line-height: 1.5;
-            overflow-x: hidden;
-            width: 100%;
-            min-height: 100vh;
-            animation: pageLoad 0.6s ease-out;
-            padding-top: var(--safe-top);
+            background: var(--creme); color: var(--text-dark); line-height: 1.5;
+            overflow-x: hidden; width: 100%; min-height: 100vh;
+            animation: pageLoad 0.6s ease-out; padding-top: var(--safe-top);
         }
-
-        @keyframes pageLoad {
-            0% { opacity: 0; transform: translateY(12px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
+        @keyframes pageLoad { 0% { opacity: 0; transform: translateY(12px); } 100% { opacity: 1; transform: translateY(0); } }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--creme-dark); }
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
-        /* ============================================================
-           LOADER
-           ============================================================ */
+        /* LOADER */
         #pageLoader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(253, 251, 247, 0.98);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.98); backdrop-filter: blur(10px);
+            z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: opacity 0.5s;
         }
-        
-        .loader-spinner {
-            width: 55px; height: 55px;
-            border: 4px solid var(--gold-light);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
+        .loader-spinner { width: 55px; height: 55px; border: 4px solid var(--gold-light); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .loader-text {
-            margin-top: 18px;
-            font-weight: 700;
-            color: var(--dark-green);
-            letter-spacing: 2px;
-            font-size: 14px;
-        }
+        .loader-text { margin-top: 18px; font-weight: 700; color: var(--dark-green); letter-spacing: 2px; font-size: 14px; }
 
-        /* ============================================================
-           TOAST NOTIFICATIONS
-           ============================================================ */
-        #toastContainer {
-            position: fixed;
-            top: calc(15px + var(--safe-top));
-            left: 15px;
-            right: 15px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-        
-        .toast {
-            background: var(--dark-green);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 18px;
-            border-left: 5px solid var(--gold);
-            box-shadow: var(--shadow-card);
-            animation: slideDown 0.35s ease-out;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            pointer-events: auto;
-            backdrop-filter: blur(5px);
-        }
-        
+        /* TOAST */
+        #toastContainer { position: fixed; top: calc(15px + var(--safe-top)); left: 15px; right: 15px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: var(--dark-green); color: white; padding: 16px 20px; border-radius: 18px; border-left: 5px solid var(--gold); box-shadow: var(--shadow-card); animation: slideDown 0.35s ease-out; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; pointer-events: auto; backdrop-filter: blur(5px); }
         .toast.success { border-left-color: var(--success); background: #0a3622; }
         .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
         .toast.info { border-left-color: var(--gold); }
-        
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ============================================================
-           AUTHENTICATION SCREENS
-           ============================================================ */
-        .auth-overlay {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--creme) 0%, var(--gold-light) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .auth-overlay::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--gold) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.03;
-            animation: bgMove 60s linear infinite;
-        }
-        
-        @keyframes bgMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-50px, -50px); }
-        }
+        /* AUTH SCREENS */
+        .auth-overlay { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, var(--creme) 0%, var(--gold-light) 100%); position: relative; overflow: hidden; }
+        .auth-overlay::before { content: ''; position: absolute; width: 200%; height: 200%; background: radial-gradient(circle, var(--gold) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.03; animation: bgMove 60s linear infinite; }
+        @keyframes bgMove { 0% { transform: translate(0, 0); } 100% { transform: translate(-50px, -50px); } }
+        .auth-card { width: 100%; max-width: 460px; background: var(--white); border-radius: var(--radius-xl); padding: 40px 32px; box-shadow: var(--shadow-premium); border: 1px solid rgba(212, 175, 55, 0.25); position: relative; z-index: 1; animation: cardPop 0.6s var(--bounce); backdrop-filter: blur(5px); }
+        @keyframes cardPop { 0% { opacity: 0; transform: scale(0.85) translateY(30px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .auth-logo { text-align: center; margin-bottom: 28px; }
+        .auth-logo img { width: 70px; height: 70px; border-radius: 20px; object-fit: cover; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); animation: logoGlow 3s infinite; }
+        @keyframes logoGlow { 0%, 100% { box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); } 50% { box-shadow: 0 8px 35px rgba(212, 175, 55, 0.6); } }
+        .auth-header { text-align: center; margin-bottom: 35px; }
+        .auth-header h2 { font-family: 'Outfit', sans-serif; font-size: 34px; font-weight: 900; color: var(--dark-green); letter-spacing: -0.5px; }
+        .auth-header p { color: var(--text-muted); font-size: 15px; margin-top: 8px; font-weight: 500; }
+        .input-box { margin-bottom: 22px; position: relative; }
+        .input-box label { display: block; font-size: 12px; font-weight: 800; color: var(--dark-green); margin-bottom: 8px; margin-left: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+        .input-field { width: 100%; padding: 16px 18px 16px 52px; border-radius: 18px; border: 2px solid var(--border-light); background: var(--creme); font-size: 15px; font-weight: 600; outline: none; transition: var(--transition); color: var(--text-dark); }
+        .input-field:focus { border-color: var(--gold); background: var(--white); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15); transform: scale(1.01); }
+        .input-box i { position: absolute; left: 20px; bottom: 16px; color: var(--text-muted); font-size: 18px; transition: var(--transition); }
+        .input-field:focus + i { color: var(--gold); }
+        .action-btn { width: 100%; padding: 18px; background: var(--dark-green); color: var(--gold); border: 2px solid var(--gold); border-radius: 18px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-gold); transition: var(--transition); margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .action-btn:hover { transform: translateY(-4px); box-shadow: 0 20px 35px rgba(10,31,19,0.25); background: var(--leaf-green); }
+        .action-btn:active { transform: translateY(0) scale(0.98); }
 
-        .auth-card {
-            width: 100%;
-            max-width: 460px;
-            background: var(--white);
-            border-radius: var(--radius-xl);
-            padding: 40px 32px;
-            box-shadow: var(--shadow-premium);
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            position: relative;
-            z-index: 1;
-            animation: cardPop 0.6s var(--bounce);
-            backdrop-filter: blur(5px);
-        }
-        
-        @keyframes cardPop {
-            0% { opacity: 0; transform: scale(0.85) translateY(30px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        .toggle-text { text-align: center; margin-top: 28px; font-weight: 600; color: var(--text-muted); font-size: 15px; }
+        .toggle-text b { color: var(--dark-green); cursor: pointer; text-decoration: underline; margin-left: 6px; transition: var(--transition); }
+        .toggle-text b:hover { color: var(--gold); }
 
-        .auth-logo {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-        
-        .auth-logo img {
-            width: 70px;
-            height: 70px;
-            border-radius: 20px;
-            object-fit: cover;
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-            animation: logoGlow 3s infinite;
-        }
-        
-        @keyframes logoGlow {
-            0%, 100% { box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
-            50% { box-shadow: 0 8px 35px rgba(212, 175, 55, 0.6); }
-        }
+        .forgot-link { text-align: right; margin-top: -12px; margin-bottom: 15px; }
+        .forgot-link a { font-size: 13px; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition); }
+        .forgot-link a:hover { color: var(--gold); }
 
-        .auth-header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-        
-        .auth-header h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 34px;
-            font-weight: 900;
-            color: var(--dark-green);
-            letter-spacing: -0.5px;
-        }
-        
-        .auth-header p {
-            color: var(--text-muted);
-            font-size: 15px;
-            margin-top: 8px;
-            font-weight: 500;
-        }
+        /* PROFILE HEADER */
+        #mainProfileUI { display: none; padding-bottom: 60px; }
+        .header-bg { height: 440px; background: linear-gradient(135deg, var(--dark-green) 0%, var(--leaf-green) 100%); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom-left-radius: 70px; border-bottom-right-radius: 70px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
+        .bg-icon { position: absolute; color: rgba(212, 175, 55, 0.06); font-size: 32px; animation: floatMove var(--d) linear infinite; pointer-events: none; }
+        @keyframes floatMove { 0% { transform: rotate(0deg) translateX(var(--r)) rotate(0deg); opacity: 0; } 50% { opacity: 0.8; } 100% { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); opacity: 0; } }
+        .profile-container { width: 140px; height: 140px; border-radius: 50px; background: var(--gold); padding: 4px; position: relative; z-index: 5; margin-bottom: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.4); transition: var(--transition); }
+        .profile-container:hover { transform: scale(1.05) rotate(3deg); }
+        #userImg { width: 100%; height: 100%; border-radius: 46px; object-fit: cover; border: 4px solid var(--dark-green); }
+        .upload-label { position: absolute; bottom: -5px; right: -5px; width: 48px; height: 48px; background: var(--white); border-radius: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--dark-green); box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 2px solid var(--gold); transition: var(--transition); }
+        .upload-label:hover { background: var(--gold); color: var(--white); transform: rotate(5deg) scale(1.1); }
+        .user-details-hero { text-align: center; color: white; z-index: 5; }
+        .user-details-hero h1 { font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; letter-spacing: -0.5px; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .user-details-hero p { color: var(--gold); font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 3px; margin-top: 5px; }
 
-        .input-box {
-            margin-bottom: 22px;
-            position: relative;
-        }
-        
-        .input-box label {
-            display: block;
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--dark-green);
-            margin-bottom: 8px;
-            margin-left: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-        
-        .input-field {
-            width: 100%;
-            padding: 16px 18px 16px 52px;
-            border-radius: 18px;
-            border: 2px solid var(--border-light);
-            background: var(--creme);
-            font-size: 15px;
-            font-weight: 600;
-            outline: none;
-            transition: var(--transition);
-            color: var(--text-dark);
-        }
-        
-        .input-field:focus {
-            border-color: var(--gold);
-            background: var(--white);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
-            transform: scale(1.01);
-        }
-        
-        .input-box i {
-            position: absolute;
-            left: 20px;
-            bottom: 16px;
-            color: var(--text-muted);
-            font-size: 18px;
-            transition: var(--transition);
-        }
-        
-        .input-field:focus + i {
-            color: var(--gold);
-        }
+        /* DASHBOARD CARDS */
+        .content-wrapper { max-width: 600px; margin: -50px auto 0; padding: 0 18px; position: relative; z-index: 10; }
+        .card-system { background: var(--white); border-radius: var(--radius-xl); padding: 8px; box-shadow: var(--shadow-card); margin-bottom: 22px; border: 1px solid rgba(212, 175, 55, 0.15); animation: cardSlideUp 0.6s ease-out backwards; }
+        .card-system:nth-child(1) { animation-delay: 0.1s; } .card-system:nth-child(2) { animation-delay: 0.2s; } .card-system:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes cardSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-item { display: flex; align-items: center; padding: 20px 18px; text-decoration: none; color: var(--text-dark); border-radius: 22px; transition: var(--transition); border: none; background: transparent; width: 100%; cursor: pointer; }
+        .nav-item:hover { background: var(--gold-light); transform: translateX(8px); }
+        .nav-icon { width: 56px; height: 56px; border-radius: 20px; background: var(--leaf-light); color: var(--dark-green); display: flex; align-items: center; justify-content: center; margin-right: 18px; font-size: 22px; transition: var(--transition); }
+        .nav-item:hover .nav-icon { background: var(--dark-green); color: var(--gold); transform: scale(1.05); }
+        .nav-text { flex: 1; text-align: left; }
+        .nav-text b { display: block; font-size: 16px; font-weight: 800; color: var(--dark-green); }
+        .nav-text span { display: block; font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 3px; }
+        .chevron { color: #CBD5E1; font-size: 18px; transition: var(--transition); }
+        .nav-item:hover .chevron { color: var(--gold); transform: translateX(5px); }
+        .danger-zone { color: var(--danger) !important; }
+        .danger-zone .nav-icon { background: #FEE2E2; color: var(--danger); }
+        .danger-zone:hover .nav-icon { background: var(--danger); color: white; }
 
-        .action-btn {
-            width: 100%;
-            padding: 18px;
-            background: var(--dark-green);
-            color: var(--gold);
-            border: 2px solid var(--gold);
-            border-radius: 18px;
-            font-size: 17px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: var(--shadow-gold);
-            transition: var(--transition);
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 35px rgba(10,31,19,0.25);
-            background: var(--leaf-green);
-        }
-        
-        .action-btn:active {
-            transform: translateY(0) scale(0.98);
-        }
+        /* MODALS */
+        .modal { position: fixed; inset: 0; background: rgba(10, 31, 19, 0.9); backdrop-filter: blur(12px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-body { background: var(--white); width: 100%; max-width: 480px; border-radius: var(--radius-xl); padding: 36px 28px; position: relative; animation: modalPop 0.4s var(--bounce); max-height: 85vh; overflow-y: auto; }
+        @keyframes modalPop { from { opacity: 0; transform: scale(0.8) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .close-btn { position: absolute; top: 24px; right: 24px; font-size: 28px; color: var(--text-muted); cursor: pointer; transition: var(--transition); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .close-btn:hover { background: var(--creme-dark); color: var(--danger); transform: rotate(90deg); }
+        .modal-body h2 { font-family: 'Outfit', sans-serif; margin-bottom: 28px; color: var(--dark-green); font-size: 28px; font-weight: 800; }
+        .terms-content { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+        .terms-content h3 { color: var(--dark-green); margin: 20px 0 10px; font-size: 18px; }
+        .terms-content p { margin-bottom: 12px; }
+        .terms-content ul { margin-left: 20px; margin-bottom: 15px; }
+        .terms-content li { margin-bottom: 8px; }
 
-        .google-btn {
-            background: var(--white);
-            color: var(--text-dark);
-            border: 2px solid var(--border-light);
-            box-shadow: var(--shadow-soft);
-            margin-top: 15px;
-        }
-        
-        .google-btn:hover {
-            background: var(--creme);
-            border-color: var(--gold);
-        }
-        
-        .google-btn i {
-            color: var(--google-blue);
-            margin-right: 8px;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 25px 0 15px;
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 600;
-        }
-        
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--border-light);
-        }
-        
-        .divider span {
-            padding: 0 15px;
-        }
-
-        .toggle-text {
-            text-align: center;
-            margin-top: 28px;
-            font-weight: 600;
-            color: var(--text-muted);
-            font-size: 15px;
-        }
-        
-        .toggle-text b {
-            color: var(--dark-green);
-            cursor: pointer;
-            text-decoration: underline;
-            margin-left: 6px;
-            transition: var(--transition);
-        }
-        
-        .toggle-text b:hover {
-            color: var(--gold);
-        }
-
-        /* ============================================================
-           PROFILE HEADER - PREMIUM
-           ============================================================ */
-        #mainProfileUI {
-            display: none;
-            padding-bottom: 60px;
-        }
-
-        .header-bg {
-            height: 440px;
-            background: linear-gradient(135deg, var(--dark-green) 0%, var(--leaf-green) 100%);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-bottom-left-radius: 70px;
-            border-bottom-right-radius: 70px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-        }
-
-        .bg-icon {
-            position: absolute;
-            color: rgba(212, 175, 55, 0.06);
-            font-size: 32px;
-            animation: floatMove var(--d) linear infinite;
-            pointer-events: none;
-        }
-        
-        @keyframes floatMove {
-            0% { transform: rotate(0deg) translateX(var(--r)) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); opacity: 0; }
-        }
-
-        .profile-container {
-            width: 140px;
-            height: 140px;
-            border-radius: 50px;
-            background: var(--gold);
-            padding: 4px;
-            position: relative;
-            z-index: 5;
-            margin-bottom: 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-            transition: var(--transition);
-        }
-        
-        .profile-container:hover {
-            transform: scale(1.05) rotate(3deg);
-        }
-        
-        #userImg {
-            width: 100%;
-            height: 100%;
-            border-radius: 46px;
-            object-fit: cover;
-            border: 4px solid var(--dark-green);
-        }
-        
-        .upload-label {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            width: 48px;
-            height: 48px;
-            background: var(--white);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--dark-green);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 2px solid var(--gold);
-            transition: var(--transition);
-        }
-        
-        .upload-label:hover {
-            background: var(--gold);
-            color: var(--white);
-            transform: rotate(5deg) scale(1.1);
-        }
-
-        .user-details-hero {
-            text-align: center;
-            color: white;
-            z-index: 5;
-        }
-        
-        .user-details-hero h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 36px;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        
-        .user-details-hero p {
-            color: var(--gold);
-            font-weight: 800;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 5px;
-        }
-
-        /* ============================================================
-           DASHBOARD CARDS
-           ============================================================ */
-        .content-wrapper {
-            max-width: 600px;
-            margin: -50px auto 0;
-            padding: 0 18px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .card-system {
-            background: var(--white);
-            border-radius: var(--radius-xl);
-            padding: 8px;
-            box-shadow: var(--shadow-card);
-            margin-bottom: 22px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            animation: cardSlideUp 0.6s ease-out backwards;
-        }
-        
-        .card-system:nth-child(1) { animation-delay: 0.1s; }
-        .card-system:nth-child(2) { animation-delay: 0.2s; }
-        .card-system:nth-child(3) { animation-delay: 0.3s; }
-        
-        @keyframes cardSlideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 20px 18px;
-            text-decoration: none;
-            color: var(--text-dark);
-            border-radius: 22px;
-            transition: var(--transition);
-            border: none;
-            background: transparent;
-            width: 100%;
-            cursor: pointer;
-        }
-        
-        .nav-item:hover {
-            background: var(--gold-light);
-            transform: translateX(8px);
-        }
-
-        .nav-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 20px;
-            background: var(--leaf-light);
-            color: var(--dark-green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 18px;
-            font-size: 22px;
-            transition: var(--transition);
-        }
-        
-        .nav-item:hover .nav-icon {
-            background: var(--dark-green);
-            color: var(--gold);
-            transform: scale(1.05);
-        }
-
-        .nav-text {
-            flex: 1;
-            text-align: left;
-        }
-        
-        .nav-text b {
-            display: block;
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--dark-green);
-        }
-        
-        .nav-text span {
-            display: block;
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-            margin-top: 3px;
-        }
-
-        .chevron {
-            color: #CBD5E1;
-            font-size: 18px;
-            transition: var(--transition);
-        }
-        
-        .nav-item:hover .chevron {
-            color: var(--gold);
-            transform: translateX(5px);
-        }
-
-        .danger-zone {
-            color: var(--danger) !important;
-        }
-        
-        .danger-zone .nav-icon {
-            background: #FEE2E2;
-            color: var(--danger);
-        }
-        
-        .danger-zone:hover .nav-icon {
-            background: var(--danger);
-            color: white;
-        }
-
-        /* ============================================================
-           MODALS
-           ============================================================ */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 31, 19, 0.9);
-            backdrop-filter: blur(12px);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .modal-body {
-            background: var(--white);
-            width: 100%;
-            max-width: 480px;
-            border-radius: var(--radius-xl);
-            padding: 36px 28px;
-            position: relative;
-            animation: modalPop 0.4s var(--bounce);
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        
-        @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.8) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            font-size: 28px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: var(--transition);
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-        
-        .close-btn:hover {
-            background: var(--creme-dark);
-            color: var(--danger);
-            transform: rotate(90deg);
-        }
-
-        .modal-body h2 {
-            font-family: 'Outfit', sans-serif;
-            margin-bottom: 28px;
-            color: var(--dark-green);
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-        /* ============================================================
-           T&C CONTENT
-           ============================================================ */
-        .terms-content {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-        
-        .terms-content h3 {
-            color: var(--dark-green);
-            margin: 20px 0 10px;
-            font-size: 18px;
-        }
-        
-        .terms-content p {
-            margin-bottom: 12px;
-        }
-        
-        .terms-content ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-        
-        .terms-content li {
-            margin-bottom: 8px;
-        }
-
-        /* ============================================================
-           MOBILE OPTIMIZATIONS
-           ============================================================ */
         @media (max-width: 480px) {
             .auth-card { padding: 32px 22px; }
             .auth-header h2 { font-size: 28px; }
@@ -729,25 +192,21 @@
         <div class="input-box">
             <label>Email or Username</label>
             <i class="fa-solid fa-envelope"></i>
-            <input type="text" id="loginIdentifier" class="input-field" placeholder="akash@email.com">
+            <input type="text" id="loginIdentifier" class="input-field" placeholder="Enter email or username">
         </div>
         
         <div class="input-box">
             <label>Password</label>
             <i class="fa-solid fa-lock"></i>
-            <input type="password" id="loginPassword" class="input-field" placeholder="••••••••">
+            <input type="password" id="loginPassword" class="input-field" placeholder="Enter password">
+        </div>
+        
+        <div class="forgot-link">
+            <a href="forgot.html">Forgot Password?</a>
         </div>
         
         <button class="action-btn" onclick="handleLogin()">
             <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
-        </button>
-        
-        <div class="divider">
-            <span>OR CONTINUE WITH</span>
-        </div>
-        
-        <button class="action-btn google-btn" onclick="handleGoogleLogin()">
-            <i class="fa-brands fa-google"></i> Google
         </button>
         
         <p class="toggle-text">
@@ -773,25 +232,25 @@
         <div class="input-box">
             <label>Full Name</label>
             <i class="fa-solid fa-user"></i>
-            <input type="text" id="regName" class="input-field" placeholder="Akash Sharma">
+            <input type="text" id="regName" class="input-field" placeholder="Enter full name">
         </div>
         
         <div class="input-box">
             <label>Username</label>
             <i class="fa-solid fa-at"></i>
-            <input type="text" id="regUsername" class="input-field" placeholder="akash_ayurveda" readonly>
+            <input type="text" id="regUsername" class="input-field" placeholder="Auto-generated" readonly>
         </div>
         
         <div class="input-box">
             <label>Email</label>
             <i class="fa-solid fa-envelope"></i>
-            <input type="email" id="regEmail" class="input-field" placeholder="akash@email.com">
+            <input type="email" id="regEmail" class="input-field" placeholder="Enter email address">
         </div>
         
         <div class="input-box">
             <label>Mobile</label>
             <i class="fa-solid fa-phone"></i>
-            <input type="tel" id="regPhone" class="input-field" placeholder="+91 98765 43210">
+            <input type="tel" id="regPhone" class="input-field" placeholder="Enter mobile number">
         </div>
         
         <div class="input-box">
@@ -838,8 +297,8 @@
                 </label>
             </div>
             <div class="user-details-hero" style="color: var(--dark-green);">
-                <h1 id="displayName">Akash Sharma</h1>
-                <p id="displayUsername" style="color: var(--gold);">@akash_official</p>
+                <h1 id="displayName">Nemi User</h1>
+                <p id="displayUsername" style="color: var(--gold);">@user</p>
             </div>
         </div>
         
@@ -848,7 +307,7 @@
                 <div class="nav-icon"><i class="fa-solid fa-user-pen"></i></div>
                 <div class="nav-text">
                     <b>Personal Information</b>
-                    <span id="displayEmail">akash@email.com</span>
+                    <span id="displayEmail">—</span>
                 </div>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </button>
@@ -857,7 +316,7 @@
                 <div class="nav-icon"><i class="fa-solid fa-phone"></i></div>
                 <div class="nav-text">
                     <b>Mobile Number</b>
-                    <span id="displayPhone">+91 98765 43210</span>
+                    <span id="displayPhone">—</span>
                 </div>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </button>
@@ -866,7 +325,7 @@
                 <div class="nav-icon"><i class="fa-solid fa-location-dot"></i></div>
                 <div class="nav-text">
                     <b>Delivery Address</b>
-                    <span id="displayAddress">Patiala, Punjab</span>
+                    <span id="displayAddress">—</span>
                 </div>
                 <i class="fa-solid fa-chevron-right chevron"></i>
             </button>
@@ -939,85 +398,49 @@
         <h2>Terms & Conditions</h2>
         <div class="terms-content">
             <p><strong>Last Updated:</strong> April 21, 2026</p>
-            
             <h3>1. Acceptance of Terms</h3>
             <p>By accessing Nemi Mart, you agree to be bound by these Terms. We provide premium Ayurvedic products with authentic sourcing.</p>
-            
             <h3>2. User Accounts</h3>
             <p>You are responsible for maintaining account confidentiality. Nemi Mart reserves the right to terminate accounts for violations.</p>
-            
             <h3>3. Product Information</h3>
             <p>All products are 100% natural and Ayurvedic. Results may vary. Consult healthcare provider before use.</p>
-            
             <h3>4. Privacy Policy</h3>
             <p>Your data is encrypted and never shared with third parties without consent.</p>
-            
             <h3>5. Shipping & Returns</h3>
-            <ul>
-                <li>Free shipping on orders above ₹499</li>
-                <li>7-day easy returns for unopened products</li>
-                <li>Refunds processed within 5-7 business days</li>
-            </ul>
-            
+            <ul><li>Free shipping on orders above ₹499</li><li>7-day easy returns for unopened products</li><li>Refunds processed within 5-7 business days</li></ul>
             <h3>6. Contact</h3>
-            <p>Email: support@nemimart.com<br>Phone: +91 98765 43210</p>
-            
+            <p>Email: support@nemimart.com</p>
             <p style="margin-top: 25px; font-style: italic;">Nemi Mart - Pure Ayurveda, Pure Life.</p>
         </div>
     </div>
 </div>
 
 <script>
-    // ============================================================
-    // FIREBASE CONFIG - USING REALTIME DATABASE ONLY (NO AUTH ERROR)
-    // ============================================================
-    const firebaseConfig = {
-        databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com"
-    };
-    
+    const firebaseConfig = { databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
-    // ============================================================
-    // GLOBAL STATE (Using localStorage for auth to avoid API key error)
-    // ============================================================
     let currentUser = null;
     let currentEditType = 'profile';
     
-    // ============================================================
-    // AUTO-GENERATE USERNAME FROM NAME
-    // ============================================================
     document.getElementById('regName')?.addEventListener('input', function(e) {
         const name = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '_');
-        if (name) {
-            document.getElementById('regUsername').value = name + '_' + Math.floor(Math.random() * 1000);
-        }
+        if (name) document.getElementById('regUsername').value = name + '_' + Math.floor(Math.random() * 1000);
+        else document.getElementById('regUsername').value = '';
     });
     
-    // ============================================================
-    // SWITCH AUTH SCREENS
-    // ============================================================
     function switchAuth(screen) {
         document.getElementById('loginUI').style.display = 'none';
         document.getElementById('registerUI').style.display = 'none';
         document.getElementById(screen).style.display = 'flex';
     }
     
-    // ============================================================
-    // CHECK IF USER EXISTS IN DATABASE
-    // ============================================================
     async function checkUserExists(email, username) {
         const snapshot = await database.ref('users').once('value');
         const users = snapshot.val() || {};
-        
-        return Object.values(users).some(u => 
-            u.email === email || u.username === username
-        );
+        return Object.values(users).some(u => u.email === email || u.username === username);
     }
     
-    // ============================================================
-    // HANDLE REGISTER (LocalStorage + Firebase Database)
-    // ============================================================
     async function handleRegister() {
         const name = document.getElementById('regName').value.trim();
         const username = document.getElementById('regUsername').value.trim();
@@ -1025,291 +448,108 @@
         const phone = document.getElementById('regPhone').value.trim();
         const password = document.getElementById('regPassword').value;
         const confirm = document.getElementById('regConfirmPass').value;
-        
-        if (!name || !username || !email || !phone || !password) {
-            showToast('All fields are required!', 'error');
-            return;
-        }
-        
-        if (password !== confirm) {
-            showToast('Passwords do not match!', 'error');
-            return;
-        }
-        
-        if (password.length < 8) {
-            showToast('Password must be at least 8 characters', 'error');
-            return;
-        }
-        
-        // Check if user exists
+        if (!name || !username || !email || !phone || !password) { showToast('All fields are required!', 'error'); return; }
+        if (password !== confirm) { showToast('Passwords do not match!', 'error'); return; }
+        if (password.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
         const exists = await checkUserExists(email, username);
-        if (exists) {
-            showToast('Email or username already registered!', 'error');
-            return;
-        }
-        
-        // Generate unique ID
+        if (exists) { showToast('Email or username already registered!', 'error'); return; }
         const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        // Save user data to Firebase
-        const userData = {
-            uid: userId,
-            name: name,
-            username: username,
-            email: email,
-            phone: phone,
-            password: btoa(password), // Simple encoding (not for production, just demo)
-            address: 'Patiala, Punjab 147001',
-            photoURL: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-            createdAt: Date.now()
-        };
-        
+        const userData = { uid: userId, name, username, email, phone, password: btoa(password), address: 'Patiala, Punjab 147001', photoURL: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', createdAt: Date.now() };
         try {
             await database.ref('users/' + userId).set(userData);
-            
-            // Auto-login after register
-            localStorage.setItem('nemi_current_user', JSON.stringify({
-                uid: userId,
-                name: name,
-                username: username,
-                email: email
-            }));
-            
+            localStorage.setItem('nemi_current_user', JSON.stringify({ uid: userId, name, username, email }));
             showToast('Account created successfully!', 'success');
             setTimeout(() => loadProfile(), 1000);
-            
-        } catch (error) {
-            showToast('Registration failed: ' + error.message, 'error');
-        }
+        } catch (error) { showToast('Registration failed: ' + error.message, 'error'); }
     }
     
-    // ============================================================
-    // HANDLE LOGIN
-    // ============================================================
     async function handleLogin() {
         const identifier = document.getElementById('loginIdentifier').value.trim();
         const password = document.getElementById('loginPassword').value;
-        
-        if (!identifier || !password) {
-            showToast('Please fill all fields', 'error');
-            return;
-        }
-        
+        if (!identifier || !password) { showToast('Please fill all fields', 'error'); return; }
         try {
             const snapshot = await database.ref('users').once('value');
             const users = snapshot.val() || {};
-            
-            // Find user by email or username
-            const user = Object.values(users).find(u => 
-                (u.email === identifier || u.username === identifier) && 
-                (u.password === btoa(password))
-            );
-            
-            if (!user) {
-                showToast('Invalid credentials!', 'error');
-                return;
-            }
-            
-            // Save session
-            localStorage.setItem('nemi_current_user', JSON.stringify({
-                uid: user.uid,
-                name: user.name,
-                username: user.username,
-                email: user.email
-            }));
-            
+            const user = Object.values(users).find(u => (u.email === identifier || u.username === identifier) && u.password === btoa(password));
+            if (!user) { showToast('Invalid credentials!', 'error'); return; }
+            localStorage.setItem('nemi_current_user', JSON.stringify({ uid: user.uid, name: user.name, username: user.username, email: user.email }));
             showToast('Login successful!', 'success');
             loadProfile();
-            
-        } catch (error) {
-            showToast('Login failed: ' + error.message, 'error');
-        }
+        } catch (error) { showToast('Login failed: ' + error.message, 'error'); }
     }
     
-    // ============================================================
-    // GOOGLE LOGIN (Simulated - redirect to register with Google info)
-    // ============================================================
-    function handleGoogleLogin() {
-        // Simulate Google login - in production use real OAuth
-        const googleUser = {
-            name: 'Google User',
-            email: 'user@gmail.com',
-            photo: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
-        };
-        
-        // Pre-fill register form and switch
-        document.getElementById('regName').value = googleUser.name;
-        document.getElementById('regEmail').value = googleUser.email;
-        document.getElementById('regUsername').value = googleUser.email.split('@')[0] + '_' + Math.floor(Math.random() * 1000);
-        
-        switchAuth('registerUI');
-        showToast('Please complete registration', 'info');
-    }
-    
-    // ============================================================
-    // LOAD PROFILE
-    // ============================================================
     async function loadProfile() {
         const savedUser = localStorage.getItem('nemi_current_user');
-        if (!savedUser) {
-            document.getElementById('mainProfileUI').style.display = 'none';
-            document.getElementById('loginUI').style.display = 'flex';
-            return;
-        }
-        
+        if (!savedUser) { document.getElementById('mainProfileUI').style.display = 'none'; document.getElementById('loginUI').style.display = 'flex'; return; }
         currentUser = JSON.parse(savedUser);
-        
-        // Load full user data from Firebase
         const snapshot = await database.ref('users/' + currentUser.uid).once('value');
         const userData = snapshot.val();
-        
-        if (userData) {
-            displayUserData(userData);
-        }
-        
+        if (userData) displayUserData(userData);
         document.getElementById('loginUI').style.display = 'none';
         document.getElementById('registerUI').style.display = 'none';
         document.getElementById('mainProfileUI').style.display = 'block';
-        
         document.getElementById('pageLoader').style.opacity = '0';
         setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500);
-        
         initBgAnimation();
     }
     
-    // ============================================================
-    // DISPLAY USER DATA
-    // ============================================================
     function displayUserData(data) {
-        document.getElementById('displayName').textContent = data.name || 'User';
+        document.getElementById('displayName').textContent = data.name || 'Nemi User';
         document.getElementById('displayUsername').textContent = '@' + (data.username || 'user');
-        document.getElementById('displayEmail').textContent = data.email || '';
-        document.getElementById('displayPhone').textContent = data.phone || 'Not set';
-        document.getElementById('displayAddress').textContent = data.address || 'Patiala, Punjab';
-        
-        if (data.photoURL) {
-            document.getElementById('userImg').src = data.photoURL;
-        }
+        document.getElementById('displayEmail').textContent = data.email || '—';
+        document.getElementById('displayPhone').textContent = data.phone || '—';
+        document.getElementById('displayAddress').textContent = data.address || '—';
+        if (data.photoURL) document.getElementById('userImg').src = data.photoURL;
     }
     
-    // ============================================================
-    // OPEN EDIT MODAL
-    // ============================================================
     async function openEditModal(type) {
         currentEditType = type;
         const modal = document.getElementById('editModal');
         const title = document.getElementById('modalTitle');
         const content = document.getElementById('modalContent');
-        
         const snapshot = await database.ref('users/' + currentUser.uid).once('value');
         const userData = snapshot.val();
-        
         if (type === 'profile') {
             title.textContent = 'Edit Profile';
-            content.innerHTML = `
-                <div class="input-box">
-                    <label>Full Name</label>
-                    <input type="text" id="editName" class="input-field" value="${userData.name || ''}">
-                </div>
-                <div class="input-box">
-                    <label>Email</label>
-                    <input type="email" id="editEmail" class="input-field" value="${userData.email || ''}">
-                </div>
-                <div class="input-box">
-                    <label>Username</label>
-                    <input type="text" id="editUsername" class="input-field" value="${userData.username || ''}">
-                </div>
-            `;
+            content.innerHTML = `<div class="input-box"><label>Full Name</label><input type="text" id="editName" class="input-field" value="${userData.name || ''}"></div><div class="input-box"><label>Email</label><input type="email" id="editEmail" class="input-field" value="${userData.email || ''}"></div><div class="input-box"><label>Username</label><input type="text" id="editUsername" class="input-field" value="${userData.username || ''}"></div>`;
         } else if (type === 'phone') {
             title.textContent = 'Edit Phone';
-            content.innerHTML = `
-                <div class="input-box">
-                    <label>Mobile Number</label>
-                    <input type="tel" id="editPhone" class="input-field" value="${userData.phone || ''}">
-                </div>
-            `;
+            content.innerHTML = `<div class="input-box"><label>Mobile Number</label><input type="tel" id="editPhone" class="input-field" value="${userData.phone || ''}"></div>`;
         } else if (type === 'address') {
             const addrParts = (userData.address || 'Patiala, Punjab 147001').split(',');
             title.textContent = 'Edit Address';
-            content.innerHTML = `
-                <div class="input-box">
-                    <label>Street Address</label>
-                    <input type="text" id="editStreet" class="input-field" value="${addrParts[0] || ''}" placeholder="House/Street">
-                </div>
-                <div class="input-box">
-                    <label>City</label>
-                    <input type="text" id="editCity" class="input-field" value="${addrParts[1] || 'Patiala'}">
-                </div>
-                <div class="input-box">
-                    <label>State</label>
-                    <input type="text" id="editState" class="input-field" value="${addrParts[2] || 'Punjab'}">
-                </div>
-                <div class="input-box">
-                    <label>Pincode</label>
-                    <input type="text" id="editPincode" class="input-field" value="${addrParts[3] || '147001'}">
-                </div>
-            `;
+            content.innerHTML = `<div class="input-box"><label>Street Address</label><input type="text" id="editStreet" class="input-field" value="${addrParts[0] || ''}" placeholder="House/Street"></div><div class="input-box"><label>City</label><input type="text" id="editCity" class="input-field" value="${addrParts[1] || 'Patiala'}"></div><div class="input-box"><label>State</label><input type="text" id="editState" class="input-field" value="${addrParts[2] || 'Punjab'}"></div><div class="input-box"><label>Pincode</label><input type="text" id="editPincode" class="input-field" value="${addrParts[3] || '147001'}"></div>`;
         }
-        
         modal.style.display = 'flex';
     }
     
-    // ============================================================
-    // SAVE EDITS
-    // ============================================================
     async function saveEdits() {
         const updates = {};
-        
-        if (currentEditType === 'profile') {
-            updates.name = document.getElementById('editName')?.value;
-            updates.email = document.getElementById('editEmail')?.value;
-            updates.username = document.getElementById('editUsername')?.value;
-        } else if (currentEditType === 'phone') {
-            updates.phone = document.getElementById('editPhone')?.value;
-        } else if (currentEditType === 'address') {
-            const street = document.getElementById('editStreet')?.value || '';
-            const city = document.getElementById('editCity')?.value || 'Patiala';
-            const state = document.getElementById('editState')?.value || 'Punjab';
-            const pincode = document.getElementById('editPincode')?.value || '147001';
-            updates.address = `${street}, ${city}, ${state} - ${pincode}`;
-        }
-        
+        if (currentEditType === 'profile') { updates.name = document.getElementById('editName')?.value; updates.email = document.getElementById('editEmail')?.value; updates.username = document.getElementById('editUsername')?.value; }
+        else if (currentEditType === 'phone') { updates.phone = document.getElementById('editPhone')?.value; }
+        else if (currentEditType === 'address') { const street = document.getElementById('editStreet')?.value || ''; const city = document.getElementById('editCity')?.value || 'Patiala'; const state = document.getElementById('editState')?.value || 'Punjab'; const pincode = document.getElementById('editPincode')?.value || '147001'; updates.address = `${street}, ${city}, ${state} - ${pincode}`; }
         try {
             await database.ref('users/' + currentUser.uid).update(updates);
             showToast('Profile updated!', 'success');
             closeModal('editModal');
-            
-            // Refresh display
             const snapshot = await database.ref('users/' + currentUser.uid).once('value');
             displayUserData(snapshot.val());
-            
-        } catch (error) {
-            showToast('Update failed', 'error');
-        }
+        } catch (error) { showToast('Update failed', 'error'); }
     }
     
-    // ============================================================
-    // IMAGE UPLOAD
-    // ============================================================
     document.getElementById('fileUpload')?.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file || !currentUser) return;
-        
         const reader = new FileReader();
         reader.onloadend = async function() {
             const base64 = reader.result;
             document.getElementById('userImg').src = base64;
-            
-            // Save to database
             await database.ref('users/' + currentUser.uid).update({ photoURL: base64 });
             showToast('Profile picture updated!', 'success');
         };
         reader.readAsDataURL(file);
     });
     
-    // ============================================================
-    // HANDLE LOGOUT
-    // ============================================================
     function handleLogout() {
         localStorage.removeItem('nemi_current_user');
         currentUser = null;
@@ -1318,76 +558,43 @@
         showToast('Logged out successfully', 'info');
     }
     
-    // ============================================================
-    // SHOW TERMS
-    // ============================================================
-    function showTerms() {
-        document.getElementById('termsModal').style.display = 'flex';
-    }
+    function showTerms() { document.getElementById('termsModal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     
-    // ============================================================
-    // CLOSE MODAL
-    // ============================================================
-    function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-    
-    // ============================================================
-    // BACKGROUND ANIMATION
-    // ============================================================
     function initBgAnimation() {
         const container = document.getElementById('dynamicBg');
         if (!container || container.children.length > 0) return;
-        
         const icons = ['fa-leaf', 'fa-seedling', 'fa-wheat-awn', 'fa-crown', 'fa-star', 'fa-heart'];
         for (let i = 0; i < 30; i++) {
             const el = document.createElement('i');
             el.className = `fa-solid ${icons[Math.floor(Math.random() * icons.length)]} bg-icon`;
             el.style.setProperty('--r', `${Math.floor(Math.random() * 200) + 100}px`);
             el.style.setProperty('--d', `${Math.floor(Math.random() * 20) + 10}s`);
-            el.style.left = '50%';
-            el.style.top = '50%';
+            el.style.left = '50%'; el.style.top = '50%';
             el.style.animationDelay = `${Math.random() * -30}s`;
             container.appendChild(el);
         }
     }
     
-    // ============================================================
-    // TOAST
-    // ============================================================
     function showToast(msg, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        
         const icons = { success: '✅', error: '❌', info: '💚' };
         toast.innerHTML = `<span>${icons[type] || '🔔'}</span> ${msg}`;
-        
         container.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
     
-    // ============================================================
-    // CHECK SESSION ON LOAD
-    // ============================================================
     window.onload = function() {
         const savedUser = localStorage.getItem('nemi_current_user');
-        if (savedUser) {
-            loadProfile();
-        } else {
-            document.getElementById('pageLoader').style.opacity = '0';
-            setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500);
-        }
+        if (savedUser) { loadProfile(); }
+        else { document.getElementById('pageLoader').style.opacity = '0'; setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500); }
     };
     
-    // Expose globally
     window.switchAuth = switchAuth;
     window.handleLogin = handleLogin;
     window.handleRegister = handleRegister;
-    window.handleGoogleLogin = handleGoogleLogin;
     window.handleLogout = handleLogout;
     window.openEditModal = openEditModal;
     window.saveEdits = saveEdits;

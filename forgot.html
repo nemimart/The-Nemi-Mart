@@ -3,192 +3,884 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Forgot Password</title>
+    <title>Nemi Mart | Secure Password Reset</title>
     
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <style>
+        /* ============================================================
+           ROOT VARIABLES - PREMIUM GREEN/CREME/GOLD THEME
+           ============================================================ */
         :root {
-            --creme: #FDFBF7; --creme-dark: #F5F1E6; --gold: #D4AF37; --gold-light: #FAF4E5;
-            --gold-hover: #B8860B; --dark-green: #0A1F13; --leaf-green: #1A3E26; --white: #FFFFFF;
-            --text-dark: #1F2937; --text-muted: #5C6F63; --danger: #EF4444; --success: #059669;
-            --border-light: #EAE5D9; --radius-xl: 32px; --radius-lg: 24px; --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
+            --creme: #FDFBF7;
+            --creme-dark: #F5F1E6;
+            --gold: #D4AF37;
+            --gold-light: #FAF4E5;
+            --gold-hover: #B8860B;
+            --dark-green: #0A1F13;
+            --leaf-green: #1A3E26;
+            --leaf-light: #eaf2e9;
+            --white: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-muted: #5C6F63;
+            --danger: #EF4444;
+            --success: #059669;
+            --info: #3B82F6;
+            --warning: #EAB308;
+            --border-light: #EAE5D9;
+            
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+            
+            --shadow-soft: 0 8px 25px rgba(0,0,0,0.04);
+            --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
+            --shadow-hover: 0 25px 45px -10px rgba(212,175,55,0.25);
+            --shadow-gold: 0 10px 30px rgba(212,175,55,0.2);
             --shadow-premium: 0 30px 60px -15px rgba(10,31,19,0.25);
+            
             --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             --bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; -webkit-tap-highlight-color:transparent; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             background: linear-gradient(135deg, var(--creme) 0%, var(--gold-light) 50%, var(--creme-dark) 100%);
-            background-attachment: fixed; color: var(--text-dark); min-height: 100vh;
-            display: flex; align-items: center; justify-content: center; padding: 20px;
+            background-attachment: fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
             animation: pageLoad 0.8s ease-out;
+            position: relative;
+            overflow-x: hidden;
         }
-        @keyframes pageLoad { 0% { opacity:0; transform:translateY(20px); } 100% { opacity:1; transform:translateY(0); } }
+
+        @keyframes pageLoad {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           FLOATING BACKGROUND PARTICLES
+           ============================================================ */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatParticle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+            opacity: 0;
+        }
+
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(0) translateX(0) scale(0); }
+            10% { opacity: 0.6; }
+            85% { opacity: 0.15; }
+            100% { opacity: 0; transform: translateY(var(--moveY)) translateX(var(--moveX)) scale(1.5); }
+        }
+
+        /* ============================================================
+           TOAST NOTIFICATIONS
+           ============================================================ */
+        #toastContainer {
+            position: fixed;
+            top: calc(15px + var(--safe-top));
+            left: 15px;
+            right: 15px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
         
-        #toastContainer { position:fixed; top:15px; left:15px; right:15px; z-index:10000; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
-        .toast { background:var(--dark-green); color:white; padding:16px 20px; border-radius:18px; border-left:5px solid var(--gold); box-shadow:var(--shadow-card); animation:slideDown 0.4s ease-out; display:flex; align-items:center; gap:12px; font-weight:600; font-size:14px; pointer-events:auto; }
-        .toast.success { border-left-color:var(--success); background:#0a3622; }
-        .toast.error { border-left-color:var(--danger); background:#3b1e1e; }
-        .toast.info { border-left-color:var(--gold); }
-        @keyframes slideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+        .toast {
+            background: var(--dark-green);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border-left: 5px solid var(--gold);
+            box-shadow: var(--shadow-card);
+            animation: slideDown 0.4s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            pointer-events: auto;
+        }
         
-        #loadingOverlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(253,251,247,0.98); backdrop-filter:blur(10px); z-index:9999; display:none; flex-direction:column; justify-content:center; align-items:center; }
-        .loading-spinner { width:60px; height:60px; border:4px solid var(--gold-light); border-top-color:var(--gold); border-radius:50%; animation:spin 0.9s linear infinite; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-        .loading-text { margin-top:20px; font-weight:700; color:var(--dark-green); letter-spacing:2px; font-size:14px; }
+        .toast.success { border-left-color: var(--success); background: #0a3622; }
+        .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
+        .toast.info { border-left-color: var(--info); }
+        .toast.warning { border-left-color: var(--warning); background: #3d2e00; }
         
-        .main-container { position:relative; z-index:10; width:100%; max-width:480px; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           LOADING OVERLAY
+           ============================================================ */
+        #loadingOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.98);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-spinner {
+            width: 60px; height: 60px;
+            border: 4px solid var(--gold-light);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .loading-text {
+            margin-top: 20px;
+            font-weight: 700;
+            color: var(--dark-green);
+            letter-spacing: 2px;
+            font-size: 14px;
+        }
+
+        /* ============================================================
+           MAIN CONTAINER
+           ============================================================ */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+        }
+
         .auth-card {
-            background:var(--white); border-radius:var(--radius-xl); padding:40px 32px;
-            box-shadow:var(--shadow-premium); border:1px solid rgba(212,175,55,0.3);
-            position:relative; overflow:hidden; animation:cardPop 0.7s var(--bounce);
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: cardPop 0.7s var(--bounce);
         }
-        @keyframes cardPop { 0% { opacity:0; transform:scale(0.85) translateY(30px); } 100% { opacity:1; transform:scale(1) translateY(0); } }
-        .auth-card::after { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, var(--gold), var(--gold-hover), var(--gold)); animation:borderShine 3s ease-in-out infinite; }
-        @keyframes borderShine { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
-        
-        .logo-section { text-align:center; margin-bottom:30px; position:relative; z-index:1; }
-        .logo-circle { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--dark-green), var(--leaf-green)); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; box-shadow:0 15px 35px rgba(10,31,19,0.3); animation:logoFloat 3s ease-in-out infinite; border:3px solid var(--gold); }
-        @keyframes logoFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
-        .logo-circle i { font-size:36px; color:var(--gold); animation:lockPulse 2s ease-in-out infinite; }
-        @keyframes lockPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.15); } }
-        
-        .auth-header { text-align:center; margin-bottom:30px; position:relative; z-index:1; }
-        .auth-header h1 { font-family:'Outfit',sans-serif; font-size:32px; font-weight:900; color:var(--dark-green); letter-spacing:-0.5px; margin-bottom:8px; }
-        .auth-header p { color:var(--text-muted); font-size:15px; font-weight:500; line-height:1.6; }
-        
-        .steps-bar { display:flex; justify-content:center; gap:30px; margin-bottom:30px; position:relative; z-index:1; }
-        .step { display:flex; flex-direction:column; align-items:center; gap:8px; }
-        .step-circle { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; transition:var(--transition); }
-        .step-circle.active { background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); animation:stepGlow 2s ease-in-out infinite; }
-        .step-circle.inactive { background:var(--creme-dark); color:var(--text-muted); border:2px solid var(--border-light); }
-        .step-circle.done { background:var(--success); color:white; border:2px solid var(--success); }
-        @keyframes stepGlow { 0%,100% { box-shadow:0 0 0 0 rgba(212,175,55,0.4); } 50% { box-shadow:0 0 0 15px rgba(212,175,55,0); } }
-        .step-label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; }
-        
-        .input-group { margin-bottom:22px; position:relative; z-index:1; }
-        .input-group label { display:block; font-size:12px; font-weight:800; color:var(--dark-green); margin-bottom:8px; margin-left:8px; text-transform:uppercase; letter-spacing:1.5px; }
-        .input-wrapper { position:relative; }
-        .input-wrapper input { width:100%; padding:18px 20px 18px 55px; border-radius:18px; border:2px solid var(--border-light); background:var(--creme); font-size:15px; font-weight:600; outline:none; transition:var(--transition); color:var(--text-dark); }
-        .input-wrapper input:focus { border-color:var(--gold); background:var(--white); box-shadow:0 8px 25px rgba(212,175,55,0.2); transform:scale(1.01); }
-        .input-wrapper i { position:absolute; left:20px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:20px; transition:var(--transition); }
-        .input-wrapper input:focus + i, .input-wrapper input:focus ~ i { color:var(--gold); }
-        
-        .btn-primary { width:100%; padding:18px; background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); border-radius:18px; font-size:17px; font-weight:800; cursor:pointer; box-shadow:0 10px 30px rgba(212,175,55,0.2); transition:var(--transition); margin-top:15px; display:flex; align-items:center; justify-content:center; gap:10px; position:relative; z-index:1; }
-        .btn-primary:hover { transform:translateY(-4px); box-shadow:0 20px 40px rgba(10,31,19,0.3); background:var(--leaf-green); }
-        .btn-primary:active { transform:translateY(0) scale(0.98); }
-        .btn-primary:disabled { opacity:0.5; cursor:not-allowed; pointer-events:none; }
-        .btn-secondary { width:100%; padding:16px; background:transparent; color:var(--dark-green); border:2px solid var(--border-light); border-radius:18px; font-size:15px; font-weight:700; cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; position:relative; z-index:1; }
-        .btn-secondary:hover { border-color:var(--gold); background:var(--gold-light); }
-        
-        .success-state { display:none; text-align:center; padding:20px 0; animation:fadeInUp 0.6s ease-out; }
-        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        .success-icon-wrapper { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg, var(--success), #047857); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; animation:successPop 0.6s var(--bounce); box-shadow:0 20px 40px rgba(5,150,105,0.4); }
-        @keyframes successPop { 0% { transform:scale(0); opacity:0; } 50% { transform:scale(1.2); } 100% { transform:scale(1); opacity:1; } }
-        .success-icon-wrapper i { font-size:50px; color:white; }
-        .success-state h2 { font-family:'Outfit',sans-serif; font-size:26px; font-weight:800; color:var(--success); margin-bottom:12px; }
-        .success-state p { color:var(--text-muted); font-size:15px; margin-bottom:8px; line-height:1.6; }
-        .sent-email-highlight { background:var(--gold-light); padding:12px 20px; border-radius:14px; display:inline-block; font-weight:700; color:var(--dark-green); margin:10px 0 20px; border:1px solid var(--gold); }
-        .temp-password-box { background:#0a3622; color:var(--gold); padding:16px 20px; border-radius:14px; display:inline-block; font-weight:900; font-size:20px; margin:10px 0 20px; border:2px dashed var(--gold); letter-spacing:3px; }
-        
-        @media (max-width:480px) { .auth-card { padding:30px 22px; } .auth-header h1 { font-size:26px; } .logo-circle { width:70px; height:70px; } .logo-circle i { font-size:30px; } }
-        @keyframes shake { 0%,100% { transform:translateX(0); } 25% { transform:translateX(-8px); } 75% { transform:translateX(8px); } }
-        .shake { animation:shake 0.5s ease-out; }
+
+        @keyframes cardPop {
+            0% { opacity: 0; transform: scale(0.85) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Gold border animation */
+        .auth-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-hover), var(--gold));
+            animation: borderShine 3s ease-in-out infinite;
+        }
+
+        @keyframes borderShine {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* ============================================================
+           LOGO & HEADER
+           ============================================================ */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--dark-green), var(--leaf-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 15px 35px rgba(10,31,19,0.3);
+            animation: logoFloat 3s ease-in-out infinite;
+            border: 3px solid var(--gold);
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .logo-circle i {
+            font-size: 36px;
+            color: var(--gold);
+            animation: lockPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes lockPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--dark-green);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .auth-header p {
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* ============================================================
+           STEPS INDICATOR
+           ============================================================ */
+        .steps-bar {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        /* Connector line */
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 22px;
+            left: 50px;
+            width: 40px;
+            height: 2px;
+            background: var(--border-light);
+        }
+
+        .step.completed:not(:last-child)::after {
+            background: var(--success);
+        }
+
+        .step-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .step-circle.active {
+            background: var(--dark-green);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            animation: stepGlow 2s ease-in-out infinite;
+        }
+
+        .step-circle.inactive {
+            background: var(--creme-dark);
+            color: var(--text-muted);
+            border: 2px solid var(--border-light);
+        }
+
+        .step-circle.done {
+            background: var(--success);
+            color: white;
+            border: 2px solid var(--success);
+        }
+
+        @keyframes stepGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+        }
+
+        .step-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .step.active .step-label,
+        .step.completed .step-label {
+            color: var(--dark-green);
+        }
+
+        /* ============================================================
+           FORM ELEMENTS
+           ============================================================ */
+        .input-group {
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--dark-green);
+            margin-bottom: 8px;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 18px 50px 18px 55px;
+            border-radius: 18px;
+            border: 2px solid var(--border-light);
+            background: var(--creme);
+            font-size: 15px;
+            font-weight: 600;
+            outline: none;
+            transition: var(--transition);
+            color: var(--text-dark);
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--gold);
+            background: var(--white);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+            transform: scale(1.01);
+        }
+
+        .input-wrapper .input-icon-left {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 20px;
+            transition: var(--transition);
+        }
+
+        .input-wrapper input:focus ~ .input-icon-left {
+            color: var(--gold);
+        }
+
+        /* Eye toggle button */
+        .eye-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 10px;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .eye-toggle:hover {
+            color: var(--gold);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .eye-toggle:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* ============================================================
+           OTP INPUT GROUP
+           ============================================================ */
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+
+        .otp-box {
+            width: 50px;
+            height: 60px;
+            border-radius: 14px;
+            border: 2px solid var(--border-light);
+            background: var(--creme);
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--dark-green);
+            font-family: 'Space Mono', monospace;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .otp-box:focus {
+            border-color: var(--gold);
+            background: var(--white);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .otp-box.filled {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        /* ============================================================
+           TIMER
+           ============================================================ */
+        .timer-container {
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .timer-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--creme-dark);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .timer-display i {
+            color: var(--gold);
+            animation: spin 2s linear infinite;
+        }
+
+        .timer-display.expired {
+            color: var(--danger);
+        }
+
+        .resend-link {
+            color: var(--gold);
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .resend-link:hover {
+            color: var(--gold-hover);
+        }
+
+        /* ============================================================
+           BUTTONS
+           ============================================================ */
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: var(--dark-green);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 18px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            transition: var(--transition);
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(10,31,19,0.3);
+            background: var(--leaf-green);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            color: var(--dark-green);
+            border: 2px solid var(--border-light);
+            border-radius: 18px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           SUCCESS STATE
+           ============================================================ */
+        .success-state {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success), #047857);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: successPop 0.6s var(--bounce);
+            box-shadow: 0 20px 40px rgba(5, 150, 105, 0.4);
+        }
+
+        @keyframes successPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-icon-wrapper i {
+            font-size: 50px;
+            color: white;
+            animation: checkDraw 0.8s ease-out forwards;
+        }
+
+        @keyframes checkDraw {
+            0% { opacity: 0; transform: scale(0) rotate(-90deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .success-state h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--success);
+            margin-bottom: 12px;
+        }
+
+        .success-state p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* ============================================================
+           SHAKE ANIMATION
+           ============================================================ */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-4px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-out;
+        }
+
+        /* ============================================================
+           MOBILE OPTIMIZATIONS
+           ============================================================ */
+        @media (max-width: 480px) {
+            .auth-card { padding: 30px 22px; }
+            .auth-header h1 { font-size: 26px; }
+            .logo-circle { width: 70px; height: 70px; }
+            .logo-circle i { font-size: 30px; }
+            .otp-box { width: 42px; height: 52px; font-size: 20px; }
+            .steps-bar { gap: 15px; }
+            .step:not(:last-child)::after { width: 25px; left: 40px; }
+        }
     </style>
 </head>
 <body>
 
+<!-- ============================================================ -->
+<!-- BACKGROUND PARTICLES -->
+<!-- ============================================================ -->
+<div class="bg-particles" id="bgParticles"></div>
+
+<!-- ============================================================ -->
+<!-- TOAST CONTAINER -->
+<!-- ============================================================ -->
 <div id="toastContainer"></div>
+
+<!-- ============================================================ -->
+<!-- LOADING OVERLAY -->
+<!-- ============================================================ -->
 <div id="loadingOverlay">
     <div class="loading-spinner"></div>
     <div class="loading-text">VERIFYING ACCOUNT...</div>
 </div>
 
+<!-- ============================================================ -->
+<!-- MAIN CONTAINER -->
+<!-- ============================================================ -->
 <div class="main-container">
     <div class="auth-card">
         
+        <!-- LOGO -->
         <div class="logo-section">
-            <div class="logo-circle"><i class="fa-solid fa-lock"></i></div>
+            <div class="logo-circle">
+                <i class="fa-solid fa-shield-heart"></i>
+            </div>
         </div>
 
+        <!-- STEPS INDICATOR -->
         <div class="steps-bar">
             <div class="step active" id="step1">
                 <div class="step-circle active">1</div>
-                <span class="step-label">Verify</span>
+                <span class="step-label">Email</span>
             </div>
             <div class="step" id="step2">
                 <div class="step-circle inactive">2</div>
-                <span class="step-label">Reset</span>
+                <span class="step-label">OTP</span>
             </div>
             <div class="step" id="step3">
                 <div class="step-circle inactive">3</div>
+                <span class="step-label">Reset</span>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-circle inactive">4</div>
                 <span class="step-label">Done</span>
             </div>
         </div>
 
+        <!-- ============================================================ -->
         <!-- STEP 1: VERIFY EMAIL -->
+        <!-- ============================================================ -->
         <div id="step1Content">
             <div class="auth-header">
                 <h1>Forgot Password?</h1>
-                <p>Enter your registered email address and we'll help you reset your password securely.</p>
+                <p>Enter your registered email address. We'll send a 6-digit OTP to verify your identity.</p>
             </div>
+
             <div class="input-group">
-                <label><i class="fa-solid fa-envelope" style="margin-right:6px;"></i> Registered Email Address</label>
+                <label><i class="fa-solid fa-envelope" style="margin-right:6px;"></i> Registered Email</label>
                 <div class="input-wrapper">
-                    <input type="email" id="forgotEmail" placeholder="Enter your email address" autocomplete="email">
-                    <i class="fa-solid fa-at"></i>
+                    <input type="email" id="forgotEmail" placeholder="Enter your email address" autocomplete="email" inputmode="email">
+                    <i class="fa-solid fa-at input-icon-left"></i>
                 </div>
             </div>
-            <button class="btn-primary" id="verifyBtn" onclick="verifyEmail()">
-                <i class="fa-solid fa-magnifying-glass"></i> Find Account
+
+            <button class="btn-primary" id="verifyBtn" onclick="sendOTP()">
+                <i class="fa-solid fa-paper-plane"></i> Send OTP
             </button>
+
             <button class="btn-secondary" onclick="window.location.href='profile.html'">
                 <i class="fa-solid fa-arrow-left"></i> Back to Login
             </button>
         </div>
 
-        <!-- STEP 2: SET NEW PASSWORD -->
+        <!-- ============================================================ -->
+        <!-- STEP 2: ENTER OTP -->
+        <!-- ============================================================ -->
         <div id="step2Content" style="display:none;">
             <div class="auth-header">
-                <h1>Set New Password</h1>
-                <p>Choose a strong password for your account.</p>
+                <h1>Verify OTP</h1>
+                <p>We've sent a 6-digit code to your email. Enter it below.</p>
             </div>
+
+            <!-- Timer -->
+            <div class="timer-container" id="timerContainer">
+                <div class="timer-display" id="timerDisplay">
+                    <i class="fa-solid fa-clock"></i>
+                    <span id="timerText">02:00</span>
+                </div>
+            </div>
+
+            <!-- OTP Input -->
+            <div class="otp-container" id="otpContainer">
+                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this, 0)" onkeydown="handleOTPBackspace(event, this, 0)" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this, 1)" onkeydown="handleOTPBackspace(event, this, 1)" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this, 2)" onkeydown="handleOTPBackspace(event, this, 2)" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this, 3)" onkeydown="handleOTPBackspace(event, this, 3)" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this, 4)" onkeydown="handleOTPBackspace(event, this, 4)" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this, 5)" onkeydown="handleOTPBackspace(event, this, 5)" inputmode="numeric" pattern="[0-9]">
+            </div>
+
+            <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-bottom:15px;">
+                Didn't receive code? 
+                <span class="resend-link" id="resendLink" onclick="resendOTP()">Resend OTP</span>
+            </p>
+
+            <button class="btn-primary" id="verifyOtpBtn" onclick="verifyOTP()">
+                <i class="fa-solid fa-check-circle"></i> Verify & Continue
+            </button>
+
+            <button class="btn-secondary" onclick="goBackToStep1()">
+                <i class="fa-solid fa-arrow-left"></i> Change Email
+            </button>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- STEP 3: SET NEW PASSWORD -->
+        <!-- ============================================================ -->
+        <div id="step3Content" style="display:none;">
+            <div class="auth-header">
+                <h1>Set New Password</h1>
+                <p>Choose a strong, unique password for your account.</p>
+            </div>
+
             <div class="input-group">
                 <label>New Password</label>
                 <div class="input-wrapper">
                     <input type="password" id="newPassword" placeholder="Min. 8 characters" autocomplete="new-password">
-                    <i class="fa-solid fa-key"></i>
+                    <i class="fa-solid fa-lock input-icon-left"></i>
+                    <button type="button" class="eye-toggle" onclick="togglePassword('newPassword', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
                 </div>
             </div>
+
             <div class="input-group">
-                <label>Confirm New Password</label>
+                <label>Confirm Password</label>
                 <div class="input-wrapper">
-                    <input type="password" id="confirmPassword" placeholder="Re-enter password">
-                    <i class="fa-solid fa-check-circle"></i>
+                    <input type="password" id="confirmPassword" placeholder="Re-enter your password">
+                    <i class="fa-solid fa-check-double input-icon-left"></i>
+                    <button type="button" class="eye-toggle" onclick="togglePassword('confirmPassword', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
                 </div>
             </div>
+
             <button class="btn-primary" id="resetBtn" onclick="resetPassword()">
                 <i class="fa-solid fa-shield-halved"></i> Reset Password
             </button>
-            <button class="btn-secondary" onclick="goBackToStep1()">
-                <i class="fa-solid fa-arrow-left"></i> Try Different Email
+
+            <button class="btn-secondary" onclick="window.location.href='profile.html'">
+                <i class="fa-solid fa-times"></i> Cancel
             </button>
         </div>
 
-        <!-- STEP 3: SUCCESS -->
-        <div class="success-state" id="step3Content">
-            <div class="success-icon-wrapper"><i class="fa-solid fa-check"></i></div>
-            <h2>Password Updated!</h2>
-            <p>Your password has been successfully reset.</p>
-            <p style="font-size:13px; color:var(--text-muted);">
-                <i class="fa-solid fa-shield-check"></i> You can now login with your new password.
+        <!-- ============================================================ -->
+        <!-- STEP 4: SUCCESS -->
+        <!-- ============================================================ -->
+        <div class="success-state" id="step4Content">
+            <div class="success-icon-wrapper">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2>Password Reset Successful!</h2>
+            <p>Your password has been securely updated.</p>
+            <p style="font-size:13px; color:var(--text-muted); margin-top:5px;">
+                <i class="fa-solid fa-shield-check"></i> 
+                You can now login with your new password.
             </p>
-            <button class="btn-primary" onclick="window.location.href='profile.html'" style="margin-top:20px;">
+
+            <button class="btn-primary" onclick="window.location.href='profile.html'" style="margin-top:25px;">
                 <i class="fa-solid fa-sign-in-alt"></i> Go to Login
             </button>
         </div>
@@ -197,18 +889,170 @@
 </div>
 
 <script>
-    const firebaseConfig = { databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" };
+    // ============================================================
+    // FIREBASE CONFIG
+    // ============================================================
+    const firebaseConfig = {
+        databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com"
+    };
+    
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
+    // ============================================================
+    // GLOBAL STATE
+    // ============================================================
     let foundUserKey = null;
     let foundUserData = null;
+    let generatedOTP = null;
+    let otpExpiryTime = null;
+    let otpTimerInterval = null;
     let isProcessing = false;
     
     // ============================================================
-    // STEP 1: VERIFY EMAIL EXISTS IN DATABASE
+    // INIT BACKGROUND PARTICLES
     // ============================================================
-    window.verifyEmail = async function() {
+    function initParticles() {
+        const container = document.getElementById('bgParticles');
+        const colors = ['#D4AF37', '#B8860B', '#1A3E26', '#FAF4E5', '#059669'];
+        
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.floor(Math.random() * 8) + 2;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.cssText = `
+                width: ${size}px; height: ${size}px; background: ${color};
+                left: ${Math.random() * 100}%; top: ${Math.random() * 100}%;
+                --duration: ${Math.floor(Math.random() * 15) + 10}s;
+                --delay: ${Math.random() * 10}s;
+                --moveY: ${Math.floor(Math.random() * 200) - 100}px;
+                --moveX: ${Math.floor(Math.random() * 200) - 100}px;
+            `;
+            container.appendChild(particle);
+        }
+    }
+    
+    // ============================================================
+    // TOGGLE PASSWORD VISIBILITY
+    // ============================================================
+    window.togglePassword = function(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fa-solid fa-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'fa-solid fa-eye';
+        }
+    };
+    
+    // ============================================================
+    // OTP INPUT HANDLING
+    // ============================================================
+    window.handleOTPInput = function(input, index) {
+        // Allow only numbers
+        input.value = input.value.replace(/[^0-9]/g, '');
+        
+        if (input.value) {
+            input.classList.add('filled');
+            // Auto-focus next input
+            const nextInput = document.querySelectorAll('.otp-box')[index + 1];
+            if (nextInput) {
+                nextInput.focus();
+            }
+        } else {
+            input.classList.remove('filled');
+        }
+        
+        // Check if all filled
+        checkOTPComplete();
+    };
+    
+    window.handleOTPBackspace = function(event, input, index) {
+        if (event.key === 'Backspace' && !input.value) {
+            const prevInput = document.querySelectorAll('.otp-box')[index - 1];
+            if (prevInput) {
+                prevInput.focus();
+            }
+        }
+    };
+    
+    function checkOTPComplete() {
+        const otpInputs = document.querySelectorAll('.otp-box');
+        const allFilled = Array.from(otpInputs).every(input => input.value.length === 1);
+        const verifyBtn = document.getElementById('verifyOtpBtn');
+        
+        if (allFilled) {
+            verifyBtn.style.animation = 'pulse 1s infinite';
+            verifyBtn.style.boxShadow = '0 0 0 8px rgba(212, 175, 55, 0.2)';
+        } else {
+            verifyBtn.style.animation = '';
+            verifyBtn.style.boxShadow = '';
+        }
+    }
+    
+    function getOTPValue() {
+        const otpInputs = document.querySelectorAll('.otp-box');
+        return Array.from(otpInputs).map(input => input.value).join('');
+    }
+    
+    function clearOTP() {
+        document.querySelectorAll('.otp-box').forEach(input => {
+            input.value = '';
+            input.classList.remove('filled');
+        });
+        document.getElementById('verifyOtpBtn').style.animation = '';
+    }
+    
+    // ============================================================
+    // GENERATE OTP
+    // ============================================================
+    function generateOTP() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+    
+    // ============================================================
+    // START OTP TIMER
+    // ============================================================
+    function startOTPTimer() {
+        otpExpiryTime = Date.now() + 120000; // 2 minutes
+        
+        document.getElementById('timerContainer').style.display = 'block';
+        document.getElementById('timerDisplay').classList.remove('expired');
+        document.getElementById('resendLink').style.pointerEvents = 'auto';
+        document.getElementById('resendLink').style.opacity = '1';
+        
+        if (otpTimerInterval) clearInterval(otpTimerInterval);
+        
+        otpTimerInterval = setInterval(() => {
+            const remaining = Math.max(0, Math.floor((otpExpiryTime - Date.now()) / 1000));
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            
+            document.getElementById('timerText').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            if (remaining <= 30) {
+                document.getElementById('timerDisplay').classList.add('expired');
+            }
+            
+            if (remaining <= 0) {
+                clearInterval(otpTimerInterval);
+                document.getElementById('timerDisplay').classList.add('expired');
+                document.getElementById('timerText').textContent = 'Expired';
+                document.getElementById('resendLink').style.pointerEvents = 'auto';
+                document.getElementById('resendLink').style.opacity = '1';
+            }
+        }, 1000);
+    }
+    
+    // ============================================================
+    // STEP 1: SEND OTP
+    // ============================================================
+    window.sendOTP = async function() {
         if (isProcessing) return;
         
         const emailInput = document.getElementById('forgotEmail');
@@ -216,59 +1060,188 @@
         const card = document.querySelector('.auth-card');
         const verifyBtn = document.getElementById('verifyBtn');
         
-        if (!email) { showToast('Please enter your email address', 'error'); emailInput.focus(); card.classList.add('shake'); setTimeout(() => card.classList.remove('shake'), 500); return; }
-        if (!isValidEmail(email)) { showToast('Please enter a valid email address', 'error'); card.classList.add('shake'); setTimeout(() => card.classList.remove('shake'), 500); return; }
+        if (!email) {
+            showToast('Please enter your email address', 'error');
+            emailInput.focus();
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 500);
+            return;
+        }
+        
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('Please enter a valid email address', 'error');
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 500);
+            return;
+        }
         
         isProcessing = true;
         verifyBtn.disabled = true;
+        verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
         document.getElementById('loadingOverlay').style.display = 'flex';
         
         try {
             const snapshot = await database.ref('users').once('value');
             const users = snapshot.val() || {};
-            
-            // Find user by email
             const entries = Object.entries(users);
             const found = entries.find(([key, user]) => user.email === email);
             
             document.getElementById('loadingOverlay').style.display = 'none';
             
             if (!found) {
-                showToast('No account found with this email address', 'error');
+                showToast('No account found with this email', 'error');
                 isProcessing = false;
                 verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send OTP';
                 return;
             }
             
             foundUserKey = found[0];
             foundUserData = found[1];
             
+            // Generate OTP
+            generatedOTP = generateOTP();
+            
+            // Store OTP in database temporarily
+            await database.ref('users/' + foundUserKey).update({
+                resetOTP: generatedOTP,
+                otpExpiry: Date.now() + 120000
+            });
+            
             // Move to step 2
             document.getElementById('step1Content').style.display = 'none';
             document.getElementById('step2Content').style.display = 'block';
             
             // Update steps
-            document.getElementById('step1').querySelector('.step-circle').classList.remove('active');
-            document.getElementById('step1').querySelector('.step-circle').classList.add('done');
-            document.getElementById('step2').querySelector('.step-circle').classList.remove('inactive');
-            document.getElementById('step2').querySelector('.step-circle').classList.add('active');
-            document.getElementById('step2').classList.add('active');
+            updateStepUI(2);
             
-            showToast('Account found! Set your new password.', 'success');
-            setTimeout(() => document.getElementById('newPassword').focus(), 500);
+            // Start timer
+            startOTPTimer();
+            
+            // Focus first OTP input
+            setTimeout(() => {
+                document.querySelectorAll('.otp-box')[0]?.focus();
+            }, 300);
+            
+            // Show OTP (in production, this would be sent via EmailJS)
+            showToast(`OTP sent! Your code: ${generatedOTP}`, 'success');
             
         } catch (error) {
             document.getElementById('loadingOverlay').style.display = 'none';
             console.error('Error:', error);
-            showToast('Something went wrong. Please try again.', 'error');
+            showToast('Something went wrong. Try again.', 'error');
         } finally {
             isProcessing = false;
             verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send OTP';
         }
     };
     
     // ============================================================
-    // STEP 2: RESET PASSWORD IN DATABASE
+    // RESEND OTP
+    // ============================================================
+    window.resendOTP = function() {
+        if (isProcessing) return;
+        
+        generatedOTP = generateOTP();
+        
+        // Update OTP in database
+        database.ref('users/' + foundUserKey).update({
+            resetOTP: generatedOTP,
+            otpExpiry: Date.now() + 120000
+        }).then(() => {
+            clearOTP();
+            startOTPTimer();
+            document.querySelectorAll('.otp-box')[0]?.focus();
+            showToast(`New OTP: ${generatedOTP}`, 'success');
+        }).catch(() => {
+            showToast('Failed to resend OTP', 'error');
+        });
+    };
+    
+    // ============================================================
+    // STEP 2: VERIFY OTP
+    // ============================================================
+    window.verifyOTP = async function() {
+        if (isProcessing) return;
+        
+        const enteredOTP = getOTPValue();
+        const card = document.querySelector('.auth-card');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        
+        if (enteredOTP.length !== 6) {
+            showToast('Please enter complete 6-digit OTP', 'error');
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 500);
+            return;
+        }
+        
+        // Check expiry
+        if (Date.now() > otpExpiryTime) {
+            showToast('OTP has expired. Please resend.', 'error');
+            return;
+        }
+        
+        isProcessing = true;
+        verifyOtpBtn.disabled = true;
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        document.querySelector('.loading-text').textContent = 'VERIFYING OTP...';
+        
+        try {
+            // Fetch latest OTP from database
+            const snapshot = await database.ref('users/' + foundUserKey).once('value');
+            const userData = snapshot.val();
+            
+            document.getElementById('loadingOverlay').style.display = 'none';
+            
+            if (!userData || !userData.resetOTP) {
+                showToast('OTP expired. Please resend.', 'error');
+                isProcessing = false;
+                verifyOtpBtn.disabled = false;
+                return;
+            }
+            
+            if (userData.resetOTP !== enteredOTP) {
+                showToast('Invalid OTP. Please try again.', 'error');
+                clearOTP();
+                document.querySelectorAll('.otp-box')[0]?.focus();
+                isProcessing = false;
+                verifyOtpBtn.disabled = false;
+                return;
+            }
+            
+            if (Date.now() > userData.otpExpiry) {
+                showToast('OTP has expired. Please resend.', 'error');
+                isProcessing = false;
+                verifyOtpBtn.disabled = false;
+                return;
+            }
+            
+            // OTP verified! Move to step 3
+            document.getElementById('step2Content').style.display = 'none';
+            document.getElementById('step3Content').style.display = 'block';
+            
+            // Clear timer
+            if (otpTimerInterval) clearInterval(otpTimerInterval);
+            
+            updateStepUI(3);
+            
+            showToast('OTP verified! Set new password.', 'success');
+            setTimeout(() => document.getElementById('newPassword')?.focus(), 500);
+            
+        } catch (error) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            console.error('Error:', error);
+            showToast('Verification failed. Try again.', 'error');
+        } finally {
+            isProcessing = false;
+            verifyOtpBtn.disabled = false;
+            document.querySelector('.loading-text').textContent = 'VERIFYING ACCOUNT...';
+        }
+    };
+    
+    // ============================================================
+    // STEP 3: RESET PASSWORD
     // ============================================================
     window.resetPassword = async function() {
         if (isProcessing) return;
@@ -278,9 +1251,22 @@
         const card = document.querySelector('.auth-card');
         const resetBtn = document.getElementById('resetBtn');
         
-        if (!newPass) { showToast('Please enter a new password', 'error'); card.classList.add('shake'); setTimeout(() => card.classList.remove('shake'), 500); return; }
-        if (newPass.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
-        if (newPass !== confirmPass) { showToast('Passwords do not match', 'error'); return; }
+        if (!newPass) {
+            showToast('Please enter a new password', 'error');
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 500);
+            return;
+        }
+        
+        if (newPass.length < 8) {
+            showToast('Password must be at least 8 characters', 'error');
+            return;
+        }
+        
+        if (newPass !== confirmPass) {
+            showToast('Passwords do not match', 'error');
+            return;
+        }
         
         isProcessing = true;
         resetBtn.disabled = true;
@@ -288,22 +1274,20 @@
         document.querySelector('.loading-text').textContent = 'UPDATING PASSWORD...';
         
         try {
-            // Update password in database (same encoding as profile.html)
+            // Update password in database
             await database.ref('users/' + foundUserKey).update({
-                password: btoa(newPass)
+                password: btoa(newPass),
+                resetOTP: null,
+                otpExpiry: null
             });
             
             document.getElementById('loadingOverlay').style.display = 'none';
             
-            // Move to step 3
-            document.getElementById('step2Content').style.display = 'none';
-            document.getElementById('step3Content').style.display = 'block';
+            // Move to step 4
+            document.getElementById('step3Content').style.display = 'none';
+            document.getElementById('step4Content').style.display = 'block';
             
-            // Update steps
-            document.getElementById('step2').querySelector('.step-circle').classList.remove('active');
-            document.getElementById('step2').querySelector('.step-circle').classList.add('done');
-            document.getElementById('step3').querySelector('.step-circle').classList.remove('inactive');
-            document.getElementById('step3').querySelector('.step-circle').classList.add('done');
+            updateStepUI(4);
             
             showToast('Password updated successfully! ✅', 'success');
             
@@ -324,42 +1308,114 @@
     window.goBackToStep1 = function() {
         document.getElementById('step1Content').style.display = 'block';
         document.getElementById('step2Content').style.display = 'none';
-        document.getElementById('newPassword').value = '';
-        document.getElementById('confirmPassword').value = '';
+        clearOTP();
+        if (otpTimerInterval) clearInterval(otpTimerInterval);
+        document.getElementById('timerContainer').style.display = 'none';
         foundUserKey = null;
         foundUserData = null;
-        
-        // Reset steps
-        document.getElementById('step1').querySelector('.step-circle').classList.add('active');
-        document.getElementById('step1').querySelector('.step-circle').classList.remove('done');
-        document.getElementById('step2').querySelector('.step-circle').classList.add('inactive');
-        document.getElementById('step2').querySelector('.step-circle').classList.remove('active', 'done');
-        document.getElementById('step2').classList.remove('active');
+        generatedOTP = null;
+        updateStepUI(1);
     };
     
+    // ============================================================
+    // UPDATE STEP UI
+    // ============================================================
+    function updateStepUI(activeStep) {
+        const steps = ['step1', 'step2', 'step3', 'step4'];
+        
+        steps.forEach((stepId, index) => {
+            const stepEl = document.getElementById(stepId);
+            const circle = stepEl.querySelector('.step-circle');
+            
+            // Remove all classes
+            circle.classList.remove('active', 'inactive', 'done');
+            stepEl.classList.remove('active', 'completed');
+            
+            if (index + 1 < activeStep) {
+                // Previous steps - done
+                circle.classList.add('done');
+                stepEl.classList.add('completed');
+            } else if (index + 1 === activeStep) {
+                // Current step - active
+                circle.classList.add('active');
+                stepEl.classList.add('active');
+            } else {
+                // Future steps - inactive
+                circle.classList.add('inactive');
+            }
+        });
+    }
+    
+    // ============================================================
+    // VALIDATE EMAIL
+    // ============================================================
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
     
+    // ============================================================
+    // TOAST NOTIFICATION
+    // ============================================================
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        const icons = { success: '✅', error: '❌', info: '💚' };
+        const icons = { success: '✅', error: '❌', info: '💚', warning: '⚠️' };
         toast.innerHTML = `<span>${icons[type] || '🔔'}</span> ${message}`;
         container.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'all 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3500);
     }
     
+    // ============================================================
+    // KEYBOARD SUPPORT
+    // ============================================================
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
-            if (document.getElementById('step1Content').style.display !== 'none') verifyEmail();
-            else if (document.getElementById('step2Content').style.display !== 'none') resetPassword();
+            const step1Visible = document.getElementById('step1Content').style.display !== 'none';
+            const step2Visible = document.getElementById('step2Content').style.display !== 'none';
+            const step3Visible = document.getElementById('step3Content').style.display !== 'none';
+            
+            if (step1Visible) sendOTP();
+            else if (step2Visible) verifyOTP();
+            else if (step3Visible) resetPassword();
         }
     });
     
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => document.getElementById('forgotEmail')?.focus(), 800);
+    // ============================================================
+    // PASTE OTP SUPPORT
+    // ============================================================
+    document.addEventListener('paste', function(e) {
+        const activeEl = document.activeElement;
+        if (activeEl && activeEl.closest('#otpContainer')) {
+            e.preventDefault();
+            const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+            const digits = pastedText.replace(/[^0-9]/g, '').slice(0, 6);
+            
+            if (digits.length === 6) {
+                const otpInputs = document.querySelectorAll('.otp-box');
+                digits.split('').forEach((digit, i) => {
+                    otpInputs[i].value = digit;
+                    otpInputs[i].classList.add('filled');
+                });
+                otpInputs[5].focus();
+                checkOTPComplete();
+            }
+        }
+    });
+    
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        initParticles();
+        
+        setTimeout(() => {
+            document.getElementById('forgotEmail')?.focus();
+        }, 800);
     });
 </script>
 </body>

@@ -14,9 +14,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <style>
-        /* ============================================================
-           ROOT VARIABLES - PREMIUM GREEN/CREME/GOLD THEME
-           ============================================================ */
         :root {
             --creme: #FDFBF7; --creme-dark: #F5F1E6; --gold: #D4AF37; --gold-light: #FAF4E5;
             --gold-hover: #B8860B; --dark-green: #0A1F13; --leaf-green: #1A3E26; --leaf-light: #eaf2e9;
@@ -74,10 +71,9 @@
         .step:not(:last-child)::after { content:''; position:absolute; top:22px; left:50px; width:40px; height:2px; background:var(--border-light); }
         .step.completed:not(:last-child)::after { background:var(--success); }
         .step-circle { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; transition:var(--transition); }
-        .step-circle.active { background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); animation:stepGlow 2s ease-in-out infinite; }
+        .step-circle.active { background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); }
         .step-circle.inactive { background:var(--creme-dark); color:var(--text-muted); border:2px solid var(--border-light); }
         .step-circle.done { background:var(--success); color:white; border:2px solid var(--success); }
-        @keyframes stepGlow { 0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0.4);} 50%{box-shadow:0 0 0 15px rgba(212,175,55,0);} }
         .step-label { font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; }
         .step.active .step-label, .step.completed .step-label { color:var(--dark-green); }
         
@@ -104,13 +100,11 @@
         .resend-link:hover { color:var(--gold-hover); }
         
         .btn-primary { width:100%; padding:18px; background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); border-radius:18px; font-size:17px; font-weight:800; cursor:pointer; box-shadow:0 10px 30px rgba(212,175,55,0.2); transition:var(--transition); margin-top:15px; display:flex; align-items:center; justify-content:center; gap:10px; position:relative; z-index:1; overflow:hidden; }
-        .btn-primary::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transition:0.5s; }
-        .btn-primary:hover::before { left:100%; }
-        .btn-primary:hover { transform:translateY(-4px); box-shadow:0 20px 40px rgba(10,31,19,0.3); background:var(--leaf-green); }
+        .btn-primary:hover { transform:translateY(-4px); background:var(--leaf-green); }
         .btn-primary:active { transform:translateY(0) scale(0.98); }
-        .btn-primary:disabled { opacity:0.5; cursor:not-allowed; pointer-events:none; }
-        .btn-secondary { width:100%; padding:16px; background:transparent; color:var(--dark-green); border:2px solid var(--border-light); border-radius:18px; font-size:15px; font-weight:700; cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; position:relative; z-index:1; }
-        .btn-secondary:hover { border-color:var(--gold); background:var(--gold-light); transform:translateY(-2px); }
+        .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+        .btn-secondary { width:100%; padding:16px; background:transparent; color:var(--dark-green); border:2px solid var(--border-light); border-radius:18px; font-size:15px; font-weight:700; cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; }
+        .btn-secondary:hover { border-color:var(--gold); background:var(--gold-light); }
         
         .success-state { display:none; text-align:center; padding:20px 0; animation:fadeInUp 0.6s ease-out; }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
@@ -118,7 +112,7 @@
         @keyframes successPop { 0%{transform:scale(0);opacity:0;} 50%{transform:scale(1.2);} 100%{transform:scale(1);opacity:1;} }
         .success-icon-wrapper i { font-size:50px; color:white; }
         .success-state h2 { font-family:'Outfit',sans-serif; font-size:26px; font-weight:800; color:var(--success); margin-bottom:12px; }
-        .success-state p { color:var(--text-muted); font-size:15px; margin-bottom:8px; line-height:1.6; }
+        .success-state p { color:var(--text-muted); font-size:15px; margin-bottom:8px; }
         
         @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-8px);} 50%{transform:translateX(8px);} 75%{transform:translateX(-4px);} }
         .shake { animation:shake 0.5s ease-out; }
@@ -135,9 +129,7 @@
 <div class="main-container">
     <div class="auth-card">
         
-        <div class="logo-section">
-            <div class="logo-circle"><i class="fa-solid fa-shield-heart"></i></div>
-        </div>
+        <div class="logo-section"><div class="logo-circle"><i class="fa-solid fa-shield-heart"></i></div></div>
 
         <div class="steps-bar">
             <div class="step active" id="step1"><div class="step-circle active">1</div><span class="step-label">Email</span></div>
@@ -219,11 +211,9 @@
     const database = firebase.database();
     
     // ============================================================
-    // BREVO EMAIL CONFIG
+    // GOOGLE APPS SCRIPT EMAIL CONFIG (UNLIMITED FREE)
     // ============================================================
-    const BREVO_API_KEY = "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";
-    const SENDER_EMAIL = "thenemimart@gmail.com";
-    const SENDER_NAME = "Nemi Mart Support";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzGalEKzShgUrC2QMbLWdfEKwWbBCcZwT9YfaURk6Ph8RPWKymnXxEtPPTot2Ur7I8/exec";
     
     // ============================================================
     // GLOBAL STATE
@@ -249,151 +239,27 @@
     }
     
     // ============================================================
-    // SEND EMAIL VIA BREVO API (ULTRA PREMIUM TEMPLATE)
+    // SEND EMAIL VIA GOOGLE APPS SCRIPT (UNLIMITED + GITHUB PAGES OK)
     // ============================================================
-    async function sendBrevoEmail(toEmail, toName, subject, otpCode) {
-        const htmlContent = `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="margin:0;padding:0;background-color:#F5F1E6;font-family:'Segoe UI',Arial,sans-serif;">
-    
-    <!-- Outer Wrapper -->
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F5F1E6;padding:30px 15px;">
-        <tr>
-            <td align="center">
-                
-                <!-- Main Card -->
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background-color:#FFFFFF;border-radius:24px;overflow:hidden;box-shadow:0 15px 40px rgba(10,31,19,0.12);border:1px solid #EAE5D9;">
-                    
-                    <!-- Top Gold Bar -->
-                    <tr>
-                        <td style="height:6px;background:linear-gradient(90deg,#D4AF37,#B8860B,#D4AF37);"></td>
-                    </tr>
-                    
-                    <!-- Header with Logo -->
-                    <tr>
-                        <td style="padding:35px 35px 25px 35px;text-align:center;">
-                            <div style="width:72px;height:72px;background:linear-gradient(135deg,#0A1F13,#1A3E26);border-radius:50%;display:inline-block;text-align:center;line-height:72px;border:3px solid #D4AF37;box-shadow:0 12px 30px rgba(10,31,19,0.2);">
-                                <span style="font-size:34px;">🌿</span>
-                            </div>
-                            <h1 style="font-family:'Georgia',serif;color:#0A1F13;font-size:26px;margin:18px 0 5px 0;letter-spacing:1px;font-weight:900;">NEMI MART</h1>
-                            <p style="color:#D4AF37;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:3px;margin:0;">Pure Ayurveda</p>
-                        </td>
-                    </tr>
-                    
-                    <!-- Divider -->
-                    <tr>
-                        <td style="padding:0 35px;">
-                            <div style="border-top:1px solid #EAE5D9;"></div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Main Content -->
-                    <tr>
-                        <td style="padding:30px 35px 20px 35px;text-align:center;">
-                            
-                            <!-- Lock Icon -->
-                            <div style="width:60px;height:60px;background:linear-gradient(135deg,#0A1F13,#1A3E26);border-radius:50%;display:inline-block;text-align:center;line-height:60px;margin-bottom:20px;">
-                                <span style="font-size:28px;">🔐</span>
-                            </div>
-                            
-                            <h2 style="color:#0A1F13;font-size:22px;font-weight:800;margin:0 0 8px 0;">Password Reset Request</h2>
-                            
-                            <p style="color:#5C6F63;font-size:14px;line-height:1.7;margin:0 0 5px 0;">
-                                Hello <strong style="color:#0A1F13;">${toName}</strong>,
-                            </p>
-                            
-                            <p style="color:#5C6F63;font-size:14px;line-height:1.7;margin:0 0 25px 0;">
-                                We received a request to reset your account password. Use the verification code below to complete the process.
-                            </p>
-                            
-                            <!-- OTP Box -->
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0 25px 0;">
-                                <tr>
-                                    <td align="center">
-                                        <div style="background:linear-gradient(135deg,#0A1F13,#1A3E26);border-radius:16px;padding:22px 30px;display:inline-block;border:2px dashed #D4AF37;box-shadow:0 10px 30px rgba(10,31,19,0.2);">
-                                            <p style="color:#D4AF37;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin:0 0 10px 0;">Your One-Time Password</p>
-                                            <span style="font-size:40px;font-weight:900;letter-spacing:14px;color:#FFFFFF;font-family:'Courier New',monospace;text-align:center;display:block;">${otpCode}</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                            
-                            <p style="color:#EF4444;font-size:12px;font-weight:700;margin:0 0 8px 0;">
-                                ⏰ This OTP expires in <strong>3 minutes</strong>
-                            </p>
-                            
-                            <p style="color:#9CA3AF;font-size:11px;margin:0 0 20px 0;">
-                                For security reasons, please do not share this code with anyone.
-                            </p>
-                            
-                        </td>
-                    </tr>
-                    
-                    <!-- Divider -->
-                    <tr>
-                        <td style="padding:0 35px;">
-                            <div style="border-top:1px solid #EAE5D9;"></div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Security Notice -->
-                    <tr>
-                        <td style="padding:20px 35px 10px 35px;text-align:center;">
-                            <p style="color:#9CA3AF;font-size:11px;line-height:1.6;margin:0;">
-                                🔒 <strong>Security Notice:</strong> If you didn't request this password reset, please ignore this email or contact our support team immediately. Your account security is our priority.
-                            </p>
-                        </td>
-                    </tr>
-                    
-                    <!-- Footer -->
-                    <tr>
-                        <td style="padding:20px 35px 30px 35px;text-align:center;">
-                            <div style="border-top:1px solid #EAE5D9;padding-top:20px;">
-                                <p style="color:#D4AF37;font-size:13px;font-weight:800;margin:0 0 5px 0;letter-spacing:1px;">
-                                    🌿 NEMI MART
-                                </p>
-                               
-                                <p style="color:#C4C9C6;font-size:9px;margin-top:12px;">
-                                    © 2026 Nemi Mart. All rights reserved. Pure Ayurveda, Pure Life.
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                </table>
-                
-            </td>
-        </tr>
-    </table>
-    
-</body>
-</html>`;
-        
-        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    async function sendEmailGoogleScript(toEmail, toName, subject, otpCode) {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'api-key': BREVO_API_KEY
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-                to: [{ email: toEmail, name: toName }],
-                subject: subject,
-                htmlContent: htmlContent
+                toEmail: toEmail,
+                toName: toName,
+                otpCode: otpCode,
+                subject: subject
             })
         });
         
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Email sending failed');
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Email sending failed');
         }
         
-        return response.json();
+        return result;
     }
     
     // ============================================================
@@ -458,7 +324,7 @@
     }
     
     // ============================================================
-    // STEP 1: SEND OTP EMAIL VIA BREVO
+    // STEP 1: SEND OTP EMAIL
     // ============================================================
     window.sendOTPEmail = async function() {
         if (isProcessing) return;
@@ -480,12 +346,8 @@
             foundUserKey=found[0]; foundUserData=found[1];
             generatedOTP = generateOTP();
             
-            // Send email via Brevo
-            try {
-                await sendBrevoEmail(email, foundUserData.name||'Nemi User', '🔐 Your Nemi Mart Password Reset Code', generatedOTP);
-            } catch(emailErr) {
-                console.warn('Brevo email failed:', emailErr);
-            }
+            // Send email via Google Apps Script
+            await sendEmailGoogleScript(email, foundUserData.name||'User', '🔐 Your Nemi Mart Password Reset Code', generatedOTP);
             
             await database.ref('users/'+foundUserKey).update({resetOTP:generatedOTP, otpExpiry:Date.now()+180000});
             document.getElementById('step1Content').style.display='none';
@@ -494,7 +356,7 @@
             startOTPTimer();
             setTimeout(()=>document.querySelectorAll('.otp-box')[0]?.focus(),300);
             showToast(`OTP sent to ${email}! Check inbox ✅`,'success');
-        } catch(e) { document.getElementById('loadingOverlay').style.display='none'; console.error(e); showToast('Error. Try again.','error'); }
+        } catch(e) { document.getElementById('loadingOverlay').style.display='none'; console.error(e); showToast('Error sending email. Try again.','error'); }
         finally { isProcessing=false; btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Send OTP to Email'; }
     };
     
@@ -504,9 +366,8 @@
     window.resendOTPEmail = async function() {
         if (isProcessing) return;
         generatedOTP = generateOTP();
-        try {
-            await sendBrevoEmail(foundUserData.email, foundUserData.name||'User', '🔐 New OTP - Nemi Mart', generatedOTP);
-        } catch(e) { console.warn('Resend email failed:', e); }
+        try { await sendEmailGoogleScript(foundUserData.email, foundUserData.name||'User', '🔐 New OTP - Nemi Mart', generatedOTP); }
+        catch(e) { console.warn('Resend failed:', e); }
         await database.ref('users/'+foundUserKey).update({resetOTP:generatedOTP, otpExpiry:Date.now()+180000});
         clearOTP(); startOTPTimer();
         document.querySelectorAll('.otp-box')[0]?.focus();
@@ -524,7 +385,6 @@
         if (Date.now()>otpExpiryTime) { showToast('OTP expired. Resend.','error'); return; }
         isProcessing=true; document.getElementById('verifyOtpBtn').disabled=true;
         document.getElementById('loadingOverlay').style.display='flex';
-        document.querySelector('.loading-text').textContent='VERIFYING OTP...';
         try {
             const snap = await database.ref('users/'+foundUserKey).once('value');
             const data = snap.val();
@@ -536,10 +396,10 @@
             document.getElementById('step2Content').style.display='none';
             document.getElementById('step3Content').style.display='block';
             if(otpTimerInterval) clearInterval(otpTimerInterval);
-            updateStepUI(3); showToast('OTP verified! Set new password.','success');
+            updateStepUI(3); showToast('OTP verified! ✅','success');
             setTimeout(()=>document.getElementById('newPassword')?.focus(),500);
         } catch(e) { document.getElementById('loadingOverlay').style.display='none'; showToast('Error','error'); }
-        finally { isProcessing=false; document.getElementById('verifyOtpBtn').disabled=false; document.querySelector('.loading-text').textContent='SENDING OTP...'; }
+        finally { isProcessing=false; document.getElementById('verifyOtpBtn').disabled=false; }
     };
     
     // ============================================================
@@ -554,7 +414,6 @@
         if (np!==cp) { showToast('Passwords do not match','error'); return; }
         isProcessing=true; document.getElementById('resetBtn').disabled=true;
         document.getElementById('loadingOverlay').style.display='flex';
-        document.querySelector('.loading-text').textContent='UPDATING...';
         try {
             await database.ref('users/'+foundUserKey).update({password:btoa(np), resetOTP:null, otpExpiry:null});
             document.getElementById('loadingOverlay').style.display='none';
@@ -562,7 +421,7 @@
             document.getElementById('step4Content').style.display='block';
             updateStepUI(4); showToast('Password updated! ✅','success');
         } catch(e) { document.getElementById('loadingOverlay').style.display='none'; showToast('Failed','error'); }
-        finally { isProcessing=false; document.getElementById('resetBtn').disabled=false; document.querySelector('.loading-text').textContent='SENDING OTP...'; }
+        finally { isProcessing=false; document.getElementById('resetBtn').disabled=false; }
     };
     
     // ============================================================
@@ -591,7 +450,7 @@
     function showToast(msg, type='info') {
         const c=document.getElementById('toastContainer'), t=document.createElement('div');
         t.className=`toast ${type}`;
-        const icons={success:'✅',error:'❌',info:'💚',warning:'⚠️'};
+        const icons={success:'✅',error:'❌',info:'💚'};
         t.innerHTML=`<span>${icons[type]||'🔔'}</span> ${msg}`;
         c.appendChild(t);
         setTimeout(()=>{t.style.opacity='0';t.style.transition='all 0.3s ease';setTimeout(()=>t.remove(),300);},3500);

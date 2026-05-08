@@ -1,354 +1,469 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Search</title>
+    <title>Nemi Mart | Elite Search</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <style>
         :root {
-            --primary: #1A3E26; /* Deep Green */
-            --accent: #D4AF37;  /* Gold */
-            --bg-light: #FDFBF7;
-            --white: #ffffff;
-            --text-main: #0A1F13;
-            --text-muted: #64748B;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow-lg: 0 25px 50px -12px rgba(26, 62, 38, 0.15);
+            --creme: #FDFBF7; --creme-dark: #F5F1E6; --gold: #D4AF37; --gold-light: #FAF4E5;
+            --gold-hover: #B8860B; --dark-green: #0A1F13; --leaf-green: #1A3E26; --white: #FFFFFF;
+            --text-dark: #1F2937; --text-muted: #5C6F63; --danger: #EF4444; --success: #059669;
+            --info: #3B82F6; --warning: #EAB308; --border-light: #EAE5D9;
+            --radius-xl: 32px; --radius-lg: 24px; --radius-md: 18px; --radius-sm: 14px;
+            --shadow-soft: 0 8px 25px rgba(0,0,0,0.04); --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
+            --shadow-premium: 0 30px 60px -15px rgba(10,31,19,0.25);
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            --bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; -webkit-tap-highlight-color:transparent; }
+        body { background: var(--creme); color: var(--text-dark); min-height: 100vh; overflow-x: hidden; padding-bottom: 100px; animation: pageLoad 0.6s ease-out; }
+        @keyframes pageLoad { 0%{opacity:0;transform:translateY(10px);} 100%{opacity:1;transform:translateY(0);} }
+        ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--creme-dark); } ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:10px; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        /* HEADER */
+        .header { position:sticky; top:0; z-index:1000; background:rgba(253,251,247,0.96); backdrop-filter:blur(15px); padding:16px 20px; border-bottom:2px solid var(--gold); box-shadow:var(--shadow-soft); }
+        .header-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+        .back-btn { width:40px; height:40px; border-radius:14px; background:var(--white); border:1px solid var(--border-light); display:flex; align-items:center; justify-content:center; color:var(--dark-green); text-decoration:none; transition:var(--transition); }
+        .back-btn:active { background:var(--gold); color:white; transform:scale(0.95); }
+        .header-title { font-family:'Outfit',sans-serif; font-size:22px; font-weight:800; color:var(--dark-green); }
+        .search-box { display:flex; align-items:center; background:var(--white); border-radius:18px; padding:8px 16px; gap:12px; border:2px solid var(--border-light); transition:var(--transition); box-shadow:var(--shadow-soft); }
+        .search-box:focus-within { border-color:var(--gold); box-shadow:0 10px 30px rgba(212,175,55,0.15); }
+        .search-box input { flex:1; border:none; outline:none; background:transparent; font-size:15px; font-weight:600; color:var(--text-dark); }
+        .search-box input::placeholder { color:var(--text-muted); }
+        .voice-btn { width:42px; height:42px; border-radius:14px; background:var(--dark-green); border:none; color:var(--gold); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition); }
+        .voice-btn:active { background:var(--gold); color:var(--dark-green); transform:scale(0.9); }
+        .voice-btn.listening { animation:pulse 1.5s infinite; background:var(--danger); color:white; }
+        @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4);} 50%{box-shadow:0 0 0 15px rgba(239,68,68,0);} }
 
-        body { 
-            background: var(--bg-light); 
-            color: var(--text-main); 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
+        /* FILTER CHIPS */
+        .filter-strip { display:flex; gap:8px; padding:16px 20px 0; overflow-x:auto; scrollbar-width:none; }
+        .filter-strip::-webkit-scrollbar { display:none; }
+        .filter-chip { padding:10px 18px; background:var(--white); border:1px solid var(--border-light); border-radius:30px; font-size:13px; font-weight:600; color:var(--text-muted); white-space:nowrap; cursor:pointer; transition:var(--transition); }
+        .filter-chip.active { background:var(--dark-green); color:var(--gold); border-color:var(--gold); }
+        .filter-chip i { margin-right:6px; }
 
-        /* --- STICKY NAVIGATION --- */
-        .nav-container {
-            position: sticky; top: 0; z-index: 1000;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-        }
+        /* STATS BAR */
+        .stats-bar { display:flex; gap:12px; padding:16px 20px; }
+        .stat-mini { flex:1; background:var(--white); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-soft); }
+        .stat-mini h4 { font-size:20px; font-weight:800; color:var(--dark-green); }
+        .stat-mini span { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
 
-        .search-wrapper {
-            display: flex;
-            align-items: center;
-            background: #f0f2f1;
-            padding: 12px 18px;
-            border-radius: 20px;
-            gap: 12px;
-            border: 2px solid transparent;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        /* RESULTS */
+        .results-container { padding:8px 20px 20px; max-width:600px; margin:0 auto; }
+        .section-header { display:flex; justify-content:space-between; align-items:center; margin:20px 0 15px; }
+        .section-header h3 { font-family:'Outfit',sans-serif; font-size:18px; font-weight:800; color:var(--dark-green); display:flex; align-items:center; gap:8px; }
+        .section-header h3 i { color:var(--gold); }
+        .result-count { font-size:12px; color:var(--text-muted); font-weight:600; }
+        .product-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+        
+        .product-card { background:var(--white); border-radius:var(--radius-lg); padding:12px; box-shadow:var(--shadow-soft); border:1px solid rgba(0,0,0,0.02); transition:var(--transition); cursor:pointer; text-decoration:none; color:inherit; display:flex; flex-direction:column; animation:cardFadeIn 0.4s ease-out backwards; }
+        @keyframes cardFadeIn { from{opacity:0;transform:translateY(15px);} to{opacity:1;transform:translateY(0);} }
+        .product-card:hover { transform:translateY(-6px); border-color:var(--gold); box-shadow:var(--shadow-hover); }
+        .product-img { width:100%; aspect-ratio:1/1; border-radius:var(--radius-md); overflow:hidden; background:var(--creme-dark); margin-bottom:10px; }
+        .product-img img { width:100%; height:100%; object-fit:cover; transition:0.4s; }
+        .product-card:hover .product-img img { transform:scale(1.08); }
+        .product-tag { font-size:9px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+        .product-name { font-size:14px; font-weight:700; color:var(--dark-green); line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:8px; }
+        .product-footer { display:flex; justify-content:space-between; align-items:center; margin-top:auto; }
+        .product-price { font-weight:800; font-size:16px; color:var(--leaf-green); }
+        .product-old-price { font-size:11px; color:var(--text-muted); text-decoration:line-through; display:block; }
+        .add-btn { width:36px; height:36px; border-radius:12px; background:var(--dark-green); border:none; color:white; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition); }
+        .add-btn:active { background:var(--gold); color:var(--dark-green); transform:scale(0.9); }
+        .add-btn.added { background:var(--success); width:auto; padding:0 12px; font-size:11px; font-weight:700; gap:4px; }
 
-        .search-wrapper:focus-within {
-            background: var(--white);
-            border-color: var(--accent);
-            box-shadow: 0 10px 25px rgba(26, 62, 38, 0.08);
-        }
+        /* DISCOUNT BADGE */
+        .discount-badge { position:absolute; top:8px; left:8px; background:var(--danger); color:white; font-size:9px; font-weight:800; padding:3px 8px; border-radius:20px; z-index:2; }
+        .out-of-stock { opacity:0.6; pointer-events:none; }
 
-        .search-input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            font-size: 16px;
-            font-weight: 600;
-            outline: none;
-            color: var(--text-main);
-        }
+        /* NO RESULTS */
+        .no-results { text-align:center; padding:60px 30px; color:var(--text-muted); }
+        .no-results i { font-size:60px; color:var(--gold-light); margin-bottom:20px; display:block; }
+        .no-results h3 { font-family:'Outfit',sans-serif; font-size:20px; color:var(--dark-green); margin-bottom:8px; }
+        .no-results p { font-size:14px; }
+        .clear-search-btn { display:inline-block; margin-top:20px; padding:12px 28px; background:var(--dark-green); color:var(--gold); border-radius:30px; text-decoration:none; font-weight:700; border:2px solid var(--gold); cursor:pointer; }
 
-        .voice-btn {
-            background: var(--primary);
-            border: none;
-            color: var(--accent);
-            width: 38px; height: 38px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
-        }
+        /* LOADER */
+        .loader-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+        .skeleton-card { background:var(--white); border-radius:var(--radius-lg); padding:12px; height:240px; animation:shimmer 1.5s infinite; background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; }
+        @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 
-        .voice-btn:active { transform: scale(0.9); }
+        /* TOAST */
+        #toastContainer { position:fixed; top:15px; left:15px; right:15px; z-index:10000; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
+        .toast { background:var(--dark-green); color:white; padding:14px 18px; border-radius:16px; border-left:4px solid var(--gold); animation:slideDown 0.3s; font-weight:600; font-size:13px; display:flex; align-items:center; gap:10px; }
+        .toast.success { border-left-color:var(--success); background:#0a3622; }
+        .toast.error { border-left-color:var(--danger); background:#3b1e1e; }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
 
-        /* --- VOICE POPUP (CENTERED) --- */
-        .voice-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 31, 19, 0.4); /* Dim background */
-            backdrop-filter: blur(4px);
-            z-index: 9999;
-            display: none; /* Hidden by default */
-            align-items: center; justify-content: center;
-            padding: 20px;
-        }
+        /* VOICE MODAL */
+        .voice-overlay { position:fixed; inset:0; background:rgba(10,31,19,0.85); backdrop-filter:blur(8px); z-index:5000; display:none; align-items:center; justify-content:center; padding:20px; }
+        .voice-card { background:var(--white); width:100%; max-width:360px; border-radius:var(--radius-xl); padding:40px 30px; text-align:center; box-shadow:var(--shadow-premium); border:1px solid rgba(212,175,55,0.3); animation:modalPop 0.4s var(--bounce); }
+        @keyframes modalPop { from{opacity:0;transform:scale(0.85) translateY(20px);} to{opacity:1;transform:scale(1) translateY(0);} }
+        .voice-status { display:inline-block; padding:6px 16px; border-radius:20px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:20px; }
+        .voice-status.listening { background:#dcfce7; color:var(--success); }
+        .voice-status.processing { background:#fef9c3; color:#854d0e; }
+        .voice-text { font-family:'Outfit',sans-serif; font-size:22px; font-weight:800; color:var(--dark-green); margin-bottom:25px; min-height:30px; }
+        .wave-bars { display:flex; justify-content:center; align-items:center; gap:5px; height:50px; margin-bottom:30px; }
+        .wave-bar { width:5px; background:var(--gold); border-radius:10px; animation:wave 1.2s ease-in-out infinite; }
+        .wave-bar:nth-child(1){height:20px;animation-delay:0.1s;} .wave-bar:nth-child(2){height:35px;animation-delay:0.2s;} .wave-bar:nth-child(3){height:50px;animation-delay:0.3s;} .wave-bar:nth-child(4){height:35px;animation-delay:0.4s;} .wave-bar:nth-child(5){height:20px;animation-delay:0.5s;}
+        @keyframes wave { 0%,100%{transform:scaleY(1);} 50%{transform:scaleY(0.4);} }
+        .voice-cancel-btn { padding:14px 30px; border-radius:16px; background:var(--creme-dark); border:1px solid var(--border-light); font-weight:700; cursor:pointer; transition:var(--transition); }
+        .voice-cancel-btn:active { background:var(--danger); color:white; }
 
-        .voice-card {
-            background: var(--white);
-            width: 100%; max-width: 320px;
-            border-radius: 35px;
-            padding: 40px 20px;
-            text-align: center;
-            position: relative;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            animation: popupScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popupScale {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .status-pill {
-            display: inline-block;
-            background: #E8F5E9;
-            color: var(--primary);
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-        }
-
-        .listening-msg {
-            font-family: 'Outfit';
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 30px;
-        }
-
-        /* Wave Animation */
-        .audio-waves {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            height: 50px;
-            margin-bottom: 35px;
-        }
-
-        .bar {
-            width: 5px;
-            height: 15px;
-            background: var(--gold-gradient);
-            border-radius: 10px;
-            animation: quiet 1.2s ease-in-out infinite;
-        }
-
-        @keyframes quiet {
-            0%, 100% { height: 15px; }
-            50% { height: 50px; }
-        }
-
-        .bar:nth-child(1) { animation-delay: 0.1s; }
-        .bar:nth-child(2) { animation-delay: 0.3s; }
-        .bar:nth-child(3) { animation-delay: 0.5s; }
-        .bar:nth-child(4) { animation-delay: 0.2s; }
-        .bar:nth-child(5) { animation-delay: 0.4s; }
-
-        .close-modal-btn {
-            background: #f1f1f1;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 15px;
-            font-weight: 700;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .close-modal-btn:hover { background: #fee2e2; color: #ef4444; }
-
-        /* --- PRODUCT GRID --- */
-        .main-content { padding: 25px 20px; }
-        .section-title { font-family: 'Outfit'; font-size: 22px; font-weight: 900; color: var(--primary); margin-bottom: 20px; }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .product-card {
-            background: var(--white);
-            border-radius: 28px;
-            padding: 10px;
-            text-decoration: none; color: inherit;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-            border: 1px solid rgba(0,0,0,0.02);
-            transition: 0.3s ease;
-        }
-
-        .product-card:active { transform: translateY(-5px); }
-
-        .img-container {
-            width: 100%; aspect-ratio: 1/1;
-            border-radius: 20px; overflow: hidden;
-            background: #f8f8f8;
-        }
-        .img-container img { width: 100%; height: 100%; object-fit: cover; }
-
-        .details { padding: 12px 8px; }
-        .details h4 { font-size: 14px; font-weight: 700; color: var(--primary); line-height: 1.2; }
-        .price-row { margin-top: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .price { font-weight: 800; font-size: 16px; color: var(--text-main); }
-        .add-icon { color: var(--accent); font-size: 14px; }
-
-        /* Suggestions */
-        #suggestionBox {
-            background: white; border-radius: 15px; margin: 5px 20px;
-            box-shadow: var(--shadow-lg); display: none; flex-direction: column;
-            overflow: hidden; border: 1px solid #eee;
-        }
-        .s-row { padding: 15px 20px; border-bottom: 1px solid #f9f9f9; font-weight: 600; font-size: 14px; cursor: pointer; }
+        @media(min-width:600px){ .product-grid{grid-template-columns:repeat(3,1fr); gap:18px; } }
+        @media(min-width:900px){ .product-grid{grid-template-columns:repeat(4,1fr); gap:20px; } }
     </style>
 </head>
 <body>
 
-    <div class="voice-modal-overlay" id="voiceModal">
-        <div class="voice-card">
-            <div class="status-pill" id="voiceStatus"> Nrmi's AI</div>
-            <div class="listening-msg" id="displayMsg">Listening for you...</div>
+<div id="toastContainer"></div>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-top">
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <span class="header-title"><i class="fa-solid fa-magnifying-glass" style="color:var(--gold);"></i> Search</span>
+    </div>
+    <div class="search-box">
+        <i class="fa-solid fa-search" style="color:var(--text-muted);"></i>
+        <input type="text" id="searchInput" placeholder="Search premium products..." oninput="performSearch()" autocomplete="off">
+        <button class="voice-btn" id="voiceBtn" onclick="startVoiceSearch()" title="Voice Search">
+            <i class="fa-solid fa-microphone"></i>
+        </button>
+    </div>
+</div>
+
+<!-- FILTER STRIP -->
+<div class="filter-strip" id="filterStrip">
+    <div class="filter-chip active" onclick="filterByCategory('all', this)"><i class="fa-solid fa-grid-2"></i> All</div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+    <div class="stat-mini"><h4 id="totalResults">0</h4><span>Results</span></div>
+    <div class="stat-mini"><h4 id="categoriesCount">0</h4><span>Categories</span></div>
+    <div class="stat-mini"><h4 id="avgPrice">₹0</h4><span>Avg Price</span></div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-container">
+    <div class="section-header">
+        <h3><i class="fa-solid fa-sparkles"></i> Products</h3>
+        <span class="result-count" id="resultLabel">Showing all</span>
+    </div>
+    <div class="product-grid" id="productGrid">
+        <div class="loader-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+        </div>
+    </div>
+    <div class="no-results" id="noResults" style="display:none;">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <h3>No products found</h3>
+        <p>Try a different search term or browse categories</p>
+        <button class="clear-search-btn" onclick="clearSearch()">Clear Search</button>
+    </div>
+</div>
+
+<!-- VOICE MODAL -->
+<div class="voice-overlay" id="voiceOverlay">
+    <div class="voice-card">
+        <div class="voice-status listening" id="voiceStatus"><i class="fa-solid fa-microphone"></i> Listening</div>
+        <div class="voice-text" id="voiceDisplay">Speak now...</div>
+        <div class="wave-bars"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+        <button class="voice-cancel-btn" onclick="stopVoiceSearch()">Cancel</button>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // FIREBASE CONFIG
+    // ============================================================
+    const firebaseConfig = { databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    const CLOUD_NAME = "despxo7zb";
+    const CART_KEY = 'nemi_cart';
+    
+    // ============================================================
+    // GLOBAL STATE
+    // ============================================================
+    let allProducts = [];
+    let categories = new Set();
+    let currentFilter = 'all';
+    let searchTimeout;
+    
+    // ============================================================
+    // FETCH PRODUCTS
+    // ============================================================
+    function fetchProducts() {
+        database.ref('products').on('value', (snap) => {
+            const data = snap.val();
+            allProducts = [];
+            categories = new Set();
             
-            <div class="audio-waves">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-
-            <button class="close-modal-btn" onclick="stopVoiceSearch()">Cancel</button>
-        </div>
-    </div>
-
-    <div class="nav-container">
-        <div class="search-wrapper">
-            <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
-            <input type="text" id="mainSearch" class="search-input" placeholder="Find Saffron, Honey..." oninput="magicSearch()">
-            <button class="voice-btn" onclick="startVoiceSearch()">
-                <i class="fa-solid fa-microphone"></i>
-            </button>
-        </div>
-    </div>
-
-    <div id="suggestionBox"></div>
-
-    <main class="main-content">
-        <h2 class="section-title">Discover Premium</h2>
-        <div class="results-grid" id="mainGrid"></div>
-    </main>
-
-    <script>
-        // Database
-        const items = [
-            { id: 1, name: "Premium Kashmiri Kesar", price: "₹499", img: "https://images.unsplash.com/photo-1599307734170-4d372579120a?q=80&w=500" },
-            { id: 2, name: "Raw Forest Honey", price: "₹320", img: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=500" },
-            { id: 3, name: "Roasted Walnuts", price: "₹750", img: "https://images.unsplash.com/photo-1585241936939-be4099591252?q=80&w=500" },
-            { id: 4, name: "Virgin Olive Oil", price: "₹990", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=500" },
-            { id: 5, name: "Dry Fig (Anjeer)", price: "₹650", img: "https://images.unsplash.com/photo-1621464010800-410a8c279a02?q=80&w=500" },
-            { id: 6, name: "Green Tea Leaves", price: "₹250", img: "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?q=80&w=500" }
-        ];
-
-        // --- Voice Logic ---
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition;
-
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.lang = 'en-IN';
-
-            recognition.onresult = (event) => {
-                const text = event.results[0][0].transcript;
-                document.getElementById('mainSearch').value = text;
-                document.getElementById('displayMsg').innerText = `Searching: "${text}"`;
-                
-                setTimeout(() => {
-                    stopVoiceSearch();
-                    magicSearch();
-                }, 800);
-            };
-
-            recognition.onerror = () => {
-                document.getElementById('displayMsg').innerText = "Try speaking again...";
-                setTimeout(stopVoiceSearch, 1500);
-            };
-        }
-
-        function startVoiceSearch() {
-            if(!recognition) return alert("Browser not supported");
-            document.getElementById('voiceModal').style.display = 'flex';
-            document.getElementById('displayMsg').innerText = "Listening for you...";
-            recognition.start();
-        }
-
-        function stopVoiceSearch() {
-            document.getElementById('voiceModal').style.display = 'none';
-            if(recognition) recognition.stop();
-        }
-
-        // --- Search Function ---
-        function magicSearch() {
-            const query = document.getElementById('mainSearch').value.toLowerCase();
-            const grid = document.getElementById('mainGrid');
-            const suggestions = document.getElementById('suggestionBox');
-
-            if(query.length > 0) {
-                const filtered = items.filter(i => i.name.toLowerCase().includes(query));
-                suggestions.innerHTML = "";
-                grid.innerHTML = "";
-
-                if(filtered.length > 0) {
-                    suggestions.style.display = "flex";
-                    filtered.forEach(i => {
-                        suggestions.innerHTML += `<div class="s-row" onclick="selectSearch('${i.name}')">${i.name}</div>`;
-                        renderCard(i);
-                    });
-                }
-            } else {
-                suggestions.style.display = "none";
-                renderInitial();
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const p = data[key];
+                    const product = {
+                        id: key,
+                        name: p.title || p.name || 'Premium Product',
+                        category: p.category || 'Ayurveda',
+                        price: p.finalPrice || p.price || 0,
+                        oldPrice: p.price || 0,
+                        discount: p.discount || 0,
+                        img: p.images?.[0] || p.img || p.image || '',
+                        stock: p.stock || 0,
+                        isPremium: p.isPremium || false,
+                        description: p.description || ''
+                    };
+                    
+                    // Cloudinary URL fix
+                    if (product.img && !product.img.startsWith('http')) {
+                        product.img = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${product.img}`;
+                    }
+                    if (!product.img) {
+                        product.img = 'https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png';
+                    }
+                    
+                    allProducts.push(product);
+                    categories.add(product.category);
+                });
             }
+            
+            renderFilters();
+            renderStats();
+            performSearch();
+        });
+    }
+    
+    // ============================================================
+    // RENDER FILTER CHIPS
+    // ============================================================
+    function renderFilters() {
+        const strip = document.getElementById('filterStrip');
+        strip.innerHTML = `<div class="filter-chip active" onclick="filterByCategory('all', this)"><i class="fa-solid fa-grid-2"></i> All</div>`;
+        
+        Array.from(categories).sort().forEach(cat => {
+            strip.innerHTML += `<div class="filter-chip" onclick="filterByCategory('${cat}', this)"><i class="fa-solid fa-leaf"></i> ${cat}</div>`;
+        });
+    }
+    
+    // ============================================================
+    // FILTER BY CATEGORY
+    // ============================================================
+    window.filterByCategory = function(category, chip) {
+        currentFilter = category;
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        performSearch();
+    };
+    
+    // ============================================================
+    // RENDER STATS
+    // ============================================================
+    function renderStats() {
+        const active = getActiveProducts();
+        document.getElementById('totalResults').textContent = active.length;
+        document.getElementById('categoriesCount').textContent = categories.size;
+        
+        const avg = active.length > 0 ? Math.round(active.reduce((s, p) => s + p.price, 0) / active.length) : 0;
+        document.getElementById('avgPrice').textContent = `₹${avg}`;
+    }
+    
+    function getActiveProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        let filtered = allProducts;
+        
+        if (currentFilter !== 'all') {
+            filtered = filtered.filter(p => p.category === currentFilter);
         }
-
-        function selectSearch(name) {
-            document.getElementById('mainSearch').value = name;
-            magicSearch();
+        
+        if (query) {
+            filtered = filtered.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.category.toLowerCase().includes(query) ||
+                p.description.toLowerCase().includes(query)
+            );
         }
-
-        function renderCard(i) {
-            document.getElementById('mainGrid').innerHTML += `
-                <a href="#" class="product-card">
-                    <div class="img-container"><img src="${i.img}"></div>
-                    <div class="details">
-                        <h4>${i.name}</h4>
-                        <div class="price-row">
-                            <span class="price">${i.price}</span>
-                            <i class="fa-solid fa-circle-plus add-icon"></i>
-                        </div>
-                    </div>
-                </a>`;
+        
+        return filtered;
+    }
+    
+    // ============================================================
+    // PERFORM SEARCH
+    // ============================================================
+    window.performSearch = function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const results = getActiveProducts();
+            const grid = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+            const resultLabel = document.getElementById('resultLabel');
+            const query = document.getElementById('searchInput').value.trim();
+            
+            renderStats();
+            
+            if (results.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = 'block';
+                resultLabel.textContent = 'No results';
+            } else {
+                noResults.style.display = 'none';
+                resultLabel.textContent = query ? `"${query}" - ${results.length} results` : `Showing ${results.length} products`;
+                
+                grid.innerHTML = results.map((p, i) => {
+                    const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+                    const inCart = cart.some(item => item.id === p.id);
+                    const outOfStock = p.stock <= 0;
+                    
+                    return `
+                        <a href="product.html?id=${p.id}" class="product-card ${outOfStock ? 'out-of-stock' : ''}" style="animation-delay:${i*0.05}s; position:relative;">
+                            ${p.discount > 0 ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}
+                            ${p.isPremium ? `<div style="position:absolute;top:8px;right:8px;background:var(--gold);color:var(--dark-green);font-size:8px;font-weight:800;padding:3px 6px;border-radius:20px;z-index:2;"><i class="fa-solid fa-crown"></i> PREMIUM</div>` : ''}
+                            <div class="product-img">
+                                <img src="${p.img}" alt="${p.name}" onerror="this.src='https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png'" loading="lazy">
+                            </div>
+                            <span class="product-tag">${p.category}</span>
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-footer">
+                                <div>
+                                    <span class="product-price">₹${p.price}</span>
+                                    ${p.oldPrice > p.price ? `<span class="product-old-price">₹${p.oldPrice}</span>` : ''}
+                                </div>
+                                <button class="add-btn ${inCart ? 'added' : ''}" onclick="addToCart(event, '${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${p.img.replace(/'/g, "\\'")}')" ${outOfStock || inCart ? 'disabled' : ''}>
+                                    ${inCart ? '✓ Added' : outOfStock ? '—' : '<i class="fa-solid fa-plus"></i>'}
+                                </button>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            }
+        }, 300);
+    };
+    
+    // ============================================================
+    // ADD TO CART
+    // ============================================================
+    window.addToCart = function(event, id, name, price, img) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        
+        if (!cart.some(item => item.id === id)) {
+            cart.push({ id, name, price, img, qty: 1 });
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            showToast(`${name} added to cart!`, 'success');
+            performSearch(); // Re-render to update button
         }
-
-        function renderInitial() {
-            document.getElementById('mainGrid').innerHTML = "";
-            items.forEach(i => renderCard(i));
+    };
+    
+    // ============================================================
+    // CLEAR SEARCH
+    // ============================================================
+    window.clearSearch = function() {
+        document.getElementById('searchInput').value = '';
+        currentFilter = 'all';
+        document.querySelectorAll('.filter-chip').forEach((c, i) => c.classList.toggle('active', i === 0));
+        performSearch();
+    };
+    
+    // ============================================================
+    // VOICE SEARCH
+    // ============================================================
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+    
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-IN';
+        recognition.interimResults = false;
+        
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('voiceDisplay').textContent = `"${transcript}"`;
+            document.getElementById('voiceStatus').className = 'voice-status processing';
+            document.getElementById('voiceStatus').innerHTML = '<i class="fa-solid fa-check"></i> Recognized';
+            
+            setTimeout(() => {
+                document.getElementById('searchInput').value = transcript;
+                stopVoiceSearch();
+                performSearch();
+            }, 600);
+        };
+        
+        recognition.onerror = (event) => {
+            document.getElementById('voiceDisplay').textContent = 'Try again...';
+            document.getElementById('voiceStatus').innerHTML = '<i class="fa-solid fa-exclamation-triangle"></i> Error';
+            setTimeout(stopVoiceSearch, 1500);
+        };
+        
+        recognition.onend = () => {
+            document.getElementById('voiceBtn').classList.remove('listening');
+        };
+    }
+    
+    window.startVoiceSearch = function() {
+        if (!recognition) {
+            showToast('Voice search not supported in this browser', 'error');
+            return;
         }
-
-        renderInitial();
-    </script>
+        
+        document.getElementById('voiceOverlay').style.display = 'flex';
+        document.getElementById('voiceDisplay').textContent = 'Speak now...';
+        document.getElementById('voiceStatus').className = 'voice-status listening';
+        document.getElementById('voiceStatus').innerHTML = '<i class="fa-solid fa-microphone"></i> Listening';
+        document.getElementById('voiceBtn').classList.add('listening');
+        
+        try {
+            recognition.start();
+        } catch (e) {
+            console.log('Recognition already started');
+        }
+    };
+    
+    window.stopVoiceSearch = function() {
+        document.getElementById('voiceOverlay').style.display = 'none';
+        document.getElementById('voiceBtn').classList.remove('listening');
+        if (recognition) {
+            try { recognition.stop(); } catch(e) {}
+        }
+    };
+    
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function showToast(msg, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'all 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
+    }
+    
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchProducts();
+        
+        document.getElementById('searchInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') clearSearch();
+        });
+    });
+</script>
 </body>
 </html>

@@ -3,161 +3,989 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Elite Search</title>
+    <title>Nemi Mart | Elite Search Engine</title>
     
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <style>
+        /* ============================================================
+           ROOT VARIABLES - PREMIUM GREEN/CREME/GOLD THEME
+           ============================================================ */
         :root {
-            --creme: #FDFBF7; --creme-dark: #F5F1E6; --gold: #D4AF37; --gold-light: #FAF4E5;
-            --gold-hover: #B8860B; --dark-green: #0A1F13; --leaf-green: #1A3E26; --white: #FFFFFF;
-            --text-dark: #1F2937; --text-muted: #5C6F63; --danger: #EF4444; --success: #059669;
-            --info: #3B82F6; --warning: #EAB308; --border-light: #EAE5D9;
-            --radius-xl: 32px; --radius-lg: 24px; --radius-md: 18px; --radius-sm: 14px;
-            --shadow-soft: 0 8px 25px rgba(0,0,0,0.04); --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
+            --creme: #FDFBF7;
+            --creme-dark: #F5F1E6;
+            --gold: #D4AF37;
+            --gold-light: #FAF4E5;
+            --gold-hover: #B8860B;
+            --dark-green: #0A1F13;
+            --leaf-green: #1A3E26;
+            --leaf-light: #eaf2e9;
+            --white: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-muted: #5C6F63;
+            --danger: #EF4444;
+            --success: #059669;
+            --info: #3B82F6;
+            --warning: #EAB308;
+            --border-light: #EAE5D9;
+            
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+            
+            --shadow-soft: 0 8px 25px rgba(0,0,0,0.04);
+            --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
+            --shadow-hover: 0 25px 45px -10px rgba(212,175,55,0.25);
+            --shadow-gold: 0 10px 30px rgba(212,175,55,0.2);
             --shadow-premium: 0 30px 60px -15px rgba(10,31,19,0.25);
+            
             --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             --bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; -webkit-tap-highlight-color:transparent; }
-        body { background: var(--creme); color: var(--text-dark); min-height: 100vh; overflow-x: hidden; padding-bottom: 100px; animation: pageLoad 0.6s ease-out; }
-        @keyframes pageLoad { 0%{opacity:0;transform:translateY(10px);} 100%{opacity:1;transform:translateY(0);} }
-        ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--creme-dark); } ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:10px; }
 
-        /* HEADER */
-        .header { position:sticky; top:0; z-index:1000; background:rgba(253,251,247,0.96); backdrop-filter:blur(15px); padding:16px 20px; border-bottom:2px solid var(--gold); box-shadow:var(--shadow-soft); }
-        .header-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-        .back-btn { width:40px; height:40px; border-radius:14px; background:var(--white); border:1px solid var(--border-light); display:flex; align-items:center; justify-content:center; color:var(--dark-green); text-decoration:none; transition:var(--transition); }
-        .back-btn:active { background:var(--gold); color:white; transform:scale(0.95); }
-        .header-title { font-family:'Outfit',sans-serif; font-size:22px; font-weight:800; color:var(--dark-green); }
-        .search-box { display:flex; align-items:center; background:var(--white); border-radius:18px; padding:8px 16px; gap:12px; border:2px solid var(--border-light); transition:var(--transition); box-shadow:var(--shadow-soft); }
-        .search-box:focus-within { border-color:var(--gold); box-shadow:0 10px 30px rgba(212,175,55,0.15); }
-        .search-box input { flex:1; border:none; outline:none; background:transparent; font-size:15px; font-weight:600; color:var(--text-dark); }
-        .search-box input::placeholder { color:var(--text-muted); }
-        .voice-btn { width:42px; height:42px; border-radius:14px; background:var(--dark-green); border:none; color:var(--gold); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition); }
-        .voice-btn:active { background:var(--gold); color:var(--dark-green); transform:scale(0.9); }
-        .voice-btn.listening { animation:pulse 1.5s infinite; background:var(--danger); color:white; }
-        @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4);} 50%{box-shadow:0 0 0 15px rgba(239,68,68,0);} }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* FILTER CHIPS */
-        .filter-strip { display:flex; gap:8px; padding:16px 20px 0; overflow-x:auto; scrollbar-width:none; }
-        .filter-strip::-webkit-scrollbar { display:none; }
-        .filter-chip { padding:10px 18px; background:var(--white); border:1px solid var(--border-light); border-radius:30px; font-size:13px; font-weight:600; color:var(--text-muted); white-space:nowrap; cursor:pointer; transition:var(--transition); }
-        .filter-chip.active { background:var(--dark-green); color:var(--gold); border-color:var(--gold); }
-        .filter-chip i { margin-right:6px; }
+        body {
+            background: var(--creme);
+            color: var(--text-dark);
+            line-height: 1.5;
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            padding-bottom: 100px;
+            animation: pageLoad 0.6s ease-out;
+        }
 
-        /* STATS BAR */
-        .stats-bar { display:flex; gap:12px; padding:16px 20px; }
-        .stat-mini { flex:1; background:var(--white); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-soft); }
-        .stat-mini h4 { font-size:20px; font-weight:800; color:var(--dark-green); }
-        .stat-mini span { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+        @keyframes pageLoad {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
-        /* RESULTS */
-        .results-container { padding:8px 20px 20px; max-width:600px; margin:0 auto; }
-        .section-header { display:flex; justify-content:space-between; align-items:center; margin:20px 0 15px; }
-        .section-header h3 { font-family:'Outfit',sans-serif; font-size:18px; font-weight:800; color:var(--dark-green); display:flex; align-items:center; gap:8px; }
-        .section-header h3 i { color:var(--gold); }
-        .result-count { font-size:12px; color:var(--text-muted); font-weight:600; }
-        .product-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--creme-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        /* ============================================================
+           LOADER
+           ============================================================ */
+        #pageLoader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
         
-        .product-card { background:var(--white); border-radius:var(--radius-lg); padding:12px; box-shadow:var(--shadow-soft); border:1px solid rgba(0,0,0,0.02); transition:var(--transition); cursor:pointer; text-decoration:none; color:inherit; display:flex; flex-direction:column; animation:cardFadeIn 0.4s ease-out backwards; }
-        @keyframes cardFadeIn { from{opacity:0;transform:translateY(15px);} to{opacity:1;transform:translateY(0);} }
-        .product-card:hover { transform:translateY(-6px); border-color:var(--gold); box-shadow:var(--shadow-hover); }
-        .product-img { width:100%; aspect-ratio:1/1; border-radius:var(--radius-md); overflow:hidden; background:var(--creme-dark); margin-bottom:10px; }
-        .product-img img { width:100%; height:100%; object-fit:cover; transition:0.4s; }
-        .product-card:hover .product-img img { transform:scale(1.08); }
-        .product-tag { font-size:9px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
-        .product-name { font-size:14px; font-weight:700; color:var(--dark-green); line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:8px; }
-        .product-footer { display:flex; justify-content:space-between; align-items:center; margin-top:auto; }
-        .product-price { font-weight:800; font-size:16px; color:var(--leaf-green); }
-        .product-old-price { font-size:11px; color:var(--text-muted); text-decoration:line-through; display:block; }
-        .add-btn { width:36px; height:36px; border-radius:12px; background:var(--dark-green); border:none; color:white; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition); }
-        .add-btn:active { background:var(--gold); color:var(--dark-green); transform:scale(0.9); }
-        .add-btn.added { background:var(--success); width:auto; padding:0 12px; font-size:11px; font-weight:700; gap:4px; }
+        .loader-spinner {
+            width: 55px; height: 55px;
+            border: 4px solid var(--gold-light);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .loader-text {
+            margin-top: 18px;
+            font-weight: 700;
+            color: var(--dark-green);
+            letter-spacing: 2px;
+            font-size: 14px;
+        }
 
-        /* DISCOUNT BADGE */
-        .discount-badge { position:absolute; top:8px; left:8px; background:var(--danger); color:white; font-size:9px; font-weight:800; padding:3px 8px; border-radius:20px; z-index:2; }
-        .out-of-stock { opacity:0.6; pointer-events:none; }
+        /* ============================================================
+           TOAST NOTIFICATIONS
+           ============================================================ */
+        #toastContainer {
+            position: fixed;
+            top: calc(15px + var(--safe-top));
+            left: 15px;
+            right: 15px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: var(--dark-green);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border-left: 5px solid var(--gold);
+            box-shadow: var(--shadow-card);
+            animation: slideDown 0.4s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            pointer-events: auto;
+        }
+        
+        .toast.success { border-left-color: var(--success); background: #0a3622; }
+        .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
+        .toast.info { border-left-color: var(--info); }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        /* NO RESULTS */
-        .no-results { text-align:center; padding:60px 30px; color:var(--text-muted); }
-        .no-results i { font-size:60px; color:var(--gold-light); margin-bottom:20px; display:block; }
-        .no-results h3 { font-family:'Outfit',sans-serif; font-size:20px; color:var(--dark-green); margin-bottom:8px; }
-        .no-results p { font-size:14px; }
-        .clear-search-btn { display:inline-block; margin-top:20px; padding:12px 28px; background:var(--dark-green); color:var(--gold); border-radius:30px; text-decoration:none; font-weight:700; border:2px solid var(--gold); cursor:pointer; }
+        /* ============================================================
+           HEADER - PREMIUM STICKY
+           ============================================================ */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(253, 251, 247, 0.96);
+            backdrop-filter: blur(15px);
+            padding: 16px 20px;
+            border-bottom: 2px solid var(--gold);
+            box-shadow: var(--shadow-soft);
+        }
 
-        /* LOADER */
-        .loader-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
-        .skeleton-card { background:var(--white); border-radius:var(--radius-lg); padding:12px; height:240px; animation:shimmer 1.5s infinite; background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; }
-        @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
 
-        /* TOAST */
-        #toastContainer { position:fixed; top:15px; left:15px; right:15px; z-index:10000; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
-        .toast { background:var(--dark-green); color:white; padding:14px 18px; border-radius:16px; border-left:4px solid var(--gold); animation:slideDown 0.3s; font-weight:600; font-size:13px; display:flex; align-items:center; gap:10px; }
-        .toast.success { border-left-color:var(--success); background:#0a3622; }
-        .toast.error { border-left-color:var(--danger); background:#3b1e1e; }
-        @keyframes slideDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-green);
+            text-decoration: none;
+            transition: var(--transition);
+        }
 
-        /* VOICE MODAL */
-        .voice-overlay { position:fixed; inset:0; background:rgba(10,31,19,0.85); backdrop-filter:blur(8px); z-index:5000; display:none; align-items:center; justify-content:center; padding:20px; }
-        .voice-card { background:var(--white); width:100%; max-width:360px; border-radius:var(--radius-xl); padding:40px 30px; text-align:center; box-shadow:var(--shadow-premium); border:1px solid rgba(212,175,55,0.3); animation:modalPop 0.4s var(--bounce); }
-        @keyframes modalPop { from{opacity:0;transform:scale(0.85) translateY(20px);} to{opacity:1;transform:scale(1) translateY(0);} }
-        .voice-status { display:inline-block; padding:6px 16px; border-radius:20px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:20px; }
-        .voice-status.listening { background:#dcfce7; color:var(--success); }
-        .voice-status.processing { background:#fef9c3; color:#854d0e; }
-        .voice-text { font-family:'Outfit',sans-serif; font-size:22px; font-weight:800; color:var(--dark-green); margin-bottom:25px; min-height:30px; }
-        .wave-bars { display:flex; justify-content:center; align-items:center; gap:5px; height:50px; margin-bottom:30px; }
-        .wave-bar { width:5px; background:var(--gold); border-radius:10px; animation:wave 1.2s ease-in-out infinite; }
-        .wave-bar:nth-child(1){height:20px;animation-delay:0.1s;} .wave-bar:nth-child(2){height:35px;animation-delay:0.2s;} .wave-bar:nth-child(3){height:50px;animation-delay:0.3s;} .wave-bar:nth-child(4){height:35px;animation-delay:0.4s;} .wave-bar:nth-child(5){height:20px;animation-delay:0.5s;}
-        @keyframes wave { 0%,100%{transform:scaleY(1);} 50%{transform:scaleY(0.4);} }
-        .voice-cancel-btn { padding:14px 30px; border-radius:16px; background:var(--creme-dark); border:1px solid var(--border-light); font-weight:700; cursor:pointer; transition:var(--transition); }
-        .voice-cancel-btn:active { background:var(--danger); color:white; }
+        .back-btn:active {
+            background: var(--gold);
+            color: white;
+            transform: scale(0.95);
+        }
 
-        @media(min-width:600px){ .product-grid{grid-template-columns:repeat(3,1fr); gap:18px; } }
-        @media(min-width:900px){ .product-grid{grid-template-columns:repeat(4,1fr); gap:20px; } }
+        .header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark-green);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-title i {
+            color: var(--gold);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border-radius: 18px;
+            padding: 8px 16px;
+            gap: 12px;
+            border: 2px solid var(--border-light);
+            transition: var(--transition);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .search-box:focus-within {
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .voice-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: var(--dark-green);
+            border: none;
+            color: var(--gold);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .voice-btn:active {
+            background: var(--gold);
+            color: var(--dark-green);
+            transform: scale(0.9);
+        }
+
+        .voice-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: var(--danger);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+        }
+
+        /* ============================================================
+           SEARCH SUGGESTIONS DROPDOWN
+           ============================================================ */
+        .suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-premium);
+            border: 1px solid var(--border-light);
+            margin-top: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+        }
+
+        .suggestions-dropdown.active {
+            display: block;
+            animation: fadeInDown 0.3s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestion-item {
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: var(--gold-light);
+        }
+
+        .suggestion-item i {
+            color: var(--gold);
+            font-size: 14px;
+        }
+
+        .suggestion-item .suggestion-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark-green);
+        }
+
+        .suggestion-item .suggestion-category {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .no-suggestions {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* ============================================================
+           TRENDING SEARCHES
+           ============================================================ */
+        .trending-section {
+            padding: 16px 20px 0;
+        }
+
+        .trending-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--dark-green);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trending-title i {
+            color: var(--danger);
+            font-size: 16px;
+        }
+
+        .trending-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .trending-tag {
+            padding: 8px 16px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .trending-tag:hover {
+            background: var(--gold-light);
+            border-color: var(--gold);
+            color: var(--dark-green);
+        }
+
+        .trending-tag:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================================
+           RECENT SEARCHES
+           ============================================================ */
+        .recent-section {
+            padding: 16px 20px 0;
+        }
+
+        .recent-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--dark-green);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .clear-recent-btn {
+            font-size: 11px;
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: 600;
+            background: none;
+            border: none;
+        }
+
+        .recent-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .recent-tag {
+            padding: 8px 16px;
+            background: var(--gold-light);
+            border: 1px solid var(--gold);
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark-green);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .recent-tag i {
+            font-size: 10px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .recent-tag i:hover {
+            color: var(--danger);
+        }
+
+        /* ============================================================
+           FILTER STRIP
+           ============================================================ */
+        .filter-strip {
+            display: flex;
+            gap: 8px;
+            padding: 16px 20px 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .filter-strip::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            padding: 10px 18px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-chip.active {
+            background: var(--dark-green);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .filter-chip i {
+            margin-right: 6px;
+        }
+
+        /* ============================================================
+           RESULTS CONTAINER
+           ============================================================ */
+        .results-container {
+            padding: 8px 20px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0 15px;
+        }
+
+        .section-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--dark-green);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header h3 i {
+            color: var(--gold);
+        }
+
+        .result-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .sort-btn {
+            padding: 8px 14px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .sort-btn:hover {
+            border-color: var(--gold);
+            color: var(--dark-green);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        /* ============================================================
+           PRODUCT CARD - PREMIUM
+           ============================================================ */
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 12px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            animation: cardFadeIn 0.4s ease-out backwards;
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--gold);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .product-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--creme-dark);
+            margin-bottom: 10px;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.4s;
+        }
+
+        .product-card:hover .product-img img {
+            transform: scale(1.08);
+        }
+
+        /* Badges */
+        .discount-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: var(--danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 20px;
+            z-index: 2;
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
+            color: var(--dark-green);
+            font-size: 8px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 20px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .out-of-stock {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .product-tag {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark-green);
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 8px;
+            font-size: 10px;
+            color: var(--gold);
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .product-price {
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--leaf-green);
+        }
+
+        .product-old-price {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            display: block;
+        }
+
+        .add-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: var(--dark-green);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .add-btn:active {
+            background: var(--gold);
+            color: var(--dark-green);
+            transform: scale(0.9);
+        }
+
+        .add-btn.added {
+            background: var(--success);
+            width: auto;
+            padding: 0 12px;
+            font-size: 11px;
+            font-weight: 700;
+            gap: 4px;
+        }
+
+        .add-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ============================================================
+           NO RESULTS
+           ============================================================ */
+        .no-results {
+            text-align: center;
+            padding: 60px 30px;
+            color: var(--text-muted);
+        }
+
+        .no-results i {
+            font-size: 60px;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .no-results h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            color: var(--dark-green);
+            margin-bottom: 8px;
+        }
+
+        .no-results p {
+            font-size: 14px;
+        }
+
+        .clear-search-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 28px;
+            background: var(--dark-green);
+            color: var(--gold);
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            border: 2px solid var(--gold);
+            cursor: pointer;
+        }
+
+        /* ============================================================
+           LOADER SKELETON
+           ============================================================ */
+        .loader-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .skeleton-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 12px;
+            height: 240px;
+            animation: shimmer 1.5s infinite;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ============================================================
+           VOICE MODAL
+           ============================================================ */
+        .voice-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 31, 19, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .voice-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 360px;
+            border-radius: var(--radius-xl);
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            animation: modalPop 0.4s var(--bounce);
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.85) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .voice-status {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .voice-status.listening {
+            background: #dcfce7;
+            color: var(--success);
+        }
+
+        .voice-status.processing {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .voice-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark-green);
+            margin-bottom: 25px;
+            min-height: 30px;
+        }
+
+        .wave-bars {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            height: 50px;
+            margin-bottom: 30px;
+        }
+
+        .wave-bar {
+            width: 5px;
+            background: var(--gold);
+            border-radius: 10px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        .wave-bar:nth-child(1) { height: 20px; animation-delay: 0.1s; }
+        .wave-bar:nth-child(2) { height: 35px; animation-delay: 0.2s; }
+        .wave-bar:nth-child(3) { height: 50px; animation-delay: 0.3s; }
+        .wave-bar:nth-child(4) { height: 35px; animation-delay: 0.4s; }
+        .wave-bar:nth-child(5) { height: 20px; animation-delay: 0.5s; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.4); }
+        }
+
+        .voice-cancel-btn {
+            padding: 14px 30px;
+            border-radius: 16px;
+            background: var(--creme-dark);
+            border: 1px solid var(--border-light);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .voice-cancel-btn:active {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* ============================================================
+           MOBILE OPTIMIZATIONS
+           ============================================================ */
+        @media (max-width: 480px) {
+            .product-grid { gap: 10px; }
+            .product-card { padding: 10px; }
+            .product-name { font-size: 13px; }
+            .product-price { font-size: 14px; }
+        }
+
+        @media (min-width: 600px) {
+            .product-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        }
+
+        @media (min-width: 900px) {
+            .product-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        }
     </style>
 </head>
 <body>
 
+<!-- ============================================================ -->
+<!-- TOAST CONTAINER -->
+<!-- ============================================================ -->
 <div id="toastContainer"></div>
 
+<!-- ============================================================ -->
+<!-- PAGE LOADER -->
+<!-- ============================================================ -->
+<div id="pageLoader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">LOADING PRODUCTS...</div>
+</div>
+
+<!-- ============================================================ -->
 <!-- HEADER -->
-<div class="header">
+<!-- ============================================================ -->
+<div class="header" style="position: relative;">
     <div class="header-top">
-        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-        <span class="header-title"><i class="fa-solid fa-magnifying-glass" style="color:var(--gold);"></i> Search</span>
+        <a href="index.html" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <span class="header-title">
+            <i class="fa-solid fa-magnifying-glass" style="color:var(--gold);"></i> Search
+        </span>
     </div>
-    <div class="search-box">
+    <div class="search-box" style="position: relative;">
         <i class="fa-solid fa-search" style="color:var(--text-muted);"></i>
-        <input type="text" id="searchInput" placeholder="Search premium products..." oninput="performSearch()" autocomplete="off">
+        <input type="text" id="searchInput" placeholder="Search premium products..." oninput="performSearch()" onfocus="showSuggestions()" autocomplete="off">
         <button class="voice-btn" id="voiceBtn" onclick="startVoiceSearch()" title="Voice Search">
             <i class="fa-solid fa-microphone"></i>
         </button>
+        
+        <!-- SUGGESTIONS DROPDOWN -->
+        <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
     </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- TRENDING SEARCHES -->
+<!-- ============================================================ -->
+<div class="trending-section" id="trendingSection">
+    <div class="trending-title">
+        <i class="fa-solid fa-fire"></i> Trending Searches
+    </div>
+    <div class="trending-tags" id="trendingTags"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RECENT SEARCHES -->
+<!-- ============================================================ -->
+<div class="recent-section" id="recentSection">
+    <div class="recent-title">
+        <span><i class="fa-solid fa-clock-rotate-left" style="margin-right: 8px; color: var(--gold);"></i>Recent Searches</span>
+        <button class="clear-recent-btn" onclick="clearRecentSearches()">Clear All</button>
+    </div>
+    <div class="recent-list" id="recentList"></div>
+</div>
+
+<!-- ============================================================ -->
 <!-- FILTER STRIP -->
+<!-- ============================================================ -->
 <div class="filter-strip" id="filterStrip">
-    <div class="filter-chip active" onclick="filterByCategory('all', this)"><i class="fa-solid fa-grid-2"></i> All</div>
+    <div class="filter-chip active" onclick="filterByCategory('all', this)">
+        <i class="fa-solid fa-grid-2"></i> All
+    </div>
 </div>
 
-<!-- STATS BAR -->
-<div class="stats-bar">
-    <div class="stat-mini"><h4 id="totalResults">0</h4><span>Results</span></div>
-    <div class="stat-mini"><h4 id="categoriesCount">0</h4><span>Categories</span></div>
-    <div class="stat-mini"><h4 id="avgPrice">₹0</h4><span>Avg Price</span></div>
-</div>
-
-<!-- RESULTS -->
+<!-- ============================================================ -->
+<!-- RESULTS CONTAINER -->
+<!-- ============================================================ -->
 <div class="results-container">
     <div class="section-header">
         <h3><i class="fa-solid fa-sparkles"></i> Products</h3>
-        <span class="result-count" id="resultLabel">Showing all</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="result-count" id="resultLabel">Loading...</span>
+        </div>
     </div>
+    
     <div class="product-grid" id="productGrid">
         <div class="loader-grid">
             <div class="skeleton-card"></div>
@@ -166,6 +994,7 @@
             <div class="skeleton-card"></div>
         </div>
     </div>
+    
     <div class="no-results" id="noResults" style="display:none;">
         <i class="fa-solid fa-magnifying-glass"></i>
         <h3>No products found</h3>
@@ -174,26 +1003,41 @@
     </div>
 </div>
 
+<!-- ============================================================ -->
 <!-- VOICE MODAL -->
+<!-- ============================================================ -->
 <div class="voice-overlay" id="voiceOverlay">
     <div class="voice-card">
-        <div class="voice-status listening" id="voiceStatus"><i class="fa-solid fa-microphone"></i> Listening</div>
+        <div class="voice-status listening" id="voiceStatus">
+            <i class="fa-solid fa-microphone"></i> Listening
+        </div>
         <div class="voice-text" id="voiceDisplay">Speak now...</div>
-        <div class="wave-bars"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+        <div class="wave-bars">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+        </div>
         <button class="voice-cancel-btn" onclick="stopVoiceSearch()">Cancel</button>
     </div>
 </div>
 
 <script>
     // ============================================================
-    // FIREBASE CONFIG
+    // FIREBASE CONFIG - USING NEMI-MART-2 (CORRECT DATABASE)
     // ============================================================
-    const firebaseConfig = { databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" };
+    const firebaseConfig = {
+        databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/"
+    };
+    
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
     const CLOUD_NAME = "despxo7zb";
     const CART_KEY = 'nemi_cart';
+    const RECENT_KEY = 'nemi_recent_searches';
+    const MAX_RECENT = 8;
     
     // ============================================================
     // GLOBAL STATE
@@ -202,9 +1046,18 @@
     let categories = new Set();
     let currentFilter = 'all';
     let searchTimeout;
+    let recentSearches = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
     
     // ============================================================
-    // FETCH PRODUCTS
+    // TRENDING KEYWORDS
+    // ============================================================
+    const trendingKeywords = [
+        'Saffron', 'Honey', 'Ashwagandha', 'Oil', 'Chyawanprash',
+        'Kesar', 'Tulsi', 'Neem', 'Aloe Vera', 'Brahmi'
+    ];
+    
+    // ============================================================
+    // FETCH PRODUCTS FROM FIREBASE
     // ============================================================
     function fetchProducts() {
         database.ref('products').on('value', (snap) => {
@@ -224,11 +1077,12 @@
                         discount: p.discount || 0,
                         img: p.images?.[0] || p.img || p.image || '',
                         stock: p.stock || 0,
-                        isPremium: p.isPremium || false,
-                        description: p.description || ''
+                        isPremium: p.isPremium || p.premium || false,
+                        description: p.description || p.hero || '',
+                        rating: p.rating || 4.5
                     };
                     
-                    // Cloudinary URL fix
+                    // Cloudinary URL handling
                     if (product.img && !product.img.startsWith('http')) {
                         product.img = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${product.img}`;
                     }
@@ -241,9 +1095,22 @@
                 });
             }
             
+            allProducts.sort((a, b) => (b.isPremium ? 1 : 0) - (a.isPremium ? 1 : 0));
+            
             renderFilters();
-            renderStats();
+            renderTrending();
+            renderRecentSearches();
             performSearch();
+            
+            // Hide loader
+            document.getElementById('pageLoader').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('pageLoader').style.display = 'none';
+            }, 500);
+        }, (error) => {
+            console.error('Firebase error:', error);
+            document.getElementById('pageLoader').style.display = 'none';
+            showToast('Failed to load products. Check connection.', 'error');
         });
     }
     
@@ -252,11 +1119,14 @@
     // ============================================================
     function renderFilters() {
         const strip = document.getElementById('filterStrip');
-        strip.innerHTML = `<div class="filter-chip active" onclick="filterByCategory('all', this)"><i class="fa-solid fa-grid-2"></i> All</div>`;
+        let html = `<div class="filter-chip active" onclick="filterByCategory('all', this)"><i class="fa-solid fa-grid-2"></i> All (${allProducts.length})</div>`;
         
         Array.from(categories).sort().forEach(cat => {
-            strip.innerHTML += `<div class="filter-chip" onclick="filterByCategory('${cat}', this)"><i class="fa-solid fa-leaf"></i> ${cat}</div>`;
+            const count = allProducts.filter(p => p.category === cat).length;
+            html += `<div class="filter-chip" onclick="filterByCategory('${cat}', this)"><i class="fa-solid fa-leaf"></i> ${cat} (${count})</div>`;
         });
+        
+        strip.innerHTML = html;
     }
     
     // ============================================================
@@ -265,22 +1135,227 @@
     window.filterByCategory = function(category, chip) {
         currentFilter = category;
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
+        if (chip) chip.classList.add('active');
         performSearch();
     };
     
     // ============================================================
-    // RENDER STATS
+    // RENDER TRENDING SEARCHES
     // ============================================================
-    function renderStats() {
-        const active = getActiveProducts();
-        document.getElementById('totalResults').textContent = active.length;
-        document.getElementById('categoriesCount').textContent = categories.size;
-        
-        const avg = active.length > 0 ? Math.round(active.reduce((s, p) => s + p.price, 0) / active.length) : 0;
-        document.getElementById('avgPrice').textContent = `₹${avg}`;
+    function renderTrending() {
+        const container = document.getElementById('trendingTags');
+        container.innerHTML = trendingKeywords.map(keyword => `
+            <div class="trending-tag" onclick="quickSearch('${keyword}')">
+                <i class="fa-solid fa-magnifying-glass" style="margin-right: 4px; font-size: 10px;"></i> ${keyword}
+            </div>
+        `).join('');
     }
     
+    // ============================================================
+    // RENDER RECENT SEARCHES
+    // ============================================================
+    function renderRecentSearches() {
+        const section = document.getElementById('recentSection');
+        const list = document.getElementById('recentList');
+        
+        if (recentSearches.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+        
+        section.style.display = 'block';
+        list.innerHTML = recentSearches.map((search, i) => `
+            <div class="recent-tag" onclick="quickSearch('${search}')">
+                <i class="fa-solid fa-clock-rotate-left" style="font-size: 10px;"></i>
+                ${search}
+                <i class="fa-solid fa-xmark" onclick="event.stopPropagation(); removeRecentSearch(${i})"></i>
+            </div>
+        `).join('');
+    }
+    
+    // ============================================================
+    // QUICK SEARCH
+    // ============================================================
+    window.quickSearch = function(query) {
+        document.getElementById('searchInput').value = query;
+        addToRecentSearches(query);
+        hideTrendingAndRecent();
+        performSearch();
+    };
+    
+    // ============================================================
+    // ADD TO RECENT SEARCHES
+    // ============================================================
+    function addToRecentSearches(query) {
+        if (!query.trim()) return;
+        
+        recentSearches = recentSearches.filter(s => s.toLowerCase() !== query.toLowerCase());
+        recentSearches.unshift(query);
+        
+        if (recentSearches.length > MAX_RECENT) {
+            recentSearches = recentSearches.slice(0, MAX_RECENT);
+        }
+        
+        localStorage.setItem(RECENT_KEY, JSON.stringify(recentSearches));
+        renderRecentSearches();
+    }
+    
+    // ============================================================
+    // REMOVE RECENT SEARCH
+    // ============================================================
+    window.removeRecentSearch = function(index) {
+        recentSearches.splice(index, 1);
+        localStorage.setItem(RECENT_KEY, JSON.stringify(recentSearches));
+        renderRecentSearches();
+    };
+    
+    // ============================================================
+    // CLEAR RECENT SEARCHES
+    // ============================================================
+    window.clearRecentSearches = function() {
+        recentSearches = [];
+        localStorage.removeItem(RECENT_KEY);
+        renderRecentSearches();
+        showToast('Recent searches cleared', 'info');
+    };
+    
+    // ============================================================
+    // HIDE TRENDING & RECENT WHEN SEARCHING
+    // ============================================================
+    function hideTrendingAndRecent() {
+        document.getElementById('trendingSection').style.display = 'none';
+        document.getElementById('recentSection').style.display = 'none';
+    }
+    
+    function showTrendingAndRecent() {
+        document.getElementById('trendingSection').style.display = 'block';
+        renderRecentSearches();
+    }
+    
+    // ============================================================
+    // SHOW SUGGESTIONS DROPDOWN
+    // ============================================================
+    window.showSuggestions = function() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const dropdown = document.getElementById('suggestionsDropdown');
+        
+        if (!query || query.length < 1) {
+            dropdown.classList.remove('active');
+            showTrendingAndRecent();
+            return;
+        }
+        
+        hideTrendingAndRecent();
+        
+        const matches = allProducts.filter(p => 
+            p.name.toLowerCase().includes(query) || 
+            p.category.toLowerCase().includes(query)
+        ).slice(0, 5);
+        
+        if (matches.length === 0) {
+            dropdown.innerHTML = '<div class="no-suggestions">No matching products</div>';
+        } else {
+            dropdown.innerHTML = matches.map(p => `
+                <div class="suggestion-item" onclick="selectSuggestion('${p.name.replace(/'/g, "\\'")}')">
+                    <i class="fa-solid fa-search"></i>
+                    <div>
+                        <div class="suggestion-name">${highlightMatch(p.name, query)}</div>
+                        <div class="suggestion-category">${p.category} • ₹${p.price}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        dropdown.classList.add('active');
+    };
+    
+    // ============================================================
+    // HIGHLIGHT MATCH IN SUGGESTION
+    // ============================================================
+    function highlightMatch(text, query) {
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<span style="color: var(--gold); font-weight: 800;">$1</span>');
+    }
+    
+    // ============================================================
+    // SELECT SUGGESTION
+    // ============================================================
+    window.selectSuggestion = function(name) {
+        document.getElementById('searchInput').value = name;
+        document.getElementById('suggestionsDropdown').classList.remove('active');
+        addToRecentSearches(name);
+        performSearch();
+    };
+    
+    // ============================================================
+    // PERFORM SEARCH
+    // ============================================================
+    window.performSearch = function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const results = getActiveProducts();
+            const grid = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+            const resultLabel = document.getElementById('resultLabel');
+            const query = document.getElementById('searchInput').value.trim();
+            const dropdown = document.getElementById('suggestionsDropdown');
+            
+            // Update suggestions
+            showSuggestions();
+            
+            if (results.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = 'block';
+                resultLabel.textContent = 'No results';
+            } else {
+                noResults.style.display = 'none';
+                resultLabel.textContent = query ? `"${query}" • ${results.length} products` : `${results.length} products`;
+                
+                grid.innerHTML = results.map((p, i) => {
+                    const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+                    const inCart = cart.some(item => item.id === p.id);
+                    const outOfStock = p.stock <= 0;
+                    const stars = Math.round(p.rating);
+                    
+                    return `
+                        <a href="product.html?id=${p.id}" class="product-card ${outOfStock ? 'out-of-stock' : ''}" style="animation-delay:${i * 0.05}s;">
+                            ${p.discount > 0 ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}
+                            ${p.isPremium ? `<div class="premium-badge"><i class="fa-solid fa-crown"></i> PREMIUM</div>` : ''}
+                            ${outOfStock ? `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.7);color:white;padding:8px 16px;border-radius:20px;font-size:11px;font-weight:800;z-index:3;">OUT OF STOCK</div>` : ''}
+                            <div class="product-img">
+                                <img src="${p.img}" alt="${p.name}" onerror="this.src='https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png'" loading="lazy">
+                            </div>
+                            <span class="product-tag">${p.category}</span>
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-rating">
+                                ${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}
+                            </div>
+                            <div class="product-footer">
+                                <div>
+                                    <span class="product-price">₹${p.price}</span>
+                                    ${p.oldPrice > p.price ? `<span class="product-old-price">₹${p.oldPrice}</span>` : ''}
+                                </div>
+                                <button class="add-btn ${inCart ? 'added' : ''}" onclick="addToCartSmart(event, '${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${p.img.replace(/'/g, "\\'")}')" ${outOfStock || inCart ? 'disabled' : ''}>
+                                    ${inCart ? '✓ Added' : outOfStock ? '<i class="fa-solid fa-ban"></i>' : '<i class="fa-solid fa-plus"></i>'}
+                                </button>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            }
+            
+            // Hide suggestions after search
+            if (query) {
+                setTimeout(() => {
+                    dropdown.classList.remove('active');
+                }, 500);
+            }
+        }, 300);
+    };
+    
+    // ============================================================
+    // GET ACTIVE PRODUCTS
+    // ============================================================
     function getActiveProducts() {
         const query = document.getElementById('searchInput').value.toLowerCase().trim();
         let filtered = allProducts;
@@ -301,61 +1376,9 @@
     }
     
     // ============================================================
-    // PERFORM SEARCH
+    // ADD TO CART (SMART)
     // ============================================================
-    window.performSearch = function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const results = getActiveProducts();
-            const grid = document.getElementById('productGrid');
-            const noResults = document.getElementById('noResults');
-            const resultLabel = document.getElementById('resultLabel');
-            const query = document.getElementById('searchInput').value.trim();
-            
-            renderStats();
-            
-            if (results.length === 0) {
-                grid.innerHTML = '';
-                noResults.style.display = 'block';
-                resultLabel.textContent = 'No results';
-            } else {
-                noResults.style.display = 'none';
-                resultLabel.textContent = query ? `"${query}" - ${results.length} results` : `Showing ${results.length} products`;
-                
-                grid.innerHTML = results.map((p, i) => {
-                    const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-                    const inCart = cart.some(item => item.id === p.id);
-                    const outOfStock = p.stock <= 0;
-                    
-                    return `
-                        <a href="product.html?id=${p.id}" class="product-card ${outOfStock ? 'out-of-stock' : ''}" style="animation-delay:${i*0.05}s; position:relative;">
-                            ${p.discount > 0 ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}
-                            ${p.isPremium ? `<div style="position:absolute;top:8px;right:8px;background:var(--gold);color:var(--dark-green);font-size:8px;font-weight:800;padding:3px 6px;border-radius:20px;z-index:2;"><i class="fa-solid fa-crown"></i> PREMIUM</div>` : ''}
-                            <div class="product-img">
-                                <img src="${p.img}" alt="${p.name}" onerror="this.src='https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png'" loading="lazy">
-                            </div>
-                            <span class="product-tag">${p.category}</span>
-                            <div class="product-name">${p.name}</div>
-                            <div class="product-footer">
-                                <div>
-                                    <span class="product-price">₹${p.price}</span>
-                                    ${p.oldPrice > p.price ? `<span class="product-old-price">₹${p.oldPrice}</span>` : ''}
-                                </div>
-                                <button class="add-btn ${inCart ? 'added' : ''}" onclick="addToCart(event, '${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${p.img.replace(/'/g, "\\'")}')" ${outOfStock || inCart ? 'disabled' : ''}>
-                                    ${inCart ? '✓ Added' : outOfStock ? '—' : '<i class="fa-solid fa-plus"></i>'}
-                                </button>
-                            </div>
-                        </a>
-                    `;
-                }).join('');
-            }
-        }, 300);
-    };
-    
-    // ============================================================
-    // ADD TO CART
-    // ============================================================
-    window.addToCart = function(event, id, name, price, img) {
+    window.addToCartSmart = function(event, id, name, price, img) {
         event.preventDefault();
         event.stopPropagation();
         
@@ -364,8 +1387,10 @@
         if (!cart.some(item => item.id === id)) {
             cart.push({ id, name, price, img, qty: 1 });
             localStorage.setItem(CART_KEY, JSON.stringify(cart));
-            showToast(`${name} added to cart!`, 'success');
-            performSearch(); // Re-render to update button
+            showToast(`${name} added to cart! 🛒`, 'success');
+            performSearch();
+        } else {
+            showToast('Already in cart', 'info');
         }
     };
     
@@ -376,8 +1401,22 @@
         document.getElementById('searchInput').value = '';
         currentFilter = 'all';
         document.querySelectorAll('.filter-chip').forEach((c, i) => c.classList.toggle('active', i === 0));
+        document.getElementById('suggestionsDropdown').classList.remove('active');
+        showTrendingAndRecent();
         performSearch();
     };
+    
+    // ============================================================
+    // CLOSE SUGGESTIONS ON OUTSIDE CLICK
+    // ============================================================
+    document.addEventListener('click', function(e) {
+        const searchBox = document.querySelector('.search-box');
+        const dropdown = document.getElementById('suggestionsDropdown');
+        
+        if (searchBox && !searchBox.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
     
     // ============================================================
     // VOICE SEARCH
@@ -400,11 +1439,13 @@
             setTimeout(() => {
                 document.getElementById('searchInput').value = transcript;
                 stopVoiceSearch();
+                addToRecentSearches(transcript);
+                hideTrendingAndRecent();
                 performSearch();
             }, 600);
         };
         
-        recognition.onerror = (event) => {
+        recognition.onerror = () => {
             document.getElementById('voiceDisplay').textContent = 'Try again...';
             document.getElementById('voiceStatus').innerHTML = '<i class="fa-solid fa-exclamation-triangle"></i> Error';
             setTimeout(stopVoiceSearch, 1500);
@@ -417,7 +1458,7 @@
     
     window.startVoiceSearch = function() {
         if (!recognition) {
-            showToast('Voice search not supported in this browser', 'error');
+            showToast('Voice search not supported', 'error');
             return;
         }
         
@@ -427,41 +1468,50 @@
         document.getElementById('voiceStatus').innerHTML = '<i class="fa-solid fa-microphone"></i> Listening';
         document.getElementById('voiceBtn').classList.add('listening');
         
-        try {
-            recognition.start();
-        } catch (e) {
-            console.log('Recognition already started');
-        }
+        try { recognition.start(); } catch(e) {}
     };
     
     window.stopVoiceSearch = function() {
         document.getElementById('voiceOverlay').style.display = 'none';
         document.getElementById('voiceBtn').classList.remove('listening');
-        if (recognition) {
-            try { recognition.stop(); } catch(e) {}
-        }
+        if (recognition) { try { recognition.stop(); } catch(e) {} }
     };
     
     // ============================================================
-    // TOAST
+    // TOAST NOTIFICATION
     // ============================================================
     function showToast(msg, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> ${msg}`;
+        toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'error' ? '❌' : '💚'}</span> ${msg}`;
         container.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'all 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'all 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
     
     // ============================================================
-    // INIT
+    // INITIALIZATION
     // ============================================================
     document.addEventListener('DOMContentLoaded', () => {
         fetchProducts();
         
         document.getElementById('searchInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') clearSearch();
+            if (e.key === 'Escape') {
+                document.getElementById('suggestionsDropdown').classList.remove('active');
+                clearSearch();
+            }
+            if (e.key === 'Enter') {
+                const query = document.getElementById('searchInput').value.trim();
+                if (query) {
+                    addToRecentSearches(query);
+                    hideTrendingAndRecent();
+                    document.getElementById('suggestionsDropdown').classList.remove('active');
+                }
+            }
         });
     });
 </script>

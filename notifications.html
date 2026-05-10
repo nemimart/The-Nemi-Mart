@@ -1,335 +1,676 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Elite Notifications</title>
+    <title>Nemi Mart | Elite Notification Center</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        /* ==========================================================================
-           1. CORE ARCHITECTURE & VARIABLES
-           ========================================================================== */
+        /* ============================================================
+           ROOT VARIABLES - PREMIUM GREEN/CREME/GOLD THEME
+           ============================================================ */
         :root {
-            --brand-gold: #D4AF37;
-            --brand-gold-glow: rgba(212, 175, 55, 0.4);
-            --brand-green: #0F5132;
-            --bg-cream: #FCFBF7;
-            --text-main: #1A1A1A;
-            --text-muted: #64748B;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --glass-border: rgba(212, 175, 55, 0.2);
-            --glass-bg: rgba(252, 251, 247, 0.7);
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
-            --shadow-hover: 0 20px 40px -10px rgba(212, 175, 55, 0.15);
-            --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --creme: #FDFBF7;
+            --creme-dark: #F5F1E6;
+            --gold: #D4AF37;
+            --gold-light: #FAF4E5;
+            --gold-hover: #B8860B;
+            --dark-green: #0A1F13;
+            --leaf-green: #1A3E26;
+            --leaf-light: #eaf2e9;
+            --white: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-muted: #5C6F63;
             --danger: #EF4444;
+            --success: #059669;
+            --info: #3B82F6;
+            --warning: #EAB308;
+            --border-light: #EAE5D9;
+            --new-product: #FF6B6B;
+            --order-confirmed: #4ECDC4;
+            --order-delivered: #45B7D1;
+            --system-alert: #F7DC6F;
+            
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+            
+            --shadow-soft: 0 8px 25px rgba(0,0,0,0.04);
+            --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
+            --shadow-hover: 0 25px 45px -10px rgba(212,175,55,0.25);
+            --shadow-gold: 0 10px 30px rgba(212,175,55,0.2);
+            --shadow-premium: 0 30px 60px -15px rgba(10,31,19,0.25);
+            
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            --bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
 
-        /* ==========================================================================
-           2. GLOBAL RESET & AMBIENT ELEMENTS
-           ========================================================================== */
         * {
             margin: 0; padding: 0; box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-cream);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--text-main);
+            background: var(--creme);
+            color: var(--text-dark);
             min-height: 100vh;
             overflow-x: hidden;
+            padding-bottom: 100px;
+            animation: pageLoad 0.6s ease-out;
         }
 
-        body::before {
-            content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 40%),
-                        radial-gradient(circle at 80% 20%, rgba(15, 81, 50, 0.02) 0%, transparent 30%);
-            animation: ambientShift 20s infinite linear alternate;
-            z-index: -1; pointer-events: none;
+        @keyframes pageLoad {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes ambientShift { 0% { transform: rotate(0deg); } 100% { transform: rotate(5deg); } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--creme-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
-        /* ==========================================================================
-           3. NAVIGATION
-           ========================================================================== */
-        .nav-bar {
+        /* ============================================================
+           LOADER
+           ============================================================ */
+        #pageLoader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.98); backdrop-filter: blur(10px);
+            z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: opacity 0.5s;
+        }
+        .loader-spinner {
+            width: 55px; height: 55px; border: 4px solid var(--gold-light);
+            border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-text { margin-top: 18px; font-weight: 700; color: var(--dark-green); letter-spacing: 2px; font-size: 14px; }
+
+        /* ============================================================
+           TOAST
+           ============================================================ */
+        #toastContainer {
+            position: fixed; top: 15px; left: 15px; right: 15px; z-index: 10000;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .toast {
+            background: var(--dark-green); color: white; padding: 16px 20px;
+            border-radius: 18px; border-left: 5px solid var(--gold); box-shadow: var(--shadow-card);
+            animation: slideDown 0.4s ease-out; display: flex; align-items: center;
+            gap: 12px; font-weight: 600; font-size: 14px; pointer-events: auto;
+        }
+        .toast.success { border-left-color: var(--success); background: #0a3622; }
+        .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
+        .toast.info { border-left-color: var(--info); }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           BACKGROUND PARTICLES
+           ============================================================ */
+        .bg-particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .particle {
+            position: absolute; border-radius: 50%;
+            animation: floatParticle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay); opacity: 0;
+        }
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(0) translateX(0) scale(0); }
+            10% { opacity: 0.4; } 85% { opacity: 0.1; }
+            100% { opacity: 0; transform: translateY(var(--moveY)) translateX(var(--moveX)) scale(1.5); }
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
             position: sticky; top: 0; z-index: 1000;
-            background: var(--glass-bg); backdrop-filter: blur(24px);
-            padding: 16px 24px; display: flex; align-items: center;
-            border-bottom: 1px solid var(--glass-border);
+            background: rgba(253, 251, 247, 0.96); backdrop-filter: blur(15px);
+            padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 2px solid var(--gold); box-shadow: var(--shadow-soft);
+        }
+        .back-btn {
+            width: 44px; height: 44px; border-radius: 14px; background: var(--white);
+            border: 1px solid var(--border-light); display: flex; align-items: center;
+            justify-content: center; color: var(--dark-green); text-decoration: none;
+            transition: var(--transition);
+        }
+        .back-btn:active { background: var(--gold); color: white; transform: scale(0.95); }
+        .header-title {
+            font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800;
+            color: var(--dark-green); display: flex; align-items: center; gap: 8px;
+        }
+        .header-title i { color: var(--gold); animation: bellRing 2s infinite; }
+        @keyframes bellRing {
+            0%, 100% { transform: rotate(0); }
+            10% { transform: rotate(15deg); }
+            20% { transform: rotate(-15deg); }
+            30% { transform: rotate(10deg); }
+            40% { transform: rotate(-10deg); }
+            50% { transform: rotate(0); }
+        }
+        .unread-badge {
+            background: var(--danger); color: white; font-size: 11px; font-weight: 800;
+            min-width: 24px; height: 24px; border-radius: 30px; display: flex;
+            align-items: center; justify-content: center; padding: 0 6px;
+        }
+        .clear-all-btn {
+            width: 40px; height: 40px; border-radius: 14px; background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2); display: flex; align-items: center;
+            justify-content: center; color: var(--danger); cursor: pointer; transition: var(--transition);
+        }
+        .clear-all-btn:active { background: var(--danger); color: white; }
+
+        /* ============================================================
+           FILTER TABS
+           ============================================================ */
+        .filter-tabs {
+            display: flex; gap: 8px; padding: 16px 20px; overflow-x: auto;
+            scrollbar-width: none; max-width: 600px; margin: 0 auto;
+        }
+        .filter-tabs::-webkit-scrollbar { display: none; }
+        .filter-chip {
+            padding: 10px 18px; background: var(--white); border: 1px solid var(--border-light);
+            border-radius: 30px; font-size: 13px; font-weight: 600; color: var(--text-muted);
+            white-space: nowrap; cursor: pointer; transition: var(--transition); display: flex;
+            align-items: center; gap: 6px;
+        }
+        .filter-chip.active { background: var(--dark-green); color: var(--gold); border-color: var(--gold); }
+        .filter-chip .count {
+            background: var(--gold-light); color: var(--dark-green); font-size: 10px;
+            font-weight: 800; padding: 2px 8px; border-radius: 20px;
+        }
+        .filter-chip.active .count { background: rgba(255,255,255,0.2); color: var(--gold); }
+
+        /* ============================================================
+           NOTIFICATIONS CONTAINER
+           ============================================================ */
+        .notif-container {
+            max-width: 600px; margin: 0 auto; padding: 8px 20px 100px;
+        }
+        .date-divider {
+            text-align: center; margin: 20px 0 15px; position: relative;
+        }
+        .date-divider span {
+            background: var(--creme); padding: 6px 16px; font-size: 11px; font-weight: 700;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+            position: relative; z-index: 1;
+        }
+        .date-divider::before {
+            content: ''; position: absolute; top: 50%; left: 0; right: 0;
+            height: 1px; background: var(--border-light); z-index: 0;
         }
 
-        .back-link {
-            width: 40px; height: 40px; border-radius: 12px; background: white;
-            border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center;
-            color: var(--text-main); text-decoration: none; transition: var(--transition-bounce);
+        /* ============================================================
+           NOTIFICATION CARD - PREMIUM
+           ============================================================ */
+        .notif-card {
+            background: var(--white); border-radius: var(--radius-lg); padding: 16px;
+            margin-bottom: 12px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-light);
+            transition: var(--transition); position: relative; overflow: hidden;
+            animation: cardSlideIn 0.5s ease-out backwards; cursor: pointer;
+        }
+        @keyframes cardSlideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .notif-card:hover { transform: translateX(5px); border-color: var(--gold); box-shadow: var(--shadow-hover); }
+        .notif-card.unread { border-left: 4px solid var(--gold); background: var(--gold-light); }
+        .notif-card.unread::before {
+            content: ''; position: absolute; top: 20px; right: 20px; width: 8px; height: 8px;
+            border-radius: 50%; background: var(--gold); animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.6); }
+            50% { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0); }
+        }
+        .notif-card.removing {
+            animation: cardSlideOut 0.3s ease-out forwards;
+        }
+        @keyframes cardSlideOut {
+            to { opacity: 0; transform: translateX(100px); }
         }
 
-        .nav-title {
-            flex: 1; text-align: center; font-family: 'Outfit', sans-serif;
-            font-size: 18px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
-            background: linear-gradient(135deg, var(--brand-green), var(--brand-gold));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        /* Notification Type Colors */
+        .notif-card.new-product { border-left: 4px solid var(--new-product); }
+        .notif-card.new-product .notif-icon { background: rgba(255, 107, 107, 0.15); color: var(--new-product); }
+        
+        .notif-card.order-confirmed { border-left: 4px solid var(--order-confirmed); }
+        .notif-card.order-confirmed .notif-icon { background: rgba(78, 205, 196, 0.15); color: var(--order-confirmed); }
+        
+        .notif-card.order-delivered { border-left: 4px solid var(--order-delivered); }
+        .notif-card.order-delivered .notif-icon { background: rgba(69, 183, 209, 0.15); color: var(--order-delivered); }
+        
+        .notif-card.system-alert { border-left: 4px solid var(--system-alert); }
+        .notif-card.system-alert .notif-icon { background: rgba(247, 220, 111, 0.2); color: #B8860B; }
+
+        .notif-inner {
+            display: flex; gap: 14px; align-items: flex-start;
         }
-
-        /* ==========================================================================
-           4. MAIN FEED & HEADER
-           ========================================================================== */
-        .feed-container { max-width: 550px; margin: 0 auto; padding: 25px 20px 100px; }
-
-        .feed-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px;
+        .notif-icon-wrapper {
+            position: relative; flex-shrink: 0;
         }
-
-        .feed-header h2 {
-            font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 900;
+        .notif-icon {
+            width: 50px; height: 50px; border-radius: 16px; display: flex;
+            align-items: center; justify-content: center; font-size: 20px;
+            transition: var(--transition);
         }
-
-        /* Compact Wipe Button */
-        .wipe-btn-mini {
-            width: 36px; height: 36px; border-radius: 10px;
-            background: rgba(239, 68, 68, 0.1); color: var(--danger);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border: 1px solid rgba(239, 68, 68, 0.1);
-            transition: var(--transition-smooth);
+        .notif-product-img {
+            width: 50px; height: 50px; border-radius: 16px; object-fit: cover;
+            border: 2px solid var(--border-light);
         }
-
-        .wipe-btn-mini:hover {
-            background: var(--danger); color: white; transform: rotate(15deg);
+        .notif-content { flex: 1; min-width: 0; }
+        .notif-title {
+            font-size: 15px; font-weight: 700; color: var(--dark-green); margin-bottom: 4px;
+            display: flex; align-items: center; gap: 8px;
         }
-
-        /* ==========================================================================
-           5. PREMIUM CARDS SYSTEM
-           ========================================================================== */
-        .card-item {
-            background: var(--card-bg); border-radius: 24px; padding: 18px;
-            margin-bottom: 16px; display: flex; gap: 15px; align-items: center;
-            border: 1px solid rgba(255,255,255,0.8); box-shadow: var(--shadow-md);
-            animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        .notif-type-badge {
+            font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 20px;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .orbit-container {
-            position: relative; width: 60px; height: 60px; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
+        .badge-new { background: rgba(255, 107, 107, 0.15); color: var(--new-product); }
+        .badge-order { background: rgba(78, 205, 196, 0.15); color: var(--order-confirmed); }
+        .badge-system { background: rgba(247, 220, 111, 0.2); color: #B8860B; }
+        
+        .notif-message {
+            font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px;
         }
-
-        .main-icon {
-            width: 44px; height: 44px; border-radius: 14px; background: white;
-            border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center;
-            color: var(--brand-gold); z-index: 5;
+        .notif-footer {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
         }
-
-        .orbit-line {
-            position: absolute; width: 100%; height: 100%;
-            border: 1px dashed rgba(197, 160, 89, 0.4); border-radius: 50%;
-            animation: spinRing 8s linear infinite;
+        .notif-time {
+            font-size: 11px; color: var(--text-muted); font-weight: 500;
+            display: flex; align-items: center; gap: 4px;
         }
-
-        @keyframes spinRing { 100% { transform: rotate(360deg); } }
-
-        .card-content { flex: 1; }
-        .card-content h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
-        .card-content p { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
-
-        .card-meta { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .time-badge { font-size: 9px; font-weight: 800; color: var(--brand-gold); text-transform: uppercase; }
-
-        .bin-btn {
-            background: none; border: none; color: var(--text-muted); cursor: pointer;
-            transition: 0.3s; padding: 5px;
+        .notif-delete {
+            width: 32px; height: 32px; border-radius: 10px; background: transparent;
+            border: 1px solid var(--border-light); display: flex; align-items: center;
+            justify-content: center; color: var(--text-muted); cursor: pointer;
+            transition: var(--transition); font-size: 13px;
         }
-        .bin-btn:hover { color: var(--danger); }
+        .notif-delete:hover { background: var(--danger); color: white; border-color: var(--danger); }
 
-        /* ==========================================================================
-           6. CUSTOM MODAL SYSTEM (No Browser Alerts)
-           ========================================================================== */
+        /* ============================================================
+           EMPTY STATE
+           ============================================================ */
+        .empty-state {
+            text-align: center; padding: 80px 30px; animation: fadeIn 0.6s ease-out;
+        }
+        .empty-icon {
+            font-size: 80px; color: var(--gold-light); margin-bottom: 24px;
+            animation: float 3s ease-in-out infinite; display: inline-block;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .empty-state h3 { font-family: 'Outfit', sans-serif; font-size: 22px; color: var(--dark-green); margin-bottom: 8px; }
+        .empty-state p { color: var(--text-muted); font-size: 14px; }
+
+        /* ============================================================
+           CONFIRMATION MODAL
+           ============================================================ */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px); display: none;
-            align-items: center; justify-content: center; z-index: 9999;
-            padding: 20px;
+            position: fixed; inset: 0; background: rgba(10, 31, 19, 0.85);
+            backdrop-filter: blur(8px); z-index: 5000; display: none;
+            align-items: center; justify-content: center; padding: 20px;
         }
-
-        .modal-card {
-            background: white; width: 100%; max-width: 340px; border-radius: 28px;
-            padding: 30px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-            transform: scale(0.9); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
         .modal-overlay.active { display: flex; }
-        .modal-overlay.active .modal-card { transform: scale(1); }
-
+        .modal-card {
+            background: var(--white); width: 100%; max-width: 380px; border-radius: var(--radius-xl);
+            padding: 35px 28px; text-align: center; box-shadow: var(--shadow-premium);
+            animation: modalPop 0.4s var(--bounce); border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.85) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
         .modal-icon {
-            width: 60px; height: 60px; background: rgba(239, 68, 68, 0.1);
-            color: var(--danger); border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-size: 24px;
-            margin: 0 auto 20px;
+            width: 70px; height: 70px; border-radius: 50%; background: rgba(239, 68, 68, 0.1);
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+            font-size: 30px; color: var(--danger);
         }
-
-        .modal-btns { display: flex; gap: 12px; margin-top: 25px; }
+        .modal-card h3 { font-family: 'Outfit', sans-serif; font-size: 22px; color: var(--dark-green); margin-bottom: 8px; }
+        .modal-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
+        .modal-btns { display: flex; gap: 12px; }
         .m-btn {
-            flex: 1; padding: 12px; border-radius: 14px; font-weight: 700;
-            cursor: pointer; border: none; transition: 0.3s;
+            flex: 1; padding: 14px; border-radius: 16px; font-weight: 700; font-size: 14px;
+            cursor: pointer; border: none; transition: var(--transition);
         }
-        .btn-cancel { background: #F1F5F9; color: var(--text-muted); }
-        .btn-confirm { background: var(--danger); color: white; }
+        .btn-cancel { background: var(--creme-dark); color: var(--text-muted); border: 1px solid var(--border-light); }
+        .btn-cancel:hover { background: var(--white); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:active { transform: scale(0.95); }
 
-        /* ==========================================================================
-           7. TOAST & SKELETON
-           ========================================================================== */
-        #toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: #1A1A1A; color: white; padding: 12px 24px; border-radius: 50px;
-            font-size: 13px; font-weight: 600; z-index: 10000; transition: 0.4s;
+        @media (max-width: 480px) {
+            .notif-card { padding: 14px; }
+            .notif-icon { width: 42px; height: 42px; font-size: 18px; }
+            .notif-product-img { width: 42px; height: 42px; }
         }
-        #toast.show { transform: translateX(-50%) translateY(0); }
-
-        .skeleton-card {
-            background: white; border-radius: 24px; height: 100px; margin-bottom: 15px;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse { 50% { opacity: 0.5; } }
-
     </style>
 </head>
 <body>
 
-    <nav class="nav-bar">
-        <a href="javascript:history.back()" class="back-link"><i class="fa-solid fa-chevron-left"></i></a>
-        <div class="nav-title">Nemi Mart Updates</div>
-    </nav>
+<div id="toastContainer"></div>
+<div id="pageLoader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">SYNCING NOTIFICATIONS...</div>
+</div>
 
-    <main class="feed-container">
-        <header class="feed-header">
-            <h2>Inbox</h2>
-            <div class="wipe-btn-mini" onclick="openWipeModal()" title="Clear Inbox">
-                <i class="fa-solid fa-broom"></i>
-            </div>
-        </header>
+<!-- BACKGROUND PARTICLES -->
+<div class="bg-particles" id="bgParticles"></div>
 
-        <div id="loader">
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-        </div>
-        
-        <div id="notif-list"></div>
+<!-- HEADER -->
+<div class="header">
+    <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="header-title">
+        <i class="fa-solid fa-bell"></i> Notifications
+        <span class="unread-badge" id="unreadBadge">0</span>
+    </div>
+    <div class="clear-all-btn" onclick="openClearModal()" title="Clear All">
+        <i class="fa-solid fa-broom"></i>
+    </div>
+</div>
 
-        <div id="empty-state" style="display:none; text-align:center; padding: 100px 20px;">
-            <i class="fa-solid fa-cloud-moon" style="font-size: 50px; color: #CBD5E1; margin-bottom: 15px;"></i>
-            <h3 style="color: #64748B;">All Caught Up!</h3>
-        </div>
-    </main>
+<!-- FILTER TABS -->
+<div class="filter-tabs">
+    <div class="filter-chip active" onclick="filterNotifications('all', this)">
+        <i class="fa-solid fa-list"></i> All <span class="count" id="countAll">0</span>
+    </div>
+    <div class="filter-chip" onclick="filterNotifications('new-product', this)">
+        <i class="fa-solid fa-tag"></i> New <span class="count" id="countNew">0</span>
+    </div>
+    <div class="filter-chip" onclick="filterNotifications('order', this)">
+        <i class="fa-solid fa-box"></i> Orders <span class="count" id="countOrder">0</span>
+    </div>
+    <div class="filter-chip" onclick="filterNotifications('system', this)">
+        <i class="fa-solid fa-circle-info"></i> System <span class="count" id="countSystem">0</span>
+    </div>
+</div>
 
-    <div class="modal-overlay" id="wipeModal">
-        <div class="modal-card">
-            <div class="modal-icon"><i class="fa-solid fa-trash-can"></i></div>
-            <h3 style="margin-bottom: 10px;">Clear Inbox?</h3>
-            <p style="color: #64748B; font-size: 14px;">This will permanently remove all notifications from your feed.</p>
-            <div class="modal-btns">
-                <button class="m-btn btn-cancel" onclick="closeWipeModal()">Cancel</button>
-                <button class="m-btn btn-confirm" onclick="confirmClear()">Clear All</button>
-            </div>
+<!-- NOTIFICATIONS CONTAINER -->
+<div class="notif-container" id="notifContainer"></div>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal-overlay" id="clearModal">
+    <div class="modal-card">
+        <div class="modal-icon"><i class="fa-solid fa-trash-can"></i></div>
+        <h3>Clear All Notifications?</h3>
+        <p>This action cannot be undone. All notifications will be permanently removed.</p>
+        <div class="modal-btns">
+            <button class="m-btn btn-cancel" onclick="closeClearModal()">Cancel</button>
+            <button class="m-btn btn-danger" onclick="confirmClearAll()">Clear All</button>
         </div>
     </div>
+</div>
 
-    <div id="toast">Action completed successfully</div>
-
-    <script>
-        // FIREBASE
-        const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // CORE LOGIC
-        function fetchUpdates() {
-            const list = document.getElementById('notif-list');
-            const loader = document.getElementById('loader');
-            const empty = document.getElementById('empty-state');
-
-            db.ref('notifications').on('value', (snap) => {
-                loader.style.display = 'none';
-                list.innerHTML = '';
-                const data = snap.val();
-
-                if (!data) {
-                    empty.style.display = 'block';
-                    return;
-                }
-
-                empty.style.display = 'none';
-                Object.keys(data).reverse().forEach((key, i) => {
-                    const item = data[key];
-                    const card = document.createElement('div');
-                    card.className = 'card-item';
-                    card.style.animationDelay = (i * 0.05) + 's';
+<script>
+    // ============================================================
+    // FIREBASE CONFIG
+    // ============================================================
+    const firebaseConfig = { databaseURL: "https://nemi-mart-2-default-rtdb.firebaseio.com/" };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    const CLOUD_NAME = "despxo7zb";
+    
+    // ============================================================
+    // GLOBAL STATE
+    // ============================================================
+    let allNotifications = [];
+    let currentFilter = 'all';
+    let unreadCount = 0;
+    
+    // ============================================================
+    // INIT PARTICLES
+    // ============================================================
+    function initParticles() {
+        const container = document.getElementById('bgParticles');
+        const colors = ['#D4AF37', '#B8860B', '#1A3E26', '#FAF4E5', '#059669'];
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div'); p.className = 'particle';
+            p.style.cssText = `width:${Math.floor(Math.random()*6)+2}px;height:${Math.floor(Math.random()*6)+2}px;background:${colors[Math.floor(Math.random()*colors.length)]};left:${Math.random()*100}%;top:${Math.random()*100}%;--duration:${Math.floor(Math.random()*12)+8}s;--delay:${Math.random()*8}s;--moveY:${Math.floor(Math.random()*150)-75}px;--moveX:${Math.floor(Math.random()*150)-75}px;`;
+            container.appendChild(p);
+        }
+    }
+    
+    // ============================================================
+    // FETCH NOTIFICATIONS
+    // ============================================================
+    function fetchNotifications() {
+        database.ref('notifications').on('value', (snap) => {
+            const data = snap.val();
+            allNotifications = [];
+            unreadCount = 0;
+            
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const n = data[key];
+                    allNotifications.push({
+                        id: key,
+                        type: n.type || 'system',
+                        title: n.title || 'Notification',
+                        message: n.message || '',
+                        productImage: n.productImage || n.img || '',
+                        productId: n.productId || '',
+                        orderId: n.orderId || '',
+                        timestamp: n.timestamp || Date.now(),
+                        read: n.read || false
+                    });
                     
-                    let icon = 'fa-tag';
-                    if(item.type === 'order') icon = 'fa-box-open';
-                    if(item.type === 'alert') icon = 'fa-triangle-exclamation';
-
-                    card.innerHTML = `
-                        <div class="orbit-container">
-                            <div class="orbit-line"></div>
-                            <div class="main-icon"><i class="fa-solid ${icon}"></i></div>
+                    if (!n.read) unreadCount++;
+                });
+            }
+            
+            // Sort by newest first
+            allNotifications.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            
+            updateCounts();
+            renderNotifications();
+            updateUnreadBadge();
+            
+            document.getElementById('pageLoader').style.opacity = '0';
+            setTimeout(() => { document.getElementById('pageLoader').style.display = 'none'; }, 500);
+        });
+    }
+    
+    // ============================================================
+    // UPDATE COUNTS
+    // ============================================================
+    function updateCounts() {
+        document.getElementById('countAll').textContent = allNotifications.length;
+        document.getElementById('countNew').textContent = allNotifications.filter(n => n.type === 'new-product').length;
+        document.getElementById('countOrder').textContent = allNotifications.filter(n => n.type === 'order').length;
+        document.getElementById('countSystem').textContent = allNotifications.filter(n => n.type === 'system').length;
+    }
+    
+    // ============================================================
+    // UPDATE UNREAD BADGE
+    // ============================================================
+    function updateUnreadBadge() {
+        const badge = document.getElementById('unreadBadge');
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+    }
+    
+    // ============================================================
+    // FILTER NOTIFICATIONS
+    // ============================================================
+    window.filterNotifications = function(filter, chip) {
+        currentFilter = filter;
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        renderNotifications();
+    };
+    
+    // ============================================================
+    // RENDER NOTIFICATIONS
+    // ============================================================
+    function renderNotifications() {
+        const container = document.getElementById('notifContainer');
+        
+        let filtered = allNotifications;
+        if (currentFilter !== 'all') {
+            filtered = allNotifications.filter(n => n.type === currentFilter);
+        }
+        
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fa-regular fa-bell"></i></div>
+                    <h3>No Notifications</h3>
+                    <p>${currentFilter === 'all' ? 'You\'re all caught up!' : 'No ' + currentFilter + ' notifications yet.'}</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Group by date
+        let lastDate = '';
+        let html = '';
+        
+        filtered.forEach((n, i) => {
+            const notifDate = new Date(n.timestamp);
+            const dateStr = notifDate.toDateString();
+            const today = new Date().toDateString();
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            
+            let dateLabel = dateStr === today ? 'Today' : dateStr === yesterday ? 'Yesterday' : notifDate.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' });
+            
+            if (dateStr !== lastDate) {
+                html += `<div class="date-divider"><span>${dateLabel}</span></div>`;
+                lastDate = dateStr;
+            }
+            
+            const typeClass = n.type === 'new-product' ? 'new-product' : n.type === 'order' ? 'order-confirmed' : 'system-alert';
+            const typeBadge = n.type === 'new-product' ? 'badge-new' : n.type === 'order' ? 'badge-order' : 'badge-system';
+            const typeLabel = n.type === 'new-product' ? 'New Product' : n.type === 'order' ? 'Order Update' : 'System';
+            const iconMap = { 'new-product': 'fa-tag', 'order': 'fa-box', 'system': 'fa-circle-info' };
+            
+            const hasImage = n.productImage && n.type === 'new-product';
+            const imageUrl = n.productImage && n.productImage.startsWith('http') ? n.productImage : `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${n.productImage}`;
+            
+            html += `
+                <div class="notif-card ${typeClass} ${!n.read ? 'unread' : ''}" id="notif-${n.id}" style="animation-delay:${i*0.05}s" onclick="markAsRead('${n.id}', '${n.productId || ''}')">
+                    <div class="notif-inner">
+                        <div class="notif-icon-wrapper">
+                            ${hasImage ? 
+                                `<img src="${imageUrl}" class="notif-product-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+                                 <div class="notif-icon" style="display:none;"><i class="fa-solid ${iconMap[n.type] || 'fa-bell'}"></i></div>` :
+                                `<div class="notif-icon"><i class="fa-solid ${iconMap[n.type] || 'fa-bell'}"></i></div>`
+                            }
                         </div>
-                        <div class="card-content">
-                            <h3>${item.title || 'Official Update'}</h3>
-                            <p>${item.message || 'New premium content available.'}</p>
-                            <div class="card-meta">
-                                <span class="time-badge">${getRelativeTime(item.timestamp)}</span>
-                                <button class="bin-btn" onclick="deleteItem('${key}')"><i class="fa-solid fa-trash"></i></button>
+                        <div class="notif-content">
+                            <div class="notif-title">
+                                ${n.title}
+                                <span class="notif-type-badge ${typeBadge}">${typeLabel}</span>
+                            </div>
+                            <div class="notif-message">${n.message}</div>
+                            <div class="notif-footer">
+                                <span class="notif-time">
+                                    <i class="fa-regular fa-clock"></i> ${getRelativeTime(n.timestamp)}
+                                </span>
+                                <button class="notif-delete" onclick="event.stopPropagation(); deleteNotification('${n.id}')">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
                             </div>
                         </div>
-                    `;
-                    list.appendChild(card);
-                });
-            });
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+    
+    // ============================================================
+    // GET RELATIVE TIME
+    // ============================================================
+    function getRelativeTime(timestamp) {
+        if (!timestamp) return 'Just now';
+        const seconds = Math.floor((Date.now() - timestamp) / 1000);
+        if (seconds < 60) return 'Just now';
+        if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+        if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+        return new Date(timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+    }
+    
+    // ============================================================
+    // MARK AS READ
+    // ============================================================
+    window.markAsRead = function(notifId, productId) {
+        database.ref('notifications/' + notifId).update({ read: true });
+        
+        // Navigate to product if it's a new product notification
+        if (productId) {
+            window.location.href = `product.html?id=${productId}`;
         }
-
-        function getRelativeTime(ts) {
-            if(!ts) return "Just now";
-            const s = Math.floor((Date.now() - ts) / 1000);
-            if(s < 60) return "Now";
-            if(s < 3600) return Math.floor(s/60) + "m ago";
-            if(s < 86400) return Math.floor(s/3600) + "h ago";
-            return new Date(ts).toLocaleDateString();
-        }
-
-        // MODAL & ACTIONS
-        function openWipeModal() { document.getElementById('wipeModal').classList.add('active'); }
-        function closeWipeModal() { document.getElementById('wipeModal').classList.remove('active'); }
-
-        function confirmClear() {
-            closeWipeModal();
-            db.ref('notifications').remove().then(() => showToast("Inbox cleared successfully"));
-        }
-
-        function deleteItem(id) {
-            db.ref('notifications/' + id).remove().then(() => showToast("Notification deleted"));
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
-
-        window.onload = fetchUpdates;
-    </script>
+    };
+    
+    // ============================================================
+    // DELETE SINGLE NOTIFICATION
+    // ============================================================
+    window.deleteNotification = function(notifId) {
+        const card = document.getElementById(`notif-${notifId}`);
+        if (card) card.classList.add('removing');
+        
+        setTimeout(() => {
+            database.ref('notifications/' + notifId).remove()
+                .then(() => showToast('Notification removed', 'info'))
+                .catch(() => showToast('Failed to delete', 'error'));
+        }, 300);
+    };
+    
+    // ============================================================
+    // CLEAR ALL MODAL
+    // ============================================================
+    window.openClearModal = function() {
+        document.getElementById('clearModal').classList.add('active');
+    };
+    window.closeClearModal = function() {
+        document.getElementById('clearModal').classList.remove('active');
+    };
+    window.confirmClearAll = function() {
+        closeClearModal();
+        database.ref('notifications').remove()
+            .then(() => showToast('All notifications cleared', 'success'))
+            .catch(() => showToast('Failed to clear', 'error'));
+    };
+    
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function showToast(msg, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'error' ? '❌' : '💚'}</span> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3000);
+    }
+    
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        initParticles();
+        fetchNotifications();
+        
+        // Close modal on overlay click
+        document.getElementById('clearModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) closeClearModal();
+        });
+    });
+</script>
 </body>
 </html>

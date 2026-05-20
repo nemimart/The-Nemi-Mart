@@ -17,26 +17,13 @@
        ROOT VARIABLES - PREMIUM GREEN/CREME/GOLD THEME
        ============================================================ */
     :root {
-      --creme: #FDFBF7;
-      --creme-dark: #F5F1E6;
-      --gold: #D4AF37;
-      --gold-light: #FAF4E5;
-      --gold-hover: #B8860B;
-      --dark-green: #0A1F13;
-      --leaf-green: #1A3E26;
-      --leaf-light: #eaf2e9;
-      --white: #FFFFFF;
-      --text-dark: #1F2937;
-      --text-muted: #5C6F63;
-      --danger: #EF4444;
-      --success: #059669;
-      --warning: #EAB308;
-      --info: #3B82F6;
-      --border-light: #EAE5D9;
-      --radius-xl: 32px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
+      --creme: #FDFBF7; --creme-dark: #F5F1E6; --gold: #D4AF37;
+      --gold-light: #FAF4E5; --gold-hover: #B8860B; --dark-green: #0A1F13;
+      --leaf-green: #1A3E26; --leaf-light: #eaf2e9; --white: #FFFFFF;
+      --text-dark: #1F2937; --text-muted: #5C6F63; --danger: #EF4444;
+      --success: #059669; --warning: #EAB308; --info: #3B82F6;
+      --border-light: #EAE5D9; --radius-xl: 32px; --radius-lg: 24px;
+      --radius-md: 18px; --radius-sm: 14px;
       --shadow-soft: 0 8px 25px rgba(0,0,0,0.04);
       --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
       --shadow-hover: 0 25px 45px -10px rgba(212,175,55,0.25);
@@ -47,315 +34,174 @@
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; -webkit-tap-highlight-color:transparent; }
     body {
-      background: var(--creme);
-      color: var(--text-dark);
-      line-height: 1.5;
-      overflow-x: hidden;
-      width: 100%;
-      min-height: 100vh;
-      padding-bottom: 80px;
+      background: var(--creme); color: var(--text-dark); line-height:1.5;
+      overflow-x: hidden; width:100%; min-height:100vh; padding-bottom:80px;
       animation: pageLoad 0.6s ease-out;
     }
-    @keyframes pageLoad {
-      0% { opacity: 0; transform: translateY(12px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--creme-dark); }
-    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+    @keyframes pageLoad { 0%{opacity:0;transform:translateY(12px);} 100%{opacity:1;transform:translateY(0);} }
+    ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--creme-dark); }
+    ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:10px; }
+
     /* LOADER */
     #pageLoader {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(253, 251, 247, 0.98);
-      backdrop-filter: blur(10px); z-index: 9999;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: opacity 0.5s;
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(253,251,247,0.98); backdrop-filter:blur(10px);
+      z-index:9999; display:flex; flex-direction:column;
+      justify-content:center; align-items:center; transition:opacity 0.5s;
     }
     .loader-spinner {
-      width: 55px; height: 55px;
-      border: 4px solid var(--gold-light);
-      border-top-color: var(--gold); border-radius: 50%;
-      animation: spin 1s linear infinite;
+      width:55px; height:55px; border:4px solid var(--gold-light);
+      border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loader-text {
-      margin-top: 18px; font-weight: 700;
-      color: var(--dark-green); letter-spacing: 2px; font-size: 14px;
-    }
+    @keyframes spin { to{transform:rotate(360deg);} }
+    .loader-text { margin-top:18px; font-weight:700; color:var(--dark-green); letter-spacing:2px; font-size:14px; }
+
     /* TOAST */
-    #toastContainer {
-      position: fixed; top: calc(15px + var(--safe-top)); left: 15px; right: 15px;
-      z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
-    }
-    .toast {
-      background: var(--dark-green); color: white; padding: 16px 20px;
-      border-radius: 18px; border-left: 5px solid var(--gold);
-      box-shadow: var(--shadow-card); animation: slideDown 0.35s ease-out;
-      display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px;
-      pointer-events: auto;
-    }
-    .toast.success { border-left-color: var(--success); background: #0a3622; }
-    .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
-    .toast.info { border-left-color: var(--gold); }
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    #toastContainer { position:fixed; top:calc(15px + var(--safe-top)); left:15px; right:15px; z-index:10000; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
+    .toast { background:var(--dark-green); color:white; padding:16px 20px; border-radius:18px; border-left:5px solid var(--gold); box-shadow:var(--shadow-card); animation:slideDown 0.35s ease-out; display:flex; align-items:center; gap:12px; font-weight:600; font-size:14px; pointer-events:auto; }
+    .toast.success { border-left-color:var(--success); background:#0a3622; }
+    .toast.error { border-left-color:var(--danger); background:#3b1e1e; }
+    .toast.info { border-left-color:var(--gold); }
+    @keyframes slideDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
+
     /* HEADER */
-    .header {
-      position: sticky; top: 0; z-index: 1000;
-      background: rgba(253, 251, 247, 0.96); backdrop-filter: blur(15px);
-      padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 2px solid var(--gold); box-shadow: var(--shadow-soft);
-    }
-    .back-btn {
-      width: 44px; height: 44px; border-radius: 14px;
-      background: var(--white); border: 1px solid var(--border-light);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--dark-green); text-decoration: none; transition: var(--transition);
-    }
-    .back-btn:active { background: var(--gold); color: white; transform: scale(0.95); }
-    .header-title {
-      font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800;
-      color: var(--dark-green); display: flex; align-items: center; gap: 8px;
-    }
-    .header-title i { color: var(--gold); }
-    .header-actions { display: flex; gap: 8px; }
-    .header-btn {
-      width: 44px; height: 44px; border-radius: 14px;
-      background: var(--gold-light); border: 1px solid var(--gold);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--gold); cursor: pointer; transition: var(--transition);
-    }
-    .header-btn:active { background: var(--gold); color: white; transform: scale(0.95); }
+    .header { position:sticky; top:0; z-index:1000; background:rgba(253,251,247,0.96); backdrop-filter:blur(15px); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--gold); box-shadow:var(--shadow-soft); }
+    .back-btn { width:44px; height:44px; border-radius:14px; background:var(--white); border:1px solid var(--border-light); display:flex; align-items:center; justify-content:center; color:var(--dark-green); text-decoration:none; transition:var(--transition); }
+    .back-btn:active { background:var(--gold); color:white; transform:scale(0.95); }
+    .header-title { font-family:'Outfit',sans-serif; font-size:22px; font-weight:800; color:var(--dark-green); display:flex; align-items:center; gap:8px; }
+    .header-title i { color:var(--gold); }
+    .header-actions { display:flex; gap:8px; }
+    .header-btn { width:44px; height:44px; border-radius:14px; background:var(--gold-light); border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; color:var(--gold); cursor:pointer; transition:var(--transition); }
+    .header-btn:active { background:var(--gold); color:white; transform:scale(0.95); }
+
     /* STATS */
-    .stats-container {
-      display: flex; gap: 12px; padding: 20px 16px; max-width: 600px; margin: 0 auto;
-    }
-    .stat-card {
-      flex: 1; background: var(--white); padding: 16px; border-radius: var(--radius-lg);
-      border: 1px solid var(--border-light); box-shadow: var(--shadow-soft);
-      display: flex; align-items: center; gap: 12px; animation: fadeInUp 0.5s ease-out;
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .stat-icon {
-      width: 48px; height: 48px; border-radius: 14px;
-      background: var(--gold-light); display: flex; align-items: center; justify-content: center;
-      color: var(--gold); font-size: 22px;
-    }
-    .stat-content h3 { font-size: 22px; font-weight: 800; color: var(--dark-green); line-height: 1.2; }
-    .stat-content p { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stats-container { display:flex; gap:12px; padding:20px 16px; max-width:600px; margin:0 auto; }
+    .stat-card { flex:1; background:var(--white); padding:16px; border-radius:var(--radius-lg); border:1px solid var(--border-light); box-shadow:var(--shadow-soft); display:flex; align-items:center; gap:12px; animation:fadeInUp 0.5s ease-out; }
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+    .stat-icon { width:48px; height:48px; border-radius:14px; background:var(--gold-light); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:22px; }
+    .stat-content h3 { font-size:22px; font-weight:800; color:var(--dark-green); line-height:1.2; }
+    .stat-content p { font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+
     /* FILTER TABS */
-    .filter-tabs {
-      display: flex; gap: 8px; padding: 8px 16px 16px; max-width: 600px; margin: 0 auto;
-      overflow-x: auto; scrollbar-width: none;
-    }
-    .filter-tabs::-webkit-scrollbar { display: none; }
-    .filter-chip {
-      padding: 10px 18px; background: var(--white); border: 1px solid var(--border-light);
-      border-radius: 30px; font-size: 13px; font-weight: 600; color: var(--text-muted);
-      white-space: nowrap; cursor: pointer; transition: var(--transition);
-    }
-    .filter-chip.active { background: var(--dark-green); color: var(--gold); border-color: var(--gold); }
-    .filter-chip i { margin-right: 6px; }
+    .filter-tabs { display:flex; gap:8px; padding:8px 16px 16px; max-width:600px; margin:0 auto; overflow-x:auto; scrollbar-width:none; }
+    .filter-tabs::-webkit-scrollbar { display:none; }
+    .filter-chip { padding:10px 18px; background:var(--white); border:1px solid var(--border-light); border-radius:30px; font-size:13px; font-weight:600; color:var(--text-muted); white-space:nowrap; cursor:pointer; transition:var(--transition); }
+    .filter-chip.active { background:var(--dark-green); color:var(--gold); border-color:var(--gold); }
+    .filter-chip i { margin-right:6px; }
+
     /* ORDERS CONTAINER */
-    .orders-container { padding: 0 16px 20px; max-width: 600px; margin: 0 auto; }
+    .orders-container { padding:0 16px 20px; max-width:600px; margin:0 auto; }
+
     .order-card {
-      background: var(--white); border-radius: var(--radius-xl); padding: 20px;
-      margin-bottom: 20px; box-shadow: var(--shadow-card); border: 1px solid var(--border-light);
-      transition: var(--transition); animation: cardSlideIn 0.5s ease-out backwards;
-      position: relative; overflow: hidden;
+      background:var(--white); border-radius:var(--radius-xl); padding:20px;
+      margin-bottom:20px; box-shadow:var(--shadow-card); border:1px solid var(--border-light);
+      transition:var(--transition); animation:cardSlideIn 0.5s ease-out backwards;
+      position:relative; overflow:hidden;
     }
-    @keyframes cardSlideIn {
-      from { opacity: 0; transform: translateY(25px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .order-card::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
-      transition: var(--transition);
-    }
-    .order-card.pending::before { background: var(--warning); }
-    .order-card.confirmed::before { background: var(--info); }
-    .order-card.delivered::before { background: var(--success); }
-    .order-card.rejected::before { background: var(--danger); }
-    .order-card:active { transform: scale(0.99); }
-    .order-header {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      margin-bottom: 16px; padding-left: 8px;
-    }
-    .order-id { font-size: 13px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px; }
-    .order-date { font-size: 11px; color: var(--text-muted); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
-    .order-status { padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-    .status-pending { background: rgba(234, 179, 8, 0.15); color: var(--warning); }
-    .status-confirmed { background: rgba(59, 130, 246, 0.15); color: var(--info); }
-    .status-delivered { background: rgba(5, 150, 105, 0.15); color: var(--success); }
-    .status-rejected { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-    .order-items { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; padding-left: 8px; }
-    .order-item { display: flex; align-items: center; gap: 12px; }
-    .item-image {
-      width: 55px; height: 55px; border-radius: 14px; object-fit: cover;
-      background: var(--creme-dark); border: 1px solid var(--border-light);
-    }
-    .item-details { flex: 1; }
-    .item-name { font-size: 14px; font-weight: 700; color: var(--dark-green); margin-bottom: 2px; }
-    .item-qty { font-size: 11px; color: var(--text-muted); }
-    .item-price { font-size: 14px; font-weight: 700; color: var(--gold); }
-    .delivery-info {
-      background: var(--creme-dark); padding: 14px; border-radius: var(--radius-md);
-      margin-bottom: 16px; margin-left: 8px;
-    }
-    .delivery-info p {
-      font-size: 12px; color: var(--text-muted); display: flex; align-items: flex-start;
-      gap: 8px; margin-bottom: 4px;
-    }
-    .delivery-info i { width: 18px; color: var(--gold); margin-top: 2px; }
-    .order-footer {
-      display: flex; justify-content: space-between; align-items: center;
-      padding-top: 12px; margin-top: 8px; border-top: 1px solid var(--border-light);
-    }
-    .total-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .total-amount { font-size: 22px; font-weight: 800; color: var(--dark-green); }
+    @keyframes cardSlideIn { from{opacity:0;transform:translateY(25px);} to{opacity:1;transform:translateY(0);} }
+    .order-card::before { content:''; position:absolute; top:0; left:0; width:5px; height:100%; transition:var(--transition); }
+    .order-card.pending::before { background:var(--warning); }
+    .order-card.confirmed::before { background:var(--info); }
+    .order-card.delivered::before { background:var(--success); }
+    .order-card.rejected::before { background:var(--danger); }
+    .order-card:active { transform:scale(0.99); }
+
+    .order-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; padding-left:8px; }
+    .order-id { font-size:13px; font-weight:800; color:var(--text-muted); letter-spacing:0.5px; }
+    .order-date { font-size:11px; color:var(--text-muted); margin-top:3px; display:flex; align-items:center; gap:4px; }
+    .order-status { padding:4px 12px; border-radius:20px; font-size:10px; font-weight:800; text-transform:uppercase; }
+    .status-pending { background:rgba(234,179,8,0.15); color:var(--warning); }
+    .status-confirmed { background:rgba(59,130,246,0.15); color:var(--info); }
+    .status-delivered { background:rgba(5,150,105,0.15); color:var(--success); }
+    .status-rejected { background:rgba(239,68,68,0.15); color:var(--danger); }
+
+    .order-items { display:flex; flex-direction:column; gap:12px; margin-bottom:16px; padding-left:8px; }
+    .order-item { display:flex; align-items:center; gap:12px; }
+    .item-image { width:55px; height:55px; border-radius:14px; object-fit:cover; background:var(--creme-dark); border:1px solid var(--border-light); }
+    .item-details { flex:1; }
+    .item-name { font-size:14px; font-weight:700; color:var(--dark-green); margin-bottom:2px; }
+    .item-qty { font-size:11px; color:var(--text-muted); }
+    .item-price { font-size:14px; font-weight:700; color:var(--gold); }
+
+    .delivery-info { background:var(--creme-dark); padding:14px; border-radius:var(--radius-md); margin-bottom:16px; margin-left:8px; }
+    .delivery-info p { font-size:12px; color:var(--text-muted); display:flex; align-items:flex-start; gap:8px; margin-bottom:4px; }
+    .delivery-info i { width:18px; color:var(--gold); margin-top:2px; }
+
+    .order-footer { display:flex; justify-content:space-between; align-items:center; padding-top:12px; margin-top:8px; border-top:1px solid var(--border-light); }
+    .total-label { font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+    .total-amount { font-size:22px; font-weight:800; color:var(--dark-green); }
+
     .invoice-btn {
-      background: var(--dark-green); color: var(--gold); border: 1.5px solid var(--gold);
-      padding: 12px 20px; border-radius: 14px; font-size: 13px; font-weight: 700;
-      cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 8px;
+      background:var(--dark-green); color:var(--gold); border:1.5px solid var(--gold);
+      padding:12px 20px; border-radius:14px; font-size:13px; font-weight:700;
+      cursor:pointer; transition:var(--transition); display:flex; align-items:center; gap:8px;
     }
-    .invoice-btn:active { background: var(--gold); color: var(--dark-green); transform: scale(0.96); }
+    .invoice-btn:active { background:var(--gold); color:var(--dark-green); transform:scale(0.96); }
+
     /* EMPTY STATE */
-    .empty-state { text-align: center; padding: 60px 30px; animation: fadeIn 0.6s ease-out; }
-    .empty-icon {
-      font-size: 80px; color: var(--gold-light); margin-bottom: 24px;
-      animation: float 3s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-    .empty-state h2 { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 800; color: var(--dark-green); margin-bottom: 12px; }
-    .empty-state p { color: var(--text-muted); font-size: 15px; margin-bottom: 25px; }
-    .shop-btn {
-      display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px;
-      background: var(--dark-green); color: var(--gold); border-radius: 40px;
-      text-decoration: none; font-weight: 700; border: 2px solid var(--gold);
-    }
+    .empty-state { text-align:center; padding:60px 30px; animation:fadeIn 0.6s ease-out; }
+    .empty-icon { font-size:80px; color:var(--gold-light); margin-bottom:24px; animation:float 3s ease-in-out infinite; display:inline-block; }
+    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
+    .empty-state h2 { font-family:'Outfit',sans-serif; font-size:24px; font-weight:800; color:var(--dark-green); margin-bottom:12px; }
+    .empty-state p { color:var(--text-muted); font-size:15px; margin-bottom:25px; }
+    .shop-btn { display:inline-flex; align-items:center; gap:10px; padding:14px 32px; background:var(--dark-green); color:var(--gold); border-radius:40px; text-decoration:none; font-weight:700; border:2px solid var(--gold); }
+
     /* INVOICE MODAL */
-    .invoice-modal {
-      position: fixed; inset: 0; background: rgba(10, 31, 19, 0.95);
-      backdrop-filter: blur(12px); z-index: 3000; display: none;
-      align-items: center; justify-content: center; padding: 16px;
-    }
-    .invoice-modal-content {
-      background: var(--white); width: 100%; max-width: 550px; max-height: 90vh;
-      overflow-y: auto; border-radius: var(--radius-xl); padding: 0;
-      animation: modalPop 0.4s var(--bounce); box-shadow: var(--shadow-premium);
-    }
-    @keyframes modalPop {
-      from { opacity: 0; transform: scale(0.85) translateY(30px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .invoice-preview-header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 20px 24px; border-bottom: 2px solid var(--gold);
-      background: linear-gradient(135deg, var(--dark-green), var(--leaf-green));
-      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    }
-    .invoice-preview-header h2 { color: var(--gold); font-family: 'Outfit', sans-serif; font-size: 22px; }
-    .close-invoice {
-      width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.15);
-      border: none; color: white; font-size: 20px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
-    #invoicePreviewImage { width: 100%; display: block; }
-    .invoice-actions {
-      display: flex; gap: 12px; padding: 20px 24px;
-      background: var(--creme-dark); border-radius: 0 0 var(--radius-xl) var(--radius-xl);
-    }
-    .invoice-action-btn {
-      flex: 1; padding: 16px; border: none; border-radius: 16px; font-weight: 700;
-      font-size: 15px; cursor: pointer; transition: var(--transition);
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .download-invoice-btn { background: var(--dark-green); color: var(--gold); border: 2px solid var(--gold); }
-    .share-invoice-btn { background: var(--gold-light); color: var(--dark-green); border: 2px solid var(--gold); }
-    .invoice-action-btn:active { transform: scale(0.97); }
+    .invoice-modal { position:fixed; inset:0; background:rgba(10,31,19,0.95); backdrop-filter:blur(12px); z-index:3000; display:none; align-items:center; justify-content:center; padding:16px; }
+    .invoice-modal-content { background:var(--white); width:100%; max-width:550px; max-height:90vh; overflow-y:auto; border-radius:var(--radius-xl); padding:0; animation:modalPop 0.4s var(--bounce); box-shadow:var(--shadow-premium); }
+    @keyframes modalPop { from{opacity:0;transform:scale(0.85) translateY(30px);} to{opacity:1;transform:scale(1) translateY(0);} }
+    .invoice-preview-header { display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:2px solid var(--gold); background:linear-gradient(135deg, var(--dark-green), var(--leaf-green)); border-radius:var(--radius-xl) var(--radius-xl) 0 0; }
+    .invoice-preview-header h2 { color:var(--gold); font-family:'Outfit',sans-serif; font-size:22px; }
+    .close-invoice { width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,0.15); border:none; color:white; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    #invoicePreviewImage { width:100%; display:block; }
+    .invoice-actions { display:flex; gap:12px; padding:20px 24px; background:var(--creme-dark); border-radius:0 0 var(--radius-xl) var(--radius-xl); }
+    .invoice-action-btn { flex:1; padding:16px; border:none; border-radius:16px; font-weight:700; font-size:15px; cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:8px; }
+    .download-invoice-btn { background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); }
+    .share-invoice-btn { background:var(--gold-light); color:var(--dark-green); border:2px solid var(--gold); }
+    .invoice-action-btn:active { transform:scale(0.97); }
+
     /* HIDDEN INVOICE TEMPLATE – ULTRA PREMIUM */
     #invoiceTemplate {
-      position: fixed; left: -9999px; top: 0; width: 620px;
-      background: var(--white); padding: 50px 45px;
-      font-family: 'Cormorant Garamond', serif; color: var(--dark-green);
-      border: 15px solid var(--dark-green); box-shadow: var(--shadow-premium);
+      position:fixed; left:-9999px; top:0; width:620px;
+      background:var(--white); padding:50px 45px;
+      font-family:'Cormorant Garamond',serif; color:var(--dark-green);
+      border:15px solid var(--dark-green); box-shadow:var(--shadow-premium);
     }
-    .invoice-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 45px; border-bottom: 3px double var(--gold); padding-bottom: 28px;
-    }
-    .invoice-logo-section { display: flex; align-items: center; gap: 16px; }
-    .invoice-logo {
-      width: 75px; height: 75px; border-radius: 20px; object-fit: cover;
-      border: 2px solid var(--gold);
-    }
-    .invoice-brand h2 { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900; color: var(--dark-green); }
-    .invoice-brand p { font-size: 13px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 3px; }
-    .invoice-title-section { text-align: right; }
-    .invoice-title {
-      font-size: 38px; font-weight: 900; color: var(--gold);
-      font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 5px;
-    }
-    .invoice-number { font-size: 15px; color: var(--text-muted); font-weight: 700; }
-    .invoice-details-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 35px; margin-bottom: 40px;
-    }
-    .invoice-section h4 {
-      font-size: 14px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px;
-      margin-bottom: 14px; font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    .invoice-section p { font-size: 16px; font-weight: 600; line-height: 1.6; margin-bottom: 4px; }
-    .invoice-section .address { font-size: 14px; font-weight: 400; color: var(--text-muted); }
-    .invoice-items-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
-    .invoice-items-table th {
-      background: var(--dark-green); color: var(--gold); padding: 16px 14px;
-      font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-      font-family: 'Plus Jakarta Sans', sans-serif; text-align: left;
-    }
-    .invoice-items-table td { padding: 18px 14px; border-bottom: 1px solid var(--border-light); font-size: 15px; font-weight: 500; }
-    .invoice-items-table tfoot td { border-bottom: none; padding-top: 24px; }
-    .invoice-total-box { float: right; width: 280px; margin-top: 24px; }
-    .invoice-total-row { display: flex; justify-content: space-between; padding: 12px 0; font-size: 15px; }
-    .invoice-grand-total {
-      display: flex; justify-content: space-between; padding: 16px 0; margin-top: 8px;
-      border-top: 2px solid var(--dark-green); border-bottom: 2px double var(--gold);
-      font-size: 22px; font-weight: 800; color: var(--dark-green);
-    }
-    .invoice-footer { margin-top: 70px; padding-top: 30px; border-top: 1px solid var(--border-light); clear: both; }
-    .invoice-footer p { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
-    .signature-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; }
-    .signature-box { text-align: center; }
-    .signature { font-family: 'Dancing Script', cursive; font-size: 36px; color: var(--dark-green); margin-bottom: 6px; }
-    .signature-label { font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
-    .invoice-stamp {
-      width: 110px; height: 110px; border: 3px solid var(--gold); border-radius: 50%;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: var(--gold); font-weight: 800; font-size: 14px; text-transform: uppercase;
-      transform: rotate(-15deg);
-    }
-    .invoice-stamp i { font-size: 28px; margin-bottom: 6px; }
+    .invoice-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:45px; border-bottom:3px double var(--gold); padding-bottom:28px; }
+    .invoice-logo-section { display:flex; align-items:center; gap:16px; }
+    .invoice-logo { width:75px; height:75px; border-radius:20px; object-fit:cover; border:2px solid var(--gold); }
+    .invoice-brand h2 { font-family:'Outfit',sans-serif; font-size:26px; font-weight:900; color:var(--dark-green); }
+    .invoice-brand p { font-size:13px; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:3px; }
+    .invoice-title-section { text-align:right; }
+    .invoice-title { font-size:38px; font-weight:900; color:var(--gold); font-family:'Outfit',sans-serif; text-transform:uppercase; letter-spacing:5px; margin-bottom:5px; }
+    .invoice-number { font-size:15px; color:var(--text-muted); font-weight:700; }
+    .invoice-details-grid { display:grid; grid-template-columns:1fr 1fr; gap:35px; margin-bottom:40px; }
+    .invoice-section h4 { font-size:14px; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; font-family:'Plus Jakarta Sans',sans-serif; }
+    .invoice-section p { font-size:16px; font-weight:600; line-height:1.6; margin-bottom:4px; }
+    .invoice-section .address { font-size:14px; font-weight:400; color:var(--text-muted); }
+    .invoice-items-table { width:100%; border-collapse:collapse; margin-bottom:40px; }
+    .invoice-items-table th { background:var(--dark-green); color:var(--gold); padding:16px 14px; font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:1px; font-family:'Plus Jakarta Sans',sans-serif; text-align:left; }
+    .invoice-items-table td { padding:18px 14px; border-bottom:1px solid var(--border-light); font-size:15px; font-weight:500; }
+    .invoice-items-table tfoot td { border-bottom:none; padding-top:24px; }
+    .invoice-total-box { float:right; width:280px; margin-top:24px; }
+    .invoice-total-row { display:flex; justify-content:space-between; padding:12px 0; font-size:15px; }
+    .invoice-grand-total { display:flex; justify-content:space-between; padding:16px 0; margin-top:8px; border-top:2px solid var(--dark-green); border-bottom:2px double var(--gold); font-size:22px; font-weight:800; color:var(--dark-green); }
+    .invoice-footer { margin-top:70px; padding-top:30px; border-top:1px solid var(--border-light); clear:both; }
+    .invoice-footer p { font-size:13px; color:var(--text-muted); margin-bottom:22px; }
+    .signature-section { display:flex; justify-content:space-between; align-items:flex-end; margin-top:35px; }
+    .signature-box { text-align:center; }
+    .signature { font-family:'Dancing Script',cursive; font-size:36px; color:var(--dark-green); margin-bottom:6px; }
+    .signature-label { font-size:12px; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:1px; }
+    .invoice-stamp { width:110px; height:110px; border:3px solid var(--gold); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--gold); font-weight:800; font-size:14px; text-transform:uppercase; transform:rotate(-15deg); }
+    .invoice-stamp i { font-size:28px; margin-bottom:6px; }
   </style>
 </head>
 <body>
   <div id="toastContainer"></div>
-  <div id="pageLoader">
-    <div class="loader-spinner"></div>
-    <div class="loader-text">LOADING YOUR ORDERS...</div>
-  </div>
+  <div id="pageLoader"><div class="loader-spinner"></div><div class="loader-text">LOADING YOUR ORDERS...</div></div>
+
   <!-- HEADER -->
   <div class="header">
     <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
@@ -364,17 +210,13 @@
       <button class="header-btn" onclick="window.location.href='cart.html'"><i class="fa-solid fa-shopping-bag"></i></button>
     </div>
   </div>
+
   <!-- STATS -->
   <div class="stats-container">
-    <div class="stat-card">
-      <div class="stat-icon"><i class="fa-solid fa-truck"></i></div>
-      <div class="stat-content"><h3 id="totalOrdersStat">0</h3><p>Total Orders</p></div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
-      <div class="stat-content"><h3 id="totalSpentStat">₹0</h3><p>Total Spent</p></div>
-    </div>
+    <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-truck"></i></div><div class="stat-content"><h3 id="totalOrdersStat">0</h3><p>Total Orders</p></div></div>
+    <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div><div class="stat-content"><h3 id="totalSpentStat">₹0</h3><p>Total Spent</p></div></div>
   </div>
+
   <!-- FILTER TABS -->
   <div class="filter-tabs">
     <div class="filter-chip active" onclick="filterOrders('all')"><i class="fa-solid fa-list"></i> All Orders</div>
@@ -382,8 +224,10 @@
     <div class="filter-chip" onclick="filterOrders('confirmed')"><i class="fa-solid fa-check"></i> Confirmed</div>
     <div class="filter-chip" onclick="filterOrders('delivered')"><i class="fa-solid fa-circle-check"></i> Delivered</div>
   </div>
+
   <!-- ORDERS CONTAINER -->
   <div class="orders-container" id="ordersContainer"></div>
+
   <!-- INVOICE PREVIEW MODAL -->
   <div class="invoice-modal" id="invoiceModal">
     <div class="invoice-modal-content">
@@ -398,6 +242,7 @@
       </div>
     </div>
   </div>
+
   <!-- HIDDEN INVOICE TEMPLATE -->
   <div id="invoiceTemplate">
     <div class="invoice-header">
@@ -410,7 +255,7 @@
     <div class="invoice-details-grid">
       <div class="invoice-section">
         <h4>Billed To:</h4>
-        <p id="invCustomerName">Akash Sharma</p>
+        <p id="invCustomerName">Valued Customer</p>
         <p class="address" id="invCustomerAddress">Patiala, Punjab - 147001</p>
         <p style="margin-top: 14px;" id="invCustomerPhone">📞 +91 98765 43210</p>
       </div>
@@ -434,7 +279,7 @@
       </td></tr></tfoot>
     </table>
     <div class="invoice-footer">
-      <p>This is a computer-generated invoice. Valid without physical signature. For any queries, contact support@nemimart.com</p>
+      <p>This is a computer-generated invoice. For any queries, contact support@nemimart.com</p>
       <div class="signature-section">
         <div class="signature-box">
           <div class="signature">Naman Jain</div>
@@ -444,6 +289,7 @@
       </div>
     </div>
   </div>
+
   <script>
     // ============================================================
     // FIREBASE CONFIG
@@ -451,6 +297,7 @@
     const firebaseConfig = { databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+    
     // ============================================================
     // GLOBAL STATE
     // ============================================================
@@ -458,39 +305,55 @@
     let currentFilter = 'all';
     let currentUser = null;
     let generatedInvoiceImage = null;
+
     // ============================================================
-    // GET CURRENT USER
+    // GET CURRENT USER (STRICT IDENTITY)
     // ============================================================
     function getCurrentUser() {
       const saved = localStorage.getItem('nemi_current_user');
-      if (saved) { try { currentUser = JSON.parse(saved); } catch(e) { currentUser = null; } }
+      if (saved) {
+        try { currentUser = JSON.parse(saved); } catch(e) { currentUser = null; }
+      }
       if (!currentUser) {
         const profile = JSON.parse(localStorage.getItem('nemi_master_user')) || {};
         if (profile.phone) { currentUser = { name: profile.name, phone: profile.phone, email: profile.email }; }
       }
       return currentUser;
     }
+
     // ============================================================
-    // LOAD ORDERS FROM FIREBASE (REAL TIME)
+    // LOAD ORDERS FROM FIREBASE (STRICTLY USER'S OWN)
     // ============================================================
     function loadOrders() {
       const user = getCurrentUser();
+      if (!user || (!user.phone && !user.uid && !user.email)) {
+        // Not logged in – show nothing
+        allOrders = [];
+        updateStats();
+        renderOrders();
+        document.getElementById('pageLoader').style.opacity = '0';
+        setTimeout(() => { document.getElementById('pageLoader').style.display = 'none'; }, 500);
+        return;
+      }
+
       database.ref('orders').on('value', (snap) => {
         const data = snap.val();
         allOrders = [];
         if (data) {
-          Object.keys(data).forEach(key => { allOrders.push({ id: key, ...data[key] }); });
+          Object.keys(data).forEach(key => {
+            const order = { id: key, ...data[key] };
+            // Strict matching: customer.phone, customer.email, or uid must match current user
+            const customer = order.customer || {};
+            if (
+              (user.phone && customer.phone === user.phone) ||
+              (user.email && customer.email === user.email) ||
+              (user.uid && order.uid === user.uid)
+            ) {
+              allOrders.push(order);
+            }
+          });
         }
-        // Filter for current user (by phone or uid)
-        if (user && user.phone) {
-          allOrders = allOrders.filter(o => o.customer?.phone === user.phone || o.phone === user.phone || o.uid === user.uid);
-        }
-        // Also include orders stored locally under guest phone
-        const localPhone = localStorage.getItem('nemi_user_phone');
-        if (localPhone) {
-          const localOrders = JSON.parse(localStorage.getItem('nemi_local_orders') || '[]');
-          localOrders.forEach(lo => { if (!allOrders.find(o => o.id === lo.id)) allOrders.push(lo); });
-        }
+        // Remove any guest/local storage fallback – only Firebase orders
         allOrders.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
         updateStats();
         renderOrders();
@@ -498,6 +361,7 @@
         setTimeout(() => { document.getElementById('pageLoader').style.display = 'none'; }, 500);
       });
     }
+
     // ============================================================
     // UPDATE STATS
     // ============================================================
@@ -506,6 +370,7 @@
       const totalSpent = allOrders.reduce((sum, o) => sum + (o.total || 0), 0);
       document.getElementById('totalSpentStat').textContent = '₹' + totalSpent.toLocaleString();
     }
+
     // ============================================================
     // FILTER ORDERS
     // ============================================================
@@ -515,8 +380,9 @@
       event.target.closest('.filter-chip').classList.add('active');
       renderOrders();
     };
+
     // ============================================================
-    // RENDER ORDERS (ALL PRODUCTS VISIBLE)
+    // RENDER ORDERS
     // ============================================================
     function renderOrders() {
       const container = document.getElementById('ordersContainer');
@@ -524,16 +390,23 @@
       if (currentFilter !== 'all') {
         filtered = allOrders.filter(o => (o.status || 'pending').toLowerCase() === currentFilter);
       }
+
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fa-regular fa-clipboard"></i></div><h2>${currentFilter === 'all' ? 'No Orders Yet' : 'No ' + currentFilter + ' orders'}</h2><p>Start shopping to see your orders here!</p><a href="index.html" class="shop-btn"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a></div>`;
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fa-regular fa-clipboard"></i></div>
+            <h2>${currentFilter === 'all' ? 'No Orders Yet' : 'No ' + currentFilter + ' orders'}</h2>
+            <p>Start shopping to see your orders here!</p>
+            <a href="index.html" class="shop-btn"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+          </div>`;
         return;
       }
+
       container.innerHTML = filtered.map((order, index) => {
         const status = order.status || 'pending';
         const items = order.items || [];
         const customer = order.customer || {};
         const orderDate = order.timestamp ? new Date(order.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recently';
-        // Show ALL items
         const itemsHtml = items.map(item => `
           <div class="order-item">
             <img src="${item.img || 'https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png'}" class="item-image" onerror="this.src='https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png'">
@@ -542,8 +415,8 @@
               <div class="item-qty">Qty: ${item.qty || 1}</div>
             </div>
             <div class="item-price">₹${(item.price || 0) * (item.qty || 1)}</div>
-          </div>
-        `).join('');
+          </div>`).join('');
+
         return `<div class="order-card ${status}" style="animation-delay: ${index * 0.08}s">
           <div class="order-header">
             <div class="order-id-section">
@@ -564,6 +437,7 @@
         </div>`;
       }).join('');
     }
+
     // ============================================================
     // GENERATE PREMIUM INVOICE
     // ============================================================
@@ -597,6 +471,7 @@
         };
       }).catch(() => showToast('Error generating invoice', 'error'));
     };
+
     window.closeInvoiceModal = function() { document.getElementById('invoiceModal').style.display = 'none'; };
     window.shareInvoice = async function() {
       if (!generatedInvoiceImage) { showToast('No invoice to share', 'error'); return; }
@@ -610,6 +485,7 @@
         showToast('Invoice saved to downloads', 'success');
       }
     };
+
     function showToast(message, type = 'info') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
@@ -618,6 +494,7 @@
       container.appendChild(toast);
       setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-10px)'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
+
     document.addEventListener('DOMContentLoaded', () => {
       loadOrders();
       document.getElementById('invoiceModal').addEventListener('click', (e) => { if (e.target.classList.contains('invoice-modal')) closeInvoiceModal(); });

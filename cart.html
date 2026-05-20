@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -891,7 +891,7 @@
 <!-- ============================================================ -->
 <header class="header">
     <div class="nav-left">
-        <a href="index.html" class="circle-btn">
+        <a href="home.html" class="circle-btn">
             <i class="fas fa-chevron-left"></i>
         </a>
         <div class="active-address-display" onclick="openAddressSheet()">
@@ -983,11 +983,11 @@
         <div id="addressForm" style="display: none; margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-light);">
             <div class="input-group">
                 <label>FULL NAME</label>
-                <input type="text" id="custName" placeholder="Akash Sharma">
+                <input type="text" id="custName" placeholder="Enter your full name">
             </div>
             <div class="input-group">
                 <label>MOBILE NUMBER</label>
-                <input type="tel" id="custPhone" placeholder="+91 98765 43210">
+                <input type="tel" id="custPhone" placeholder="10-digit mobile number">
             </div>
             <div class="input-group">
                 <label>ADDRESS TYPE</label>
@@ -1003,15 +1003,15 @@
             </div>
             <div class="input-group">
                 <label>CITY</label>
-                <input type="text" id="addrCity" value="Patiala">
+                <input type="text" id="addrCity" placeholder="City">
             </div>
             <div class="input-group">
                 <label>STATE</label>
-                <input type="text" id="addrState" value="Punjab">
+                <input type="text" id="addrState" placeholder="State">
             </div>
             <div class="input-group">
                 <label>PINCODE</label>
-                <input type="text" id="addrPincode" value="147001">
+                <input type="text" id="addrPincode" placeholder="6-digit pincode">
             </div>
             <button class="checkout-btn" style="width: 100%; justify-content: center;" onclick="saveNewAddress()">
                 <i class="fas fa-save"></i> Save Address
@@ -1213,7 +1213,7 @@
     // ============================================================
     // UPDATE QUANTITY
     // ============================================================
-    function updateQty(id, delta) {
+    window.updateQty = function(id, delta) {
         const item = cartItems.find(i => i.id === id);
         if (!item) return;
         
@@ -1226,13 +1226,14 @@
         document.getElementById(`qty-${id}`).textContent = newQty;
         renderCart();
         updateBill();
-    }
+    };
     
     // ============================================================
     // REMOVE ITEM
     // ============================================================
-    function removeItem(id) {
+    window.removeItem = function(id) {
         const itemElement = document.getElementById(`item-${id}`);
+        if (!itemElement) return;
         itemElement.classList.add('removing');
         
         setTimeout(() => {
@@ -1240,9 +1241,9 @@
             localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
             renderCart();
             updateBill();
-            showToast('Item removed from cart', 'info');
+            showToast('Item removed', 'info');
         }, 300);
-    }
+    };
     
     // ============================================================
     // UPDATE BILL
@@ -1255,7 +1256,6 @@
         document.getElementById('totalDisplay').textContent = `₹${total}`;
         document.getElementById('bottomPrice').textContent = `₹${total}`;
         
-        // Update QR amount
         document.getElementById('qrAmount').textContent = `₹${total}`;
         generateQRCode(total);
     }
@@ -1272,16 +1272,16 @@
     // ============================================================
     // ADDRESS MANAGEMENT
     // ============================================================
-    function openAddressSheet() {
+    window.openAddressSheet = function() {
         loadSavedAddresses();
         document.getElementById('addressSheetOverlay').style.display = 'flex';
         setTimeout(() => document.getElementById('addressSheet').classList.add('active'), 10);
-    }
+    };
     
-    function closeAddressSheet() {
+    window.closeAddressSheet = function() {
         document.getElementById('addressSheet').classList.remove('active');
         setTimeout(() => document.getElementById('addressSheetOverlay').style.display = 'none', 300);
-    }
+    };
     
     function loadSavedAddresses() {
         const saved = JSON.parse(localStorage.getItem('nemi_addresses')) || [];
@@ -1314,8 +1314,9 @@
         return icons[type] || 'fa-map-marker-alt';
     }
     
-    function selectAddress(index) {
+    window.selectAddress = function(index) {
         const saved = JSON.parse(localStorage.getItem('nemi_addresses')) || [];
+        if (!saved[index]) return;
         selectedAddress = saved[index];
         
         document.getElementById('currentAddrLabel').textContent = 
@@ -1335,14 +1336,15 @@
         });
         
         closeAddressSheet();
-    }
+        showToast('Address selected', 'success');
+    };
     
-    function showAddressForm() {
+    window.showAddressForm = function() {
         const form = document.getElementById('addressForm');
         form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
+    };
     
-    function saveNewAddress() {
+    window.saveNewAddress = function() {
         const name = document.getElementById('custName').value.trim();
         const phone = document.getElementById('custPhone').value.trim();
         const type = document.getElementById('addrType').value;
@@ -1366,20 +1368,19 @@
         saved.push(newAddress);
         localStorage.setItem('nemi_addresses', JSON.stringify(saved));
         
-        // Clear form
         document.getElementById('custName').value = '';
         document.getElementById('custPhone').value = '';
         document.getElementById('addrFull').value = '';
         document.getElementById('addressForm').style.display = 'none';
         
         loadSavedAddresses();
-        showToast('Address saved successfully!', 'success');
-    }
+        showToast('Address saved!', 'success');
+    };
     
     // ============================================================
     // CHECKOUT FLOW
     // ============================================================
-    function proceedToCheckout() {
+    window.proceedToCheckout = function() {
         if (cartItems.length === 0) {
             showToast('Your cart is empty!', 'error');
             return;
@@ -1387,11 +1388,11 @@
         
         if (!selectedAddress) {
             openAddressSheet();
-            showToast('Please select delivery address', 'error');
+            showToast('Please select a delivery address', 'error');
             return;
         }
         
-        // Pre-fill form with selected address
+        // Pre-fill with selected address
         document.getElementById('orderName').value = selectedAddress.name || '';
         document.getElementById('orderPhone').value = selectedAddress.phone || '';
         document.getElementById('orderAddress').value = 
@@ -1399,14 +1400,14 @@
         
         document.getElementById('checkoutSheetOverlay').style.display = 'flex';
         setTimeout(() => document.getElementById('checkoutSheet').classList.add('active'), 10);
-    }
+    };
     
-    function closeCheckoutSheet() {
+    window.closeCheckoutSheet = function() {
         document.getElementById('checkoutSheet').classList.remove('active');
         setTimeout(() => document.getElementById('checkoutSheetOverlay').style.display = 'none', 300);
-    }
+    };
     
-    function showPaymentSheet() {
+    window.showPaymentSheet = function() {
         const name = document.getElementById('orderName').value.trim();
         const phone = document.getElementById('orderPhone').value.trim();
         const address = document.getElementById('orderAddress').value.trim();
@@ -1435,17 +1436,17 @@
         
         document.getElementById('paymentSheetOverlay').style.display = 'flex';
         setTimeout(() => document.getElementById('paymentSheet').classList.add('active'), 10);
-    }
+    };
     
-    function closePaymentSheet() {
+    window.closePaymentSheet = function() {
         document.getElementById('paymentSheet').classList.remove('active');
         setTimeout(() => document.getElementById('paymentSheetOverlay').style.display = 'none', 300);
-    }
+    };
     
     // ============================================================
     // OPEN UPI APP
     // ============================================================
-    function openUPIApp(app) {
+    window.openUPIApp = function(app) {
         const amount = subtotal + PLATFORM_FEE;
         const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}&cu=INR`;
         
@@ -1454,25 +1455,19 @@
         else if (app === 'phonepe') deepLink = `phonepe://pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}`;
         else if (app === 'paytm') deepLink = `paytmmp://pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}`;
         
-        // Try to open app
         window.location.href = deepLink;
-        
-        // Fallback to UPI intent
-        setTimeout(() => {
-            window.location.href = upiUrl;
-        }, 500);
-        
+        setTimeout(() => { window.location.href = upiUrl; }, 500);
         showToast(`Opening ${app}...`, 'success');
-    }
+    };
     
     // ============================================================
     // VERIFY AND PLACE ORDER
     // ============================================================
-    async function verifyAndPlaceOrder() {
+    window.verifyAndPlaceOrder = async function() {
         const utr = document.getElementById('utrInput').value.trim();
         
         if (!utr || utr.length < 6) {
-            showToast('Please enter valid UTR/Transaction ID', 'error');
+            showToast('Please enter a valid UTR/Transaction ID', 'error');
             return;
         }
         
@@ -1514,13 +1509,11 @@
             
             closePaymentSheet();
             
-            // Show success screen
             document.getElementById('orderIdDisplay').textContent = `Order ID: ${orderId}`;
             document.getElementById('successScreen').style.display = 'flex';
             
             showToast('Order placed successfully! 🎉', 'success');
             
-            // Redirect to orders page
             setTimeout(() => {
                 window.location.href = 'order.html';
             }, 4000);
@@ -1529,18 +1522,18 @@
             console.error('Order error:', error);
             showToast('Failed to place order. Please try again.', 'error');
         }
-    }
+    };
     
     // ============================================================
     // UTILITIES
     // ============================================================
-    function closeOnOverlay(e, id) {
+    window.closeOnOverlay = function(e, id) {
         if (e.target.classList.contains('overlay')) {
             if (id === 'addressSheet') closeAddressSheet();
             else if (id === 'checkoutSheet') closeCheckoutSheet();
             else if (id === 'paymentSheet') closePaymentSheet();
         }
-    }
+    };
     
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
@@ -1558,24 +1551,6 @@
             setTimeout(() => toast.remove(), 300);
         }, 3000);
     }
-    
-    // ============================================================
-    // EXPOSE TO GLOBAL
-    // ============================================================
-    window.updateQty = updateQty;
-    window.removeItem = removeItem;
-    window.openAddressSheet = openAddressSheet;
-    window.closeAddressSheet = closeAddressSheet;
-    window.selectAddress = selectAddress;
-    window.showAddressForm = showAddressForm;
-    window.saveNewAddress = saveNewAddress;
-    window.proceedToCheckout = proceedToCheckout;
-    window.closeCheckoutSheet = closeCheckoutSheet;
-    window.showPaymentSheet = showPaymentSheet;
-    window.closePaymentSheet = closePaymentSheet;
-    window.openUPIApp = openUPIApp;
-    window.verifyAndPlaceOrder = verifyAndPlaceOrder;
-    window.closeOnOverlay = closeOnOverlay;
     
     // ============================================================
     // INIT

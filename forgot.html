@@ -1,24 +1,19 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nemi Mart | Secure Password Reset</title>
+    <title>Nemi Mart | Password Reset Request</title>
     
-    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <style>
         :root {
             --creme: #FDFBF7; --creme-dark: #F5F1E6; --gold: #D4AF37; --gold-light: #FAF4E5;
             --gold-hover: #B8860B; --dark-green: #0A1F13; --leaf-green: #1A3E26; --leaf-light: #eaf2e9;
             --white: #FFFFFF; --text-dark: #1F2937; --text-muted: #5C6F63; --danger: #EF4444;
-            --success: #059669; --info: #3B82F6; --warning: #EAB308; --border-light: #EAE5D9;
+            --success: #059669; --info: #3B82F6; --border-light: #EAE5D9;
             --radius-xl: 32px; --radius-lg: 24px; --radius-md: 18px; --radius-sm: 14px;
             --shadow-soft: 0 8px 25px rgba(0,0,0,0.04); --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
             --shadow-premium: 0 30px 60px -15px rgba(10,31,19,0.25);
@@ -29,25 +24,15 @@
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background: linear-gradient(135deg, var(--creme) 0%, var(--gold-light) 50%, var(--creme-dark) 100%);
-            background-attachment: fixed;
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: pageLoad 0.8s ease-out;
-            position: relative;
-            overflow-x: hidden;
+            background-attachment: fixed; color: var(--text-dark); min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            animation: pageLoad 0.8s ease-out; position: relative; overflow-x: hidden;
         }
 
         @keyframes pageLoad {
@@ -68,13 +53,7 @@
         .toast.success { border-left-color: var(--success); background: #0a3622; }
         .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
         .toast.info { border-left-color: var(--info); }
-        .toast.warning { border-left-color: var(--warning); background: #3d2e00; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-
-        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(253, 251, 247, 0.98); backdrop-filter: blur(12px); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .loading-spinner { width: 60px; height: 60px; border: 4px solid var(--gold-light); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { margin-top: 20px; font-weight: 700; color: var(--dark-green); letter-spacing: 2px; font-size: 14px; }
 
         .main-container { position: relative; z-index: 10; width: 100%; max-width: 480px; }
         .auth-card { background: var(--white); border-radius: var(--radius-xl); padding: 40px 32px; box-shadow: var(--shadow-premium); border: 1px solid rgba(212, 175, 55, 0.3); position: relative; overflow: hidden; animation: cardPop 0.7s var(--bounce); }
@@ -92,6 +71,32 @@
         .auth-header h1 { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900; color: var(--dark-green); letter-spacing: -0.5px; margin-bottom: 8px; }
         .auth-header p { color: var(--text-muted); font-size: 15px; font-weight: 500; line-height: 1.6; }
 
+        .input-group { margin-bottom: 22px; position: relative; z-index: 1; }
+        .input-group label { display: block; font-size: 12px; font-weight: 800; color: var(--dark-green); margin-bottom: 8px; margin-left: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+        .input-wrapper { position: relative; }
+        .input-wrapper input, .input-wrapper textarea { width: 100%; padding: 18px 50px 18px 55px; border-radius: 18px; border: 2px solid var(--border-light); background: var(--creme); font-size: 15px; font-weight: 600; outline: none; transition: var(--transition); color: var(--text-dark); resize: vertical; }
+        .input-wrapper textarea { min-height: 100px; padding-top: 18px; }
+        .input-wrapper input:focus, .input-wrapper textarea:focus { border-color: var(--gold); background: var(--white); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2); transform: scale(1.01); }
+        .input-wrapper .input-icon-left { position: absolute; left: 20px; top: 18px; color: var(--text-muted); font-size: 20px; transition: var(--transition); }
+        .input-wrapper input:focus ~ .input-icon-left, .input-wrapper textarea:focus ~ .input-icon-left { color: var(--gold); }
+
+        .btn-primary { width: 100%; padding: 18px; background: var(--dark-green); color: var(--gold); border: 2px solid var(--gold); border-radius: 18px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2); transition: var(--transition); margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; z-index: 1; overflow: hidden; text-decoration: none; }
+        .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transition: 0.5s; }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(10,31,19,0.3); background: var(--leaf-green); }
+        .btn-primary:active { transform: translateY(0) scale(0.98); }
+        .btn-secondary { width: 100%; padding: 16px; background: transparent; color: var(--dark-green); border: 2px solid var(--border-light); border-radius: 18px; font-size: 15px; font-weight: 700; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; position: relative; z-index: 1; }
+        .btn-secondary:hover { border-color: var(--gold); background: var(--gold-light); transform: translateY(-2px); }
+
+        .divider { display: flex; align-items: center; text-align: center; margin: 25px 0 15px; color: var(--text-muted); font-size: 13px; font-weight: 600; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-light); }
+        .divider span { padding: 0 15px; }
+
+        .info-box { background: var(--gold-light); border-radius: var(--radius-md); padding: 16px; margin-top: 20px; border: 1px solid var(--gold); display: flex; gap: 12px; align-items: flex-start; }
+        .info-box i { color: var(--gold); font-size: 22px; margin-top: 2px; }
+        .info-box p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin: 0; }
+        .info-box strong { color: var(--dark-green); }
+
         .steps-bar { display: flex; justify-content: center; gap: 25px; margin-bottom: 30px; position: relative; z-index: 1; }
         .step { display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
         .step:not(:last-child)::after { content: ''; position: absolute; top: 22px; left: 50px; width: 40px; height: 2px; background: var(--border-light); }
@@ -104,56 +109,13 @@
         .step-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         .step.active .step-label, .step.completed .step-label { color: var(--dark-green); }
 
-        .input-group { margin-bottom: 22px; position: relative; z-index: 1; }
-        .input-group label { display: block; font-size: 12px; font-weight: 800; color: var(--dark-green); margin-bottom: 8px; margin-left: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
-        .input-wrapper { position: relative; }
-        .input-wrapper input { width: 100%; padding: 18px 50px 18px 55px; border-radius: 18px; border: 2px solid var(--border-light); background: var(--creme); font-size: 15px; font-weight: 600; outline: none; transition: var(--transition); color: var(--text-dark); }
-        .input-wrapper input:focus { border-color: var(--gold); background: var(--white); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2); transform: scale(1.01); }
-        .input-wrapper .input-icon-left { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 20px; transition: var(--transition); }
-        .input-wrapper input:focus ~ .input-icon-left { color: var(--gold); }
-        .eye-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 10px; transition: var(--transition); z-index: 2; }
-        .eye-toggle:hover { color: var(--gold); }
-
-        .otp-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 22px; }
-        .otp-box { width: 50px; height: 60px; border-radius: 14px; border: 2px solid var(--border-light); background: var(--creme); text-align: center; font-size: 24px; font-weight: 800; color: var(--dark-green); font-family: 'Space Mono', monospace; outline: none; transition: var(--transition); }
-        .otp-box:focus { border-color: var(--gold); background: var(--white); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2); transform: translateY(-3px); }
-        .otp-box.filled { border-color: var(--success); background: #f0fdf4; }
-
-        .timer-container { text-align: center; margin-bottom: 20px; display: none; }
-        .timer-display { display: inline-flex; align-items: center; gap: 8px; background: var(--creme-dark); padding: 10px 20px; border-radius: 30px; font-weight: 700; font-size: 14px; color: var(--text-muted); }
-        .timer-display i { color: var(--gold); }
-        .timer-display.expired { color: var(--danger); }
-        .resend-link { color: var(--gold); font-weight: 700; cursor: pointer; text-decoration: underline; transition: var(--transition); font-size: 13px; }
-        .resend-link:hover { color: var(--gold-hover); }
-
-        .btn-primary { width: 100%; padding: 18px; background: var(--dark-green); color: var(--gold); border: 2px solid var(--gold); border-radius: 18px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2); transition: var(--transition); margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; z-index: 1; overflow: hidden; }
-        .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transition: 0.5s; }
-        .btn-primary:hover::before { left: 100%; }
-        .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(10,31,19,0.3); background: var(--leaf-green); }
-        .btn-primary:active { transform: translateY(0) scale(0.98); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
-        .btn-secondary { width: 100%; padding: 16px; background: transparent; color: var(--dark-green); border: 2px solid var(--border-light); border-radius: 18px; font-size: 15px; font-weight: 700; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; position: relative; z-index: 1; }
-        .btn-secondary:hover { border-color: var(--gold); background: var(--gold-light); transform: translateY(-2px); }
-
-        .success-state { display: none; text-align: center; padding: 20px 0; animation: fadeInUp 0.6s ease-out; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .success-icon-wrapper { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #047857); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; animation: successPop 0.6s var(--bounce); box-shadow: 0 20px 40px rgba(5, 150, 105, 0.4); }
-        @keyframes successPop { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
-        .success-icon-wrapper i { font-size: 50px; color: white; }
-        .success-state h2 { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; color: var(--success); margin-bottom: 12px; }
-        .success-state p { color: var(--text-muted); font-size: 15px; margin-bottom: 8px; line-height: 1.6; }
-
-        .security-notice { text-align: center; margin-top: 15px; padding: 10px; background: var(--gold-light); border-radius: 12px; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .security-notice i { color: var(--gold); }
-
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-4px); } }
         .shake { animation: shake 0.5s ease-out; }
 
         @media (max-width: 480px) {
             .auth-card { padding: 30px 22px; } .auth-header h1 { font-size: 26px; }
             .logo-circle { width: 70px; height: 70px; } .logo-circle i { font-size: 30px; }
-            .otp-box { width: 42px; height: 52px; font-size: 20px; } .steps-bar { gap: 15px; }
-            .step:not(:last-child)::after { width: 25px; left: 40px; }
+            .steps-bar { gap: 15px; } .step:not(:last-child)::after { width: 25px; left: 40px; }
         }
     </style>
 </head>
@@ -161,115 +123,89 @@
 
 <div class="bg-particles" id="bgParticles"></div>
 <div id="toastContainer"></div>
-<div id="loadingOverlay"><div class="loading-spinner"></div><div class="loading-text">SENDING SECURE CODE...</div></div>
 
 <div class="main-container">
     <div class="auth-card">
-        <div class="logo-section"><div class="logo-circle"><i class="fa-solid fa-shield-heart"></i></div></div>
+        
+        <div class="logo-section">
+            <div class="logo-circle">
+                <i class="fa-solid fa-shield-heart"></i>
+            </div>
+        </div>
 
         <div class="steps-bar">
-            <div class="step active" id="step1"><div class="step-circle active">1</div><span class="step-label">Email</span></div>
-            <div class="step" id="step2"><div class="step-circle inactive">2</div><span class="step-label">OTP</span></div>
-            <div class="step" id="step3"><div class="step-circle inactive">3</div><span class="step-label">Reset</span></div>
-            <div class="step" id="step4"><div class="step-circle inactive">4</div><span class="step-label">Done</span></div>
+            <div class="step active">
+                <div class="step-circle active">1</div>
+                <span class="step-label">Request</span>
+            </div>
+            <div class="step">
+                <div class="step-circle inactive">2</div>
+                <span class="step-label">Send Email</span>
+            </div>
+            <div class="step">
+                <div class="step-circle inactive">3</div>
+                <span class="step-label">Reply</span>
+            </div>
         </div>
 
-        <!-- STEP 1: EMAIL -->
-        <div id="step1Content">
-            <div class="auth-header"><h1>Forgot Password?</h1><p>Enter your registered email & we'll send a secure 6-digit code.</p></div>
-            <div class="input-group">
-                <label><i class="fa-solid fa-envelope" style="margin-right:6px;"></i> Registered Email</label>
-                <div class="input-wrapper">
-                    <input type="email" id="forgotEmail" placeholder="Enter your email address" autocomplete="email" inputmode="email">
-                    <i class="fa-solid fa-at input-icon-left"></i>
-                </div>
-            </div>
-            <button class="btn-primary" id="verifyBtn" onclick="sendSecureOTP()"><i class="fa-solid fa-shield-halved"></i> Send Verification Code</button>
-            <button class="btn-secondary" onclick="window.location.href='profile.html'"><i class="fa-solid fa-arrow-left"></i> Back to Login</button>
-            <div class="security-notice"><i class="fa-solid fa-lock"></i> <span>Secured with end-to-end encryption • Code expires in 3 minutes</span></div>
+        <div class="auth-header">
+            <h1>Forgot Password?</h1>
+            <p>Don't worry! Send us an email request and we'll help you reset your password within 24 hours.</p>
         </div>
 
-        <!-- STEP 2: OTP -->
-        <div id="step2Content" style="display:none;">
-            <div class="auth-header"><h1>Verify Code</h1><p>We've sent a 6-digit code to <strong id="sentEmailDisplay" style="color:var(--dark-green);">your email</strong>.</p></div>
-            <div class="timer-container" id="timerContainer"><div class="timer-display" id="timerDisplay"><i class="fa-solid fa-clock"></i> <span id="timerText">03:00</span></div></div>
-            <div class="otp-container" id="otpContainer">
-                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this,0)" onkeydown="handleOTPBackspace(event,this,0)" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
-                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this,1)" onkeydown="handleOTPBackspace(event,this,1)" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this,2)" onkeydown="handleOTPBackspace(event,this,2)" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this,3)" onkeydown="handleOTPBackspace(event,this,3)" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this,4)" onkeydown="handleOTPBackspace(event,this,4)" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="otp-box" maxlength="1" oninput="handleOTPInput(this,5)" onkeydown="handleOTPBackspace(event,this,5)" inputmode="numeric" pattern="[0-9]">
-            </div>
-            <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:15px;">Didn't receive code? <span class="resend-link" id="resendLink" onclick="resendSecureOTP()">Resend Code</span></p>
-            <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:10px;" id="attemptsDisplay">Attempts remaining: <strong style="color:var(--dark-green);">3</strong></p>
-            <button class="btn-primary" id="verifyOtpBtn" onclick="verifySecureOTP()"><i class="fa-solid fa-check-circle"></i> Verify & Continue</button>
-            <button class="btn-secondary" onclick="goBackToStep1()"><i class="fa-solid fa-arrow-left"></i> Change Email</button>
+        <div class="info-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <p>
+                <strong>How it works:</strong><br>
+                1️⃣ Enter your registered email below<br>
+                2️⃣ Click "Send Reset Request" to open your email app<br>
+                3️⃣ Send the pre-filled email to us<br>
+                4️⃣ We'll reply with a new password within <strong>24 hours</strong>
+            </p>
         </div>
 
-        <!-- STEP 3: NEW PASSWORD -->
-        <div id="step3Content" style="display:none;">
-            <div class="auth-header"><h1>Set New Password</h1><p>Choose a strong, unique password for your account.</p></div>
-            <div class="input-group">
-                <label>New Password</label>
-                <div class="input-wrapper">
-                    <input type="password" id="newPassword" placeholder="Min. 8 characters" autocomplete="new-password">
-                    <i class="fa-solid fa-lock input-icon-left"></i>
-                    <button type="button" class="eye-toggle" onclick="togglePassword('newPassword',this)"><i class="fa-solid fa-eye"></i></button>
-                </div>
+        <div class="input-group" style="margin-top: 20px;">
+            <label><i class="fa-solid fa-envelope" style="margin-right:6px;"></i> Your Registered Email</label>
+            <div class="input-wrapper">
+                <input type="email" id="userEmail" placeholder="Enter your registered email address" autocomplete="email" oninput="updateMailtoLink()">
+                <i class="fa-solid fa-at input-icon-left"></i>
             </div>
-            <div class="input-group">
-                <label>Confirm Password</label>
-                <div class="input-wrapper">
-                    <input type="password" id="confirmPassword" placeholder="Re-enter your password">
-                    <i class="fa-solid fa-check-double input-icon-left"></i>
-                    <button type="button" class="eye-toggle" onclick="togglePassword('confirmPassword',this)"><i class="fa-solid fa-eye"></i></button>
-                </div>
-            </div>
-            <button class="btn-primary" id="resetBtn" onclick="resetPasswordSecurely()"><i class="fa-solid fa-shield-halved"></i> Reset Password</button>
-            <button class="btn-secondary" onclick="window.location.href='profile.html'"><i class="fa-solid fa-times"></i> Cancel</button>
         </div>
 
-        <!-- STEP 4: SUCCESS -->
-        <div class="success-state" id="step4Content">
-            <div class="success-icon-wrapper"><i class="fa-solid fa-check"></i></div>
-            <h2>Password Reset Successful!</h2><p>Your password has been securely updated.</p>
-            <p style="font-size:13px;color:var(--text-muted);margin-top:5px;"><i class="fa-solid fa-shield-check"></i> You can now login with your new password.</p>
-            <button class="btn-primary" onclick="window.location.href='profile.html'" style="margin-top:25px;"><i class="fa-solid fa-sign-in-alt"></i> Go to Login</button>
+        <div class="input-group">
+            <label><i class="fa-solid fa-user" style="margin-right:6px;"></i> Your Username (Optional)</label>
+            <div class="input-wrapper">
+                <input type="text" id="userName" placeholder="Enter your username if you remember" oninput="updateMailtoLink()">
+                <i class="fa-solid fa-user input-icon-left"></i>
+            </div>
         </div>
+
+        <a href="mailto:thenemimart@gmail.com?subject=Password Reset Request&body=Hello Nemi Mart Support,%0D%0A%0D%0AI forgot my password and need help resetting it.%0D%0A%0D%0AMy Registered Email:%0D%0AMy Username:%0D%0A%0D%0APlease help me recover my account.%0D%0A%0D%0AThank you." 
+           class="btn-primary" id="mailtoLink" target="_blank">
+            <i class="fa-solid fa-envelope"></i> Send Reset Request
+        </a>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <button class="btn-secondary" onclick="window.location.href='profile.html'">
+            <i class="fa-solid fa-arrow-left"></i> Back to Login
+        </button>
+
+        <div class="info-box" style="margin-top: 20px; background: var(--creme-dark); border-color: var(--border-light);">
+            <i class="fa-solid fa-clock"></i>
+            <p>
+                <strong>Response Time:</strong> We typically respond within a few hours. Make sure to check your email inbox (and spam folder) for our reply.
+            </p>
+        </div>
+
     </div>
 </div>
 
 <script>
     // ============================================================
-    // FIREBASE CONFIG
-    // ============================================================
-    const firebaseConfig = { databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    
-    // ============================================================
-    // CLOUDFLARE WORKER EMAIL CONFIG
-    // ============================================================
-    const CLOUDFLARE_WORKER_URL = "https://nemi-email.thenemimart.workers.dev/";
-    
-    // ============================================================
-    // SECURITY CONFIG
-    // ============================================================
-    const SECURITY_CONFIG = {
-        maxOTPAttempts: 3, otpExpiryMinutes: 3, resendCooldown: 60,
-        maxResendAttempts: 3, passwordMinLength: 8, sessionTimeout: 600
-    };
-    
-    // ============================================================
-    // GLOBAL STATE
-    // ============================================================
-    let foundUserKey = null, foundUserData = null, generatedOTP = null;
-    let otpExpiryTime = null, otpTimerInterval = null, isProcessing = false;
-    let otpAttempts = 0, resendCount = 0, lastResendTime = 0, sessionStartTime = null;
-    
-    // ============================================================
-    // INIT PARTICLES
+    // BACKGROUND PARTICLES
     // ============================================================
     function initParticles() {
         const container = document.getElementById('bgParticles');
@@ -280,237 +216,47 @@
             container.appendChild(p);
         }
     }
-    
+
     // ============================================================
-    // SEND EMAIL VIA CLOUDFLARE WORKER
+    // UPDATE MAILTO LINK WITH USER INPUT
     // ============================================================
-    async function sendEmailCloudflare(toEmail, toName, subject, otpCode) {
-        const response = await fetch(CLOUDFLARE_WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ toEmail, toName, otpCode, subject })
-        });
+    window.updateMailtoLink = function() {
+        const email = document.getElementById('userEmail').value.trim();
+        const username = document.getElementById('userName').value.trim();
+        const mailtoLink = document.getElementById('mailtoLink');
         
-        if (!response.ok) throw new Error('Email service unavailable');
-        const result = await response.json();
-        if (!result.success) throw new Error(result.error || 'Email failed');
-        return result;
+        const subject = 'Password Reset Request';
+        let body = 'Hello Nemi Mart Support,\n\n';
+        body += 'I forgot my password and need help resetting it.\n\n';
+        body += 'My Registered Email: ' + (email || '[Please enter your email]') + '\n';
+        body += 'My Username: ' + (username || '[Not provided]') + '\n\n';
+        body += 'Please help me recover my account.\n\n';
+        body += 'Thank you.';
+        
+        const mailtoHref = `mailto:thenemimart@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        mailtoLink.href = mailtoHref;
+    };
+
+    // ============================================================
+    // SHOW TOAST
+    // ============================================================
+    function showToast(msg, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        const icons = { success: '✅', error: '❌', info: '💚' };
+        toast.innerHTML = `<span>${icons[type] || '🔔'}</span> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3500);
     }
-    
+
     // ============================================================
-    // TOGGLE PASSWORD
+    // INIT
     // ============================================================
-    window.togglePassword = function(inputId, btn) {
-        const input = document.getElementById(inputId);
-        const icon = btn.querySelector('i');
-        input.type = input.type === 'password' ? 'text' : 'password';
-        icon.className = input.type === 'password' ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
-    };
-    
-    // ============================================================
-    // OTP HANDLERS
-    // ============================================================
-    window.handleOTPInput = function(input, index) {
-        input.value = input.value.replace(/[^0-9]/g, '');
-        if (input.value) { input.classList.add('filled'); const n = document.querySelectorAll('.otp-box')[index+1]; if(n)n.focus(); }
-        else { input.classList.remove('filled'); }
-        checkOTPComplete();
-    };
-    window.handleOTPBackspace = function(event, input, index) {
-        if (event.key === 'Backspace' && !input.value) { const p = document.querySelectorAll('.otp-box')[index-1]; if(p)p.focus(); }
-    };
-    function checkOTPComplete() {
-        const a = document.querySelectorAll('.otp-box');
-        document.getElementById('verifyOtpBtn').style.boxShadow = Array.from(a).every(i=>i.value.length===1) ? '0 0 0 8px rgba(212,175,55,0.2)' : '';
-    }
-    function getOTPValue() { return Array.from(document.querySelectorAll('.otp-box')).map(i=>i.value).join(''); }
-    function clearOTP() { document.querySelectorAll('.otp-box').forEach(i=>{i.value='';i.classList.remove('filled');}); document.getElementById('verifyOtpBtn').style.boxShadow=''; }
-    
-    // ============================================================
-    // OTP GENERATION
-    // ============================================================
-    function generateSecureOTP() { return String(Math.floor(100000 + Math.random() * 900000)); }
-    
-    // ============================================================
-    // TIMER
-    // ============================================================
-    function startOTPTimer() {
-        otpExpiryTime = Date.now() + SECURITY_CONFIG.otpExpiryMinutes * 60000;
-        document.getElementById('timerContainer').style.display = 'block';
-        document.getElementById('timerDisplay').classList.remove('expired');
-        if (otpTimerInterval) clearInterval(otpTimerInterval);
-        otpTimerInterval = setInterval(() => {
-            const r = Math.max(0, Math.floor((otpExpiryTime - Date.now()) / 1000));
-            document.getElementById('timerText').textContent = `${String(Math.floor(r/60)).padStart(2,'0')}:${String(r%60).padStart(2,'0')}`;
-            if (r <= 30) document.getElementById('timerDisplay').classList.add('expired');
-            if (r <= 0) { clearInterval(otpTimerInterval); document.getElementById('timerText').textContent = 'Expired'; }
-        }, 1000);
-    }
-    
-    function isSessionValid() { return sessionStartTime && (Date.now() - sessionStartTime) / 1000 < SECURITY_CONFIG.sessionTimeout; }
-    function resetSession() { sessionStartTime = Date.now(); otpAttempts = 0; resendCount = 0; lastResendTime = 0; updateAttemptsDisplay(); }
-    function updateAttemptsDisplay() {
-        const r = SECURITY_CONFIG.maxOTPAttempts - otpAttempts;
-        const d = document.getElementById('attemptsDisplay');
-        if (d) d.innerHTML = `Attempts remaining: <strong style="color:${r<=1?'var(--danger)':'var(--dark-green)'};">${r}</strong>`;
-    }
-    
-    // ============================================================
-    // SEND OTP
-    // ============================================================
-    window.sendSecureOTP = async function() {
-        if (isProcessing) return;
-        const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
-        const card = document.querySelector('.auth-card'), btn = document.getElementById('verifyBtn');
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Valid email required','error'); card.classList.add('shake'); setTimeout(()=>card.classList.remove('shake'),500); return; }
-        isProcessing = true; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        try {
-            const snap = await database.ref('users').once('value');
-            const users = snap.val() || {};
-            const found = Object.entries(users).find(([k,u]) => u.email && u.email.toLowerCase() === email);
-            document.getElementById('loadingOverlay').style.display = 'none';
-            if (!found) { showToast('If registered, code will be sent.','info'); isProcessing=false; btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-shield-halved"></i> Send Verification Code'; return; }
-            foundUserKey = found[0]; foundUserData = found[1];
-            generatedOTP = generateSecureOTP();
-            
-            await database.ref('users/' + foundUserKey).update({ resetOTP: generatedOTP, otpExpiry: Date.now() + SECURITY_CONFIG.otpExpiryMinutes * 60000, otpAttempts: 0, resendCount: 0 });
-            
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            document.querySelector('.loading-text').textContent = 'SENDING EMAIL...';
-            
-            try {
-                await sendEmailCloudflare(foundUserData.email, foundUserData.name || 'User', '🔐 Nemi Mart Verification Code', generatedOTP);
-            } catch (emailErr) { console.warn('Email failed, backup:', emailErr); showToast(`Code: ${generatedOTP}`,'warning'); }
-            
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('step1Content').style.display = 'none';
-            document.getElementById('step2Content').style.display = 'block';
-            document.getElementById('sentEmailDisplay').textContent = foundUserData.email;
-            resetSession(); updateStepUI(2); startOTPTimer();
-            setTimeout(()=>document.querySelectorAll('.otp-box')[0]?.focus(),300);
-            showToast(`Code sent! Check email.`,'success');
-        } catch(e) { document.getElementById('loadingOverlay').style.display='none'; console.error(e); showToast('Service error. Try again.','error'); }
-        finally { isProcessing = false; btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Send Verification Code'; }
-    };
-    
-    // ============================================================
-    // RESEND OTP
-    // ============================================================
-    window.resendSecureOTP = async function() {
-        if (isProcessing) return;
-        if ((Date.now()-lastResendTime)/1000 < SECURITY_CONFIG.resendCooldown) { showToast('Wait before resending','warning'); return; }
-        if (resendCount >= SECURITY_CONFIG.maxResendAttempts) { showToast('Max resends reached','error'); return; }
-        if (!isSessionValid()) { showToast('Session expired','error'); goBackToStep1(); return; }
-        isProcessing = true; lastResendTime = Date.now(); resendCount++;
-        generatedOTP = generateSecureOTP();
-        await database.ref('users/' + foundUserKey).update({ resetOTP: generatedOTP, otpExpiry: Date.now() + SECURITY_CONFIG.otpExpiryMinutes * 60000, otpAttempts: 0, resendCount });
-        try { await sendEmailCloudflare(foundUserData.email, foundUserData.name||'User', '🔐 New Code - Nemi Mart', generatedOTP); }
-        catch(e) { showToast(`Code: ${generatedOTP}`,'warning'); }
-        clearOTP(); otpAttempts = 0; updateAttemptsDisplay(); startOTPTimer();
-        document.querySelectorAll('.otp-box')[0]?.focus();
-        showToast('New code sent!','success');
-        isProcessing = false;
-    };
-    
-    // ============================================================
-    // VERIFY OTP
-    // ============================================================
-    window.verifySecureOTP = async function() {
-        if (isProcessing) return;
-        if (!isSessionValid()) { showToast('Session expired','error'); goBackToStep1(); return; }
-        const entered = getOTPValue(), card = document.querySelector('.auth-card');
-        if (entered.length !== 6) { showToast('Enter 6-digit code','error'); card.classList.add('shake'); setTimeout(()=>card.classList.remove('shake'),500); return; }
-        if (Date.now() > otpExpiryTime) { showToast('Code expired','error'); return; }
-        if (otpAttempts >= SECURITY_CONFIG.maxOTPAttempts) { showToast('Too many attempts','error'); clearOTP(); return; }
-        isProcessing = true; document.getElementById('verifyOtpBtn').disabled = true;
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        try {
-            const snap = await database.ref('users/' + foundUserKey).once('value');
-            const data = snap.val();
-            document.getElementById('loadingOverlay').style.display = 'none';
-            if (!data || !data.resetOTP || data.resetOTP !== entered || Date.now() > data.otpExpiry) {
-                otpAttempts++; updateAttemptsDisplay();
-                await database.ref('users/' + foundUserKey).update({ otpAttempts });
-                const r = SECURITY_CONFIG.maxOTPAttempts - otpAttempts;
-                if (r <= 0) { showToast('Max attempts. Request new code.','error'); await database.ref('users/' + foundUserKey).update({resetOTP:null,otpExpiry:null}); goBackToStep1(); }
-                else { showToast(`Invalid code. ${r} left.`,'error'); clearOTP(); document.querySelectorAll('.otp-box')[0]?.focus(); }
-                isProcessing = false; document.getElementById('verifyOtpBtn').disabled = false; return;
-            }
-            await database.ref('users/' + foundUserKey).update({ resetOTP: null, otpExpiry: null, otpAttempts: 0, resetVerified: true, resetVerifiedAt: Date.now() });
-            document.getElementById('step2Content').style.display = 'none';
-            document.getElementById('step3Content').style.display = 'block';
-            if (otpTimerInterval) clearInterval(otpTimerInterval);
-            updateStepUI(3); showToast('Verified! Set password.','success');
-            setTimeout(()=>document.getElementById('newPassword')?.focus(),500);
-        } catch(e) { document.getElementById('loadingOverlay').style.display='none'; showToast('Error','error'); }
-        finally { isProcessing = false; document.getElementById('verifyOtpBtn').disabled = false; }
-    };
-    
-    // ============================================================
-    // RESET PASSWORD
-    // ============================================================
-    window.resetPasswordSecurely = async function() {
-        if (isProcessing) return;
-        const np = document.getElementById('newPassword').value, cp = document.getElementById('confirmPassword').value;
-        const card = document.querySelector('.auth-card');
-        if (!np) { showToast('Enter password','error'); card.classList.add('shake'); setTimeout(()=>card.classList.remove('shake'),500); return; }
-        if (np.length < SECURITY_CONFIG.passwordMinLength) { showToast(`Min ${SECURITY_CONFIG.passwordMinLength} chars`,'error'); return; }
-        if (np !== cp) { showToast('Passwords mismatch','error'); return; }
-        isProcessing = true; document.getElementById('resetBtn').disabled = true;
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        try {
-            const snap = await database.ref('users/' + foundUserKey).once('value');
-            const data = snap.val();
-            if (!data || !data.resetVerified || Date.now() - (data.resetVerifiedAt||0) > 300000) { showToast('Session expired','error'); document.getElementById('loadingOverlay').style.display='none'; isProcessing=false; document.getElementById('resetBtn').disabled=false; goBackToStep1(); return; }
-            await database.ref('users/' + foundUserKey).update({ password: btoa(np), resetVerified: null, resetVerifiedAt: null, passwordUpdatedAt: Date.now() });
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('step3Content').style.display = 'none';
-            document.getElementById('step4Content').style.display = 'block';
-            updateStepUI(4); showToast('Password updated! ✅','success');
-        } catch(e) { document.getElementById('loadingOverlay').style.display='none'; showToast('Failed','error'); }
-        finally { isProcessing = false; document.getElementById('resetBtn').disabled = false; }
-    };
-    
-    // ============================================================
-    // NAVIGATION
-    // ============================================================
-    window.goBackToStep1 = function() {
-        document.getElementById('step1Content').style.display='block'; document.getElementById('step2Content').style.display='none';
-        clearOTP(); if(otpTimerInterval)clearInterval(otpTimerInterval); document.getElementById('timerContainer').style.display='none';
-        foundUserKey=null; foundUserData=null; generatedOTP=null; sessionStartTime=null; updateStepUI(1);
-    };
-    function updateStepUI(s) {
-        ['step1','step2','step3','step4'].forEach((id,i)=>{
-            const el=document.getElementById(id), c=el.querySelector('.step-circle');
-            c.classList.remove('active','inactive','done'); el.classList.remove('active','completed');
-            if(i+1<s){c.classList.add('done');el.classList.add('completed');}
-            else if(i+1===s){c.classList.add('active');el.classList.add('active');}
-            else{c.classList.add('inactive');}
-        });
-    }
-    function showToast(m,t='info') {
-        const c=document.getElementById('toastContainer'), tl=document.createElement('div');
-        tl.className=`toast ${t}`; const i={success:'✅',error:'❌',info:'💚',warning:'⚠️'};
-        tl.innerHTML=`<span>${i[t]||'🔔'}</span> ${m}`; c.appendChild(tl);
-        setTimeout(()=>{tl.style.opacity='0';setTimeout(()=>tl.remove(),300);},3500);
-    }
-    
-    document.addEventListener('keydown',e=>{
-        if(e.key==='Enter'){
-            if(document.getElementById('step1Content').style.display!=='none') sendSecureOTP();
-            else if(document.getElementById('step2Content').style.display!=='none') verifySecureOTP();
-            else if(document.getElementById('step3Content').style.display!=='none') resetPasswordSecurely();
-        }
+    document.addEventListener('DOMContentLoaded', () => {
+        initParticles();
+        setTimeout(() => document.getElementById('userEmail')?.focus(), 800);
     });
-    document.addEventListener('paste',e=>{
-        if(document.activeElement?.closest('#otpContainer')){
-            e.preventDefault();
-            const d=(e.clipboardData||window.clipboardData).getData('text').replace(/[^0-9]/g,'').slice(0,6);
-            if(d.length===6){const o=document.querySelectorAll('.otp-box');d.split('').forEach((dig,i)=>{o[i].value=dig;o[i].classList.add('filled');});o[5].focus();checkOTPComplete();}
-        }
-    });
-    document.addEventListener('DOMContentLoaded',()=>{initParticles();setTimeout(()=>document.getElementById('forgotEmail')?.focus(),800);});
 </script>
 </body>
 </html>

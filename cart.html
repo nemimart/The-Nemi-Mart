@@ -1490,7 +1490,7 @@
         try {
             // Save to Firebase
             const orderRef = database.ref('orders').push();
-            await orderRef.set(orderData);
+            await ordersRef.set(ordersData);
             
             // Save notification
             const notifRef = database.ref('notifications').push();
@@ -1515,7 +1515,7 @@
             showToast('Order placed successfully! 🎉', 'success');
             
             setTimeout(() => {
-                window.location.href = 'order.html';
+                window.location.href = 'orders.html';
             }, 4000);
             
         } catch (error) {

@@ -1,11 +1,33 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#1B3022">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#1B3022">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Primary Meta Tags -->
     <title>The Nemi Mart | Premium Ayurveda</title>
+    <meta name="title" content="The Nemi Mart | Premium Ayurveda">
+    <meta name="description" content="Discover premium Ayurvedic products at The Nemi Mart. Pure, natural, and authentic wellness delivered to your doorstep.">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://thenemimart.github.io/">
+    <meta property="og:title" content="The Nemi Mart | Premium Ayurveda">
+    <meta property="og:description" content="Discover premium Ayurvedic products at The Nemi Mart. Pure, natural, and authentic wellness delivered to your doorstep.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:url" content="https://thenemimart.github.io/">
+    <meta property="twitter:title" content="The Nemi Mart | Premium Ayurveda">
+    <meta property="twitter:description" content="Discover premium Ayurvedic products at The Nemi Mart. Pure, natural, and authentic wellness delivered to your doorstep.">
+    <meta property="twitter:image" content="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
     
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,6 +63,20 @@
             padding: 0; 
             box-sizing: border-box; 
             font-family: 'Poppins', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        
+        /* Remove blue highlight on all interactive elements */
+        input:focus, textarea:focus, select:focus, button:focus, a:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        
+        input, textarea, select, button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
         
         body { 
@@ -138,7 +174,7 @@
         }
 
         /* ============================================================
-           BRAND DISPLAY - REPLACES ADDRESS BOX
+           BRAND DISPLAY - REPLACES OLD ADDRESS BOX
            ============================================================ */
         .brand-display {
             flex: 1;
@@ -219,14 +255,16 @@
         }
         
         .profile-name {
-            font-size: 8px;
+            font-size: 10px;
             color: var(--gold);
-            margin-top: -5px;
+            margin-top: -2px;
             font-weight: 600;
             white-space: nowrap;
-            max-width: 50px;
+            max-width: 60px;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-align: center;
+            line-height: 1.2;
         }
 
         .search-fake-input { 
@@ -666,7 +704,6 @@
             justify-content: center; 
             font-weight: 800;
             z-index: 10;
-            /* Always visible - no animation hiding it */
             opacity: 1;
             visibility: visible;
         }
@@ -1158,7 +1195,6 @@
             if (cartBadge) {
                 const count = cart.length;
                 cartBadge.innerText = count;
-                // Always show badge when items exist, hide when 0
                 if (count === 0) {
                     cartBadge.style.display = 'none';
                 } else {
@@ -1167,10 +1203,8 @@
             }
         }
         
-        // Initial badge state
         updateCartBadge();
         
-        // Real-time cart listener
         window.addEventListener('storage', (e) => {
             if (e.key === CART_KEY) updateCartBadge();
         });
@@ -1200,7 +1234,6 @@
             fetchProducts();
             updateCartBadge();
             
-            // Check for profile updates
             setInterval(updateProfileDisplay, 2000);
         }
 

@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1B3022">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1B3022">
     <title>The Nemi Mart | Premium Ayurveda</title>
     
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -95,11 +97,10 @@
             justify-content: center; 
             text-decoration: none; 
             transition: var(--transition);
+            flex-shrink: 0;
         }
         
-        .logo-area:hover {
-            transform: scale(1.05);
-        }
+        .logo-area:hover { transform: scale(1.05); }
         
         .main-logo { 
             width: 44px; 
@@ -136,31 +137,61 @@
             100% { transform: rotate(360deg); } 
         }
 
-        .address-box { 
-            flex: 1; 
-            margin-left: 14px; 
-            color: #fff; 
-            cursor: pointer; 
+        /* ============================================================
+           BRAND DISPLAY - REPLACES ADDRESS BOX
+           ============================================================ */
+        .brand-display {
+            flex: 1;
+            margin-left: 14px;
+            cursor: pointer;
             transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-decoration: none;
         }
         
-        .address-box:hover {
+        .brand-display:hover {
             transform: translateX(3px);
         }
         
-        .address-box p { 
-            font-size: 10px; 
-            opacity: 0.7; 
-            letter-spacing: 1.2px; 
+        .brand-tagline {
+            font-size: 9px;
+            opacity: 0.7;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-light);
+            font-weight: 500;
+            margin-bottom: 2px;
         }
         
-        .address-box h4 { 
-            font-size: 13px; 
-            font-weight: 600; 
-            color: var(--gold); 
-            display: flex; 
-            align-items: center; 
-            gap: 5px; 
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .brand-name .brand-icon {
+            font-size: 12px;
+            animation: floatIcon 2s ease-in-out infinite;
+        }
+        
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
+        .brand-name span {
+            color: var(--white);
+            font-weight: 300;
+            opacity: 0.7;
+            font-size: 14px;
         }
 
         .top-actions { 
@@ -243,6 +274,15 @@
             opacity: 0;
         }
         
+        .cat-card:nth-child(1) { animation-delay: 0.1s; }
+        .cat-card:nth-child(2) { animation-delay: 0.2s; }
+        .cat-card:nth-child(3) { animation-delay: 0.3s; }
+        .cat-card:nth-child(4) { animation-delay: 0.4s; }
+        .cat-card:nth-child(5) { animation-delay: 0.5s; }
+        .cat-card:nth-child(6) { animation-delay: 0.6s; }
+        .cat-card:nth-child(7) { animation-delay: 0.7s; }
+        .cat-card:nth-child(8) { animation-delay: 0.8s; }
+        
         @keyframes fadeInUp {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -312,18 +352,14 @@
             object-fit: cover; 
             display: block; 
             transition: transform 0.6s; 
-            background: var(--creme-dark);
+            background: var(--creme);
         }
         
         .banner-slide img[src=""], 
         .banner-slide img:not([src]), 
-        .banner-slide img[src="#"] {
-            display: none;
-        }
+        .banner-slide img[src="#"] { display: none; }
         
-        .banner-slide:hover img { 
-            transform: scale(1.02); 
-        }
+        .banner-slide:hover img { transform: scale(1.02); }
         
         .banner-dots { 
             display: flex; 
@@ -442,9 +478,7 @@
             transition: 0.5s var(--bounce); 
         }
         
-        .p-card:hover .p-img-box img { 
-            transform: scale(1.12); 
-        }
+        .p-card:hover .p-img-box img { transform: scale(1.12); }
 
         .premium-badge { 
             position: absolute; 
@@ -552,7 +586,7 @@
         }
 
         /* ============================================================
-           BOTTOM NAVIGATION
+           BOTTOM NAVIGATION - WITH ALWAYS VISIBLE BADGE
            ============================================================ */
         .bottom-nav { 
             position: fixed; 
@@ -589,16 +623,12 @@
             transform: translateY(-3px); 
         }
         
-        .nav-item.active { 
-            color: var(--leaf-green); 
-        }
-        
-        .nav-item.active i { 
-            color: var(--gold); 
-        }
+        .nav-item.active { color: var(--leaf-green); }
+        .nav-item.active i { color: var(--gold); }
 
         .cart-float { 
             margin-top: -58px; 
+            position: relative;
         }
         
         .cart-circle { 
@@ -635,7 +665,14 @@
             align-items: center; 
             justify-content: center; 
             font-weight: 800;
-            animation: badgePop 0.3s var(--bounce);
+            z-index: 10;
+            /* Always visible - no animation hiding it */
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .badge:empty {
+            display: none;
         }
         
         @keyframes badgePop {
@@ -699,16 +736,12 @@
             animation: spin 0.9s linear infinite; 
         }
         
-        @keyframes spin { 
-            to { transform: rotate(360deg); } 
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ============================================================
            FOOTER
            ============================================================ */
-        footer {
-            animation: fadeIn 0.8s ease-out;
-        }
+        footer { animation: fadeIn 0.8s ease-out; }
         
         @keyframes fadeIn {
             0% { opacity: 0; }
@@ -732,14 +765,18 @@
             </div>
             <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" class="main-logo" alt="Nemi Logo">
         </a>
-        <div class="address-box" onclick="window.location.href='address.html'">
-            <p><i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>Deliver to</p>
-            <h4 id="displayLocation">
-                <i class="fas fa-location-dot" style="font-size: 11px;"></i>
-                <span id="locationText">Detecting location...</span>
-                <i class="fas fa-chevron-down"></i>
+        
+        <!-- ============================================================ -->
+        <!-- BRAND DISPLAY - REPLACES OLD ADDRESS BOX -->
+        <!-- ============================================================ -->
+        <a href="index.html" class="brand-display">
+            <p class="brand-tagline">Premium Ayurveda</p>
+            <h4 class="brand-name">
+                NEMI <span>|</span> MART
+                <i class="fas fa-seedling brand-icon" style="color: var(--gold);"></i>
             </h4>
-        </div>
+        </a>
+        
         <div class="top-actions">
             <a href="heart.html" class="profile-icon-container">
                 <i class="far fa-heart"></i>
@@ -805,7 +842,8 @@
     <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" style="width: 70px; margin-bottom: 15px;">
     <h3 style="color: var(--gold);">The Nemi Mart</h3>
     <p style="font-size: 13px; opacity: 0.75;">Ayurveda • Purity • Tradition</p>
-    <p style="margin-top: 20px; font-size: 11px; opacity: 0.4;">&copy; 2026 Arham Insights • All Rights Reserved</p>
+    <p style="margin-top: 10px; font-size: 11px; opacity: 0.5;">📧 Support: thenemimart@gmail.com</p>
+    <p style="margin-top: 20px; font-size: 11px; opacity: 0.4;">&copy; 2026 Nemi Mart • All Rights Reserved</p>
 </footer>
 
 <!-- ============================================================ -->
@@ -814,12 +852,12 @@
 <nav class="bottom-nav">
     <a href="home.html" class="nav-item active"><i class="fas fa-home-alt"></i>Home</a>
     <a href="allproduct.html" class="nav-item"><i class="fas fa-store"></i>Shop</a>
-    <div>
-        <a href="cart.html">
+    <div class="cart-float">
+        <a href="cart.html" style="position: relative; display: block;">
             <div class="cart-circle">
                 <i class="fas fa-shopping-basket"></i>
-                <div class="badge" id="cartBadge">0</div>
             </div>
+            <div class="badge" id="cartBadge">0</div>
         </a>
     </div>
     <a href="notifications.html" class="nav-item"><i class="fas fa-bell"></i>Alerts</a>
@@ -881,7 +919,6 @@
         const allGrid = document.getElementById('allProductsGrid');
         const catContainer = document.getElementById('categoryContainer');
         const cartBadge = document.getElementById('cartBadge');
-        const locationText = document.getElementById('locationText');
         const profileNameDisplay = document.getElementById('profileNameDisplay');
 
         // ============================================================
@@ -899,52 +936,6 @@
                 }
             } else {
                 profileNameDisplay.textContent = 'Login';
-            }
-        }
-
-        // ============================================================
-        // AUTO-DETECT USER LOCATION (IP-BASED)
-        // ============================================================
-        async function detectUserLocation() {
-            try {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(async (position) => {
-                        const { latitude, longitude } = position.coords;
-                        await fetchAddressFromCoords(latitude, longitude);
-                    }, async () => {
-                        await fetchIPLocation();
-                    });
-                } else {
-                    await fetchIPLocation();
-                }
-            } catch (error) {
-                locationText.innerText = "1";
-            }
-        }
-
-        async function fetchAddressFromCoords(lat, lon) {
-            try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-                const data = await response.json();
-                const city = data.address.city || data.address.town || data.address.village || "Patiala";
-                const postcode = data.address.postcode || "147001";
-                locationText.innerText = `${city}, ${postcode}`;
-                localStorage.setItem('nemi_user_location', JSON.stringify({ city, postcode, lat, lon }));
-            } catch (error) {
-                locationText.innerText = "Patiala, 147001";
-            }
-        }
-
-        async function fetchIPLocation() {
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-                const city = data.city || "Patiala";
-                const postcode = data.postal || "147001";
-                locationText.innerText = `${city}, ${postcode}`;
-                localStorage.setItem('nemi_user_location', JSON.stringify({ city, postcode }));
-            } catch (error) {
-                locationText.innerText = "Patiala, 147001";
             }
         }
 
@@ -969,9 +960,7 @@
             const container = document.getElementById('bannerContainer');
             const dotsDiv = document.getElementById('bannerDots');
             
-            // Filter out invalid URLs and fix GitHub raw URLs
             const validBanners = BANNER_IMAGES.filter(url => url && url.trim() !== '').map(url => {
-                // Fix GitHub blob URLs to raw URLs
                 if (url.includes('github.com') && url.includes('/blob/')) {
                     return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
                 }
@@ -1013,7 +1002,6 @@
                 if (g) g.innerHTML = '<div class="global-loader"><div class="spinner"></div></div>';
             });
             
-            // Fetch products
             database.ref('products').on('value', (snap) => {
                 const data = snap.val();
                 masterProducts = [];
@@ -1052,13 +1040,11 @@
                 renderAllSections();
             });
             
-            // Fetch categories from Firebase - REAL TIME
             database.ref('categories').on('value', (snap) => {
                 const data = snap.val();
                 if (data) {
                     categories = Array.isArray(data) ? data : Object.values(data);
                 } else {
-                    // Default categories if none exist
                     categories = [
                         { id: "cat1", name: "Immunity", icon: "fa-shield-heart" },
                         { id: "cat2", name: "Hair Care", icon: "fa-pump-soap" },
@@ -1169,8 +1155,20 @@
 
         function updateCartBadge() {
             const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-            if (cartBadge) cartBadge.innerText = cart.length;
+            if (cartBadge) {
+                const count = cart.length;
+                cartBadge.innerText = count;
+                // Always show badge when items exist, hide when 0
+                if (count === 0) {
+                    cartBadge.style.display = 'none';
+                } else {
+                    cartBadge.style.display = 'flex';
+                }
+            }
         }
+        
+        // Initial badge state
+        updateCartBadge();
         
         // Real-time cart listener
         window.addEventListener('storage', (e) => {
@@ -1194,34 +1192,16 @@
         }
 
         // ============================================================
-        // SAVE ADDRESS ON CLICK
-        // ============================================================
-        window.saveAddressToLocal = function() {
-            const location = locationText.innerText;
-            localStorage.setItem('nemi_user_address', JSON.stringify({ 
-                name: "Akash", 
-                city: location.split(',')[0], 
-                zip: location.split(',')[1]?.trim() || "147001" 
-            }));
-        };
-
-        // ============================================================
         // INITIALIZATION
         // ============================================================
         function init() {
             updateProfileDisplay();
-            detectUserLocation();
             initBanners();
             fetchProducts();
             updateCartBadge();
             
             // Check for profile updates
             setInterval(updateProfileDisplay, 2000);
-            
-            document.querySelector('.address-box').addEventListener('click', function() {
-                saveAddressToLocal();
-                window.location.href = 'address.html';
-            });
         }
 
         init();

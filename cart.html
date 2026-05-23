@@ -1471,7 +1471,7 @@
     };
     
     // ============================================================
-    // VERIFY AND PLACE ORDER
+    // VERIFY AND PLACE ORDER (WITH DETAILED ERROR LOGGING)
     // ============================================================
     window.verifyAndPlaceOrder = async function() {
         const user = getCurrentUser();
@@ -1508,20 +1508,25 @@
         };
         
         try {
-            // Save to Firebase
+            // ✅ Save to Firebase
             const orderRef = database.ref('orders').push();
             await orderRef.set(orderData);
+            console.log('✅ Order saved to Firebase:', orderData);
             
             // Save notification
-            const notifRef = database.ref('notifications').push();
-            await notifRef.set({
-                title: 'New Order Received! 🛒',
-                message: `${orderData.customer.name} placed order #${orderId} worth ₹${orderData.total}`,
-                type: 'order',
-                orderId: orderId,
-                timestamp: Date.now(),
-                read: false
-            });
+            try {
+                const notifRef = database.ref('notifications').push();
+                await notifRef.set({
+                    title: 'New Order Received! 🛒',
+                    message: `${orderData.customer.name} placed order #${orderId} worth ₹${orderData.total}`,
+                    type: 'order',
+                    orderId: orderId,
+                    timestamp: Date.now(),
+                    read: false
+                });
+            } catch (notifError) {
+                console.warn('Notification save failed, but order was placed:', notifError);
+            }
             
             // Clear cart
             localStorage.removeItem(CART_KEY);
@@ -1550,8 +1555,17 @@
             }, 4000);
             
         } catch (error) {
-            console.error('Order error:', error);
-            showToast('Failed to place order. Please try again.', 'error');
+            console.error('❌ Order placement error:', error);
+            // More detailed error message
+            let errorMsg = 'Failed to place order. ';
+            if (error.code === 'PERMISSION_DENIED') {
+                errorMsg += 'Database write permission denied. Check Firebase rules.';
+            } else if (error.message) {
+                errorMsg += error.message;
+            } else {
+                errorMsg += 'Please try again.';
+            }
+            showToast(errorMsg, 'error');
         }
     };
     
@@ -1563,15 +1577,22 @@
         if (saved) {
             try { 
                 const user = JSON.parse(saved);
-                // make sure user.uid exists, else return null
-                if (user.uid) return user;
-            } catch(e) {}
+                // make sure user.uid exists
+                if (user.uid) {
+                    // also ensure phone exists (fallback to empty string)
+                    user.phone = user.phone || '';
+                    return user;
+                }
+                console.warn('User stored without uid in localStorage');
+            } catch(e) {
+                console.error('Failed to parse nemi_current_user');
+            }
         }
-        // fallback to nemi_master_user (old)
+        // fallback to nemi_master_user (old) — only if has uid
         const profile = JSON.parse(localStorage.getItem('nemi_master_user')) || {};
-        if (profile.phone && profile.name) {
-            // return minimal user with uid from old? Maybe uid not there, so return null
-            return null;
+        if (profile.uid) {
+            profile.phone = profile.phone || '';
+            return profile;
         }
         return null;
     }

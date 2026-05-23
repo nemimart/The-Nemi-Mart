@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1B3022">
     <meta name="apple-mobile-web-app-status-bar-style" content="#1B3022">
     
-  <!-- Open Graph / Facebook / WhatsApp -->
+    <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://thenemimart.github.io/">
     <meta property="og:title" content="The Nemi Mart | Premium Ayurveda">
@@ -19,10 +19,10 @@
     <meta property="twitter:title" content="The Nemi Mart | Premium Ayurveda">
     <meta property="twitter:description" content="Discover premium Ayurvedic products at The Nemi Mart. Pure, natural, and authentic wellness delivered to your doorstep.">
     <meta property="twitter:image" content="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
-  <!-- Favicon -->
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png">
-    
     
     <title>Nemi Mart | Elite Profile Suite</title>
     
@@ -39,200 +39,957 @@
            ROOT VARIABLES - PREMIUM GREEN/CREME/GOLD THEME
            ============================================================ */
         :root {
-            --creme: #FDFBF7; --creme-dark: #F5F1E6; --gold: #D4AF37;
-            --gold-light: #FAF4E5; --gold-hover: #B8860B; --dark-green: #0A1F13;
-            --leaf-green: #1A3E26; --leaf-light: #eaf2e9; --white: #FFFFFF;
-            --text-dark: #1F2937; --text-muted: #5C6F63; --danger: #EF4444;
-            --success: #059669; --border-light: #EAE5D9;
-            --radius-xl: 32px; --radius-lg: 24px; --radius-md: 18px; --radius-sm: 14px;
+            --creme: #FDFBF7;
+            --creme-dark: #F5F1E6;
+            --gold: #D4AF37;
+            --gold-light: #FAF4E5;
+            --gold-hover: #B8860B;
+            --dark-green: #0A1F13;
+            --leaf-green: #1A3E26;
+            --leaf-light: #eaf2e9;
+            --white: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-muted: #5C6F63;
+            --danger: #EF4444;
+            --success: #059669;
+            --border-light: #EAE5D9;
+            
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+            
             --shadow-soft: 0 8px 25px rgba(0,0,0,0.04);
             --shadow-card: 0 15px 35px -8px rgba(10,31,19,0.12);
             --shadow-hover: 0 25px 45px -10px rgba(212,175,55,0.25);
             --shadow-gold: 0 10px 30px rgba(212,175,55,0.2);
             --shadow-premium: 0 30px 60px -15px rgba(10,31,19,0.2);
+            
             --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             --bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; -webkit-tap-highlight-color:transparent; }
-        body { background:var(--creme); color:var(--text-dark); line-height:1.5; overflow-x:hidden; width:100%; min-height:100vh; animation:pageLoad 0.6s ease-out; padding-top:var(--safe-top); }
-        @keyframes pageLoad { 0%{opacity:0;transform:translateY(12px);} 100%{opacity:1;transform:translateY(0);} }
-        ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--creme-dark); } ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:10px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        #pageLoader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(253,251,247,0.98); backdrop-filter:blur(10px); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:opacity 0.5s; }
-        .loader-spinner { width:55px; height:55px; border:4px solid var(--gold-light); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; }
-        @keyframes spin { to{transform:rotate(360deg);} }
-        .loader-text { margin-top:18px; font-weight:700; color:var(--dark-green); letter-spacing:2px; font-size:14px; }
+        body {
+            background: var(--creme);
+            color: var(--text-dark);
+            line-height: 1.5;
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            animation: pageLoad 0.6s ease-out;
+            padding-top: var(--safe-top);
+        }
 
-        #toastContainer { position:fixed; top:calc(15px + var(--safe-top)); left:15px; right:15px; z-index:10000; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
-        .toast { background:var(--dark-green); color:white; padding:16px 20px; border-radius:18px; border-left:5px solid var(--gold); box-shadow:var(--shadow-card); animation:slideDown 0.35s ease-out; display:flex; align-items:center; gap:12px; font-weight:600; font-size:14px; pointer-events:auto; backdrop-filter:blur(5px); }
-        .toast.success { border-left-color:var(--success); background:#0a3622; }
-        .toast.error { border-left-color:var(--danger); background:#3b1e1e; }
-        .toast.info { border-left-color:var(--gold); }
-        .toast.warning { border-left-color:#EAB308; background:#3d2e00; }
-        @keyframes slideDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
+        @keyframes pageLoad {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
-        /* AUTH SCREENS */
-        .auth-overlay { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; background:linear-gradient(135deg, var(--creme) 0%, var(--gold-light) 100%); position:relative; overflow:hidden; }
-        .auth-overlay::before { content:''; position:absolute; width:200%; height:200%; background:radial-gradient(circle, var(--gold) 1px, transparent 1px); background-size:50px 50px; opacity:0.03; animation:bgMove 60s linear infinite; }
-        @keyframes bgMove { 0%{transform:translate(0,0);} 100%{transform:translate(-50px,-50px);} }
-        .auth-card { width:100%; max-width:460px; background:var(--white); border-radius:var(--radius-xl); padding:40px 32px; box-shadow:var(--shadow-premium); border:1px solid rgba(212,175,55,0.25); position:relative; z-index:1; animation:cardPop 0.6s var(--bounce); backdrop-filter:blur(5px); }
-        @keyframes cardPop { 0%{opacity:0;transform:scale(0.85) translateY(30px);} 100%{opacity:1;transform:scale(1) translateY(0);} }
-        .auth-logo { text-align:center; margin-bottom:28px; }
-        .auth-logo img { width:70px; height:70px; border-radius:20px; object-fit:cover; box-shadow:0 8px 20px rgba(212,175,55,0.3); animation:logoGlow 3s infinite; }
-        @keyframes logoGlow { 0%,100%{box-shadow:0 8px 20px rgba(212,175,55,0.3);} 50%{box-shadow:0 8px 35px rgba(212,175,55,0.6);} }
-        .auth-header { text-align:center; margin-bottom:35px; }
-        .auth-header h2 { font-family:'Outfit',sans-serif; font-size:34px; font-weight:900; color:var(--dark-green); letter-spacing:-0.5px; }
-        .auth-header p { color:var(--text-muted); font-size:15px; margin-top:8px; font-weight:500; }
-        .input-box { margin-bottom:22px; position:relative; }
-        .input-box label { display:block; font-size:12px; font-weight:800; color:var(--dark-green); margin-bottom:8px; margin-left:8px; text-transform:uppercase; letter-spacing:1.5px; }
-        .input-field { width:100%; padding:16px 18px 16px 52px; border-radius:18px; border:2px solid var(--border-light); background:var(--creme); font-size:15px; font-weight:600; outline:none; transition:var(--transition); color:var(--text-dark); }
-        .input-field:focus { border-color:var(--gold); background:var(--white); box-shadow:0 8px 20px rgba(212,175,55,0.15); transform:scale(1.01); }
-        .input-box i { position:absolute; left:20px; bottom:16px; color:var(--text-muted); font-size:18px; transition:var(--transition); }
-        .input-field:focus+i { color:var(--gold); }
-        .action-btn { width:100%; padding:18px; background:var(--dark-green); color:var(--gold); border:2px solid var(--gold); border-radius:18px; font-size:17px; font-weight:800; cursor:pointer; box-shadow:var(--shadow-gold); transition:var(--transition); margin-top:15px; display:flex; align-items:center; justify-content:center; gap:10px; }
-        .action-btn:hover { transform:translateY(-4px); box-shadow:0 20px 35px rgba(10,31,19,0.25); background:var(--leaf-green); }
-        .action-btn:active { transform:translateY(0) scale(0.98); }
-        .action-btn:disabled { opacity:0.5; cursor:not-allowed; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--creme-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
-        .toggle-text { text-align:center; margin-top:28px; font-weight:600; color:var(--text-muted); font-size:15px; }
-        .toggle-text b { color:var(--dark-green); cursor:pointer; text-decoration:underline; margin-left:6px; transition:var(--transition); }
-        .toggle-text b:hover { color:var(--gold); }
-        .forgot-link { text-align:right; margin-top:-12px; margin-bottom:15px; }
-        .forgot-link a { font-size:13px; font-weight:600; color:var(--text-muted); text-decoration:none; transition:var(--transition); }
-        .forgot-link a:hover { color:var(--gold); }
+        /* ============================================================
+           LOADER
+           ============================================================ */
+        #pageLoader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.5s;
+        }
 
-        /* PASSWORD STRENGTH METER */
-        .password-strength { margin-top:8px; height:4px; border-radius:2px; background:var(--border-light); overflow:hidden; transition:var(--transition); }
-        .password-strength-bar { height:100%; border-radius:2px; transition:var(--transition); width:0%; }
-        .strength-weak { background:var(--danger); width:33%; }
-        .strength-medium { background:#EAB308; width:66%; }
-        .strength-strong { background:var(--success); width:100%; }
-        .strength-text { font-size:10px; font-weight:700; margin-top:4px; }
+        .loader-spinner {
+            width: 55px; height: 55px;
+            border: 4px solid var(--gold-light);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
 
-        /* PROFILE HEADER */
-        #mainProfileUI { display:none; padding-bottom:60px; }
-        .header-bg { height:440px; background:linear-gradient(135deg, var(--dark-green) 0%, var(--leaf-green) 100%); position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; border-bottom-left-radius:70px; border-bottom-right-radius:70px; overflow:hidden; box-shadow:0 25px 50px rgba(0,0,0,0.25); }
-        .bg-icon { position:absolute; color:rgba(212,175,55,0.06); font-size:32px; animation:floatMove var(--d) linear infinite; pointer-events:none; }
-        @keyframes floatMove { 0%{transform:rotate(0deg) translateX(var(--r)) rotate(0deg); opacity:0;} 50%{opacity:0.8;} 100%{transform:rotate(360deg) translateX(var(--r)) rotate(-360deg); opacity:0;} }
-        .profile-container { width:140px; height:140px; border-radius:50px; background:var(--gold); padding:4px; position:relative; z-index:5; margin-bottom:20px; box-shadow:0 30px 60px rgba(0,0,0,0.4); transition:var(--transition); }
-        .profile-container:hover { transform:scale(1.05) rotate(3deg); }
-        #userImg { width:100%; height:100%; border-radius:46px; object-fit:cover; border:4px solid var(--dark-green); }
-        .upload-label { position:absolute; bottom:-5px; right:-5px; width:48px; height:48px; background:var(--white); border-radius:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--dark-green); box-shadow:0 10px 25px rgba(0,0,0,0.3); border:2px solid var(--gold); transition:var(--transition); }
-        .upload-label:hover { background:var(--gold); color:var(--white); transform:rotate(5deg) scale(1.1); }
-        .user-details-hero { text-align:center; color:white; z-index:5; }
-        .user-details-hero h1 { font-family:'Outfit',sans-serif; font-size:36px; font-weight:900; letter-spacing:-0.5px; text-shadow:0 4px 15px rgba(0,0,0,0.3); }
-        .user-details-hero p { color:var(--gold); font-weight:800; font-size:14px; text-transform:uppercase; letter-spacing:3px; margin-top:5px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* DASHBOARD CARDS */
-        .content-wrapper { max-width:600px; margin:-50px auto 0; padding:0 18px; position:relative; z-index:10; }
-        .card-system { background:var(--white); border-radius:var(--radius-xl); padding:8px; box-shadow:var(--shadow-card); margin-bottom:22px; border:1px solid rgba(212,175,55,0.15); animation:cardSlideUp 0.6s ease-out backwards; }
-        .card-system:nth-child(1){animation-delay:0.1s;} .card-system:nth-child(2){animation-delay:0.2s;} .card-system:nth-child(3){animation-delay:0.3s;}
-        @keyframes cardSlideUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
-        .nav-item { display:flex; align-items:center; padding:20px 18px; text-decoration:none; color:var(--text-dark); border-radius:22px; transition:var(--transition); border:none; background:transparent; width:100%; cursor:pointer; }
-        .nav-item:hover { background:var(--gold-light); transform:translateX(8px); }
-        .nav-icon { width:56px; height:56px; border-radius:20px; background:var(--leaf-light); color:var(--dark-green); display:flex; align-items:center; justify-content:center; margin-right:18px; font-size:22px; transition:var(--transition); }
-        .nav-item:hover .nav-icon { background:var(--dark-green); color:var(--gold); transform:scale(1.05); }
-        .nav-text { flex:1; text-align:left; }
-        .nav-text b { display:block; font-size:16px; font-weight:800; color:var(--dark-green); }
-        .nav-text span { display:block; font-size:13px; color:var(--text-muted); font-weight:500; margin-top:3px; }
-        .chevron { color:#CBD5E1; font-size:18px; transition:var(--transition); }
-        .nav-item:hover .chevron { color:var(--gold); transform:translateX(5px); }
-        .danger-zone { color:var(--danger)!important; }
-        .danger-zone .nav-icon { background:#FEE2E2; color:var(--danger); }
-        .danger-zone:hover .nav-icon { background:var(--danger); color:white; }
+        .loader-text {
+            margin-top: 18px;
+            font-weight: 700;
+            color: var(--dark-green);
+            letter-spacing: 2px;
+            font-size: 14px;
+        }
 
-        /* MODALS */
-        .modal { position:fixed; inset:0; background:rgba(10,31,19,0.9); backdrop-filter:blur(12px); z-index:2000; display:none; align-items:center; justify-content:center; padding:20px; }
-        .modal-body { background:var(--white); width:100%; max-width:480px; border-radius:var(--radius-xl); padding:36px 28px; position:relative; animation:modalPop 0.4s var(--bounce); max-height:85vh; overflow-y:auto; }
-        @keyframes modalPop { from{opacity:0;transform:scale(0.8) translateY(30px);} to{opacity:1;transform:scale(1) translateY(0);} }
-        .close-btn { position:absolute; top:24px; right:24px; font-size:28px; color:var(--text-muted); cursor:pointer; transition:var(--transition); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
-        .close-btn:hover { background:var(--creme-dark); color:var(--danger); transform:rotate(90deg); }
-        .modal-body h2 { font-family:'Outfit',sans-serif; margin-bottom:28px; color:var(--dark-green); font-size:28px; font-weight:800; }
-        .terms-content { font-size:14px; color:var(--text-muted); line-height:1.7; }
-        .terms-content h3 { color:var(--dark-green); margin:20px 0 10px; font-size:18px; }
-        .terms-content p { margin-bottom:12px; }
-        .terms-content ul { margin-left:20px; margin-bottom:15px; }
-        .terms-content li { margin-bottom:8px; }
+        /* ============================================================
+           TOAST NOTIFICATIONS
+           ============================================================ */
+        #toastContainer {
+            position: fixed;
+            top: calc(15px + var(--safe-top));
+            left: 15px; right: 15px;
+            z-index: 10000;
+            display: flex; flex-direction: column;
+            gap: 10px; pointer-events: none;
+        }
 
-        @media (max-width:480px) { .auth-card{padding:32px 22px;} .auth-header h2{font-size:28px;} .profile-container{width:120px;height:120px;} .user-details-hero h1{font-size:28px;} .header-bg{height:380px;} }
-        @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-8px);} 50%{transform:translateX(8px);} 75%{transform:translateX(-4px);} }
-        .shake { animation:shake 0.5s ease-out; }
+        .toast {
+            background: var(--dark-green);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border-left: 5px solid var(--gold);
+            box-shadow: var(--shadow-card);
+            animation: slideDown 0.35s ease-out;
+            display: flex; align-items: center; gap: 12px;
+            font-weight: 600; font-size: 14px;
+            pointer-events: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .toast.success { border-left-color: var(--success); background: #0a3622; }
+        .toast.error { border-left-color: var(--danger); background: #3b1e1e; }
+        .toast.info { border-left-color: var(--gold); }
+        .toast.warning { border-left-color: #EAB308; background: #3d2e00; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           AUTH SCREENS - LOGIN & REGISTER
+           ============================================================ */
+        .auth-overlay {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--creme) 0%, var(--gold-light) 100%);
+            position: relative; overflow: hidden;
+        }
+
+        .auth-overlay::before {
+            content: '';
+            position: absolute;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, var(--gold) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: bgMove 60s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 460px;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            position: relative; z-index: 1;
+            animation: cardPop 0.6s var(--bounce);
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes cardPop {
+            0% { opacity: 0; transform: scale(0.85) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .auth-logo { text-align: center; margin-bottom: 28px; }
+
+        .auth-logo img {
+            width: 70px; height: 70px;
+            border-radius: 20px;
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            animation: logoGlow 3s infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 8px 35px rgba(212, 175, 55, 0.6); }
+        }
+
+        .auth-header { text-align: center; margin-bottom: 35px; }
+
+        .auth-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 34px; font-weight: 900;
+            color: var(--dark-green);
+            letter-spacing: -0.5px;
+        }
+
+        .auth-header p {
+            color: var(--text-muted);
+            font-size: 15px; margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .input-box { margin-bottom: 22px; position: relative; }
+
+        .input-box label {
+            display: block;
+            font-size: 12px; font-weight: 800;
+            color: var(--dark-green);
+            margin-bottom: 8px; margin-left: 8px;
+            text-transform: uppercase; letter-spacing: 1.5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 18px 16px 52px;
+            border-radius: 18px;
+            border: 2px solid var(--border-light);
+            background: var(--creme);
+            font-size: 15px; font-weight: 600;
+            outline: none;
+            transition: var(--transition);
+            color: var(--text-dark);
+        }
+
+        .input-field:focus {
+            border-color: var(--gold);
+            background: var(--white);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
+            transform: scale(1.01);
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 20px; bottom: 16px;
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .input-field:focus + i { color: var(--gold); }
+
+        .action-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--dark-green);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 18px;
+            font-size: 17px; font-weight: 800;
+            cursor: pointer;
+            box-shadow: var(--shadow-gold);
+            transition: var(--transition);
+            margin-top: 15px;
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px rgba(10,31,19,0.25);
+            background: var(--leaf-green);
+        }
+
+        .action-btn:active { transform: translateY(0) scale(0.98); }
+        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .toggle-text {
+            text-align: center;
+            margin-top: 28px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .toggle-text b {
+            color: var(--dark-green);
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 6px;
+            transition: var(--transition);
+        }
+
+        .toggle-text b:hover { color: var(--gold); }
+
+        .forgot-link {
+            text-align: right;
+            margin-top: -12px;
+            margin-bottom: 15px;
+        }
+
+        .forgot-link a {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .forgot-link a:hover { color: var(--gold); }
+
+        /* ============================================================
+           PASSWORD STRENGTH METER
+           ============================================================ */
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border-light);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            border-radius: 2px;
+            transition: var(--transition);
+            width: 0%;
+        }
+
+        .strength-weak { background: var(--danger); width: 33%; }
+        .strength-medium { background: #EAB308; width: 66%; }
+        .strength-strong { background: var(--success); width: 100%; }
+
+        .strength-text {
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        /* ============================================================
+           PROFILE HEADER - RESPONSIVE & SMALLER ON MOBILE
+           ============================================================ */
+        #mainProfileUI {
+            display: none;
+            padding-bottom: 60px;
+        }
+
+        .header-bg {
+            background: linear-gradient(135deg, var(--dark-green) 0%, var(--leaf-green) 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-bottom-left-radius: 70px;
+            border-bottom-right-radius: 70px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            /* Default for desktop/laptop */
+            height: 420px;
+            transition: height 0.3s ease;
+        }
+
+        /* Mobile: make header smaller */
+        @media (max-width: 768px) {
+            .header-bg {
+                height: 320px;
+                border-bottom-left-radius: 50px;
+                border-bottom-right-radius: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-bg {
+                height: 270px;
+                border-bottom-left-radius: 40px;
+                border-bottom-right-radius: 40px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .header-bg {
+                height: 240px;
+                border-bottom-left-radius: 35px;
+                border-bottom-right-radius: 35px;
+            }
+        }
+
+        .bg-icon {
+            position: absolute;
+            color: rgba(212, 175, 55, 0.06);
+            font-size: 32px;
+            animation: floatMove var(--d) linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floatMove {
+            0% { transform: rotate(0deg) translateX(var(--r)) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); opacity: 0; }
+        }
+
+        .profile-container {
+            background: var(--gold);
+            padding: 4px;
+            position: relative;
+            z-index: 5;
+            margin-bottom: 16px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            transition: var(--transition);
+            /* Default size */
+            width: 140px;
+            height: 140px;
+            border-radius: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                width: 120px;
+                height: 120px;
+                border-radius: 42px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 100px;
+                height: 100px;
+                border-radius: 36px;
+                margin-bottom: 12px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .profile-container {
+                width: 88px;
+                height: 88px;
+                border-radius: 30px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .profile-container:hover {
+            transform: scale(1.05) rotate(3deg);
+        }
+
+        #userImg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 4px solid var(--dark-green);
+            border-radius: 46px;
+        }
+
+        @media (max-width: 768px) {
+            #userImg { border-radius: 38px; }
+        }
+
+        @media (max-width: 480px) {
+            #userImg { border-radius: 32px; border-width: 3px; }
+        }
+
+        @media (max-width: 380px) {
+            #userImg { border-radius: 26px; border-width: 3px; }
+        }
+
+        .upload-label {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--dark-green);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 2px solid var(--gold);
+            transition: var(--transition);
+            /* Default */
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
+        }
+
+        @media (max-width: 480px) {
+            .upload-label {
+                width: 38px;
+                height: 38px;
+                border-radius: 14px;
+                bottom: -3px;
+                right: -3px;
+            }
+        }
+
+        .upload-label:hover {
+            background: var(--gold);
+            color: var(--white);
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        .user-details-hero {
+            text-align: center;
+            color: white;
+            z-index: 5;
+        }
+
+        .user-details-hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            /* Default */
+            font-size: 36px;
+        }
+
+        @media (max-width: 768px) {
+            .user-details-hero h1 { font-size: 28px; }
+        }
+
+        @media (max-width: 480px) {
+            .user-details-hero h1 { font-size: 22px; }
+        }
+
+        @media (max-width: 380px) {
+            .user-details-hero h1 { font-size: 19px; }
+        }
+
+        .user-details-hero p {
+            color: var(--gold);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 5px;
+            /* Default */
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .user-details-hero p { font-size: 11px; letter-spacing: 2px; }
+        }
+
+        @media (max-width: 380px) {
+            .user-details-hero p { font-size: 10px; letter-spacing: 1.5px; }
+        }
+
+        /* ============================================================
+           DASHBOARD CARDS
+           ============================================================ */
+        .content-wrapper {
+            max-width: 600px;
+            margin: -50px auto 0;
+            padding: 0 18px;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 480px) {
+            .content-wrapper {
+                margin-top: -40px;
+                padding: 0 14px;
+            }
+        }
+
+        .card-system {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 8px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 22px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            animation: cardSlideUp 0.6s ease-out backwards;
+        }
+
+        .card-system:nth-child(1) { animation-delay: 0.1s; }
+        .card-system:nth-child(2) { animation-delay: 0.2s; }
+        .card-system:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes cardSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 18px;
+            text-decoration: none;
+            color: var(--text-dark);
+            border-radius: 22px;
+            transition: var(--transition);
+            border: none;
+            background: transparent;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .nav-item { padding: 16px 14px; }
+        }
+
+        .nav-item:hover {
+            background: var(--gold-light);
+            transform: translateX(8px);
+        }
+
+        .nav-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 20px;
+            background: var(--leaf-light);
+            color: var(--dark-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 18px;
+            font-size: 22px;
+            transition: var(--transition);
+        }
+
+        @media (max-width: 480px) {
+            .nav-icon {
+                width: 46px;
+                height: 46px;
+                border-radius: 16px;
+                margin-right: 14px;
+                font-size: 18px;
+            }
+        }
+
+        .nav-item:hover .nav-icon {
+            background: var(--dark-green);
+            color: var(--gold);
+            transform: scale(1.05);
+        }
+
+        .nav-text { flex: 1; text-align: left; }
+
+        .nav-text b {
+            display: block;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--dark-green);
+        }
+
+        @media (max-width: 480px) {
+            .nav-text b { font-size: 14px; }
+        }
+
+        .nav-text span {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 3px;
+        }
+
+        @media (max-width: 480px) {
+            .nav-text span { font-size: 11px; }
+        }
+
+        .chevron {
+            color: #CBD5E1;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover .chevron {
+            color: var(--gold);
+            transform: translateX(5px);
+        }
+
+        .danger-zone { color: var(--danger) !important; }
+        .danger-zone .nav-icon { background: #FEE2E2; color: var(--danger); }
+        .danger-zone:hover .nav-icon { background: var(--danger); color: white; }
+
+        /* ============================================================
+           MODALS
+           ============================================================ */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 31, 19, 0.9);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-body {
+            background: var(--white);
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius-xl);
+            padding: 36px 28px;
+            position: relative;
+            animation: modalPop 0.4s var(--bounce);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.8) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 24px; right: 24px;
+            font-size: 28px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px; height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background: var(--creme-dark);
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .modal-body h2 {
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 28px;
+            color: var(--dark-green);
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        @media (max-width: 480px) {
+            .modal-body h2 { font-size: 22px; }
+            .modal-body { padding: 28px 22px; }
+        }
+
+        .terms-content {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .terms-content h3 {
+            color: var(--dark-green);
+            margin: 20px 0 10px;
+            font-size: 18px;
+        }
+
+        .terms-content p { margin-bottom: 12px; }
+        .terms-content ul { margin-left: 20px; margin-bottom: 15px; }
+        .terms-content li { margin-bottom: 8px; }
+
+        /* ============================================================
+           MOBILE OPTIMIZATIONS
+           ============================================================ */
+        @media (max-width: 480px) {
+            .auth-card { padding: 32px 22px; }
+            .auth-header h2 { font-size: 28px; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-4px); }
+        }
+
+        .shake { animation: shake 0.5s ease-out; }
     </style>
 </head>
 <body>
 
 <div id="toastContainer"></div>
-<div id="pageLoader"><div class="loader-spinner"></div><div class="loader-text">SECURE CONNECTION...</div></div>
+<div id="pageLoader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">SECURE CONNECTION...</div>
+</div>
 
+<!-- ============================================================ -->
 <!-- LOGIN SCREEN -->
+<!-- ============================================================ -->
 <div class="auth-overlay" id="loginUI">
     <div class="auth-card">
-        <div class="auth-logo"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart Logo"></div>
-        <div class="auth-header"><h2>Welcome Back</h2><p>Sign in to continue to Nemi Mart</p></div>
-        <div class="input-box"><label>Email or Username</label><i class="fa-solid fa-envelope"></i><input type="text" id="loginIdentifier" class="input-field" placeholder="Enter email or username"></div>
-        <div class="input-box"><label>Password</label><i class="fa-solid fa-lock"></i><input type="password" id="loginPassword" class="input-field" placeholder="Enter password"></div>
-        <div class="forgot-link"><a href="forgot.html">Forgot Password?</a></div>
-        <button class="action-btn" onclick="handleLogin()"><i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In</button>
-        <p class="toggle-text">New to Nemi Mart? <b onclick="switchAuth('registerUI')">Create Account</b></p>
+        <div class="auth-logo">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart Logo">
+        </div>
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to continue to Nemi Mart</p>
+        </div>
+        <div class="input-box">
+            <label>Email or Username</label>
+            <i class="fa-solid fa-envelope"></i>
+            <input type="text" id="loginIdentifier" class="input-field" placeholder="Enter email or username" autocomplete="username">
+        </div>
+        <div class="input-box">
+            <label>Password</label>
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="loginPassword" class="input-field" placeholder="Enter password" autocomplete="current-password">
+        </div>
+        <div class="forgot-link">
+            <a href="forgot.html">Forgot Password?</a>
+        </div>
+        <button class="action-btn" onclick="handleLogin()">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+        </button>
+        <p class="toggle-text">
+            New to Nemi Mart? <b onclick="switchAuth('registerUI')">Create Account</b>
+        </p>
     </div>
 </div>
 
+<!-- ============================================================ -->
 <!-- REGISTER SCREEN -->
+<!-- ============================================================ -->
 <div class="auth-overlay" id="registerUI" style="display:none;">
     <div class="auth-card">
-        <div class="auth-logo"><img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart Logo"></div>
-        <div class="auth-header"><h2>Join Nemi Mart</h2><p>Experience premium Ayurveda</p></div>
-        <div class="input-box"><label>Full Name</label><i class="fa-solid fa-user"></i><input type="text" id="regName" class="input-field" placeholder="Enter full name"></div>
-        <div class="input-box"><label>Username</label><i class="fa-solid fa-at"></i><input type="text" id="regUsername" class="input-field" placeholder="Auto-generated" readonly></div>
-        <div class="input-box"><label>Email</label><i class="fa-solid fa-envelope"></i><input type="email" id="regEmail" class="input-field" placeholder="Enter email address"></div>
-        <div class="input-box"><label>Mobile</label><i class="fa-solid fa-phone"></i><input type="tel" id="regPhone" class="input-field" placeholder="Enter mobile number"></div>
-        <div class="input-box"><label>Password</label><i class="fa-solid fa-key"></i><input type="password" id="regPassword" class="input-field" placeholder="Min. 8 characters" oninput="checkPasswordStrength()"></div>
-        <div class="password-strength" id="passwordStrengthMeter"><div class="password-strength-bar" id="passwordStrengthBar"></div></div>
+        <div class="auth-logo">
+            <img src="https://raw.githubusercontent.com/nemimart/The-Nemi-Mart/main/logo.png" alt="Nemi Mart Logo">
+        </div>
+        <div class="auth-header">
+            <h2>Join Nemi Mart</h2>
+            <p>Experience premium Ayurveda</p>
+        </div>
+        <div class="input-box">
+            <label>Full Name</label>
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="regName" class="input-field" placeholder="Enter full name" autocomplete="name">
+        </div>
+        <div class="input-box">
+            <label>Username</label>
+            <i class="fa-solid fa-at"></i>
+            <input type="text" id="regUsername" class="input-field" placeholder="Auto-generated" readonly>
+        </div>
+        <div class="input-box">
+            <label>Email</label>
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="regEmail" class="input-field" placeholder="Enter email address" autocomplete="email">
+        </div>
+        <div class="input-box">
+            <label>Mobile</label>
+            <i class="fa-solid fa-phone"></i>
+            <input type="tel" id="regPhone" class="input-field" placeholder="Enter mobile number" autocomplete="tel">
+        </div>
+        <div class="input-box">
+            <label>Password</label>
+            <i class="fa-solid fa-key"></i>
+            <input type="password" id="regPassword" class="input-field" placeholder="Min. 8 characters" autocomplete="new-password" oninput="checkPasswordStrength()">
+        </div>
+        <div class="password-strength" id="passwordStrengthMeter">
+            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+        </div>
         <div class="strength-text" id="strengthText"></div>
-        <div class="input-box"><label>Confirm Password</label><i class="fa-solid fa-check-circle"></i><input type="password" id="regConfirmPass" class="input-field" placeholder="Re-enter password"></div>
-        <button class="action-btn" onclick="handleRegister()"><i class="fa-solid fa-user-plus"></i> Create Account</button>
-        <p class="toggle-text" style="font-size:12px;margin-top:20px;">By registering, you agree to our <b onclick="showTerms()">Terms & Conditions</b></p>
-        <p class="toggle-text">Already have an account? <b onclick="switchAuth('loginUI')">Sign In</b></p>
+        <div class="input-box">
+            <label>Confirm Password</label>
+            <i class="fa-solid fa-check-circle"></i>
+            <input type="password" id="regConfirmPass" class="input-field" placeholder="Re-enter password" autocomplete="new-password">
+        </div>
+        <button class="action-btn" onclick="handleRegister()">
+            <i class="fa-solid fa-user-plus"></i> Create Account
+        </button>
+        <p class="toggle-text" style="font-size:12px;margin-top:20px;">
+            By registering, you agree to our <b onclick="showTerms()">Terms & Conditions</b>
+        </p>
+        <p class="toggle-text">
+            Already have an account? <b onclick="switchAuth('loginUI')">Sign In</b>
+        </p>
     </div>
 </div>
 
+<!-- ============================================================ -->
 <!-- MAIN PROFILE UI -->
+<!-- ============================================================ -->
 <div id="mainProfileUI">
     <div class="header-bg" id="dynamicBg"></div>
+    
     <div class="content-wrapper">
         <div style="position:relative;top:-70px;text-align:center;">
             <div class="profile-container" style="margin:0 auto;">
                 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" id="userImg" alt="Profile">
-                <label for="fileUpload" class="upload-label"><i class="fa-solid fa-camera"></i><input type="file" id="fileUpload" hidden accept="image/*"></label>
+                <label for="fileUpload" class="upload-label">
+                    <i class="fa-solid fa-camera"></i>
+                    <input type="file" id="fileUpload" hidden accept="image/*">
+                </label>
             </div>
-            <div class="user-details-hero" style="color:var(--dark-green);"><h1 id="displayName">Nemi User</h1><p id="displayUsername" style="color:var(--gold);">@user</p></div>
+            <div class="user-details-hero" style="color:var(--dark-green);">
+                <h1 id="displayName">Nemi User</h1>
+                <p id="displayUsername" style="color:var(--gold);">@user</p>
+            </div>
         </div>
+        
         <div class="card-system" style="margin-top:-30px;">
-            <button class="nav-item" onclick="openEditModal('profile')"><div class="nav-icon"><i class="fa-solid fa-user-pen"></i></div><div class="nav-text"><b>Personal Information</b><span id="displayEmail">—</span></div><i class="fa-solid fa-chevron-right chevron"></i></button>
-            <button class="nav-item" onclick="openEditModal('phone')"><div class="nav-icon"><i class="fa-solid fa-phone"></i></div><div class="nav-text"><b>Mobile Number</b><span id="displayPhone">—</span></div><i class="fa-solid fa-chevron-right chevron"></i></button>
-            <button class="nav-item" onclick="openEditModal('address')"><div class="nav-icon"><i class="fa-solid fa-location-dot"></i></div><div class="nav-text"><b>Delivery Address</b><span id="displayAddress">—</span></div><i class="fa-solid fa-chevron-right chevron"></i></button>
+            <button class="nav-item" onclick="openEditModal('profile')">
+                <div class="nav-icon"><i class="fa-solid fa-user-pen"></i></div>
+                <div class="nav-text"><b>Personal Information</b><span id="displayEmail">—</span></div>
+                <i class="fa-solid fa-chevron-right chevron"></i>
+            </button>
+            <button class="nav-item" onclick="openEditModal('phone')">
+                <div class="nav-icon"><i class="fa-solid fa-phone"></i></div>
+                <div class="nav-text"><b>Mobile Number</b><span id="displayPhone">—</span></div>
+                <i class="fa-solid fa-chevron-right chevron"></i>
+            </button>
+            <button class="nav-item" onclick="openEditModal('address')">
+                <div class="nav-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="nav-text"><b>Delivery Address</b><span id="displayAddress">—</span></div>
+                <i class="fa-solid fa-chevron-right chevron"></i>
+            </button>
         </div>
+        
         <div class="card-system">
-            <a href="orders.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-box"></i></div><div class="nav-text"><b>My Orders</b><span>Track & manage orders</span></div><i class="fa-solid fa-chevron-right chevron"></i></a>
-            <a href="heart.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-heart"></i></div><div class="nav-text"><b>Wishlist</b><span>Saved favorites</span></div><i class="fa-solid fa-chevron-right chevron"></i></a>
-            <button class="nav-item" onclick="showTerms()"><div class="nav-icon"><i class="fa-solid fa-file-contract"></i></div><div class="nav-text"><b>Terms & Conditions</b><span>Legal information</span></div><i class="fa-solid fa-chevron-right chevron"></i></button>
+            <a href="orders.html" class="nav-item">
+                <div class="nav-icon"><i class="fa-solid fa-box"></i></div>
+                <div class="nav-text"><b>My Orders</b><span>Track & manage orders</span></div>
+                <i class="fa-solid fa-chevron-right chevron"></i>
+            </a>
+            <a href="heart.html" class="nav-item">
+                <div class="nav-icon"><i class="fa-solid fa-heart"></i></div>
+                <div class="nav-text"><b>Wishlist</b><span>Saved favorites</span></div>
+                <i class="fa-solid fa-chevron-right chevron"></i>
+            </a>
+            <button class="nav-item" onclick="showTerms()">
+                <div class="nav-icon"><i class="fa-solid fa-file-contract"></i></div>
+                <div class="nav-text"><b>Terms & Conditions</b><span>Legal information</span></div>
+                <i class="fa-solid fa-chevron-right chevron"></i>
+            </button>
         </div>
+        
         <div class="card-system">
-            <button class="nav-item danger-zone" onclick="handleLogout()"><div class="nav-icon"><i class="fa-solid fa-sign-out-alt"></i></div><div class="nav-text"><b>Sign Out</b><span>Securely logout</span></div><i class="fa-solid fa-chevron-right chevron"></i></button>
+            <button class="nav-item danger-zone" onclick="handleLogout()">
+                <div class="nav-icon"><i class="fa-solid fa-sign-out-alt"></i></div>
+                <div class="nav-text"><b>Sign Out</b><span>Securely logout</span></div>
+                <i class="fa-solid fa-chevron-right chevron"></i>
+            </button>
         </div>
-        <p style="text-align:center;color:var(--text-muted);font-size:11px;font-weight:800;letter-spacing:2px;margin-top:30px;">© 2026 ARHAM INSIGHTS • VERSION 5.0.0</p>
+        
+        <p style="text-align:center;color:var(--text-muted);font-size:11px;font-weight:800;letter-spacing:2px;margin-top:30px;">
+            © 2026 NEMI MART • VERSION 5.0.0
+        </p>
     </div>
 </div>
 
+<!-- ============================================================ -->
 <!-- EDIT MODAL -->
+<!-- ============================================================ -->
 <div class="modal" id="editModal">
-    <div class="modal-body"><i class="fa-solid fa-xmark close-btn" onclick="closeModal('editModal')"></i><h2 id="modalTitle">Edit Profile</h2><div id="modalContent"></div><button class="action-btn" onclick="saveEdits()">Save Changes</button></div>
+    <div class="modal-body">
+        <i class="fa-solid fa-xmark close-btn" onclick="closeModal('editModal')"></i>
+        <h2 id="modalTitle">Edit Profile</h2>
+        <div id="modalContent"></div>
+        <button class="action-btn" onclick="saveEdits()">Save Changes</button>
+    </div>
 </div>
 
+<!-- ============================================================ -->
 <!-- T&C MODAL -->
+<!-- ============================================================ -->
 <div class="modal" id="termsModal">
     <div class="modal-body">
         <i class="fa-solid fa-xmark close-btn" onclick="closeModal('termsModal')"></i>
@@ -248,17 +1005,17 @@
             <h3>4. Orders & Payments</h3>
             <p>By placing an order, you agree to pay the full amount displayed at checkout. All payments are processed securely. Nemi Mart is not responsible for delays caused by payment gateway issues.</p>
             <h3>5. Shipping & Delivery</h3>
-            <ul>><li>Orders are typically delivered within 5-7 business days</li><li>Delivery timelines may vary based on location</li><li>We currently ship across India only</li></ul>
+            <ul><li>Orders are typically delivered within 5-7 business days</li><li>Delivery timelines may vary based on location</li><li>We currently ship across India only</li></ul>
             <h3>6. Returns & Refunds</h3>
             <ul><li>7-day easy return policy for unopened and unused products</li><li>Refunds are processed within 5-7 business days after product inspection</li><li>Shipping charges for returns are borne by the customer</li><li>Opened or used products cannot be returned</li></ul>
             <h3>7. Privacy Policy</h3>
             <p>Your personal data is encrypted and stored securely. We never share your information with third parties without your explicit consent. You can request data deletion at any time by contacting support.</p>
             <h3>8. Intellectual Property</h3>
-            <p>All content on Nemi Mart including logos, images, text, and designs are the property of Arham Insights. Reproduction or distribution without permission is strictly prohibited.</p>
+            <p>All content on Nemi Mart including logos, images, text, and designs are the property of Nemi Mart. Reproduction or distribution without permission is strictly prohibited.</p>
             <h3>9. Limitation of Liability</h3>
             <p>Nemi Mart shall not be held liable for any indirect, incidental, or consequential damages arising from the use of our products or services. Our liability is limited to the purchase price of the product.</p>
             <h3>10. Contact Information</h3>
-            <p>For any queries, concerns, or support:<br>📧 Email: thenemimart@gmail.com<br>📞 Phone: Available on request<br>
+            <p>For any queries, concerns, or support:<br>📧 Email: thenemimart@gmail.com<br>📞 Phone: Available on request</p>
             <p style="margin-top:25px;font-style:italic;text-align:center;color:var(--gold);">🌿 Nemi Mart - Pure Ayurveda, Pure Life. 🌿</p>
         </div>
     </div>
@@ -268,7 +1025,9 @@
     // ============================================================
     // FIREBASE CONFIG
     // ============================================================
-    const firebaseConfig = { databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" };
+    const firebaseConfig = { 
+        databaseURL: "https://nemi-mart-3-default-rtdb.firebaseio.com" 
+    };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
@@ -276,12 +1035,15 @@
     let currentEditType = 'profile';
     
     // ============================================================
-    // AUTO-GENERATE USERNAME
+    // AUTO-GENERATE USERNAME FROM FULL NAME
     // ============================================================
     document.getElementById('regName')?.addEventListener('input', function(e) {
         const name = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '_');
-        if (name) document.getElementById('regUsername').value = name + '_' + Math.floor(Math.random() * 1000);
-        else document.getElementById('regUsername').value = '';
+        if (name) {
+            document.getElementById('regUsername').value = name + '_' + Math.floor(Math.random() * 1000);
+        } else {
+            document.getElementById('regUsername').value = '';
+        }
     });
     
     // ============================================================
@@ -299,11 +1061,21 @@
         if (/[0-9]/.test(password)) strength++;
         if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
         
-        if (strength <= 1) { bar.classList.add('strength-weak'); text.innerHTML = '<span style="color:var(--danger);">Weak password</span>'; }
-        else if (strength === 2) { bar.classList.add('strength-medium'); text.innerHTML = '<span style="color:#EAB308;">Medium password</span>'; }
-        else { bar.classList.add('strength-strong'); text.innerHTML = '<span style="color:var(--success);">Strong password!</span>'; }
+        if (strength <= 1) {
+            bar.classList.add('strength-weak');
+            text.innerHTML = '<span style="color:var(--danger);">Weak password</span>';
+        } else if (strength === 2) {
+            bar.classList.add('strength-medium');
+            text.innerHTML = '<span style="color:#EAB308;">Medium password</span>';
+        } else {
+            bar.classList.add('strength-strong');
+            text.innerHTML = '<span style="color:var(--success);">Strong password!</span>';
+        }
         
-        if (!password) { bar.className = 'password-strength-bar'; text.innerHTML = ''; }
+        if (!password) {
+            bar.className = 'password-strength-bar';
+            text.innerHTML = '';
+        }
     };
     
     // ============================================================
@@ -316,7 +1088,7 @@
     }
     
     // ============================================================
-    // CHECK USER EXISTS
+    // CHECK USER EXISTS IN FIREBASE
     // ============================================================
     async function checkUserExists(email, username) {
         const snapshot = await database.ref('users').once('value');
@@ -325,7 +1097,7 @@
     }
     
     // ============================================================
-    // HANDLE REGISTER (PLAIN TEXT PASSWORD)
+    // HANDLE REGISTER (SAVES TO FIREBASE + LOCALSTORAGE WITH UID)
     // ============================================================
     async function handleRegister() {
         const name = document.getElementById('regName').value.trim();
@@ -335,32 +1107,59 @@
         const password = document.getElementById('regPassword').value;
         const confirm = document.getElementById('regConfirmPass').value;
         
-        if (!name || !username || !email || !phone || !password) { showToast('All fields are required!', 'error'); return; }
-        if (password !== confirm) { showToast('Passwords do not match!', 'error'); return; }
-        if (password.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
+        if (!name || !username || !email || !phone || !password) {
+            showToast('All fields are required!', 'error');
+            return;
+        }
+        if (password !== confirm) {
+            showToast('Passwords do not match!', 'error');
+            return;
+        }
+        if (password.length < 8) {
+            showToast('Password must be at least 8 characters', 'error');
+            return;
+        }
+        if (phone.length !== 10) {
+            showToast('Enter valid 10-digit mobile number', 'error');
+            return;
+        }
         
         const exists = await checkUserExists(email, username);
-        if (exists) { showToast('Email or username already registered!', 'error'); return; }
+        if (exists) {
+            showToast('Email or username already registered!', 'error');
+            return;
+        }
         
+        // Generate unique user ID
         const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         
-        // STORE PASSWORD AS PLAIN TEXT (admin can see in admin2)
+        // User data object for Firebase
         const userData = {
             uid: userId,
             name: name,
             username: username,
             email: email,
             phone: phone,
-            password: password,  // ✅ PLAIN TEXT - Admin dekh sakega
+            password: password,  // Plain text - admin dekh sakega
             address: 'Patiala, Punjab 147001',
             photoURL: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-            isBanned: false,  // ✅ Ban flag
+            isBanned: false,
             createdAt: Date.now()
         };
         
         try {
+            // Save to Firebase Realtime Database
             await database.ref('users/' + userId).set(userData);
-            localStorage.setItem('nemi_current_user', JSON.stringify({ uid: userId, name, username, email }));
+            
+            // ✅ Save to localStorage WITH UID (cart page needs this)
+            localStorage.setItem('nemi_current_user', JSON.stringify({
+                uid: userId,
+                name: name,
+                username: username,
+                email: email,
+                phone: phone
+            }));
+            
             showToast('Account created successfully! 🎉', 'success');
             setTimeout(() => loadProfile(), 1000);
         } catch (error) {
@@ -369,25 +1168,31 @@
     }
     
     // ============================================================
-    // HANDLE LOGIN (WITH BAN CHECK)
+    // HANDLE LOGIN (WITH BAN CHECK + LOCALSTORAGE WITH UID)
     // ============================================================
     async function handleLogin() {
         const identifier = document.getElementById('loginIdentifier').value.trim();
         const password = document.getElementById('loginPassword').value;
         
-        if (!identifier || !password) { showToast('Please fill all fields', 'error'); return; }
+        if (!identifier || !password) {
+            showToast('Please fill all fields', 'error');
+            return;
+        }
         
         try {
             const snapshot = await database.ref('users').once('value');
             const users = snapshot.val() || {};
             
-            // Find user by email or username AND check password (plain text)
+            // Find user by email or username AND check password
             const user = Object.values(users).find(u => 
                 (u.email === identifier || u.username === identifier) && 
-                u.password === password  // ✅ Plain text comparison
+                u.password === password
             );
             
-            if (!user) { showToast('Invalid credentials!', 'error'); return; }
+            if (!user) {
+                showToast('Invalid credentials!', 'error');
+                return;
+            }
             
             // ✅ CHECK IF USER IS BANNED
             if (user.isBanned === true) {
@@ -395,9 +1200,13 @@
                 return;
             }
             
-            // Save session
+            // ✅ Save session WITH UID (cart page needs this)
             localStorage.setItem('nemi_current_user', JSON.stringify({
-                uid: user.uid, name: user.name, username: user.username, email: user.email
+                uid: user.uid,
+                name: user.name,
+                username: user.username,
+                email: user.email,
+                phone: user.phone || ''
             }));
             
             showToast('Login successful! 🎉', 'success');
@@ -409,7 +1218,7 @@
     }
     
     // ============================================================
-    // LOAD PROFILE
+    // LOAD PROFILE (CHECKS BAN, LOADS FROM FIREBASE)
     // ============================================================
     async function loadProfile() {
         const savedUser = localStorage.getItem('nemi_current_user');
@@ -421,17 +1230,34 @@
         
         currentUser = JSON.parse(savedUser);
         
-        const snapshot = await database.ref('users/' + currentUser.uid).once('value');
-        const userData = snapshot.val();
-        
-        if (userData) {
-            // ✅ Check ban status on profile load
-            if (userData.isBanned === true) {
-                showToast('Your account has been suspended.', 'error');
+        // Verify user still exists and not banned
+        try {
+            const snapshot = await database.ref('users/' + currentUser.uid).once('value');
+            const userData = snapshot.val();
+            
+            if (userData) {
+                if (userData.isBanned === true) {
+                    showToast('Your account has been suspended.', 'error');
+                    handleLogout();
+                    return;
+                }
+                displayUserData(userData);
+            } else {
+                // User not found in database
+                showToast('User data not found. Please login again.', 'error');
                 handleLogout();
                 return;
             }
-            displayUserData(userData);
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            // Still show profile from localStorage if Firebase fails
+            displayUserData({
+                name: currentUser.name,
+                username: currentUser.username,
+                email: currentUser.email,
+                phone: currentUser.phone || '',
+                address: 'Patiala, Punjab 147001'
+            });
         }
         
         document.getElementById('loginUI').style.display = 'none';
@@ -443,7 +1269,7 @@
     }
     
     // ============================================================
-    // DISPLAY USER DATA
+    // DISPLAY USER DATA IN PROFILE UI
     // ============================================================
     function displayUserData(data) {
         document.getElementById('displayName').textContent = data.name || 'Nemi User';
@@ -451,7 +1277,9 @@
         document.getElementById('displayEmail').textContent = data.email || '—';
         document.getElementById('displayPhone').textContent = data.phone || '—';
         document.getElementById('displayAddress').textContent = data.address || '—';
-        if (data.photoURL) document.getElementById('userImg').src = data.photoURL;
+        if (data.photoURL) {
+            document.getElementById('userImg').src = data.photoURL;
+        }
     }
     
     // ============================================================
@@ -468,21 +1296,32 @@
         
         if (type === 'profile') {
             title.textContent = 'Edit Profile';
-            content.innerHTML = `<div class="input-box"><label>Full Name</label><input type="text" id="editName" class="input-field" value="${userData.name || ''}"></div><div class="input-box"><label>Email</label><input type="email" id="editEmail" class="input-field" value="${userData.email || ''}"></div><div class="input-box"><label>Username</label><input type="text" id="editUsername" class="input-field" value="${userData.username || ''}"></div>`;
+            content.innerHTML = `
+                <div class="input-box"><label>Full Name</label><input type="text" id="editName" class="input-field" value="${userData.name || ''}"></div>
+                <div class="input-box"><label>Email</label><input type="email" id="editEmail" class="input-field" value="${userData.email || ''}"></div>
+                <div class="input-box"><label>Username</label><input type="text" id="editUsername" class="input-field" value="${userData.username || ''}"></div>
+            `;
         } else if (type === 'phone') {
             title.textContent = 'Edit Phone';
-            content.innerHTML = `<div class="input-box"><label>Mobile Number</label><input type="tel" id="editPhone" class="input-field" value="${userData.phone || ''}"></div>`;
+            content.innerHTML = `
+                <div class="input-box"><label>Mobile Number</label><input type="tel" id="editPhone" class="input-field" value="${userData.phone || ''}"></div>
+            `;
         } else if (type === 'address') {
             const addrParts = (userData.address || 'Patiala, Punjab 147001').split(',');
             title.textContent = 'Edit Address';
-            content.innerHTML = `<div class="input-box"><label>Street Address</label><input type="text" id="editStreet" class="input-field" value="${addrParts[0] || ''}" placeholder="House/Street"></div><div class="input-box"><label>City</label><input type="text" id="editCity" class="input-field" value="${addrParts[1] || 'Patiala'}"></div><div class="input-box"><label>State</label><input type="text" id="editState" class="input-field" value="${addrParts[2] || 'Punjab'}"></div><div class="input-box"><label>Pincode</label><input type="text" id="editPincode" class="input-field" value="${addrParts[3] || '147001'}"></div>`;
+            content.innerHTML = `
+                <div class="input-box"><label>Street Address</label><input type="text" id="editStreet" class="input-field" value="${addrParts[0] || ''}" placeholder="House/Street"></div>
+                <div class="input-box"><label>City</label><input type="text" id="editCity" class="input-field" value="${addrParts[1] || 'Patiala'}"></div>
+                <div class="input-box"><label>State</label><input type="text" id="editState" class="input-field" value="${addrParts[2] || 'Punjab'}"></div>
+                <div class="input-box"><label>Pincode</label><input type="text" id="editPincode" class="input-field" value="${addrParts[3] || '147001'}"></div>
+            `;
         }
         
         modal.style.display = 'flex';
     }
     
     // ============================================================
-    // SAVE EDITS
+    // SAVE EDITS TO FIREBASE
     // ============================================================
     async function saveEdits() {
         const updates = {};
@@ -559,6 +1398,9 @@
         }
     }
     
+    // ============================================================
+    // TOAST NOTIFICATION
+    // ============================================================
     function showToast(msg, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
@@ -569,12 +1411,20 @@
         setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
     
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
     window.onload = function() {
         const savedUser = localStorage.getItem('nemi_current_user');
-        if (savedUser) { loadProfile(); }
-        else { document.getElementById('pageLoader').style.opacity = '0'; setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500); }
+        if (savedUser) {
+            loadProfile();
+        } else {
+            document.getElementById('pageLoader').style.opacity = '0';
+            setTimeout(() => document.getElementById('pageLoader').style.display = 'none', 500);
+        }
     };
     
+    // Expose globally
     window.switchAuth = switchAuth;
     window.handleLogin = handleLogin;
     window.handleRegister = handleRegister;
